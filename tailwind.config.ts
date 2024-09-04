@@ -80,11 +80,11 @@ const config = {
         },
       },
     },
-    future: {
-      hoverOnlyWhenSupported: true
-    },
-    plugins: [require("tailwindcss-animate")],
-  }
+  },
+  future: {
+    hoverOnlyWhenSupported: true
+  },
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config
 
 export default config
