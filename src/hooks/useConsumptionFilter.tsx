@@ -9,7 +9,7 @@ const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
   month: 1,
 };
 
-const TIME_WINDOWS_COUNT = 10;
+const TIME_WINDOWS_COUNT = 9;
 
 export const useConsumptionFilter = () => {
   const [resolution, setResolution] = useState<Resolution>("month");

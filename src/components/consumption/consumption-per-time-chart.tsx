@@ -54,7 +54,7 @@ export default function ConsumptionPerTimeChart({
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart data={data}>
+          <BarChart data={data} barSize={30}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey={(entry) =>
@@ -68,7 +68,7 @@ export default function ConsumptionPerTimeChart({
               tickMargin={10}
               axisLine={false}
             />
-            <Bar dataKey="consumption" radius={8}>
+            <Bar dataKey="consumption" radius={20}>
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
