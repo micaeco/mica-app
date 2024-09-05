@@ -9,8 +9,6 @@ const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
   month: 1,
 };
 
-const TIME_WINDOWS_COUNT = 8;
-
 export function useTimeWindow() {
   const [resolution, setResolution] = useState<Resolution>("month");
   const [timeWindow, setTimeWindow] =
@@ -18,16 +16,21 @@ export function useTimeWindow() {
   const [data, setData] = useState<any[]>([]);
   const { events } = useEvents();
 
+  const count = resolution === "month" ? 8 : 6;
+
   const updateData = useCallback(() => {
     const { startDate, endDate } = getTimeWindowForResolution(resolution);
     setTimeWindow({ startDate, endDate });
 
-    const newData = generateTimeWindows(startDate, endDate, resolution).map(
-      (window) => ({
-        timeWindow: window,
-        consumption: getConsumption(events, window),
-      })
-    );
+    const newData = generateTimeWindows(
+      count,
+      startDate,
+      endDate,
+      resolution
+    ).map((window) => ({
+      timeWindow: window,
+      consumption: getConsumption(events, window),
+    }));
 
     setData(newData.reverse());
     console.log(newData);
@@ -75,15 +78,16 @@ function getTimeWindowForResolution(resolution: Resolution): TimeWindow {
 }
 
 function generateTimeWindows(
+  count: number,
   startDate: Date,
   endDate: Date,
   resolution: Resolution
-): TimeWindow[] {
+) {
   const windows: TimeWindow[] = [];
   let currentEnd = new Date(endDate);
   let currentStart = new Date(startDate);
 
-  for (let i = 0; i < TIME_WINDOWS_COUNT; i++) {
+  for (let i = 0; i < count; i++) {
     windows.push({
       startDate: new Date(currentStart),
       endDate: new Date(currentEnd),
