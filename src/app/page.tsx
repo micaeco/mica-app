@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useConsumptionFilter } from "../hooks/useConsumptionFilter";
+import { useTimeWindow } from "../hooks/useTimeWindow";
 import ConsumptionPerTimeChart from "@/components/consumption/consumption-per-time-chart";
 import ConsumptionPerDeviceChart from "@/components/consumption/consumption-per-device-chart";
 import ConsumptionPerCategoryPieChart from "@/components/consumption/consumption-per-category-pie-chart";
@@ -10,18 +10,13 @@ import ConsumptionCard from "@/components/consumption/consumption-card";
 import ConsumptionHistoric from "@/components/consumption/consumption-historic";
 import TimeResolutionTabs from "@/components/consumption/time-resolution-tabs";
 import ConsumptionPerPerson from "@/components/consumption/consumption-per-person";
+import { Category } from "@/types";
 
 export default function Consumption() {
   const [mounted, setMounted] = useState(false);
-  const {
-    timeWindow,
-    setTimeWindow,
-    resolution,
-    setResolution,
-    category,
-    setCategory,
-    data,
-  } = useConsumptionFilter();
+  const { timeWindow, setTimeWindow, resolution, setResolution, data } =
+    useTimeWindow();
+  const [category, setCategory] = useState<Category | undefined>(undefined);
   const { events } = useEventsContext();
 
   useEffect(() => {

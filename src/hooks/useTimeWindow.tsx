@@ -11,11 +11,10 @@ const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
 
 const TIME_WINDOWS_COUNT = 9;
 
-export const useConsumptionFilter = () => {
+export function useTimeWindow() {
   const [resolution, setResolution] = useState<Resolution>("month");
   const [timeWindow, setTimeWindow] =
     useState<TimeWindow>(getInitialTimeWindow);
-  const [category, setCategory] = useState<Category | undefined>(undefined);
   const [data, setData] = useState<any[]>([]);
   const { events } = useEvents();
 
@@ -43,11 +42,9 @@ export const useConsumptionFilter = () => {
     setTimeWindow,
     resolution,
     setResolution,
-    category,
-    setCategory,
     data,
   };
-};
+}
 
 function getInitialTimeWindow(): TimeWindow {
   const end = setToEndOfDay(new Date());
