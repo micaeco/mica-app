@@ -45,13 +45,13 @@ const CustomTick = ({ x, y, payload, onClick, isSelected }: CustomProps) => (
     </text>
     {isSelected && (
       <line
-        x1={-6}
+        x1={-5}
         y1={19}
-        x2={6}
+        x2={5}
         y2={19}
         radius={2}
         stroke="hsl(var(--brand-secondary))"
-        strokeWidth={3}
+        strokeWidth={4}
       />
     )}
   </g>
