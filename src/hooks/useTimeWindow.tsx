@@ -9,7 +9,7 @@ const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
   month: 1,
 };
 
-const TIME_WINDOWS_COUNT = 9;
+const TIME_WINDOWS_COUNT = 8;
 
 export function useTimeWindow() {
   const [resolution, setResolution] = useState<Resolution>("month");
