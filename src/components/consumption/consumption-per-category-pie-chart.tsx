@@ -69,7 +69,6 @@ export default function ConsumptionPerCategoryPieChart({
       index: number;
     }) => {
       const isActive = index === activeIndex;
-      const isLeft = midAngle > 90 && midAngle < 270;
       const RADIAN = Math.PI / 180;
       const radius =
         innerRadius + (outerRadius - innerRadius) * (isActive ? 2.1 : 1.9);
@@ -81,9 +80,7 @@ export default function ConsumptionPerCategoryPieChart({
         100
       ).toFixed(1);
 
-      const textClasses = "select-none";
-      const xOffset = isLeft ? -25 : 25;
-      const textAnchor = isLeft ? "end" : "start";
+      const textClasses = "select-none text-center";
 
       return (
         <g>
@@ -97,18 +94,20 @@ export default function ConsumptionPerCategoryPieChart({
           {isActive && (
             <>
               <text
-                className={`${textClasses} font-bold text-sm`}
-                x={x + xOffset}
-                y={y - 5}
-                textAnchor={textAnchor}
+                className={`${textClasses} font-bold text-xl`}
+                x={cx}
+                y={cy - 10}
+                textAnchor="middle"
+                dominantBaseline="middle"
               >
                 {percentage}%
               </text>
               <text
-                className={textClasses}
-                x={x + xOffset}
-                y={y + 15}
-                textAnchor={textAnchor}
+                className={`${textClasses} text-xl`}
+                x={cx}
+                y={cy + 20}
+                textAnchor="middle"
+                dominantBaseline="middle"
               >
                 {payload.consumption} L
               </text>
