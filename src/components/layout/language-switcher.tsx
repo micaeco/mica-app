@@ -1,6 +1,6 @@
 import React from "react";
-import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
+import { useRouter, usePathname } from "@/i18n/routing";
 
 import {
   Select,
@@ -10,7 +10,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const languages = [
+type Locale = "en" | "es" | "ca";
+
+const languages: { code: Locale; name: string; flag: string }[] = [
   { code: "en", name: "English", flag: "US" },
   { code: "es", name: "Español", flag: "ES" },
   { code: "ca", name: "Català", flag: "CAT" },
@@ -18,10 +20,11 @@ const languages = [
 
 export default function LanguageSwitcher() {
   const router = useRouter();
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
+  const pathname = usePathname();
 
-  const handleLanguageChange = (newLocale: string) => {
-    router.push(`/${newLocale}`);
+  const handleLanguageChange = (newLocale: Locale) => {
+    router.push(pathname, { locale: newLocale });
   };
 
   return (

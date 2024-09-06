@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { format } from 'date-fns';
-import { ca } from 'date-fns/locale';
+import { ca, enUS, es, Locale } from 'date-fns/locale';
 
 import { Event, Category, Device, Resolution, TimeWindow } from '@/lib/types';
 
@@ -110,9 +110,23 @@ export const getDateRangeString = (start: Date, end: Date, resolution: Resolutio
       `${start.getDate().toString()}-${end.getDate().toString()}` : `${months[numbersToMonths[start.getMonth()]].slice(0, 3)}`;;
 };
 
-export const formatDate = (date: Date) => {
+export const getDateFnsLocale = (locale: string): Locale => {
+  switch (locale) {
+    case 'en':
+      return enUS;
+    case 'ca':
+      return ca;
+    case 'es':
+      return es;
+    default:
+      return enUS;
+  }
+};
+
+export const formatDate = (date: Date, locale: string) => {
   if (!(date instanceof Date)) {
     return 'Invalid date';
   }
-  return format(date, "d MMM yyyy HH:mm:ss", { locale: ca });
+  const dateFnsLocale = getDateFnsLocale(locale);
+  return format(date, "d MMM yyyy HH:mm:ss", { locale: dateFnsLocale });
 };

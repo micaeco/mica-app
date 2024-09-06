@@ -49,6 +49,7 @@ export default function ConsumptionPerDeviceChart({
   events,
 }: Props) {
   const t = useTranslations("consumption-per-device-chart");
+  const common = useTranslations("common");
 
   let { devices, maxConsumption } = category
     ? getDevices(events, timeWindow, category)
@@ -77,7 +78,9 @@ export default function ConsumptionPerDeviceChart({
               <div className="space-x-2">
                 <span className="font-bold">{device.consumption}L</span>
                 <span>/</span>
-                <span>{device.uses} usos</span>
+                <span>
+                  {device.uses} {common("uses")}
+                </span>
               </div>
             </div>
             <ProgressBar
