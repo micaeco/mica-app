@@ -32,7 +32,7 @@ export default function LanguageSwitcher() {
       <SelectTrigger className="w-[180px] bg-brand-primary text-white">
         <SelectValue placeholder="Select language" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="z-[60]">
         {languages.map((lang) => (
           <SelectItem
             className="flex flex-row"
