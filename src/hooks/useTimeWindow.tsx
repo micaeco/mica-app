@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
-import { TimeWindow, Resolution, Category } from "@/types";
+
+import { TimeWindow, Resolution } from "@/lib/types";
 import { getConsumption } from "@/lib/utils";
-import { useEvents } from "./useEvents";
+import { useEvents } from "@/hooks/useEvents";
 
 const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
   day: 1,
@@ -33,8 +34,7 @@ export function useTimeWindow() {
     }));
 
     setData(newData.reverse());
-    console.log(newData);
-  }, [resolution, events]);
+  }, [resolution, events, count]);
 
   useEffect(() => {
     updateData();

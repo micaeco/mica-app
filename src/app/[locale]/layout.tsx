@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 
 import "./globals.css";
 import Sidebar from "@/components/layout/sidebar";
@@ -15,18 +17,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+  params: { locale },
+}: {
   children: React.ReactNode;
-}>) {
+  params: { locale: string };
+}) {
+  const messages = await getMessages();
+
   return (
-    <html lang="ca">
+    <html lang={locale}>
       <body className={montserrat.className}>
-        <Sidebar />
-        <main className="flex-1 p-4 lg:ml-64 mt-16 lg:mt-0">
-          <EventsProvider>{children}</EventsProvider>
-        </main>
+        <NextIntlClientProvider messages={messages}>
+          <Sidebar />
+          <main className="flex-1 p-4 lg:ml-64 mt-16 lg:mt-0">
+            <EventsProvider>{children}</EventsProvider>
+          </main>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

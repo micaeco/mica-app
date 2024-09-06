@@ -3,8 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { format } from 'date-fns';
 import { ca } from 'date-fns/locale';
 
-import { Event, Category, Device, Resolution, TimeWindow } from '@/types';
-import { months } from '@/constants';
+import { Event, Category, Device, Resolution, TimeWindow } from '@/lib/types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -103,41 +102,13 @@ export function getCategories(events: Event[], timeWindow: TimeWindow) {
   return categories;
 }
 
-export const getDateRangeString = (start: Date, end: Date, resolution: Resolution) => {
-  const dateRange = resolution === "day" ?
-    `${start.getDate().toString()} ${months[Number(start.getMonth().toString())].slice(0, 3)}` : resolution === "week" ?
-      `${start.getDate().toString()}-${end.getDate().toString()}` : `${months[Number(start.getMonth().toString())].slice(0, 3)}`;
-  return dateRange;
+export const getDateRangeString = (start: Date, end: Date, resolution: Resolution, months: Record<string, string>) => {
+  const numbersToMonths = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+
+  return resolution === "day" ?
+    `${start.getDate().toString()} ${months[numbersToMonths[start.getMonth()]].slice(0, 3)}` : resolution === "week" ?
+      `${start.getDate().toString()}-${end.getDate().toString()}` : `${months[numbersToMonths[start.getMonth()]].slice(0, 3)}`;;
 };
-
-export const getDescription = (timeWindow: TimeWindow, resolution: Resolution) => {
-  const getMonthPreposition = (month: string) =>
-    ['abril', 'agost', 'octubre'].includes(month.toLowerCase()) ? "d'" : "de ";
-
-  const formatDate = (date: Date, includeMonth: boolean = true) => {
-    const month = months[date.getMonth()];
-    return includeMonth ? `${date.getDate()} ${getMonthPreposition(month)}${month}` : `${date.getDate()}`;
-  };
-
-  const formatWeek = (start: Date, end: Date) => {
-    const startMonth = months[start.getMonth()];
-    const endMonth = months[end.getMonth()];
-
-    if (startMonth === endMonth) {
-      return `del ${formatDate(start, false)} al ${formatDate(end)}`;
-    } else {
-      return `del ${formatDate(start)} al ${formatDate(end)}`;
-    }
-  };
-
-  return (
-    resolution === "day"
-      ? `del dia ${formatDate(timeWindow.startDate)}.`
-      : resolution === "week"
-        ? `de la setmana ${formatWeek(timeWindow.startDate, timeWindow.endDate)}.`
-        : `del mes ${getMonthPreposition(months[timeWindow.startDate.getMonth()])}${months[timeWindow.startDate.getMonth()]}.`
-  );
-}
 
 export const formatDate = (date: Date) => {
   if (!(date instanceof Date)) {

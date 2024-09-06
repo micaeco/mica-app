@@ -1,21 +1,29 @@
-// src/hooks/useEvents.ts
+import { useState, useCallback } from "react";
+import { useMessages, useTranslations } from "next-intl";
 
-import { useState, useEffect, useCallback } from "react";
-import { Event } from "@/types";
+import { Event } from "@/lib/types";
 import { generateEvents } from "@/lib/mock";
+import { getDevices, getCategories } from "@/lib/constants";
 
 const NUMBER_OF_EVENTS = 1000;
 
 export function useEvents() {
-  // In the future, when we pull the data from an API, we will need to fetch periodically
+  const messages = useMessages();
+  const categories = getCategories(
+    (messages.common as { categories: Record<string, string> }).categories
+  );
+  const devices = getDevices(
+    (messages.common as { devices: Record<string, string> }).devices,
+    categories
+  );
 
   const [events, setEvents] = useState<Event[]>(
-    generateEvents(NUMBER_OF_EVENTS)
+    generateEvents(NUMBER_OF_EVENTS, devices)
   );
 
   const refreshEvents = useCallback(() => {
-    setEvents(generateEvents(NUMBER_OF_EVENTS));
-  }, []);
+    setEvents(generateEvents(NUMBER_OF_EVENTS, devices));
+  }, [devices]);
 
   const modifyEvent = useCallback((id: string, event: Partial<Event>) => {
     setEvents((events) => {

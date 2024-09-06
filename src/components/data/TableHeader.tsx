@@ -1,5 +1,6 @@
 import React from "react";
-import { ChevronUp, ChevronDown, Edit, X } from "lucide-react";
+import { ChevronUp, ChevronDown } from "lucide-react";
+
 import {
   TableHead,
   TableHeader as UITableHeader,
@@ -12,9 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { SortField } from "@/types";
-import { categories } from "@/constants";
+import { SortField } from "@/lib/types";
+import { getCategories } from "@/lib/constants";
+import { useMessages, useTranslations } from "next-intl";
 
 interface Props {
   category: string;
@@ -22,8 +23,6 @@ interface Props {
   sortField: SortField;
   sortDirection: "asc" | "desc";
   handleSort: (field: SortField) => void;
-  isEditing: boolean;
-  setIsEditing: (isEditing: boolean) => void;
 }
 
 export default function TableHeader({
@@ -32,9 +31,13 @@ export default function TableHeader({
   sortField,
   sortDirection,
   handleSort,
-  isEditing,
-  setIsEditing,
 }: Props) {
+  const common = useTranslations("common");
+  const messages = useMessages();
+  const labels = (messages.common as { categories: Record<string, string> })
+    .categories;
+  const categories = getCategories(labels);
+
   const SortableHeader = ({
     field,
     children,
@@ -47,7 +50,7 @@ export default function TableHeader({
       onClick={() => handleSort(field)}
     >
       <div className="flex items-center">
-        {children}
+        <div className="first-letter:uppercase">{children}</div>
         {sortField === field &&
           (sortDirection === "asc" ? (
             <ChevronUp className="ml-1 h-4 w-4" />
@@ -66,41 +69,31 @@ export default function TableHeader({
             defaultValue="all"
             onValueChange={(selectedCategory) => setCategory(selectedCategory)}
           >
-            <SelectTrigger className="w-full capitalize">
-              <SelectValue>{category}</SelectValue>
+            <SelectTrigger className="max-w-40 capitalize">
+              <SelectValue>
+                {categories.find((c) => c.name === category)
+                  ? categories.find((c) => c.name === category)!.label
+                  : common("categories.all")}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent className="capitalize">
+              <SelectItem value="all">{common("categories.all")}</SelectItem>
               {categories.map((category) => (
                 <SelectItem key={category.name} value={category.name}>
-                  {category.name}
+                  {category.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </TableHead>
-        <TableHead className="flex items-center">
-          {isEditing ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsEditing(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsEditing(true)}
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-          )}
-          Dispositiu
+        <TableHead className="first-letter:uppercase">
+          {common("device")}
         </TableHead>
-        <SortableHeader field="date">Dia i hora</SortableHeader>
-        <SortableHeader field="consumption">Consum</SortableHeader>
-        <SortableHeader field="duration">Duració</SortableHeader>
+        <SortableHeader field="date">{common("day-and-time")}</SortableHeader>
+        <SortableHeader field="consumption">
+          {common("consumption")}
+        </SortableHeader>
+        <SortableHeader field="duration">{common("duration")}</SortableHeader>
       </TableRow>
     </UITableHeader>
   );

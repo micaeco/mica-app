@@ -21,12 +21,15 @@ export interface Device {
 }
 
 export interface Category {
-  name: 'all' | 'shower' | 'washer' | 'toilet' | 'garden' | 'pool' | 'sink' | 'dishwasher' | 'bathtub' | 'bidet' | 'other';
+  name: CategoryName;
   color: string;
   icon: string;
+  label: string;
   consumption?: number;
   uses?: number;
 }
+
+export type CategoryName = 'all' | 'shower' | 'washer' | 'toilet' | 'sink' | 'dishwasher' | 'bathtub' | 'other'
 
 export type Resolution = 'day' | 'week' | 'month';
 

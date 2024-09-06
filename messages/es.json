@@ -1,0 +1,81 @@
+{
+  "common": {
+    "months": {
+      "january": "enero",
+      "february": "febrero",
+      "march": "marzo",
+      "april": "abril",
+      "may": "mayo",
+      "june": "junio",
+      "july": "julio",
+      "august": "agosto",
+      "september": "septiembre",
+      "october": "octubre",
+      "november": "noviembre",
+      "december": "diciembre"
+    },
+    "month": "mes",
+    "week": "semana",
+    "day": "día",
+    "hour": "hora",
+    "day-and-time": "día y hora",
+    "duration": "duración",
+    "device": "dispositivo",
+    "consumption": "consumo",
+    "liters": "litros",
+    "person": "persona",
+    "categories": {
+      "all": "Todos",
+      "shower": "Ducha",
+      "washer": "Lavadora",
+      "toilet": "Inodoro",
+      "sink": "Fregadero",
+      "dishwasher": "Lavavajillas",
+      "other": "Otros"
+    },
+    "devices": {
+      "shower-room-1": "Ducha habitación 1",
+      "shower-room-2": "Ducha habitación 2",
+      "toilet-room-1": "Inodoro habitación 1",
+      "toilet-room-2": "Inodoro habitación 2",
+      "bathroom-sink": "Fregadero baño",
+      "kitchen-sink": "Fregadero cocina",
+      "washer": "Lavadora",
+      "dishwasher": "Lavavajillas"
+    },
+    "nav-pages": {
+      "consumption": "Consumo",
+      "data": "Datos",
+      "savings": "Ahorros",
+      "community": "Comunidad",
+      "plant-a-tree": "Planta un árbol"
+    },
+    "nav-settings": {
+      "profile": "Perfil",
+      "settings": "Configuración",
+      "help": "Ayuda",
+      "logout": "Salir"
+    }
+  },
+  "consumption-card": {
+    "title": "Consumo seleccionado."
+  },
+  "consumption-per-person": {
+    "title": "Consumo por persona."
+  },
+  "consumption-historic": {
+    "title": "Consumo histórico."
+  },
+  "consumption-per-time-chart": {
+    "title": "Filtra el consumo por {resolution}.",
+    "description": "Selecciona una de las barras para ver el consumo."
+  },
+  "consumption-per-category-chart": {
+    "title": "Filtra el consumo por categoría.",
+    "description": "Selecciona una de las secciones para ver el consumo."
+  },
+  "consumption-per-device-chart": {
+    "title": "Por dispositivo.",
+    "description": "Visualiza el consumo por dispositivo."
+  }
+}

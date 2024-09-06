@@ -17,8 +17,6 @@ export default function SortableEventTable() {
     setCurrentPage,
     totalPages,
     paginatedEvents,
-    isEditing,
-    setIsEditing,
     modifyEvent,
   } = useSortableTable();
 
@@ -26,7 +24,6 @@ export default function SortableEventTable() {
     <div>
       <EventTable
         events={paginatedEvents}
-        isEditing={isEditing}
         modifyEvent={modifyEvent}
         headerComponent={
           <TableHeader
@@ -35,8 +32,6 @@ export default function SortableEventTable() {
             sortField={sortField}
             sortDirection={sortDirection}
             handleSort={handleSort}
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
           />
         }
       />

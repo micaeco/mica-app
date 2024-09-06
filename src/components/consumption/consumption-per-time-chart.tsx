@@ -1,17 +1,19 @@
 "use client";
 
 import React from "react";
+import { Bar, BarChart, CartesianGrid, Cell, XAxis } from "recharts";
+import { useMessages, useTranslations } from "next-intl";
+
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, Cell, Rectangle, XAxis } from "recharts";
-import { TimeWindow, Resolution } from "@/types";
-import { getDateRangeString } from "@/lib/utils";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "@/components/ui/card";
+import { TimeWindow, Resolution } from "@/lib/types";
+import { getDateRangeString } from "@/lib/utils";
 
 const chartConfig = {
   consumption: {
@@ -70,8 +72,12 @@ export default function ConsumptionPerTimeChart({
   resolution,
   data,
 }: Props) {
+  const t = useTranslations("consumption-per-time-chart");
+  const common = useTranslations("common");
+  const messages = useMessages();
+  const months = (messages.common as { months: Record<string, string> }).months;
+
   const handleClick = (clickedTimeWindow: TimeWindow) => {
-    console.log(clickedTimeWindow);
     setTimeWindow(clickedTimeWindow);
   };
 
@@ -81,7 +87,8 @@ export default function ConsumptionPerTimeChart({
         getDateRangeString(
           entry.timeWindow.startDate,
           entry.timeWindow.endDate,
-          resolution
+          resolution,
+          months
         ) === label
     );
     if (clickedEntry) {
@@ -99,17 +106,9 @@ export default function ConsumptionPerTimeChart({
     <Card>
       <CardHeader>
         <CardTitle>
-          Filtra el consum per{" "}
-          {resolution === "day"
-            ? "dia"
-            : resolution === "week"
-            ? "setmana"
-            : "mes"}
-          .
+          {t("title", { resolution: common(`${resolution}`) })}
         </CardTitle>
-        <CardDescription>
-          Selecciona una de les barres o etiquetes per veure el consum.
-        </CardDescription>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -120,7 +119,8 @@ export default function ConsumptionPerTimeChart({
                 getDateRangeString(
                   entry.timeWindow.startDate,
                   entry.timeWindow.endDate,
-                  resolution
+                  resolution,
+                  months
                 )
               }
               tickLine={false}

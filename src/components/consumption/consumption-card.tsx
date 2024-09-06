@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
 import { LineChart } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-import { getDescription } from "@/lib/utils";
-import { Resolution, TimeWindow } from "@/types";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Resolution, TimeWindow } from "@/lib/types";
 
 type Props = {
   timeWindow: TimeWindow;
@@ -22,7 +16,9 @@ export default function ConsumptionCard({
   timeWindow,
   resolution,
 }: Props) {
-  console.log("Start: ", timeWindow.startDate, " End: ", timeWindow.endDate);
+  const t = useTranslations("consumption-card");
+  const common = useTranslations("common");
+
   const consumption = data.find(
     (d) =>
       d.timeWindow.startDate.getDay() === timeWindow.startDate.getDay() &&
@@ -33,21 +29,19 @@ export default function ConsumptionCard({
         timeWindow.startDate.getFullYear() &&
       d.timeWindow.endDate.getFullYear() === timeWindow.endDate.getFullYear()
   )?.consumption;
-  const description = getDescription(timeWindow, resolution);
 
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-row items-center justify-between">
-          <CardTitle>Consum seleccionat.</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <LineChart className="h-6 w-6 text-gray-300" />
         </div>
-        <CardDescription className="first-letter:capitalize">
-          {description}
-        </CardDescription>
       </CardHeader>
       <CardContent>
-        <CardTitle className="font-bold">{consumption} litres</CardTitle>
+        <CardTitle className="font-bold">
+          {consumption} {common("liters")}
+        </CardTitle>
       </CardContent>
     </Card>
   );

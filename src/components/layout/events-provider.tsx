@@ -1,8 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, ReactNode } from "react";
+
 import { useEvents } from "@/hooks/useEvents";
-import { Event } from "@/types";
+import { Event } from "@/lib/types";
 
 interface EventsContextType {
   events: Event[];

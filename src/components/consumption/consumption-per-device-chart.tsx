@@ -1,5 +1,7 @@
 import React from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+
 import {
   Card,
   CardContent,
@@ -7,8 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Event, Category, Resolution, TimeWindow } from "@/types";
-import { getDescription, getDevices } from "@/lib/utils";
+import { Event, Category, Resolution, TimeWindow } from "@/lib/types";
+import { getDevices } from "@/lib/utils";
 
 const ProgressBar = ({
   consumption,
@@ -46,6 +48,8 @@ export default function ConsumptionPerDeviceChart({
   category,
   events,
 }: Props) {
+  const t = useTranslations("consumption-per-device-chart");
+
   let { devices, maxConsumption } = category
     ? getDevices(events, timeWindow, category)
     : getDevices(events, timeWindow);
@@ -53,10 +57,8 @@ export default function ConsumptionPerDeviceChart({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Per dispositiu.</CardTitle>
-        <CardDescription>
-          Consum per dispositiu {getDescription(timeWindow, resolution)}
-        </CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
 
       <CardContent className="p-6">

@@ -1,82 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import {
-  Menu,
-  X,
-  PieChart,
-  Sheet,
-  Droplet,
-  Trophy,
-  Leaf,
-  User,
-  Settings,
-  CircleHelp,
-} from "lucide-react";
+import { usePathname } from "@/i18n/routing";
+import { Menu, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
-
-const navPages = [
-  {
-    name: "Consum",
-    href: "/",
-    icon: PieChart,
-  },
-  {
-    name: "Dades",
-    href: "/data",
-    icon: Sheet,
-  },
-  {
-    name: "Estalvi",
-    href: "/savings",
-    icon: Droplet,
-  },
-  {
-    name: "Comunitat",
-    href: "/community",
-    icon: Trophy,
-  },
-  {
-    name: "Planta un arbre",
-    href: "/plant-a-tree",
-    icon: Leaf,
-  },
-];
-
-const navSettings = [
-  {
-    name: "Perfil",
-    href: "/profile",
-    icon: User,
-  },
-  {
-    name: "Configuració",
-    href: "/settings",
-    icon: Settings,
-  },
-  {
-    name: "Ajuda",
-    href: "/help",
-    icon: CircleHelp,
-  },
-];
-
-const allNavItems = [...navPages, ...navSettings];
+import { getAllNavItems, getNavPages, getNavSettings } from "@/lib/constants";
+import LanguageSwitcher from "./language-switcher";
 
 export default function Sidebar() {
+  const t = useTranslations("common");
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeName, setActiveName] = useState("");
   const pathname = usePathname();
 
   useEffect(() => {
-    const activeItem = allNavItems.find((item) => item.href === pathname);
+    const activeItem = getAllNavItems(t).find((item) => item.href === pathname);
+    console.log(activeItem);
     setActiveName(activeItem?.name || "");
-  }, [pathname]);
+  }, [pathname, t]);
 
   return (
     <>
@@ -128,7 +75,7 @@ export default function Sidebar() {
           {/* Sidebar content */}
           <nav className="flex flex-col h-full justify-between items-stretch gap-1 p-2">
             <div className="flex flex-col gap-2 py-2">
-              {navPages.map((item) => (
+              {getNavPages(t).map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -144,7 +91,7 @@ export default function Sidebar() {
               ))}
             </div>
             <div className="flex flex-col gap-1 py-6">
-              {navSettings.map((item) => (
+              {getNavSettings(t).map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -158,6 +105,9 @@ export default function Sidebar() {
                   {item.name}
                 </Link>
               ))}
+              <div className="ml-2">
+                <LanguageSwitcher />
+              </div>
             </div>
           </nav>
         </div>

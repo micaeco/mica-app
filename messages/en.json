@@ -1,0 +1,81 @@
+{
+  "common": {
+    "months": {
+      "january": "january",
+      "february": "february",
+      "march": "march",
+      "april": "april",
+      "may": "may",
+      "june": "june",
+      "july": "july",
+      "august": "august",
+      "september": "september",
+      "october": "october",
+      "november": "november",
+      "december": "december"
+    },
+    "month": "month",
+    "week": "week",
+    "day": "day",
+    "hour": "hour",
+    "day-and-time": "day and time",
+    "duration": "duration",
+    "device": "device",
+    "consumption": "consumption",
+    "liters": "liters",
+    "person": "person",
+    "categories": {
+      "all": "All",
+      "shower": "Shower",
+      "washer": "Washer",
+      "toilet": "Toilet",
+      "sink": "Sink",
+      "dishwasher": "Dishwasher",
+      "other": "Other"
+    },
+    "devices": {
+      "shower-room-1": "Shower room 1",
+      "shower-room-2": "Shower room 2",
+      "toilet-room-1": "Toilet room 1",
+      "toilet-room-2": "Toilet room 2",
+      "bathroom-sink": "Bathroom sink",
+      "kitchen-sink": "Kitchen sink",
+      "washer": "Washer",
+      "dishwasher": "Dishwasher"
+    },
+    "nav-pages": {
+      "consumption": "Consumption",
+      "data": "Data",
+      "savings": "Savings",
+      "community": "Community",
+      "plant-a-tree": "Plant a tree"
+    },
+    "nav-settings": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "help": "Help",
+      "logout": "Logout"
+    }
+  },
+  "consumption-card": {
+    "title": "Selected consumption."
+  },
+  "consumption-per-person": {
+    "title": "Consumption per person."
+  },
+  "consumption-historic": {
+    "title": "Historic consumption."
+  },
+  "consumption-per-time-chart": {
+    "title": "Filter consumption by {resolution}.",
+    "description": "Select one of the bars to view consumption."
+  },
+  "consumption-per-category-chart": {
+    "title": "Filter consumption by category.",
+    "description": "Select one of the sections to view consumption."
+  },
+  "consumption-per-device-chart": {
+    "title": "By device.",
+    "description": "Visualize consumption by device."
+  }
+}

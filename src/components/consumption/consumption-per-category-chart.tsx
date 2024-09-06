@@ -1,18 +1,18 @@
 import React, { useCallback, useMemo } from "react";
 import { Cell, Pie, PieChart, Sector } from "recharts";
-import { ChartConfig, ChartContainer } from "../ui/chart";
-import { getCategories } from "@/lib/utils";
-import { Category, TimeWindow } from "@/types";
+import { PieSectorDataItem } from "recharts/types/polar/Pie";
+import { useTranslations } from "next-intl";
+
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardDescription,
-} from "../ui/card";
-import { PieSectorDataItem } from "recharts/types/polar/Pie";
-
-import { Event } from "@/types";
+} from "@/components/ui/card";
+import { getCategories } from "@/lib/utils";
+import { Event, Category, TimeWindow } from "@/lib/types";
 
 type Props = {
   events: Event[];
@@ -21,12 +21,14 @@ type Props = {
   setCategory: (category: Category | undefined) => void;
 };
 
-export default function ConsumptionPerCategoryPieChart({
+export default function ConsumptionPerCategoryChart({
   events,
   timeWindow,
   category,
   setCategory,
 }: Props) {
+  const t = useTranslations("consumption-per-category-chart");
+
   let categories = getCategories(events, timeWindow);
 
   const totalConsumption = useMemo(
@@ -128,10 +130,8 @@ export default function ConsumptionPerCategoryPieChart({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Filtra el consum per categoria.</CardTitle>
-        <CardDescription>
-          Selecciona una de les seccions per veure el consum.
-        </CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full min-h-[300px]">

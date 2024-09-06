@@ -1,5 +1,6 @@
-import { Category, SortDirection, SortField } from "@/types";
 import { useMemo, useState } from "react";
+
+import { SortDirection, SortField } from "@/lib/types";
 import { useEventsContext } from "@/components/layout/events-provider";
 
 const ITEMS_PER_PAGE = 12;
@@ -8,7 +9,6 @@ export const useSortableTable = () => {
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("all");
   const { events, modifyEvent } = useEventsContext();
 
@@ -67,8 +67,6 @@ export const useSortableTable = () => {
     totalPages,
     handleSort,
     paginatedEvents,
-    isEditing,
-    setIsEditing,
     modifyEvent,
   };
 };

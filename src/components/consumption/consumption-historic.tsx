@@ -1,30 +1,18 @@
 import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
 import { Droplet } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-import getHistoricConsumption, {
-  getConsumption,
-  getDescription,
-} from "@/lib/utils";
-import { Event, Resolution, TimeWindow } from "@/types";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import getHistoricConsumption from "@/lib/utils";
+import { Event } from "@/lib/types";
 
 type Props = {
-  timeWindow: TimeWindow;
   events: Event[];
-  resolution: Resolution;
 };
 
-export default function ConsumptionHistoric({
-  timeWindow,
-  events,
-  resolution,
-}: Props) {
+export default function ConsumptionHistoric({ events }: Props) {
+  const t = useTranslations("consumption-historic");
+
   const historicConsumption = getHistoricConsumption(events);
   const historicConsumptionInM3 = historicConsumption / 1000;
 
@@ -32,12 +20,9 @@ export default function ConsumptionHistoric({
     <Card>
       <CardHeader>
         <div className="flex flex-row items-center justify-between">
-          <CardTitle>Consum històric.</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <Droplet className="h-6 w-6 text-gray-300" />
         </div>
-        <CardDescription>
-          Des de que es va instal·lar el sensor.
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <CardTitle className="font-bold">

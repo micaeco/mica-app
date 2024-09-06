@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTimeWindow } from "../hooks/useTimeWindow";
+
 import ConsumptionPerTimeChart from "@/components/consumption/consumption-per-time-chart";
 import ConsumptionPerDeviceChart from "@/components/consumption/consumption-per-device-chart";
-import ConsumptionPerCategoryPieChart from "@/components/consumption/consumption-per-category-pie-chart";
-import { useEventsContext } from "@/components/layout/events-provider";
+import ConsumptionPerCategoryChart from "@/components/consumption/consumption-per-category-chart";
 import ConsumptionCard from "@/components/consumption/consumption-card";
 import ConsumptionHistoric from "@/components/consumption/consumption-historic";
 import TimeResolutionTabs from "@/components/consumption/time-resolution-tabs";
 import ConsumptionPerPerson from "@/components/consumption/consumption-per-person";
-import { Category } from "@/types";
+import { useTimeWindow } from "@/hooks/useTimeWindow";
+import { useEventsContext } from "@/components/layout/events-provider";
+import { Category } from "@/lib/types";
 
 export default function Consumption() {
   const [mounted, setMounted] = useState(false);
@@ -45,11 +46,7 @@ export default function Consumption() {
           />
         </div>
         <div className="w-full hidden 2xl:block">
-          <ConsumptionHistoric
-            events={events}
-            timeWindow={timeWindow}
-            resolution={resolution}
-          />
+          <ConsumptionHistoric events={events} />
         </div>
       </div>
       <TimeResolutionTabs resolution={resolution} setResolution={setResolution}>
@@ -64,7 +61,7 @@ export default function Consumption() {
               />
             </div>
             <div className="2xl:w-1/2">
-              <ConsumptionPerCategoryPieChart
+              <ConsumptionPerCategoryChart
                 timeWindow={timeWindow}
                 category={category}
                 setCategory={setCategory}

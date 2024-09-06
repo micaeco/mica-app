@@ -1,7 +1,6 @@
-import { Event } from '@/types';
-import { devices } from '@/constants';
+import { Device, Event } from '@/lib/types';
 
-export function generateEvents(days: number): Event[] {
+export function generateEvents(days: number, devices: Device[]): Event[] {
   const data: Event[] = [];
 
   for (let i = 0; i < days; i++) {

@@ -1,13 +1,8 @@
-import { Resolution, TimeWindow } from "@/types";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
 import { PersonStanding } from "lucide-react";
-import { getDescription } from "@/lib/utils";
+import { useTranslations } from "next-intl";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Resolution, TimeWindow } from "@/lib/types";
 
 const PEOPLE = 4;
 
@@ -17,11 +12,10 @@ type Props = {
   resolution: Resolution;
 };
 
-export default function ConsumptionPerPerson({
-  data,
-  timeWindow,
-  resolution,
-}: Props) {
+export default function ConsumptionPerPerson({ data, timeWindow }: Props) {
+  const t = useTranslations("consumption-per-person");
+  const common = useTranslations("common");
+
   const consumption = data.find(
     (d) =>
       d.timeWindow.startDate.getDay() === timeWindow.startDate.getDay() &&
@@ -33,22 +27,18 @@ export default function ConsumptionPerPerson({
       d.timeWindow.endDate.getFullYear() === timeWindow.endDate.getFullYear()
   )?.consumption;
   const consumptionPerPerson = consumption / PEOPLE;
-  const description = getDescription(timeWindow, resolution);
 
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-row items-center justify-between">
-          <CardTitle>Consum per persona.</CardTitle>
+          <CardTitle>{t("title")}</CardTitle>
           <PersonStanding className="h-6 w-6 text-gray-300" />
         </div>
-        <CardDescription className="first-letter:capitalize">
-          {description}
-        </CardDescription>
       </CardHeader>
       <CardContent>
         <CardTitle className="font-bold">
-          {consumptionPerPerson} litres / persona
+          {consumptionPerPerson} {common("liters")} / {common("person")}
         </CardTitle>
       </CardContent>
     </Card>
