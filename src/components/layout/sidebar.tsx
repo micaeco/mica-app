@@ -73,7 +73,7 @@ export default function Sidebar() {
           </div>
 
           {/* Sidebar content */}
-          <nav className="flex flex-col h-full justify-between items-stretch gap-1 p-2">
+          <nav className="flex flex-col h-full justify-around items-stretch gap-1 p-2">
             <div className="flex flex-col gap-2 py-2">
               {getNavPages(t).map((item) => (
                 <Link
@@ -105,9 +105,9 @@ export default function Sidebar() {
                   {item.name}
                 </Link>
               ))}
-              <div className="ml-2">
-                <LanguageSwitcher />
-              </div>
+            </div>
+            <div className="ml-2">
+              <LanguageSwitcher />
             </div>
           </nav>
         </div>

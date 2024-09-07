@@ -81,9 +81,9 @@ const config = {
       },
     },
   },
-  // future: {
-  //   hoverOnlyWhenSupported: true
-  // },
+  future: {
+    hoverOnlyWhenSupported: true
+  },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config
 
