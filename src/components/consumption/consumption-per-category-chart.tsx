@@ -92,6 +92,8 @@ export default function ConsumptionPerCategoryChart({
             y={y - 20}
             width={40}
             height={40}
+            onClick={() => handlePieSectionClick(payload)}
+            style={{ cursor: "pointer" }}
           />
           {isActive && (
             <>
