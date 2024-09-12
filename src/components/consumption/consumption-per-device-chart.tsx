@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Event, Category, Resolution, TimeWindow } from "@/lib/types";
+import { Event, Category, TimeWindow } from "@/lib/types";
 import { getDevices } from "@/lib/utils";
 
 const ProgressBar = ({
@@ -38,13 +38,11 @@ const ProgressBar = ({
 type Props = {
   events: Event[];
   timeWindow: TimeWindow;
-  resolution: Resolution;
   category: Category | undefined;
 };
 
 export default function ConsumptionPerDeviceChart({
   timeWindow,
-  resolution,
   category,
   events,
 }: Props) {
@@ -65,7 +63,7 @@ export default function ConsumptionPerDeviceChart({
       <CardContent className="p-6">
         {devices.map((device, index) => (
           <div key={index} className="mb-8">
-            <div className="flex justify-between items-baseline mb-2">
+            <div className="flex justify-between items-center mb-2">
               <div className="flex space-x-2 items-center">
                 <Image
                   src={device.category.icon}

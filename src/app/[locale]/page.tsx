@@ -71,7 +71,6 @@ export default function Consumption() {
           </div>
           <ConsumptionPerDeviceChart
             timeWindow={timeWindow}
-            resolution={resolution}
             category={category}
             events={events}
           />

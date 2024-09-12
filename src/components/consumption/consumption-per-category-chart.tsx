@@ -52,80 +52,76 @@ export default function ConsumptionPerCategoryChart({
     [category, categories]
   );
 
-  const renderCustomizedLabel = useCallback(
-    ({
-      cx,
-      cy,
-      midAngle,
-      innerRadius,
-      outerRadius,
-      payload,
-      index,
-    }: {
-      cx: number;
-      cy: number;
-      midAngle: number;
-      innerRadius: number;
-      outerRadius: number;
-      payload: any;
-      index: number;
-    }) => {
-      const isActive = index === activeIndex;
-      const RADIAN = Math.PI / 180;
-      const radius =
-        innerRadius + (outerRadius - innerRadius) * (isActive ? 2.1 : 1.9);
-      const x = cx + radius * Math.cos(-midAngle * RADIAN);
-      const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-      const percentage = (
-        (payload.consumption / totalConsumption) *
-        100
-      ).toFixed(1);
-
-      const textClasses = "select-none text-center";
-
-      return (
-        <g>
-          <image
-            href={payload.icon}
-            x={x - 20}
-            y={y - 20}
-            width={40}
-            height={40}
-            onClick={() => handlePieSectionClick(payload)}
-            style={{ cursor: "pointer" }}
-          />
-          {isActive && (
-            <>
-              <text
-                className={`${textClasses} font-bold text-xl`}
-                x={cx}
-                y={cy - 10}
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                {percentage}%
-              </text>
-              <text
-                className={`${textClasses} text-xl`}
-                x={cx}
-                y={cy + 20}
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                {payload.consumption} L
-              </text>
-            </>
-          )}
-        </g>
-      );
-    },
-    [activeIndex, totalConsumption]
-  );
-
   const handlePieSectionClick = (clickedCategory: Category) => {
     setCategory(
       category?.name === clickedCategory.name ? undefined : clickedCategory
+    );
+  };
+
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    payload,
+    index,
+  }: {
+    cx: number;
+    cy: number;
+    midAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    payload: any;
+    index: number;
+  }) => {
+    const isActive = index === activeIndex;
+    const RADIAN = Math.PI / 180;
+    const radius =
+      innerRadius + (outerRadius - innerRadius) * (isActive ? 2.1 : 1.9);
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    const percentage = ((payload.consumption / totalConsumption) * 100).toFixed(
+      1
+    );
+
+    const textClasses = "select-none text-center";
+
+    return (
+      <g>
+        <image
+          href={payload.icon}
+          x={x - 20}
+          y={y - 20}
+          width={40}
+          height={40}
+          onClick={() => handlePieSectionClick(payload)}
+          style={{ cursor: "pointer" }}
+        />
+        {isActive && (
+          <>
+            <text
+              className={`${textClasses} font-bold text-xl`}
+              x={cx}
+              y={cy - 10}
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              {percentage}%
+            </text>
+            <text
+              className={`${textClasses} text-xl`}
+              x={cx}
+              y={cy + 20}
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              {payload.consumption} L
+            </text>
+          </>
+        )}
+      </g>
     );
   };
 
