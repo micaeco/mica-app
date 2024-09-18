@@ -17,6 +17,7 @@
     "month": "month",
     "week": "week",
     "day": "day",
+    "personalized": "personalized",
     "hour": "hour",
     "hours": "hours",
     "minute": "minute",
@@ -30,6 +31,7 @@
     "uses": "uses",
     "liters": "liters",
     "person": "person",
+    "average": "average",
     "categories": {
       "all": "All",
       "shower": "Shower",
@@ -73,7 +75,10 @@
     "title": "Historic consumption."
   },
   "consumption-per-time-chart": {
-    "title": "Filter consumption by {resolution}.",
+    "title": {
+      "personalized": "Select a time range.",
+      "other": "Filter the consumption by {resolution}."
+    },
     "description": "Select one of the bars to view consumption."
   },
   "consumption-per-category-chart": {

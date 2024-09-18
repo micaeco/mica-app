@@ -3,7 +3,7 @@ import { Droplet } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import getHistoricConsumption from "@/lib/utils";
+import { getHistoricConsumption } from "@/lib/utils";
 import { Event } from "@/lib/types";
 
 type Props = {

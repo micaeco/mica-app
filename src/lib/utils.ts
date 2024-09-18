@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function getConsumption(events: Event[], timeWindow: TimeWindow, category?: Category, device?: Device) {
+export function getConsumption(events: Event[], timeWindow: TimeWindow, category?: Category, device?: Device): number {
   const startDate = timeWindow.startDate;
   const endDate = timeWindow.endDate;
   let consumption: number = 0;
@@ -34,13 +34,51 @@ export function getConsumption(events: Event[], timeWindow: TimeWindow, category
   return consumption;
 }
 
-export default function getHistoricConsumption(events: Event[]) {
+export function getHistoricConsumption(events: Event[]): number {
   let consumption = 0;
   for (let i = 0; i < events.length; i++) {
     const event = events[i];
     consumption += event.consumption;
   }
   return consumption;
+}
+
+export function getAverageConsumption(events: Event[], resolution: Resolution = "day"): number {
+  let consumptions: Record<string, number> = {};
+  let totalPeriods = 0;
+
+  for (const event of events) {
+    let key: string;
+    const date = event.timestamp;
+
+    switch (resolution) {
+      case "year":
+        key = date.getFullYear().toString();
+        break;
+      case "month":
+        key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+        break;
+      case "week":
+        const startOfYear = new Date(date.getFullYear(), 0, 1);
+        const days = Math.floor((date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000));
+        const weekNumber = Math.ceil((days + startOfYear.getDay() + 1) / 7);
+        key = `${date.getFullYear()}-W${weekNumber.toString().padStart(2, '0')}`;
+        break;
+      case "day":
+      default:
+        key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+        break;
+    }
+
+    if (!consumptions[key]) {
+      consumptions[key] = 0;
+      totalPeriods++;
+    }
+    consumptions[key] += event.consumption;
+  }
+
+  const totalConsumption = Object.values(consumptions).reduce((sum, value) => sum + value, 0);
+  return totalPeriods > 0 ? totalConsumption / totalPeriods : 0;
 }
 
 export function getDevices(events: Event[], timeWindow: TimeWindow, category?: Category) {

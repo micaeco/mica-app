@@ -2,8 +2,6 @@ import {
   PieChart,
   Sheet,
   Droplet,
-  Trophy,
-  Leaf,
   User,
   Settings,
   CircleHelp,
@@ -50,16 +48,6 @@ export function getNavPages(t: (key: string) => string) {
       name: t('nav-pages.savings'),
       href: "/savings",
       icon: Droplet,
-    },
-    {
-      name: t('nav-pages.community'),
-      href: "/community",
-      icon: Trophy,
-    },
-    {
-      name: t('nav-pages.plant-a-tree'),
-      href: "/plant-a-tree",
-      icon: Leaf,
     },
   ];
 }

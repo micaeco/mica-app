@@ -8,6 +8,7 @@ const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
   day: 1,
   week: 7,
   month: 1,
+  personalized: 0,
 };
 
 export function useTimeWindow() {
@@ -70,6 +71,10 @@ function getTimeWindowForResolution(resolution: Resolution): TimeWindow {
       break;
     case "month":
       startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+      startDate = setToStartOfDay(startDate);
+      break;
+    case "personalized":
+      startDate = new Date();
       startDate = setToStartOfDay(startDate);
       break;
   }

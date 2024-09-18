@@ -17,6 +17,7 @@
     "month": "mes",
     "week": "setmana",
     "day": "dia",
+    "personalized": "personalitzat",
     "hour": "hora",
     "hours": "hores",
     "minute": "minut",
@@ -30,6 +31,7 @@
     "uses": "usos",
     "liters": "litres",
     "person": "persona",
+    "average": "mitjana",
     "categories": {
       "all": "Tots",
       "shower": "Dutxa",
@@ -73,7 +75,10 @@
     "title": "Consum històric."
   },
   "consumption-per-time-chart": {
-    "title": "Filtra el consum per {resolution}.",
+    "title": {
+      "personalized": "Selecciona un rang de dates.",
+      "other": "Filtra el consum per {resolution}."
+    },
     "description": "Selecciona una de les barres per veure el consum."
   },
   "consumption-per-category-chart": {
