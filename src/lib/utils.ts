@@ -52,9 +52,6 @@ export function getAverageConsumption(events: Event[], resolution: Resolution = 
     const date = event.timestamp;
 
     switch (resolution) {
-      case "year":
-        key = date.getFullYear().toString();
-        break;
       case "month":
         key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
         break;
