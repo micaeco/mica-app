@@ -21,11 +21,11 @@ export function useTimeWindow() {
   const count = resolution === "month" ? 8 : 6;
 
   const updateData = useCallback(() => {
-    const { startDate, endDate } = getTimeWindowForResolution(
-      timeWindow,
-      resolution
-    );
-    setTimeWindow({ startDate, endDate });
+    let { startDate, endDate } = timeWindow;
+    if (resolution != "personalized") {
+      const { startDate, endDate } = getTimeWindowForResolution(resolution);
+      setTimeWindow({ startDate, endDate });
+    }
 
     const newData = generateTimeWindows(
       count,
@@ -38,7 +38,7 @@ export function useTimeWindow() {
     }));
 
     setData(newData.reverse());
-  }, [resolution, events, count, timeWindow]);
+  }, [resolution, events, count]);
 
   useEffect(() => {
     updateData();
@@ -59,10 +59,7 @@ function getInitialTimeWindow(): TimeWindow {
   return { startDate: setToStartOfDay(start), endDate: end };
 }
 
-function getTimeWindowForResolution(
-  timeWindow: TimeWindow,
-  resolution: Resolution
-): TimeWindow {
+function getTimeWindowForResolution(resolution: Resolution): TimeWindow {
   let startDate: Date;
   let endDate: Date = setToEndOfDay(new Date());
 
@@ -79,9 +76,8 @@ function getTimeWindowForResolution(
       startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
       startDate = setToStartOfDay(startDate);
       break;
-    case "personalized":
-      startDate = timeWindow.startDate;
-      endDate = timeWindow.endDate;
+    default:
+      startDate = setToStartOfDay(new Date());
       break;
   }
 
