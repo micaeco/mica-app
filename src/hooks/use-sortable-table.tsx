@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { SortDirection, SortField } from "@/lib/types";
-import { useEventsContext } from "@/components/layout/events-provider";
+import { useEventsContext } from "@/components/events-provider";
 
 const ITEMS_PER_PAGE = 12;
 

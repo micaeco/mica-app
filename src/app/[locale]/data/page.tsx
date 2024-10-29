@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { useSortableTable } from "@/hooks/useSortableTable";
-import EventTable from "@/components/data/EventTable";
-import TablePagination from "@/components/data/TablePagination";
-import TableHeader from "@/components/data/TableHeader";
+
+import EventTable from "./components/event-table";
+import TablePagination from "./components/table-pagination";
+import TableHeader from "./components/table-header";
+import { useSortableTable } from "@/hooks/use-sortable-table";
 
 export default function SortableEventTable() {
   const {

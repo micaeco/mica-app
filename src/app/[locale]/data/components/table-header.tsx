@@ -69,7 +69,7 @@ export default function TableHeader({
             defaultValue="all"
             onValueChange={(selectedCategory) => setCategory(selectedCategory)}
           >
-            <SelectTrigger className="max-w-40 capitalize">
+            <SelectTrigger className="capitalize">
               <SelectValue>
                 {categories.find((c) => c.name === category)
                   ? categories.find((c) => c.name === category)!.label

@@ -32,6 +32,14 @@
     "liters": "litros",
     "person": "persona",
     "average": "media",
+    "logout": "Cerrar sesión",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "open": "Abrir",
     "categories": {
       "all": "Todos",
       "shower": "Ducha",
@@ -63,7 +71,9 @@
       "settings": "Configuración",
       "help": "Ayuda",
       "logout": "Salir"
-    }
+    },
+    "navigation": "Navegación",
+    "settings": "Configuración"
   },
   "consumption-card": {
     "title": "Consumo seleccionado."

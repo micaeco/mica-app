@@ -32,6 +32,14 @@
     "liters": "litres",
     "person": "persona",
     "average": "mitjana",
+    "logout": "Tancar sessió",
+    "cancel": "Cancel·lar",
+    "submit": "Enviar",
+    "save": "Desar",
+    "close": "Tancar",
+    "back": "Enrere",
+    "next": "Següent",
+    "open": "Obrir",
     "categories": {
       "all": "Tots",
       "shower": "Dutxa",
@@ -63,7 +71,9 @@
       "settings": "Configuració",
       "help": "Ajuda",
       "logout": "Sortir"
-    }
+    },
+    "navigation": "Navegació",
+    "settings": "Configuració"
   },
   "consumption-card": {
     "title": "Consum seleccionat."

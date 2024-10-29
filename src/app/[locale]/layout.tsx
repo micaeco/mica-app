@@ -1,11 +1,15 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Montserrat } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
+import { routing } from "@/i18n/routing";
 
 import "./globals.css";
-import Sidebar from "@/components/layout/sidebar";
-import EventsProvider from "@/components/layout/events-provider";
+import Sidebar from "@/components/sidebar";
+import Header from "@/components/header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import EventsProvider from "@/components/events-provider";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -17,13 +21,6 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-};
-
 export default async function RootLayout({
   children,
   params: { locale },
@@ -31,16 +28,25 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  const messages = await getMessages();
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
+
+  const messages = await getMessages({ locale });
 
   return (
     <html lang={locale}>
       <body className={montserrat.className}>
         <NextIntlClientProvider messages={messages}>
-          <Sidebar />
-          <main className="flex-1 p-4 lg:ml-64 mt-16 lg:mt-0">
-            <EventsProvider>{children}</EventsProvider>
-          </main>
+          <SidebarProvider>
+            <Sidebar />
+            <SidebarInset>
+              <Header />
+              <EventsProvider>
+                <div className="p-4">{children}</div>
+              </EventsProvider>
+            </SidebarInset>
+          </SidebarProvider>
         </NextIntlClientProvider>
       </body>
     </html>

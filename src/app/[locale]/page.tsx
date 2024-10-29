@@ -1,83 +1,57 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import ConsumptionPerTimeChart from "@/components/consumption/consumption-per-time-chart";
-import ConsumptionPerDeviceChart from "@/components/consumption/consumption-per-device-chart";
-import ConsumptionPerCategoryChart from "@/components/consumption/consumption-per-category-chart";
-import TimeResolutionDropdown from "@/components/consumption/time-resolution-dropdown";
-import DateRangeCalendar from "@/components/consumption/date-range-calendar";
-import { useTimeWindow } from "@/hooks/useTimeWindow";
-import { useEventsContext } from "@/components/layout/events-provider";
+import { useEventsContext } from "@/components/events-provider";
+import ConsumptionPerTimeChart from "./components/consumption-per-time-chart";
+import ConsumptionPerDeviceChart from "./components/consumption-per-device-chart";
+import ConsumptionPerCategoryChart from "./components/consumption-per-category-chart";
+import TimeResolutionSelect from "./components/time-resolution-select";
+import DateRangeDialog from "./components/date-range-dialog";
+import { useTimeWindow } from "@/hooks/use-time-window";
 import { Category } from "@/lib/types";
-import { Button } from "@/components/ui/button";
 
 export default function Consumption() {
-  const [mounted, setMounted] = useState(false);
   const { timeWindow, setTimeWindow, resolution, setResolution, data } =
     useTimeWindow();
   const [category, setCategory] = useState<Category | undefined>(undefined);
   const { events } = useEventsContext();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
   return (
-    <div className="flex flex-col gap-4 lg:p-8">
-      <div className="flex gap-4 justify-between md:justify-normal items-center">
-        {resolution === "personalized" ? (
-          <Dialog>
-            <DialogTrigger>
-              <Button variant="outline">
-                {new Date(timeWindow.startDate)?.toLocaleDateString()} -
-                {new Date(timeWindow.endDate)?.toLocaleDateString()}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="justify-center max-w-96">
-              <DateRangeCalendar
-                timeWindow={timeWindow}
-                setTimeWindow={setTimeWindow}
-              />
-            </DialogContent>
-          </Dialog>
-        ) : (
-          <p className="px-4 font-semibold">
-            {new Date(timeWindow.startDate)?.toLocaleDateString()} -
-            {new Date(timeWindow.endDate)?.toLocaleDateString()}
-          </p>
-        )}
-
-        <TimeResolutionDropdown
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex gap-4 justify-between md:justify-normal items-center w-full">
+        <DateRangeDialog
           timeWindow={timeWindow}
           setTimeWindow={setTimeWindow}
+          setResolution={setResolution}
+        />
+        <TimeResolutionSelect
           resolution={resolution}
           setResolution={setResolution}
         />
       </div>
       {resolution === "personalized" ? (
-        <div className="flex 2xl:flex-row flex-col gap-4">
-          <ConsumptionPerCategoryChart
-            timeWindow={timeWindow}
-            category={category}
-            setCategory={setCategory}
-            events={events}
-          />
-          <ConsumptionPerDeviceChart
-            timeWindow={timeWindow}
-            category={category}
-            events={events}
-          />
+        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 w-full">
+          <div className="w-full">
+            <ConsumptionPerCategoryChart
+              timeWindow={timeWindow}
+              category={category}
+              setCategory={setCategory}
+              events={events}
+            />
+          </div>
+          <div className="w-full">
+            <ConsumptionPerDeviceChart
+              timeWindow={timeWindow}
+              category={category}
+              events={events}
+            />
+          </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col 2xl:flex-row gap-4 w-full">
-            <div className="2xl:w-1/2">
+        <div className="flex flex-col gap-4 w-full">
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 w-full">
+            <div className="w-full">
               <ConsumptionPerTimeChart
                 timeWindow={timeWindow}
                 setTimeWindow={setTimeWindow}
@@ -85,7 +59,7 @@ export default function Consumption() {
                 data={data}
               />
             </div>
-            <div className="2xl:w-1/2">
+            <div className="w-full">
               <ConsumptionPerCategoryChart
                 timeWindow={timeWindow}
                 category={category}
@@ -94,11 +68,13 @@ export default function Consumption() {
               />
             </div>
           </div>
-          <ConsumptionPerDeviceChart
-            timeWindow={timeWindow}
-            category={category}
-            events={events}
-          />
+          <div className="w-full">
+            <ConsumptionPerDeviceChart
+              timeWindow={timeWindow}
+              category={category}
+              events={events}
+            />
+          </div>
         </div>
       )}
     </div>

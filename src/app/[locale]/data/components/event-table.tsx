@@ -22,7 +22,7 @@ export default function EventTable({ events, headerComponent }: Props) {
       <TableBody>
         {events.map((event, index) => (
           <TableRow key={index}>
-            <TableCell className="capitalize flex">
+            <TableCell className="capitalize flex items-center">
               <Image
                 src={event.category.icon}
                 alt={event.category.name}
@@ -36,7 +36,8 @@ export default function EventTable({ events, headerComponent }: Props) {
             <TableCell>{formatDate(event.timestamp, locale)}</TableCell>
             <TableCell>{event.consumption} L</TableCell>
             <TableCell>
-              {Math.floor(event.duration / 60)}:{event.duration % 60}{" "}
+              {String(Math.floor(event.duration / 60)).padStart(2, "0")}:
+              {String(event.duration % 60).padStart(2, "0")}{" "}
               {common("minutes").slice(0, 3)}
             </TableCell>
           </TableRow>

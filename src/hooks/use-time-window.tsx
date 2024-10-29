@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 
 import { TimeWindow, Resolution } from "@/lib/types";
 import { getConsumption } from "@/lib/utils";
-import { useEvents } from "@/hooks/useEvents";
+import { useEvents } from "@/hooks/use-events";
 
 const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
   day: 1,
@@ -21,7 +21,10 @@ export function useTimeWindow() {
   const count = resolution === "month" ? 8 : 6;
 
   const updateData = useCallback(() => {
-    const { startDate, endDate } = getTimeWindowForResolution(resolution);
+    const { startDate, endDate } = getTimeWindowForResolution(
+      timeWindow,
+      resolution
+    );
     setTimeWindow({ startDate, endDate });
 
     const newData = generateTimeWindows(
@@ -35,7 +38,7 @@ export function useTimeWindow() {
     }));
 
     setData(newData.reverse());
-  }, [resolution, events, count]);
+  }, [resolution, events, count, timeWindow]);
 
   useEffect(() => {
     updateData();
@@ -56,9 +59,12 @@ function getInitialTimeWindow(): TimeWindow {
   return { startDate: setToStartOfDay(start), endDate: end };
 }
 
-function getTimeWindowForResolution(resolution: Resolution): TimeWindow {
-  const endDate = setToEndOfDay(new Date());
+function getTimeWindowForResolution(
+  timeWindow: TimeWindow,
+  resolution: Resolution
+): TimeWindow {
   let startDate: Date;
+  let endDate: Date = setToEndOfDay(new Date());
 
   switch (resolution) {
     case "day":
@@ -74,8 +80,8 @@ function getTimeWindowForResolution(resolution: Resolution): TimeWindow {
       startDate = setToStartOfDay(startDate);
       break;
     case "personalized":
-      startDate = new Date();
-      startDate = setToStartOfDay(startDate);
+      startDate = timeWindow.startDate;
+      endDate = timeWindow.endDate;
       break;
   }
 

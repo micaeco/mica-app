@@ -5,6 +5,7 @@ import {
   User,
   Settings,
   CircleHelp,
+  BookOpen,
 } from "lucide-react";
 
 import { Category, Device } from '@/lib/types';
@@ -42,7 +43,7 @@ export function getNavPages(t: (key: string) => string) {
     {
       name: t('nav-pages.data'),
       href: "/data",
-      icon: Sheet,
+      icon: BookOpen,
     },
     {
       name: t('nav-pages.savings'),

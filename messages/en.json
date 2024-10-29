@@ -32,6 +32,14 @@
     "liters": "liters",
     "person": "person",
     "average": "average",
+    "logout": "Log out",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "save": "Save",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "open": "Open",
     "categories": {
       "all": "All",
       "shower": "Shower",
@@ -63,7 +71,9 @@
       "settings": "Settings",
       "help": "Help",
       "logout": "Logout"
-    }
+    },
+    "navigation": "Navigation",
+    "settings": "Settings"
   },
   "consumption-card": {
     "title": "Selected consumption."

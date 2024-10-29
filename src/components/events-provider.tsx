@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, ReactNode } from "react";
 
-import { useEvents } from "@/hooks/useEvents";
+import { useEvents } from "@/hooks/use-events";
 import { Event } from "@/lib/types";
 
 interface EventsContextType {

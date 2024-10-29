@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/card";
 import { TimeWindow, Resolution } from "@/lib/types";
 import { getAverageConsumption, getDateRangeString } from "@/lib/utils";
-import { useEvents } from "@/hooks/useEvents";
+import { useEvents } from "@/hooks/use-events";
 
 const chartConfig = {
   consumption: {

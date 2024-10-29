@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/routing";
+import { Globe } from "lucide-react";
 
 import {
   Select,
@@ -12,10 +15,10 @@ import {
 
 type Locale = "en" | "es" | "ca";
 
-const languages: { code: Locale; name: string; flag: string }[] = [
-  { code: "en", name: "English", flag: "US" },
-  { code: "es", name: "Español", flag: "ES" },
-  { code: "ca", name: "Català", flag: "CAT" },
+const languages: { code: Locale; name: string }[] = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Español" },
+  { code: "ca", name: "Català" },
 ];
 
 export default function LanguageSwitcher() {
@@ -24,22 +27,21 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
 
   const handleLanguageChange = (newLocale: Locale) => {
-    router.push(pathname, { locale: newLocale });
+    router.replace(pathname, { locale: newLocale });
   };
 
   return (
-    <Select onValueChange={handleLanguageChange} defaultValue={locale}>
-      <SelectTrigger className="w-[180px] bg-brand-primary text-white">
-        <SelectValue placeholder="Select language" />
+    <Select onValueChange={handleLanguageChange} value={locale}>
+      <SelectTrigger>
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {languages.map((lang) => (
-          <SelectItem
-            className="flex flex-row"
-            key={lang.code}
-            value={lang.code}
-          >
-            {lang.name}
+          <SelectItem key={lang.code} value={lang.code}>
+            <div className="flex flex-row gap-2 items-center">
+              <Globe className="h-4 w-4" />
+              {lang.name}
+            </div>
           </SelectItem>
         ))}
       </SelectContent>
