@@ -84,7 +84,7 @@ export default function DateRangeDialog({
             onSelect={handleSelect}
             locale={locale}
           />
-          <DialogFooter className="w-full flex justify-end space-x-2">
+          <DialogFooter className="gap-2 flex-col">
             <DialogClose asChild>
               <Button variant="outline">{common("cancel")}</Button>
             </DialogClose>

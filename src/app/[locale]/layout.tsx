@@ -40,12 +40,10 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <SidebarProvider>
             <Sidebar />
-            <SidebarInset>
+            <main className="overflow-x-hidden w-full">
               <Header />
-              <EventsProvider>
-                <div className="p-4">{children}</div>
-              </EventsProvider>
-            </SidebarInset>
+              <EventsProvider>{children}</EventsProvider>
+            </main>
           </SidebarProvider>
         </NextIntlClientProvider>
       </body>

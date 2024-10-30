@@ -18,7 +18,7 @@ export default function Consumption() {
   const { events } = useEventsContext();
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full p-4">
       <div className="flex gap-4 justify-between md:justify-normal items-center w-full">
         <DateRangeDialog
           timeWindow={timeWindow}

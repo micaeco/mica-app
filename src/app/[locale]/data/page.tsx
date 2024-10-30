@@ -4,7 +4,6 @@ import React from "react";
 
 import EventTable from "./components/event-table";
 import TablePagination from "./components/table-pagination";
-import TableHeader from "./components/table-header";
 import { useSortableTable } from "@/hooks/use-sortable-table";
 
 export default function SortableEventTable() {
@@ -18,23 +17,17 @@ export default function SortableEventTable() {
     setCurrentPage,
     totalPages,
     paginatedEvents,
-    modifyEvent,
   } = useSortableTable();
 
   return (
-    <div>
+    <div className="p-4">
       <EventTable
         events={paginatedEvents}
-        modifyEvent={modifyEvent}
-        headerComponent={
-          <TableHeader
-            category={category}
-            setCategory={setCategory}
-            sortField={sortField}
-            sortDirection={sortDirection}
-            handleSort={handleSort}
-          />
-        }
+        category={category}
+        setCategory={setCategory}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        handleSort={handleSort}
       />
       <TablePagination
         currentPage={currentPage}

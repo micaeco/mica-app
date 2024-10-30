@@ -23,56 +23,66 @@ export default function TablePagination({
 }: Props) {
   const renderPaginationItems = () => {
     const items = [];
-    const showEllipsisStart = currentPage > 3;
-    const showEllipsisEnd = currentPage < totalPages - 2;
 
-    if (showEllipsisStart) {
-      items.push(
-        <PaginationItem key="start" className="cursor-pointer select-none">
-          <PaginationLink onClick={() => setCurrentPage(1)}>1</PaginationLink>
-        </PaginationItem>
-      );
-      items.push(
-        <PaginationItem
-          key="ellipsis-start"
-          className="cursor-pointer select-none"
+    // For 3 pages or less, show all pages
+    if (totalPages <= 3) {
+      for (let i = 1; i <= totalPages; i++) {
+        items.push(
+          <PaginationItem key={i} className="cursor-pointer select-none">
+            <PaginationLink
+              onClick={() => setCurrentPage(i)}
+              isActive={currentPage === i}
+            >
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+      return items;
+    }
+
+    // If current page is near the end (last 3 pages)
+    if (currentPage >= totalPages - 2) {
+      for (let i = totalPages - 2; i <= totalPages; i++) {
+        items.push(
+          <PaginationItem key={i} className="cursor-pointer select-none">
+            <PaginationLink
+              onClick={() => setCurrentPage(i)}
+              isActive={currentPage === i}
+            >
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+      return items;
+    }
+
+    // For all other cases, show current page + ellipsis + last page
+    items.push(
+      <PaginationItem key={currentPage} className="cursor-pointer select-none">
+        <PaginationLink
+          onClick={() => setCurrentPage(currentPage)}
+          isActive={true}
         >
-          <PaginationEllipsis />
-        </PaginationItem>
-      );
-    }
+          {currentPage}
+        </PaginationLink>
+      </PaginationItem>
+    );
 
-    for (
-      let i = Math.max(1, currentPage - 1);
-      i <= Math.min(totalPages, currentPage + 1);
-      i++
-    ) {
-      items.push(
-        <PaginationItem key={i} className="cursor-pointer select-none">
-          <PaginationLink
-            onClick={() => setCurrentPage(i)}
-            isActive={currentPage === i}
-          >
-            {i}
-          </PaginationLink>
-        </PaginationItem>
-      );
-    }
+    items.push(
+      <PaginationItem key="ellipsis" className="cursor-pointer select-none">
+        <PaginationEllipsis />
+      </PaginationItem>
+    );
 
-    if (showEllipsisEnd) {
-      items.push(
-        <PaginationItem key="ellipsis-end">
-          <PaginationEllipsis />
-        </PaginationItem>
-      );
-      items.push(
-        <PaginationItem key="end" className="cursor-pointer select-none">
-          <PaginationLink onClick={() => setCurrentPage(totalPages)}>
-            {totalPages}
-          </PaginationLink>
-        </PaginationItem>
-      );
-    }
+    items.push(
+      <PaginationItem key={totalPages} className="cursor-pointer select-none">
+        <PaginationLink onClick={() => setCurrentPage(totalPages)}>
+          {totalPages}
+        </PaginationLink>
+      </PaginationItem>
+    );
 
     return items;
   };
