@@ -11,10 +11,16 @@ import {
   DialogContent,
   DialogTrigger,
   DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger,
+  DrawerFooter,
+} from "@/components/ui/drawer";
 import { Calendar } from "@/components/ui/calendar";
 import { Resolution, TimeWindow } from "@/lib/types";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 const localeMap: { [key: string]: any } = {
   en: enUS,
@@ -28,15 +34,21 @@ type Props = {
   setResolution: (resolution: Resolution) => void;
 };
 
-export default function DateRangeDialog({
+export default function DateRangePicker({
   timeWindow,
   setTimeWindow,
   setResolution,
 }: Props) {
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   const localeString = useLocale();
   const locale = localeMap[localeString] || enUS;
-
   const common = useTranslations("common");
+
+  const [open, setOpen] = useState(false);
+  const [tempRange, setTempRange] = useState<DateRange | undefined>({
+    from: timeWindow.startDate,
+    to: timeWindow.endDate,
+  });
 
   useEffect(() => {
     if (timeWindow.startDate && timeWindow.endDate) {
@@ -46,11 +58,6 @@ export default function DateRangeDialog({
       });
     }
   }, [timeWindow]);
-
-  const [tempRange, setTempRange] = useState<DateRange | undefined>({
-    from: timeWindow.startDate,
-    to: timeWindow.endDate,
-  });
 
   const handleSelect = (range: DateRange | undefined) => {
     setTempRange(range);
@@ -63,37 +70,69 @@ export default function DateRangeDialog({
         endDate: tempRange.to,
       });
       setResolution("personalized");
+      setOpen(false);
     }
   };
 
+  if (isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline">
+            {new Date(timeWindow.startDate)?.toLocaleDateString()} -
+            {new Date(timeWindow.endDate)?.toLocaleDateString()}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-96">
+          <div className="flex flex-col items-center space-y-4">
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={timeWindow?.startDate}
+              selected={tempRange}
+              onSelect={handleSelect}
+              locale={locale}
+            />
+          </div>
+          <DialogFooter className="gap-2 flex-row justify-around">
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              {common("cancel")}
+            </Button>
+            <Button onClick={handleSubmit}>{common("save")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
         <Button variant="outline">
           {new Date(timeWindow.startDate)?.toLocaleDateString()} -
           {new Date(timeWindow.endDate)?.toLocaleDateString()}
         </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-96">
-        <div className="flex flex-col items-center space-y-4">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={timeWindow?.startDate}
-            selected={tempRange}
-            onSelect={handleSelect}
-            locale={locale}
-          />
-          <DialogFooter className="gap-2 flex-col">
-            <DialogClose asChild>
-              <Button variant="outline">{common("cancel")}</Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button onClick={handleSubmit}>{common("save")}</Button>
-            </DialogClose>
-          </DialogFooter>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className="px-4 pb-4">
+          <div className="flex flex-col items-center space-y-4">
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={timeWindow?.startDate}
+              selected={tempRange}
+              onSelect={handleSelect}
+              locale={locale}
+            />
+          </div>
+          <DrawerFooter className="gap-20 flex-row justify-center pt-4">
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              {common("cancel")}
+            </Button>
+            <Button onClick={handleSubmit}>{common("save")}</Button>
+          </DrawerFooter>
         </div>
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   );
 }

@@ -8,7 +8,7 @@ import { routing } from "@/i18n/routing";
 import "./globals.css";
 import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import EventsProvider from "@/components/events-provider";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
@@ -40,7 +40,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <SidebarProvider>
             <Sidebar />
-            <main className="overflow-x-hidden w-full">
+            <main className="overflow-hidden w-full">
               <Header />
               <EventsProvider>{children}</EventsProvider>
             </main>
