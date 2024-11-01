@@ -23,6 +23,7 @@ export default function Consumption() {
         <DateRangeDialog
           timeWindow={timeWindow}
           setTimeWindow={setTimeWindow}
+          resolution={resolution}
           setResolution={setResolution}
         />
         <TimeResolutionSelect

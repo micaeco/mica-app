@@ -21,11 +21,8 @@ export function useTimeWindow() {
   const count = resolution === "month" ? 8 : 6;
 
   const updateData = useCallback(() => {
-    let { startDate, endDate } = timeWindow;
-    if (resolution != "personalized") {
-      const { startDate, endDate } = getTimeWindowForResolution(resolution);
-      setTimeWindow({ startDate, endDate });
-    }
+    let { startDate, endDate } = getTimeWindowForResolution(resolution);
+    setTimeWindow({ startDate, endDate });
 
     const newData = generateTimeWindows(
       count,
@@ -73,6 +70,7 @@ function getTimeWindowForResolution(resolution: Resolution): TimeWindow {
       startDate = setToStartOfDay(startDate);
       break;
     case "month":
+    case "personalized":
       startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
       startDate = setToStartOfDay(startDate);
       break;

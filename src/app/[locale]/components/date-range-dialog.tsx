@@ -31,12 +31,14 @@ const localeMap: { [key: string]: any } = {
 type Props = {
   timeWindow: TimeWindow;
   setTimeWindow: (timeWindow: TimeWindow) => void;
+  resolution: Resolution;
   setResolution: (resolution: Resolution) => void;
 };
 
 export default function DateRangePicker({
   timeWindow,
   setTimeWindow,
+  resolution,
   setResolution,
 }: Props) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -58,6 +60,12 @@ export default function DateRangePicker({
       });
     }
   }, [timeWindow]);
+
+  useEffect(() => {
+    if (resolution == "personalized") {
+      setOpen(true);
+    }
+  }, [resolution]);
 
   const handleSelect = (range: DateRange | undefined) => {
     setTempRange(range);
