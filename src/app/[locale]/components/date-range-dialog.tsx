@@ -33,6 +33,8 @@ type Props = {
   setTimeWindow: (timeWindow: TimeWindow) => void;
   resolution: Resolution;
   setResolution: (resolution: Resolution) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 };
 
 export default function DateRangePicker({
@@ -40,13 +42,14 @@ export default function DateRangePicker({
   setTimeWindow,
   resolution,
   setResolution,
+  open,
+  setOpen,
 }: Props) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const localeString = useLocale();
   const locale = localeMap[localeString] || enUS;
   const common = useTranslations("common");
 
-  const [open, setOpen] = useState(false);
   const [tempRange, setTempRange] = useState<DateRange | undefined>({
     from: timeWindow.startDate,
     to: timeWindow.endDate,
@@ -60,12 +63,6 @@ export default function DateRangePicker({
       });
     }
   }, [timeWindow]);
-
-  useEffect(() => {
-    if (resolution == "personalized") {
-      setOpen(true);
-    }
-  }, [resolution]);
 
   const handleSelect = (range: DateRange | undefined) => {
     setTempRange(range);

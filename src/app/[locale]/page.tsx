@@ -14,6 +14,7 @@ export default function Consumption() {
   const { timeWindow, setTimeWindow, resolution, setResolution, data } =
     useTimeWindow();
   const [category, setCategory] = useState<Category | undefined>(undefined);
+  const [open, setOpen] = useState(false);
   const { events } = useEventsContext();
 
   return (
@@ -25,10 +26,13 @@ export default function Consumption() {
           setTimeWindow={setTimeWindow}
           resolution={resolution}
           setResolution={setResolution}
+          open={open}
+          setOpen={setOpen}
         />
         <TimeResolutionSelect
           resolution={resolution}
           setResolution={setResolution}
+          setOpen={setOpen}
         />
       </div>
 
@@ -36,15 +40,21 @@ export default function Consumption() {
       <div className="flex flex-col gap-4">
         {/* First row wrapper - for Time and Category charts */}
         <div className="flex flex-col 2xl:flex-row gap-4">
-          <div className="w-full">
-            <ConsumptionPerTimeChart
-              timeWindow={timeWindow}
-              setTimeWindow={setTimeWindow}
-              resolution={resolution}
-              data={data}
-            />
-          </div>
-          <div className="w-full">
+          {resolution !== "personalized" && (
+            <div className="w-full">
+              <ConsumptionPerTimeChart
+                timeWindow={timeWindow}
+                setTimeWindow={setTimeWindow}
+                resolution={resolution}
+                data={data}
+              />
+            </div>
+          )}
+          <div
+            className={`w-full ${
+              resolution === "personalized" ? "2xl:w-1/2" : ""
+            }`}
+          >
             <ConsumptionPerCategoryChart
               timeWindow={timeWindow}
               category={category}
@@ -55,7 +65,11 @@ export default function Consumption() {
         </div>
 
         {/* Second row - Device chart */}
-        <div className="w-full">
+        <div
+          className={`w-full ${
+            resolution === "personalized" ? "2xl:w-1/2" : ""
+          }`}
+        >
           <ConsumptionPerDeviceChart
             timeWindow={timeWindow}
             category={category}
