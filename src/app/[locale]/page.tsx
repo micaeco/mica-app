@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import { useEventsContext } from "@/components/events-provider";
 import ConsumptionPerTimeChart from "./components/consumption-per-time-chart";
 import ConsumptionPerDeviceChart from "./components/consumption-per-device-chart";
@@ -19,7 +18,8 @@ export default function Consumption() {
 
   return (
     <div className="flex flex-col gap-4 w-full p-4">
-      <div className="flex gap-4 justify-between md:justify-normal items-center w-full">
+      {/* Controls section */}
+      <div className="flex gap-4 justify-between md:justify-normal items-center">
         <DateRangeDialog
           timeWindow={timeWindow}
           setTimeWindow={setTimeWindow}
@@ -31,53 +31,36 @@ export default function Consumption() {
           setResolution={setResolution}
         />
       </div>
-      {resolution === "personalized" ? (
-        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 w-full">
-          <div className="w-full overflow-hidden">
-            <ConsumptionPerCategoryChart
-              timeWindow={timeWindow}
-              category={category}
-              setCategory={setCategory}
-              events={events}
-            />
-          </div>
-          <div className="w-full">
-            <ConsumptionPerDeviceChart
-              timeWindow={timeWindow}
-              category={category}
-              events={events}
-            />
-          </div>
+
+      {/* Charts section */}
+      <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+        {/* First row in desktop (Time + Category charts) */}
+        <div className="w-full">
+          <ConsumptionPerTimeChart
+            timeWindow={timeWindow}
+            setTimeWindow={setTimeWindow}
+            resolution={resolution}
+            data={data}
+          />
         </div>
-      ) : (
-        <div className="flex flex-col gap-4 w-full">
-          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 w-full">
-            <div className="w-full">
-              <ConsumptionPerTimeChart
-                timeWindow={timeWindow}
-                setTimeWindow={setTimeWindow}
-                resolution={resolution}
-                data={data}
-              />
-            </div>
-            <div className="w-full overflow-hidden">
-              <ConsumptionPerCategoryChart
-                timeWindow={timeWindow}
-                category={category}
-                setCategory={setCategory}
-                events={events}
-              />
-            </div>
-          </div>
-          <div className="w-full">
-            <ConsumptionPerDeviceChart
-              timeWindow={timeWindow}
-              category={category}
-              events={events}
-            />
-          </div>
+        <div className="w-full">
+          <ConsumptionPerCategoryChart
+            timeWindow={timeWindow}
+            category={category}
+            setCategory={setCategory}
+            events={events}
+          />
         </div>
-      )}
+
+        {/* Second row in desktop (Device chart) */}
+        <div className="w-full 2xl:col-span-2">
+          <ConsumptionPerDeviceChart
+            timeWindow={timeWindow}
+            category={category}
+            events={events}
+          />
+        </div>
+      </div>
     </div>
   );
 }
