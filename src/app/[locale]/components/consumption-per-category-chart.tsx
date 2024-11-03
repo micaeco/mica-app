@@ -153,7 +153,7 @@ export default function ConsumptionPerCategoryChart({
               labelLine={false}
               label={renderCustomizedLabel}
               paddingAngle={2}
-              className="flex-grow"
+              className="min-h-[280px]"
             >
               {categories.map((currentCategory, index) => (
                 <Cell
