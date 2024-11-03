@@ -155,7 +155,7 @@ export default function ConsumptionPerTimeChart({
         <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="w-full aspect-video">
           <BarChart data={data} barSize={30} margin={{ top: 20, bottom: 20 }}>
             <CartesianGrid vertical={false} />
             <XAxis
