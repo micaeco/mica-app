@@ -33,7 +33,7 @@ export default function Consumption() {
       </div>
       {resolution === "personalized" ? (
         <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 w-full">
-          <div className="w-full">
+          <div className="w-full overflow-hidden">
             <ConsumptionPerCategoryChart
               timeWindow={timeWindow}
               category={category}
@@ -60,7 +60,7 @@ export default function Consumption() {
                 data={data}
               />
             </div>
-            <div className="w-full">
+            <div className="w-full overflow-hidden">
               <ConsumptionPerCategoryChart
                 timeWindow={timeWindow}
                 category={category}
