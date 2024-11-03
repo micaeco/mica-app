@@ -33,27 +33,29 @@ export default function Consumption() {
       </div>
 
       {/* Charts section */}
-      <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
-        {/* First row in desktop (Time + Category charts) */}
-        <div className="w-full">
-          <ConsumptionPerTimeChart
-            timeWindow={timeWindow}
-            setTimeWindow={setTimeWindow}
-            resolution={resolution}
-            data={data}
-          />
-        </div>
-        <div className="w-full">
-          <ConsumptionPerCategoryChart
-            timeWindow={timeWindow}
-            category={category}
-            setCategory={setCategory}
-            events={events}
-          />
+      <div className="flex flex-col gap-4">
+        {/* First row wrapper - for Time and Category charts */}
+        <div className="flex flex-col 2xl:flex-row gap-4">
+          <div className="w-full">
+            <ConsumptionPerTimeChart
+              timeWindow={timeWindow}
+              setTimeWindow={setTimeWindow}
+              resolution={resolution}
+              data={data}
+            />
+          </div>
+          <div className="w-full">
+            <ConsumptionPerCategoryChart
+              timeWindow={timeWindow}
+              category={category}
+              setCategory={setCategory}
+              events={events}
+            />
+          </div>
         </div>
 
-        {/* Second row in desktop (Device chart) */}
-        <div className="w-full 2xl:col-span-2">
+        {/* Second row - Device chart */}
+        <div className="w-full">
           <ConsumptionPerDeviceChart
             timeWindow={timeWindow}
             category={category}
