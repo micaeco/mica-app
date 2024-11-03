@@ -133,7 +133,7 @@ export default function ConsumptionPerCategoryChart({
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full min-h-[280px]">
-          <PieChart className="flex-grow">
+          <PieChart className="min-h-[280px]">
             <Pie
               data={categories}
               dataKey="consumption"
