@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, use } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import { TimeWindow, Resolution } from "@/lib/types";
 import { getConsumption } from "@/lib/utils";
@@ -24,14 +24,12 @@ export function useTimeWindow() {
   const updateData = useCallback(() => {
     let { startDate, endDate } = getTimeWindowForResolution(resolution);
     setTimeWindow({ startDate, endDate });
-  }, [resolution]);
 
-  useEffect(() => {
     if (resolution === "personalized") {
       setData([
         {
-          timeWindow,
-          consumption: getConsumption(events, timeWindow),
+          timeWindow: { startDate, endDate },
+          consumption: getConsumption(events, { startDate, endDate }),
         },
       ]);
       return;
@@ -39,8 +37,8 @@ export function useTimeWindow() {
 
     const newData = generateTimeWindows(
       resolution === "month" ? 8 : 6,
-      timeWindow.startDate,
-      timeWindow.endDate,
+      startDate,
+      endDate,
       resolution
     ).map((window) => ({
       timeWindow: window,
@@ -48,7 +46,15 @@ export function useTimeWindow() {
     }));
 
     setData(newData.reverse());
-  }, [resolution, timeWindow, events]);
+  }, [resolution, events]);
+
+  useEffect(() => {
+    if (resolution !== "personalized") {
+      return;
+    }
+
+    setData([{ timeWindow, consumption: getConsumption(events, timeWindow) }]);
+  }, [timeWindow, resolution, events]);
 
   useEffect(() => {
     updateData();
