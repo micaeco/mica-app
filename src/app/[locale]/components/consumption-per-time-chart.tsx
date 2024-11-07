@@ -7,11 +7,10 @@ import {
   CartesianGrid,
   Cell,
   LabelList,
-  Legend,
   ReferenceLine,
   XAxis,
 } from "recharts";
-import { useMessages, useTranslations } from "next-intl";
+import { useLocale, useMessages, useTranslations } from "next-intl";
 
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import {
@@ -22,7 +21,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TimeWindow, Resolution } from "@/lib/types";
-import { getAverageConsumption, getDateRangeString } from "@/lib/utils";
+import { getAverageConsumption, formatDateRange } from "@/lib/utils";
 import { useEvents } from "@/hooks/use-events";
 
 const chartConfig = {
@@ -110,8 +109,7 @@ export default function ConsumptionPerTimeChart({
 }: Props) {
   const t = useTranslations("consumption-per-time-chart");
   const common = useTranslations("common");
-  const messages = useMessages();
-  const months = (messages.common as { months: Record<string, string> }).months;
+  const locale = useLocale();
   const { events } = useEvents();
   const [averageConsumption, setAverageConsumption] = useState(
     getAverageConsumption(events, resolution)
@@ -124,11 +122,11 @@ export default function ConsumptionPerTimeChart({
   const handleLabelClick = (label: string) => {
     const clickedEntry = data.find(
       (entry) =>
-        getDateRangeString(
+        formatDateRange(
           entry.timeWindow.startDate,
           entry.timeWindow.endDate,
           resolution,
-          months
+          locale
         ) === label
     );
     if (clickedEntry) {
@@ -147,24 +145,34 @@ export default function ConsumptionPerTimeChart({
   }, [events, resolution]);
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>
-          {t("title.other", { resolution: common(`${resolution}`) })}
+          {resolution === "personalized"
+            ? t("title.personalized")
+            : t("title.other", { resolution: common(`${resolution}`) })}
         </CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
+        <CardDescription>
+          {resolution === "personalized"
+            ? t("description.personalized")
+            : t("description.other", { resolution: common(`${resolution}`) })}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-full aspect-video">
-          <BarChart data={data} barSize={30} margin={{ top: 20, bottom: 20 }}>
+        <ChartContainer config={chartConfig} className="aspect-[13/9] w-full">
+          <BarChart
+            data={data}
+            barSize={30}
+            margin={{ top: 25, bottom: 20, left: 10, right: 10 }}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey={(entry) =>
-                getDateRangeString(
+                formatDateRange(
                   entry.timeWindow.startDate,
                   entry.timeWindow.endDate,
                   resolution,
-                  months
+                  locale
                 )
               }
               tickLine={false}
@@ -201,11 +209,13 @@ export default function ConsumptionPerTimeChart({
                 }
               />
             </Bar>
-            <ReferenceLine
-              y={averageConsumption}
-              stroke="hsl(var(--muted-foreground))"
-              strokeDasharray="3 3"
-            />
+            {resolution !== "personalized" && (
+              <ReferenceLine
+                y={averageConsumption}
+                stroke="hsl(var(--muted-foreground))"
+                strokeDasharray="3 3"
+              />
+            )}
           </BarChart>
         </ChartContainer>
       </CardContent>

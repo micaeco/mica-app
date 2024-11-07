@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { format } from 'date-fns';
+import { format, LocalizeFn, Month } from 'date-fns';
 import { ca, enUS, es, Locale } from 'date-fns/locale';
 
 import { Event, Category, Device, Resolution, TimeWindow } from '@/lib/types';
@@ -137,31 +137,61 @@ export function getCategories(events: Event[], timeWindow: TimeWindow) {
   return categories;
 }
 
-export const getDateRangeString = (start: Date, end: Date, resolution: Resolution, months: Record<string, string>) => {
-  const numbersToMonths = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+export function getDateFnsLocale(locale: string): Locale {
+  const customCatalan: Locale = {
+    ...ca,
+    localize: {
+      ...ca.localize,
+      month: ((monthIndex: number, { width = 'abbreviated' } = {}) => {
+        const months = {
+          narrow: ['G', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+          abbreviated: ['gen', 'feb', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'oct', 'nov', 'des'],
+          wide: ['gener', 'febrer', 'març', 'abril', 'maig', 'juny', 'juliol', 'agost', 'setembre', 'octubre', 'novembre', 'desembre']
+        };
 
-  return resolution === "day" ?
-    `${start.getDate().toString()} ${months[numbersToMonths[start.getMonth()]].slice(0, 3)}` : resolution === "week" ?
-      `${start.getDate().toString()}-${end.getDate().toString()}` : `${months[numbersToMonths[start.getMonth()]].slice(0, 3)}`;;
-};
+        return months[width as keyof typeof months][monthIndex];
+      }) as LocalizeFn<Month>
+    }
+  };
 
-export const getDateFnsLocale = (locale: string): Locale => {
   switch (locale) {
     case 'en':
       return enUS;
     case 'ca':
-      return ca;
+      return customCatalan;
     case 'es':
       return es;
     default:
       return enUS;
   }
-};
+}
 
-export const formatDate = (date: Date, locale: string) => {
+export function formatDate(date: Date, locale: string) {
   if (!(date instanceof Date)) {
     return 'Invalid date';
   }
+  return format(date, "d MMM yyyy HH:mm:ss", { locale: getDateFnsLocale(locale) });
+}
+
+export function formatDateRange(start: Date, end: Date, resolution: Resolution, locale: string) {
   const dateFnsLocale = getDateFnsLocale(locale);
-  return format(date, "d MMM yyyy HH:mm:ss", { locale: dateFnsLocale });
-};
+  const formatOptions = { locale: dateFnsLocale };
+
+  const formatPatterns = {
+    day: 'd MMM',
+    week: 'd-d',
+    month: 'MMM',
+    personalized: 'd-d MMM'
+  };
+
+  switch (resolution) {
+    case 'day':
+      return format(start, formatPatterns.day, formatOptions);
+    case 'week':
+      return `${format(start, 'd', formatOptions)}-${format(end, 'd', formatOptions)}`;
+    case 'personalized':
+      return `${format(start, 'd', formatOptions)}-${format(end, 'd', formatOptions)} ${format(start, 'MMM', formatOptions)}`;
+    case 'month':
+      return format(start, formatPatterns.month, formatOptions);
+  }
+}

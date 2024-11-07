@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from "react";
-import { Cell, Pie, PieChart, Sector } from "recharts";
+import React, { useMemo } from "react";
+import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { useTranslations } from "next-intl";
 
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { getCategories } from "@/lib/utils";
 import { Event, Category, TimeWindow } from "@/lib/types";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 type Props = {
   events: Event[];
@@ -28,6 +29,7 @@ export default function ConsumptionPerCategoryChart({
   setCategory,
 }: Props) {
   const t = useTranslations("consumption-per-category-chart");
+  const isMobile = useMediaQuery("(min-width: 1280px)");
 
   let categories = getCategories(events, timeWindow);
 
@@ -77,8 +79,7 @@ export default function ConsumptionPerCategoryChart({
   }) => {
     const isActive = index === activeIndex;
     const RADIAN = Math.PI / 180;
-    const radius =
-      innerRadius + (outerRadius - innerRadius) * (isActive ? 2.1 : 1.9);
+    const radius = outerRadius * (isActive ? 1.3 : 1.2);
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -126,17 +127,14 @@ export default function ConsumptionPerCategoryChart({
   };
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>{t("title")}</CardTitle>
         <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="w-full min-h-72 aspect-video"
-        >
-          <PieChart className="w-full h-full">
+        <ChartContainer config={chartConfig} className="aspect-[13/9] w-full">
+          <PieChart>
             <Pie
               data={categories}
               dataKey="consumption"
@@ -149,14 +147,11 @@ export default function ConsumptionPerCategoryChart({
                 outerRadius = 0,
                 ...props
               }: PieSectorDataItem) => (
-                <g>
-                  <Sector {...props} outerRadius={outerRadius + 10} />
-                </g>
+                <Sector {...props} outerRadius={outerRadius + 10} />
               )}
               labelLine={false}
               label={renderCustomizedLabel}
               paddingAngle={2}
-              className="w-full h-full"
             >
               {categories.map((currentCategory, index) => (
                 <Cell

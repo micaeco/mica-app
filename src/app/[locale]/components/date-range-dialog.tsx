@@ -31,7 +31,6 @@ const localeMap: { [key: string]: any } = {
 type Props = {
   timeWindow: TimeWindow;
   setTimeWindow: (timeWindow: TimeWindow) => void;
-  resolution: Resolution;
   setResolution: (resolution: Resolution) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -40,7 +39,6 @@ type Props = {
 export default function DateRangePicker({
   timeWindow,
   setTimeWindow,
-  resolution,
   setResolution,
   open,
   setOpen,
@@ -93,6 +91,7 @@ export default function DateRangePicker({
             <Calendar
               initialFocus
               mode="range"
+              disabled={(date) => date > new Date()}
               defaultMonth={timeWindow?.startDate}
               selected={tempRange}
               onSelect={handleSelect}
@@ -124,6 +123,7 @@ export default function DateRangePicker({
             <Calendar
               initialFocus
               mode="range"
+              disabled={(date) => date > new Date()}
               defaultMonth={timeWindow?.startDate}
               selected={tempRange}
               onSelect={handleSelect}

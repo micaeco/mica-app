@@ -1,19 +1,5 @@
 {
   "common": {
-    "months": {
-      "january": "january",
-      "february": "february",
-      "march": "march",
-      "april": "april",
-      "may": "may",
-      "june": "june",
-      "july": "july",
-      "august": "august",
-      "september": "september",
-      "october": "october",
-      "november": "november",
-      "december": "december"
-    },
     "month": "month",
     "week": "week",
     "day": "day",
@@ -89,7 +75,10 @@
       "personalized": "Select a time range.",
       "other": "Filter the consumption by {resolution}."
     },
-    "description": "Select one of the bars to view consumption."
+    "description": {
+      "personalized": "Press the button on the top left to select a time range.",
+      "other": "Select one of the bars to view consumption."
+    }
   },
   "consumption-per-category-chart": {
     "title": "Filter consumption by category.",

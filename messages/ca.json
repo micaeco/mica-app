@@ -1,19 +1,5 @@
 {
   "common": {
-    "months": {
-      "january": "gener",
-      "february": "febrer",
-      "march": "març",
-      "april": "abril",
-      "may": "maig",
-      "june": "juny",
-      "july": "juliol",
-      "august": "agost",
-      "september": "setembre",
-      "october": "octubre",
-      "november": "novembre",
-      "december": "desembre"
-    },
     "month": "mes",
     "week": "setmana",
     "day": "dia",
@@ -89,7 +75,10 @@
       "personalized": "Selecciona un rang de dates.",
       "other": "Filtra el consum per {resolution}."
     },
-    "description": "Selecciona una de les barres per veure el consum."
+    "description": {
+      "personalized": "Clica el botó a la part superior esquerra per seleccionar el rang de dates.",
+      "other": "Selecciona una de les barres per veure el consum."
+    }
   },
   "consumption-per-category-chart": {
     "title": "Filtra el consum per categoria.",

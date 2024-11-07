@@ -24,7 +24,6 @@ export default function Consumption() {
         <DateRangeDialog
           timeWindow={timeWindow}
           setTimeWindow={setTimeWindow}
-          resolution={resolution}
           setResolution={setResolution}
           open={open}
           setOpen={setOpen}
@@ -39,22 +38,16 @@ export default function Consumption() {
       {/* Charts section */}
       <div className="flex flex-col gap-4">
         {/* First row wrapper - for Time and Category charts */}
-        <div className="flex flex-col 2xl:flex-row gap-4">
-          {resolution !== "personalized" && (
-            <div className="w-full">
-              <ConsumptionPerTimeChart
-                timeWindow={timeWindow}
-                setTimeWindow={setTimeWindow}
-                resolution={resolution}
-                data={data}
-              />
-            </div>
-          )}
-          <div
-            className={`w-full ${
-              resolution === "personalized" ? "2xl:w-1/2" : ""
-            }`}
-          >
+        <div className="flex flex-col xl:flex-row gap-4">
+          <div className="xl:w-1/2">
+            <ConsumptionPerTimeChart
+              timeWindow={timeWindow}
+              setTimeWindow={setTimeWindow}
+              resolution={resolution}
+              data={data}
+            />
+          </div>
+          <div className="xl:w-1/2">
             <ConsumptionPerCategoryChart
               timeWindow={timeWindow}
               category={category}
@@ -65,11 +58,7 @@ export default function Consumption() {
         </div>
 
         {/* Second row - Device chart */}
-        <div
-          className={`w-full ${
-            resolution === "personalized" ? "2xl:w-1/2" : ""
-          }`}
-        >
+        <div>
           <ConsumptionPerDeviceChart
             timeWindow={timeWindow}
             category={category}

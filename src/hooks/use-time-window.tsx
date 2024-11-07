@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, use } from "react";
 
 import { TimeWindow, Resolution } from "@/lib/types";
 import { getConsumption } from "@/lib/utils";
@@ -8,6 +8,7 @@ const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
   day: 1,
   week: 7,
   month: 1,
+  year: 1,
   personalized: 0,
 };
 
@@ -15,19 +16,31 @@ export function useTimeWindow() {
   const [resolution, setResolution] = useState<Resolution>("month");
   const [timeWindow, setTimeWindow] =
     useState<TimeWindow>(getInitialTimeWindow);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<
+    { timeWindow: TimeWindow; consumption: number }[]
+  >([]);
   const { events } = useEvents();
-
-  const count = resolution === "month" ? 8 : 6;
 
   const updateData = useCallback(() => {
     let { startDate, endDate } = getTimeWindowForResolution(resolution);
     setTimeWindow({ startDate, endDate });
+  }, [resolution]);
+
+  useEffect(() => {
+    if (resolution === "personalized") {
+      setData([
+        {
+          timeWindow,
+          consumption: getConsumption(events, timeWindow),
+        },
+      ]);
+      return;
+    }
 
     const newData = generateTimeWindows(
-      count,
-      startDate,
-      endDate,
+      resolution === "month" ? 8 : 6,
+      timeWindow.startDate,
+      timeWindow.endDate,
       resolution
     ).map((window) => ({
       timeWindow: window,
@@ -35,7 +48,7 @@ export function useTimeWindow() {
     }));
 
     setData(newData.reverse());
-  }, [resolution, events, count]);
+  }, [resolution, timeWindow, events]);
 
   useEffect(() => {
     updateData();
@@ -87,7 +100,7 @@ function generateTimeWindows(
   startDate: Date,
   endDate: Date,
   resolution: Resolution
-) {
+): TimeWindow[] {
   const windows: TimeWindow[] = [];
   let currentEnd = new Date(endDate);
   let currentStart = new Date(startDate);
