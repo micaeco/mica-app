@@ -16,9 +16,6 @@ const montserrat = Montserrat({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "MICA App",
   description: "Aplicació de MICA",
-  icons: {
-    icon: "/logos/logo.webp",
-  },
 };
 
 export default async function RootLayout({
