@@ -135,7 +135,7 @@ export default function ConsumptionPerCategoryChart({
       <CardContent>
         <ChartContainer
           config={chartConfig}
-          className="aspect-[13/9] w-full min-h-[280px]"
+          className="aspect-[13/9] h-full w-full min-h-[280px]"
         >
           <PieChart>
             <Pie
