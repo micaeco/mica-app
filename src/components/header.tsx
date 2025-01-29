@@ -54,7 +54,7 @@ export default function Header() {
   const breadcrumbs = getBreadcrumbs(pathname ?? "");
 
   return (
-    <header className="sticky top-0 z-20 bg-background flex h-16 shrink-0 items-center gap-2 border-b">
+    <header className="sticky top-0 z-20 bg-background flex h-16 shrink-0 items-center gap-2 border-b border-gray-200">
       <div className="flex items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />

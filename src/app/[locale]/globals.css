@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config "../../../tailwind.config.ts";
+
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -57,93 +57,96 @@
   }
 }
 
-/* Base styles */
-html {
-  font-size: 16px;
-}
-
-body {
-  line-height: 1.5;
-  color: hsl(var(--brand-primary));
-}
-
-/* Typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-a {
-  margin-bottom: rem;
-}
-
-h1 {
-  font-size: 3rem;
-}
-
-h2 {
-  font-size: 2.5rem;
-}
-
-h3 {
-  font-size: 2rem;
-}
-
-h4 {
-  font-size: 1.75rem;
-}
-
-h5 {
-  font-size: 1.5rem;
-}
-
-h6 {
-  font-size: 1.25rem;
-}
-
-p {
-  font-size: 1rem;
-}
-
-/* Medium screens (tablets) */
-@media screen and (min-width: 768px) {
+@layer utilities {
+  /* Base styles */
   html {
-    font-size: 18px;
+    font-size: 16px;
+  }
+
+  body {
+    line-height: 1.5;
+    color: hsl(var(--brand-primary));
+  }
+
+  /* Typography */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a {
+    margin-bottom: rem;
   }
 
   h1 {
-    font-size: 3.25rem;
-  }
-
-  h2 {
-    font-size: 2.75rem;
-  }
-
-  h3 {
-    font-size: 2.25rem;
-  }
-}
-
-/* Large screens (desktops) */
-@media screen and (min-width: 1024px) {
-  html {
-    font-size: 20px;
-  }
-
-  h1 {
-    font-size: 3.5rem;
-  }
-
-  h2 {
     font-size: 3rem;
   }
 
-  h3 {
+  h2 {
     font-size: 2.5rem;
   }
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  h4 {
+    font-size: 1.75rem;
+  }
+
+  h5 {
+    font-size: 1.5rem;
+  }
+
+  h6 {
+    font-size: 1.25rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  /* Medium screens (tablets) */
+  @media screen and (min-width: 768px) {
+    html {
+      font-size: 18px;
+    }
+
+    h1 {
+      font-size: 3.25rem;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+    }
+
+    h3 {
+      font-size: 2.25rem;
+    }
+  }
+
+  /* Large screens (desktops) */
+  @media screen and (min-width: 1024px) {
+    html {
+      font-size: 20px;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+    }
+
+    h2 {
+      font-size: 3rem;
+    }
+
+    h3 {
+      font-size: 2.5rem;
+    }
+  }
 }
+
 @layer base {
   * {
     @apply border-border;

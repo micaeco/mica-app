@@ -159,7 +159,7 @@ export default function ConsumptionPerTimeChart({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="aspect-[13/9] w-full">
+        <ChartContainer config={chartConfig} className="aspect-13/9 w-full">
           <BarChart
             data={data}
             barSize={30}
