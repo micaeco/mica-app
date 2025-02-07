@@ -132,7 +132,7 @@ export function getCategories(events: Event[], timeWindow: TimeWindow) {
           color: event.category.color,
         };
       } else {
-        categoriesRecord[event.category.name].consumption += event.consumption;
+        categoriesRecord[event.category.name].consumption! += event.consumption;
       }
     }
   });
@@ -141,7 +141,7 @@ export function getCategories(events: Event[], timeWindow: TimeWindow) {
     .map(([, data]) => ({
       ...data,
     }))
-    .sort((a, b) => b.consumption - a.consumption);
+    .sort((a, b) => b.consumption! - a.consumption!);
 
   return categories;
 }

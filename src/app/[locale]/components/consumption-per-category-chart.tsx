@@ -26,7 +26,7 @@ export default function ConsumptionPerCategoryChart({
   const categories = getCategories(events, timeWindow);
 
   const totalConsumption = useMemo(
-    () => categories.reduce((sum, category) => sum + category.consumption, 0),
+    () => categories.reduce((sum, category) => sum + category.consumption!, 0),
     [categories]
   );
 
@@ -68,7 +68,7 @@ export default function ConsumptionPerCategoryChart({
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    const percentage = ((payload.consumption / totalConsumption) * 100).toFixed(1);
+    const percentage = ((payload.consumption! / totalConsumption) * 100).toFixed(1);
 
     const textClasses = "select-none text-center";
 
