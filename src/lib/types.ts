@@ -29,9 +29,17 @@ export interface Category {
   uses?: number;
 }
 
-export type CategoryName = 'all' | 'shower' | 'washer' | 'toilet' | 'sink' | 'dishwasher' | 'bathtub' | 'other'
+export type CategoryName =
+  | "all"
+  | "shower"
+  | "washer"
+  | "toilet"
+  | "sink"
+  | "dishwasher"
+  | "bathtub"
+  | "other";
 
-export type Resolution = 'day' | 'week' | 'month' | 'year' | 'personalized';
+export type Resolution = "day" | "week" | "month" | "year" | "personalized";
 
 export type SortField = "date" | "hour" | "consumption" | "duration";
 

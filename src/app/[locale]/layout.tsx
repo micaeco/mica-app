@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Montserrat } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { routing } from "@/i18n/routing";
+import { Locale, routing } from "@/i18n/routing";
 
 import "./globals.css";
 import Sidebar from "@/components/sidebar";
@@ -25,7 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as Locale)) {
     notFound();
   }
 
@@ -37,7 +37,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <SidebarProvider>
             <Sidebar />
-            <main className="overflow-hidden w-full">
+            <main className="w-full overflow-hidden">
               <Header />
               <EventsProvider>{children}</EventsProvider>
             </main>

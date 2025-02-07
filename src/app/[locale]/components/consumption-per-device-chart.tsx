@@ -2,13 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Event, Category, TimeWindow } from "@/lib/types";
 import { getDevices } from "@/lib/utils";
 
@@ -23,7 +17,7 @@ const ProgressBar = ({
 }) => {
   const percentage = Math.min(100, (consumption / limit) * 100);
   return (
-    <div className="relative h-4 w-full bg-muted rounded-full">
+    <div className="bg-muted relative h-4 w-full rounded-full">
       <div
         className="absolute h-full rounded-full"
         style={{
@@ -41,15 +35,11 @@ type Props = {
   category: Category | undefined;
 };
 
-export default function ConsumptionPerDeviceChart({
-  timeWindow,
-  category,
-  events,
-}: Props) {
+export default function ConsumptionPerDeviceChart({ timeWindow, category, events }: Props) {
   const t = useTranslations("consumption-per-device-chart");
   const common = useTranslations("common");
 
-  let { devices, maxConsumption } = category
+  const { devices, maxConsumption } = category
     ? getDevices(events, timeWindow, category)
     : getDevices(events, timeWindow);
 
@@ -63,8 +53,8 @@ export default function ConsumptionPerDeviceChart({
       <CardContent className="p-6">
         {devices.map((device, index) => (
           <div key={index} className="mb-8">
-            <div className="flex justify-between items-center mb-2">
-              <div className="flex space-x-2 items-center">
+            <div className="mb-2 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
                 <Image
                   src={device.category.icon}
                   alt={device.category.name}

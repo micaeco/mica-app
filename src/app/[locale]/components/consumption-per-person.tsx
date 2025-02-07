@@ -7,7 +7,10 @@ import { Resolution, TimeWindow } from "@/lib/types";
 const PEOPLE = 4;
 
 type Props = {
-  data: any[];
+  data: {
+    timeWindow: TimeWindow;
+    consumption: number;
+  }[];
   timeWindow: TimeWindow;
   resolution: Resolution;
 };
@@ -22,11 +25,10 @@ export default function ConsumptionPerPerson({ data, timeWindow }: Props) {
       d.timeWindow.endDate.getDay() === timeWindow.endDate.getDay() &&
       d.timeWindow.startDate.getMonth() === timeWindow.startDate.getMonth() &&
       d.timeWindow.endDate.getMonth() === timeWindow.endDate.getMonth() &&
-      d.timeWindow.startDate.getFullYear() ===
-        timeWindow.startDate.getFullYear() &&
+      d.timeWindow.startDate.getFullYear() === timeWindow.startDate.getFullYear() &&
       d.timeWindow.endDate.getFullYear() === timeWindow.endDate.getFullYear()
   )?.consumption;
-  const consumptionPerPerson = consumption / PEOPLE;
+  const consumptionPerPerson = consumption ? consumption / PEOPLE : 0;
 
   return (
     <Card>

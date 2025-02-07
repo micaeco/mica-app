@@ -11,16 +11,15 @@ import { useTimeWindow } from "@/hooks/use-time-window";
 import { Category } from "@/lib/types";
 
 export default function Consumption() {
-  const { timeWindow, setTimeWindow, resolution, setResolution, data } =
-    useTimeWindow();
+  const { timeWindow, setTimeWindow, resolution, setResolution, data } = useTimeWindow();
   const [category, setCategory] = useState<Category | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const { events } = useEventsContext();
 
   return (
-    <div className="flex flex-col gap-4 w-full p-4">
+    <div className="flex w-full flex-col gap-4 p-4">
       {/* Controls section */}
-      <div className="flex gap-4 justify-between md:justify-normal items-center">
+      <div className="flex items-center justify-between gap-4 md:justify-normal">
         <DateRangeDialog
           timeWindow={timeWindow}
           setTimeWindow={setTimeWindow}
@@ -38,7 +37,7 @@ export default function Consumption() {
       {/* Charts section */}
       <div className="flex flex-col gap-4">
         {/* First row wrapper - for Time and Category charts */}
-        <div className="flex flex-col xl:flex-row gap-4">
+        <div className="flex flex-col gap-4 xl:flex-row">
           <div className="xl:w-1/2">
             <ConsumptionPerTimeChart
               timeWindow={timeWindow}
@@ -59,11 +58,7 @@ export default function Consumption() {
 
         {/* Second row - Device chart */}
         <div>
-          <ConsumptionPerDeviceChart
-            timeWindow={timeWindow}
-            category={category}
-            events={events}
-          />
+          <ConsumptionPerDeviceChart timeWindow={timeWindow} category={category} events={events} />
         </div>
       </div>
     </div>

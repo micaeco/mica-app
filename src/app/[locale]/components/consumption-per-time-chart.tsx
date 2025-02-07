@@ -9,17 +9,12 @@ import {
   LabelList,
   ReferenceLine,
   XAxis,
+  LabelProps,
 } from "recharts";
-import { useLocale, useMessages, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TimeWindow, Resolution } from "@/lib/types";
 import { getAverageConsumption, formatDateRange } from "@/lib/utils";
 import { useEvents } from "@/hooks/use-events";
@@ -40,19 +35,12 @@ const CustomTick = ({
 }: {
   x: number;
   y: number;
-  payload: any;
-  onClick: (value: any) => void;
-  isSelected: Boolean;
+  payload: { value: string };
+  onClick: (value: string) => void;
+  isSelected: boolean;
 }) => (
   <g transform={`translate(${x},${y})`} onClick={() => onClick(payload.value)}>
-    <text
-      x={0}
-      y={0}
-      dy={12}
-      textAnchor="middle"
-      fill="#666"
-      style={{ cursor: "pointer" }}
-    >
+    <text x={0} y={0} dy={12} textAnchor="middle" fill="#666" style={{ cursor: "pointer" }}>
       {payload.value}
     </text>
     {isSelected && (
@@ -69,7 +57,13 @@ const CustomTick = ({
   </g>
 );
 
-const renderCustomizedLabel = (props: any) => {
+const renderCustomizedLabel = (props: {
+  x: number;
+  y: number;
+  width: number;
+  value: number;
+  isSelected: boolean;
+}) => {
   const { x, y, width, value, isSelected } = props;
   const radius = 10;
 
@@ -94,11 +88,16 @@ const renderCustomizedLabel = (props: any) => {
   );
 };
 
+type ConsumptionData = {
+  timeWindow: TimeWindow;
+  consumption: number;
+};
+
 type Props = {
   timeWindow: TimeWindow;
   setTimeWindow: (timeWindow: TimeWindow) => void;
   resolution: Resolution;
-  data: any[];
+  data: ConsumptionData[];
 };
 
 export default function ConsumptionPerTimeChart({
@@ -134,7 +133,7 @@ export default function ConsumptionPerTimeChart({
     }
   };
 
-  const isSelected = (entry: any) =>
+  const isSelected = (entry: ConsumptionData) =>
     entry.timeWindow.startDate.getDate() === timeWindow.startDate.getDate() &&
     entry.timeWindow.endDate.getDate() === timeWindow.endDate.getDate() &&
     entry.timeWindow.startDate.getMonth() === timeWindow.startDate.getMonth() &&
@@ -160,11 +159,7 @@ export default function ConsumptionPerTimeChart({
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="aspect-13/9 w-full">
-          <BarChart
-            data={data}
-            barSize={30}
-            margin={{ top: 25, bottom: 20, left: 10, right: 10 }}
-          >
+          <BarChart data={data} barSize={30} margin={{ top: 25, bottom: 20, left: 10, right: 10 }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey={(entry) =>
@@ -196,15 +191,18 @@ export default function ConsumptionPerTimeChart({
                       : "hsl(var(--brand-secondary) / 0.2)"
                   }
                   onClick={() => handleClick(entry.timeWindow)}
-                  className="transition-all duration-300 ease-in-out hover:opacity-80 cursor-pointer"
+                  className="cursor-pointer transition-all duration-300 ease-in-out hover:opacity-80"
                 />
               ))}
               <LabelList
                 dataKey="consumption"
-                content={(props: any) =>
+                content={(props: LabelProps & { index?: number }) =>
                   renderCustomizedLabel({
-                    ...props,
-                    isSelected: isSelected(data[props.index]),
+                    x: Number(props.x) || 0,
+                    y: Number(props.y) || 0,
+                    width: Number(props.width) || 0,
+                    value: Number(props.value) || 0,
+                    isSelected: props.index !== undefined ? isSelected(data[props.index]) : false,
                   })
                 }
               />

@@ -6,23 +6,14 @@ import { ca } from "date-fns/locale/ca";
 import { DateRange } from "react-day-picker";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerTrigger,
-  DrawerFooter,
-} from "@/components/ui/drawer";
+import { Dialog, DialogContent, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Drawer, DrawerContent, DrawerTrigger, DrawerFooter } from "@/components/ui/drawer";
 import { Calendar } from "@/components/ui/calendar";
 import { Resolution, TimeWindow } from "@/lib/types";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { Locale } from "date-fns";
 
-const localeMap: { [key: string]: any } = {
+const localeMap: { [key: string]: Locale } = {
   en: enUS,
   es: es,
   ca: ca,
@@ -98,7 +89,7 @@ export default function DateRangePicker({
               locale={locale}
             />
           </div>
-          <DialogFooter className="gap-2 flex-row justify-around">
+          <DialogFooter className="flex-row justify-around gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>
               {common("cancel")}
             </Button>
@@ -130,7 +121,7 @@ export default function DateRangePicker({
               locale={locale}
             />
           </div>
-          <DrawerFooter className="gap-20 flex-row justify-center pt-4">
+          <DrawerFooter className="flex-row justify-center gap-20 pt-4">
             <Button variant="outline" onClick={() => setOpen(false)}>
               {common("cancel")}
             </Button>

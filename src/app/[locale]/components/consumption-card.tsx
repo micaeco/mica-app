@@ -5,17 +5,18 @@ import { useTranslations } from "next-intl";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Resolution, TimeWindow } from "@/lib/types";
 
+type ConsumptionData = {
+  timeWindow: TimeWindow;
+  consumption: number;
+};
+
 type Props = {
   timeWindow: TimeWindow;
-  data: any[];
+  data: ConsumptionData[];
   resolution: Resolution;
 };
 
-export default function ConsumptionCard({
-  data,
-  timeWindow,
-  resolution,
-}: Props) {
+export default function ConsumptionCard({ data, timeWindow }: Props) {
   const t = useTranslations("consumption-card");
   const common = useTranslations("common");
 
@@ -25,8 +26,7 @@ export default function ConsumptionCard({
       d.timeWindow.endDate.getDay() === timeWindow.endDate.getDay() &&
       d.timeWindow.startDate.getMonth() === timeWindow.startDate.getMonth() &&
       d.timeWindow.endDate.getMonth() === timeWindow.endDate.getMonth() &&
-      d.timeWindow.startDate.getFullYear() ===
-        timeWindow.startDate.getFullYear() &&
+      d.timeWindow.startDate.getFullYear() === timeWindow.startDate.getFullYear() &&
       d.timeWindow.endDate.getFullYear() === timeWindow.endDate.getFullYear()
   )?.consumption;
 

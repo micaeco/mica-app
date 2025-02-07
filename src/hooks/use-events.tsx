@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useMessages, useTranslations } from "next-intl";
+import { useMessages } from "next-intl";
 
 import { Event } from "@/lib/types";
 import { generateEvents } from "@/lib/mock";
@@ -17,13 +17,7 @@ export function useEvents() {
     categories
   );
 
-  const [events, setEvents] = useState<Event[]>(
-    generateEvents(NUMBER_OF_EVENTS, devices)
-  );
-
-  const refreshEvents = useCallback(() => {
-    setEvents(generateEvents(NUMBER_OF_EVENTS, devices));
-  }, [devices]);
+  const [events, setEvents] = useState<Event[]>(generateEvents(NUMBER_OF_EVENTS, devices));
 
   const modifyEvent = useCallback((id: string, event: Partial<Event>) => {
     setEvents((events) => {

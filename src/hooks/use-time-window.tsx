@@ -14,15 +14,12 @@ const RESOLUTION_TO_UNITS: Record<Resolution, number> = {
 
 export function useTimeWindow() {
   const [resolution, setResolution] = useState<Resolution>("month");
-  const [timeWindow, setTimeWindow] =
-    useState<TimeWindow>(getInitialTimeWindow);
-  const [data, setData] = useState<
-    { timeWindow: TimeWindow; consumption: number }[]
-  >([]);
+  const [timeWindow, setTimeWindow] = useState<TimeWindow>(getInitialTimeWindow);
+  const [data, setData] = useState<{ timeWindow: TimeWindow; consumption: number }[]>([]);
   const { events } = useEvents();
 
   const updateData = useCallback(() => {
-    let { startDate, endDate } = getTimeWindowForResolution(resolution);
+    const { startDate, endDate } = getTimeWindowForResolution(resolution);
     setTimeWindow({ startDate, endDate });
 
     if (resolution === "personalized") {
@@ -77,7 +74,7 @@ function getInitialTimeWindow(): TimeWindow {
 
 function getTimeWindowForResolution(resolution: Resolution): TimeWindow {
   let startDate: Date;
-  let endDate: Date = setToEndOfDay(new Date());
+  const endDate: Date = setToEndOfDay(new Date());
 
   switch (resolution) {
     case "day":
@@ -120,16 +117,10 @@ function generateTimeWindows(
     if (resolution === "month") {
       currentEnd = new Date(currentEnd.getFullYear(), currentEnd.getMonth(), 0);
       currentEnd = setToEndOfDay(currentEnd);
-      currentStart = new Date(
-        currentStart.getFullYear(),
-        currentStart.getMonth() - 1,
-        1
-      );
+      currentStart = new Date(currentStart.getFullYear(), currentStart.getMonth() - 1, 1);
     } else {
       currentEnd = setToEndOfDay(new Date(currentStart));
-      currentStart.setDate(
-        currentStart.getDate() - RESOLUTION_TO_UNITS[resolution]
-      );
+      currentStart.setDate(currentStart.getDate() - RESOLUTION_TO_UNITS[resolution]);
     }
     currentStart = setToStartOfDay(currentStart);
   }

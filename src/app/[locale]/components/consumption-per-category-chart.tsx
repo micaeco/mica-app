@@ -1,19 +1,12 @@
 import React, { useMemo } from "react";
-import { Cell, Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
+import { Cell, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { useTranslations } from "next-intl";
 
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { getCategories } from "@/lib/utils";
 import { Event, Category, TimeWindow } from "@/lib/types";
-import { useMediaQuery } from "@/hooks/use-media-query";
 
 type Props = {
   events: Event[];
@@ -29,25 +22,21 @@ export default function ConsumptionPerCategoryChart({
   setCategory,
 }: Props) {
   const t = useTranslations("consumption-per-category-chart");
-  const isMobile = useMediaQuery("(min-width: 1280px)");
 
-  let categories = getCategories(events, timeWindow);
+  const categories = getCategories(events, timeWindow);
 
   const totalConsumption = useMemo(
     () => categories.reduce((sum, category) => sum + category.consumption, 0),
     [categories]
   );
 
-  const chartConfig: ChartConfig = categories.reduce(
-    (config: ChartConfig, category) => {
-      config[category.name] = {
-        label: category.name,
-        color: category.color,
-      };
-      return config;
-    },
-    {}
-  );
+  const chartConfig: ChartConfig = categories.reduce((config: ChartConfig, category) => {
+    config[category.name] = {
+      label: category.name,
+      color: category.color,
+    };
+    return config;
+  }, {});
 
   const activeIndex = useMemo(
     () => categories.findIndex((c) => c.name === category?.name),
@@ -55,16 +44,13 @@ export default function ConsumptionPerCategoryChart({
   );
 
   const handlePieSectionClick = (clickedCategory: Category) => {
-    setCategory(
-      category?.name === clickedCategory.name ? undefined : clickedCategory
-    );
+    setCategory(category?.name === clickedCategory.name ? undefined : clickedCategory);
   };
 
   const renderCustomizedLabel = ({
     cx,
     cy,
     midAngle,
-    innerRadius,
     outerRadius,
     payload,
     index,
@@ -72,9 +58,8 @@ export default function ConsumptionPerCategoryChart({
     cx: number;
     cy: number;
     midAngle: number;
-    innerRadius: number;
     outerRadius: number;
-    payload: any;
+    payload: Category;
     index: number;
   }) => {
     const isActive = index === activeIndex;
@@ -83,9 +68,7 @@ export default function ConsumptionPerCategoryChart({
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    const percentage = ((payload.consumption / totalConsumption) * 100).toFixed(
-      1
-    );
+    const percentage = ((payload.consumption / totalConsumption) * 100).toFixed(1);
 
     const textClasses = "select-none text-center";
 
@@ -103,7 +86,7 @@ export default function ConsumptionPerCategoryChart({
         {isActive && (
           <>
             <text
-              className={`${textClasses} font-bold text-xl`}
+              className={`${textClasses} text-xl font-bold`}
               x={cx}
               y={cy - 10}
               textAnchor="middle"
@@ -133,10 +116,7 @@ export default function ConsumptionPerCategoryChart({
         <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-13/9 w-full min-h-[280px]"
-        >
+        <ChartContainer config={chartConfig} className="aspect-13/9 min-h-[280px] w-full">
           <PieChart>
             <Pie
               data={categories}
@@ -146,10 +126,7 @@ export default function ConsumptionPerCategoryChart({
               innerRadius="50%"
               activeIndex={activeIndex}
               isAnimationActive={false}
-              activeShape={({
-                outerRadius = 0,
-                ...props
-              }: PieSectorDataItem) => (
+              activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
                 <Sector {...props} outerRadius={outerRadius + 10} />
               )}
               labelLine={false}
