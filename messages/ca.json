@@ -26,6 +26,8 @@
     "back": "Enrere",
     "next": "Següent",
     "open": "Obrir",
+    "household": "Vivenda",
+    "households": "Vivendes",
     "categories": {
       "all": "Tots",
       "shower": "Dutxa",
@@ -46,11 +48,10 @@
       "dishwasher": "Rentavaixelles"
     },
     "nav-pages": {
-      "consumption": "Consum",
-      "data": "Dades",
-      "savings": "Estalvis",
-      "community": "Comunitat",
-      "plant-a-tree": "Planta un arbre"
+      "/home": "Inici",
+      "/consumption": "Consum",
+      "/data": "Dades",
+      "/actions": "Accions"
     },
     "nav-settings": {
       "profile": "Perfil",

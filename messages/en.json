@@ -26,6 +26,8 @@
     "back": "Back",
     "next": "Next",
     "open": "Open",
+    "household": "Household",
+    "households": "Households",
     "categories": {
       "all": "All",
       "shower": "Shower",
@@ -46,11 +48,10 @@
       "dishwasher": "Dishwasher"
     },
     "nav-pages": {
-      "consumption": "Consumption",
-      "data": "Data",
-      "savings": "Savings",
-      "community": "Community",
-      "plant-a-tree": "Plant a tree"
+      "/home": "Home",
+      "/consumption": "Consumption",
+      "/data": "Data",
+      "/actions": "Actions"
     },
     "nav-settings": {
       "profile": "Profile",

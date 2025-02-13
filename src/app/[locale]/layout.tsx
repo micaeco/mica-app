@@ -6,10 +6,11 @@ import { getMessages } from "next-intl/server";
 import { Locale, routing } from "@/i18n/routing";
 
 import "./globals.css";
-import Sidebar from "@/components/sidebar";
-import Header from "@/components/header";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import EventsProvider from "@/components/events-provider";
+import Sidebar from "@/app/_components/sidebar";
+import Header from "@/app/_components/header";
+import Navbar from "@/app/_components/navbar";
+import { SidebarProvider } from "@/app/_components/ui/sidebar";
+import EventsProvider from "@/app/_providers/events-provider";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -36,11 +37,14 @@ export default async function RootLayout({
       <body className={montserrat.className}>
         <NextIntlClientProvider messages={messages}>
           <SidebarProvider>
-            <Sidebar />
-            <main className="w-full overflow-hidden">
+            <Sidebar className="!h-[calc(100svh-var(--navbar-height))]" />
+            <main className="w-full overflow-hidden pb-(--navbar-height)">
               <Header />
-              <EventsProvider>{children}</EventsProvider>
+              <EventsProvider>
+                <div className="pt-(--header-height)">{children}</div>
+              </EventsProvider>
             </main>
+            <Navbar />
           </SidebarProvider>
         </NextIntlClientProvider>
       </body>

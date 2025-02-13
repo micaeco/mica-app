@@ -1,4 +1,4 @@
-import { Device, Event } from '@/lib/types';
+import { Device, Event } from "@/lib/types";
 
 export function generateEvents(days: number, devices: Device[]): Event[] {
   const data: Event[] = [];
@@ -21,4 +21,4 @@ export function generateEvents(days: number, devices: Device[]): Event[] {
   }
 
   return data;
-};
+}

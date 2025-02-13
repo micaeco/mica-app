@@ -26,6 +26,8 @@
     "back": "Atrás",
     "next": "Siguiente",
     "open": "Abrir",
+    "household": "Vivienda",
+    "households": "Viviendas",
     "categories": {
       "all": "Todos",
       "shower": "Ducha",
@@ -46,11 +48,10 @@
       "dishwasher": "Lavavajillas"
     },
     "nav-pages": {
-      "consumption": "Consumo",
-      "data": "Datos",
-      "savings": "Ahorros",
-      "community": "Comunidad",
-      "plant-a-tree": "Planta un árbol"
+      "/home": "Inicio",
+      "/consumption": "Consumo",
+      "/data": "Datos",
+      "/actions": "Acciones"
     },
     "nav-settings": {
       "profile": "Perfil",
