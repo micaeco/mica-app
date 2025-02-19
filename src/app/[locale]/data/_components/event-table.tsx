@@ -10,14 +10,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/app/_components/ui/table";
+} from "@components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/_components/ui/select";
+} from "@components/ui/select";
 import { Event, SortField } from "@/lib/types";
 import { getCategories } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
@@ -31,7 +31,7 @@ interface Props {
   handleSort: (field: SortField) => void;
 }
 
-export default function EventTable({
+export function EventTable({
   events,
   category,
   setCategory,

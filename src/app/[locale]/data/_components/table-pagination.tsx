@@ -8,7 +8,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/app/_components/ui/pagination";
+} from "@components/ui/pagination";
 
 interface Props {
   currentPage: number;
@@ -16,7 +16,7 @@ interface Props {
   setCurrentPage: (page: number) => void;
 }
 
-export default function TablePagination({ currentPage, totalPages, setCurrentPage }: Props) {
+export function TablePagination({ currentPage, totalPages, setCurrentPage }: Props) {
   const renderPaginationItems = () => {
     const items = [];
 

@@ -1,0 +1,104 @@
+{
+  "common": {
+    "add": "Añadir",
+    "remove": "Eliminar",
+    "month": "mes",
+    "week": "semana",
+    "day": "día",
+    "personalized": "personalizado",
+    "hour": "hora",
+    "hours": "horas",
+    "minute": "minuto",
+    "minutes": "minutos",
+    "second": "segundo",
+    "seconds": "segundos",
+    "day-and-time": "día y hora",
+    "duration": "duración",
+    "device": "dispositivo",
+    "consumption": "consumo",
+    "uses": "usos",
+    "liters": "litros",
+    "person": "persona",
+    "average": "media",
+    "logout": "Cerrar sesión",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "open": "Abrir",
+    "create": "Crear",
+    "household": "Vivienda",
+    "households": "Viviendas",
+    "name": "Nombre",
+    "categories": {
+      "all": "Todos",
+      "shower": "Ducha",
+      "washer": "Lavadora",
+      "toilet": "Inodoro",
+      "sink": "Fregadero",
+      "dishwasher": "Lavavajillas",
+      "other": "Otros"
+    },
+    "devices": {
+      "shower-room-1": "Ducha habitación 1",
+      "shower-room-2": "Ducha habitación 2",
+      "toilet-room-1": "Inodoro habitación 1",
+      "toilet-room-2": "Inodoro habitación 2",
+      "bathroom-sink": "Fregadero baño",
+      "kitchen-sink": "Fregadero cocina",
+      "washer": "Lavadora",
+      "dishwasher": "Lavavajillas"
+    },
+    "nav-pages": {
+      "/home": "Inicio",
+      "/consumption": "Consumo",
+      "/data": "Datos",
+      "/actions": "Acciones"
+    },
+    "nav-settings": {
+      "profile": "Perfil",
+      "settings": "Configuración",
+      "help": "Ayuda",
+      "logout": "Salir"
+    },
+    "navigation": "Navegación",
+    "settings": "Configuración"
+  },
+  "consumption-card": {
+    "title": "Consumo seleccionado."
+  },
+  "consumption-per-person": {
+    "title": "Consumo por persona."
+  },
+  "consumption-historic": {
+    "title": "Consumo histórico."
+  },
+  "consumption-per-time-chart": {
+    "title": {
+      "personalized": "Selecciona un rango de fechas.",
+      "other": "Filtra el consumo por {resolution}."
+    },
+    "description": {
+      "personalized": "Pulsa en el botón de arriba a la izquierda para seleccionar un rango de fechas.",
+      "other": "Selecciona una de las barras para ver el consumo."
+    }
+  },
+  "consumption-per-category-chart": {
+    "title": "Filtra el consumo por categoría.",
+    "description": "Selecciona una de las secciones para ver el consumo."
+  },
+  "consumption-per-device-chart": {
+    "title": "Por dispositivo.",
+    "description": "Visualiza el consumo por dispositivo."
+  },
+  "edit-household": {
+    "title": "Edita la vivienda.",
+    "description": "Modifica la información de la vivienda."
+  },
+  "create-household": {
+    "title": "Crea una nueva vivienda.",
+    "description": "Introduce la información de la vivienda."
+  }
+}

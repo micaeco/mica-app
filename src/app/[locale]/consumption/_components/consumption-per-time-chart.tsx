@@ -13,10 +13,10 @@ import {
 } from "recharts";
 import { useLocale } from "next-intl";
 
-import { ChartConfig, ChartContainer } from "@/app/_components/ui/chart";
+import { ChartConfig, ChartContainer } from "@components/ui/chart";
 import { TimeWindow, Resolution } from "@/lib/types";
 import { getAverageConsumption, formatDateRange } from "@/lib/utils";
-import { useEvents } from "@/app/_hooks/use-events";
+import { useEvents } from "@hooks/use-events";
 
 const chartConfig = {
   consumption: {
@@ -99,12 +99,7 @@ type Props = {
   data: ConsumptionData[];
 };
 
-export default function ConsumptionPerTimeChart({
-  timeWindow,
-  setTimeWindow,
-  resolution,
-  data,
-}: Props) {
+export function ConsumptionPerTimeChart({ timeWindow, setTimeWindow, resolution, data }: Props) {
   const locale = useLocale();
   const { events } = useEvents();
   const [averageConsumption, setAverageConsumption] = useState(

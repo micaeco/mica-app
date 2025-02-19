@@ -3,20 +3,14 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import ConsumptionPerTimeChart from "./_components/consumption-per-time-chart";
-import ConsumptionPerDeviceChart from "./_components/consumption-per-device-chart";
-import ConsumptionPerCategoryChart from "./_components/consumption-per-category-chart";
-import TimeResolutionSelect from "./_components/time-resolution-select";
-import DateRangeDialog from "./_components/date-range-panel";
-import { useEventsContext } from "@/app/_providers/events-provider";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/app/_components/ui/card";
-import { useTimeWindow } from "@/app/_hooks/use-time-window";
+import { ConsumptionPerTimeChart } from "./_components/consumption-per-time-chart";
+import { ConsumptionPerDeviceChart } from "./_components/consumption-per-device-chart";
+import { ConsumptionPerCategoryChart } from "./_components/consumption-per-category-chart";
+import { TimeResolutionSelect } from "./_components/time-resolution-select";
+import { DateRangePanel } from "./_components/date-range-panel";
+import { useEventsContext } from "@providers/events-provider";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card";
+import { useTimeWindow } from "@hooks/use-time-window";
 import { Category } from "@/lib/types";
 
 export default function Consumption() {
@@ -34,7 +28,7 @@ export default function Consumption() {
     <div className="flex w-full flex-col gap-4 p-4">
       {/* Controls section */}
       <div className="flex items-center justify-between gap-4 md:justify-normal">
-        <DateRangeDialog
+        <DateRangePanel
           timeWindow={timeWindow}
           setTimeWindow={setTimeWindow}
           setResolution={setResolution}

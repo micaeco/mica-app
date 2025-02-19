@@ -5,9 +5,9 @@ import { es } from "date-fns/locale/es";
 import { ca } from "date-fns/locale/ca";
 import { DateRange } from "react-day-picker";
 
-import { Button } from "@/app/_components/ui/button";
-import { Panel, PanelContent, PanelTrigger, PanelFooter } from "@/app/_components/ui/panel";
-import { Calendar } from "@/app/_components/ui/calendar";
+import { Button } from "@components/ui/button";
+import { Panel, PanelContent, PanelTrigger, PanelFooter } from "@components/ui/panel";
+import { Calendar } from "@components/ui/calendar";
 import { Resolution, TimeWindow } from "@/lib/types";
 import { Locale } from "date-fns";
 
@@ -25,13 +25,7 @@ type Props = {
   setOpen: (open: boolean) => void;
 };
 
-export default function DateRangePicker({
-  timeWindow,
-  setTimeWindow,
-  setResolution,
-  open,
-  setOpen,
-}: Props) {
+export function DateRangePanel({ timeWindow, setTimeWindow, setResolution, open, setOpen }: Props) {
   const localeString = useLocale();
   const locale = localeMap[localeString] || enUS;
   const common = useTranslations("common");

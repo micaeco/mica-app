@@ -17,9 +17,23 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "#/*": ["./*"]
+      "@/*": ["src/*"], // Keeps a general alias for everything inside `src/`
+      "@app/*": ["src/app/*"],
+      "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@stores/*": ["src/stores/*"],
+      "@providers/*": ["src/providers/*"],
+      "@lib/*": ["src/lib/*"],
+      "@messages/*": ["src/messages/*"],
+
+      "@core/*": ["core/*"],
+      "@domain/*": ["domain/*"],
+      "@infrastructure/*": ["infrastructure/*"],
+      "@config/*": ["config/*"],
+
+      "#/*": ["./*"] // Keeps an alias for everything at the root level
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

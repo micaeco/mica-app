@@ -5,12 +5,13 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { Locale, routing } from "@/i18n/routing";
 
-import "./globals.css";
-import Sidebar from "@/app/_components/sidebar";
-import Header from "@/app/_components/header";
-import Navbar from "@/app/_components/navbar";
-import { SidebarProvider } from "@/app/_components/ui/sidebar";
-import EventsProvider from "@/app/_providers/events-provider";
+import "@/app/globals.css";
+import { AppSidebar } from "@components/sidebar";
+import { Header } from "@components/header";
+import { Navbar } from "@components/navbar";
+import { SidebarProvider } from "@components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
+import { EventsProvider } from "@providers/events-provider";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -37,7 +38,7 @@ export default async function RootLayout({
       <body className={montserrat.className}>
         <NextIntlClientProvider messages={messages}>
           <SidebarProvider>
-            <Sidebar className="!h-[calc(100svh-var(--navbar-height))]" />
+            <AppSidebar className="!h-[calc(100svh-var(--navbar-height))]" />
             <main className="w-full overflow-hidden pb-(--navbar-height)">
               <Header />
               <EventsProvider>
@@ -45,6 +46,7 @@ export default async function RootLayout({
               </EventsProvider>
             </main>
             <Navbar />
+            <Toaster />
           </SidebarProvider>
         </NextIntlClientProvider>
       </body>

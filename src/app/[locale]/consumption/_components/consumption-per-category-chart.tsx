@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Cell, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
-import { ChartConfig, ChartContainer } from "@/app/_components/ui/chart";
+import { ChartConfig, ChartContainer } from "@components/ui/chart";
 import { getCategories } from "@/lib/utils";
 import { Event, Category, TimeWindow } from "@/lib/types";
 
@@ -13,12 +13,7 @@ type Props = {
   setCategory: (category: Category | undefined) => void;
 };
 
-export default function ConsumptionPerCategoryChart({
-  events,
-  timeWindow,
-  category,
-  setCategory,
-}: Props) {
+export function ConsumptionPerCategoryChart({ events, timeWindow, category, setCategory }: Props) {
   const categories = getCategories(events, timeWindow);
 
   const totalConsumption = useMemo(

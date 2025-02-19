@@ -34,7 +34,7 @@ type Props = {
   category: Category | undefined;
 };
 
-export default function ConsumptionPerDeviceChart({ timeWindow, category, events }: Props) {
+export function ConsumptionPerDeviceChart({ timeWindow, category, events }: Props) {
   const common = useTranslations("common");
 
   const { devices, maxConsumption } = category

@@ -1,0 +1,104 @@
+{
+  "common": {
+    "add": "Add",
+    "remove": "Remove",
+    "month": "month",
+    "week": "week",
+    "day": "day",
+    "personalized": "personalized",
+    "hour": "hour",
+    "hours": "hours",
+    "minute": "minute",
+    "minutes": "minutes",
+    "second": "second",
+    "seconds": "seconds",
+    "day-and-time": "day and time",
+    "duration": "duration",
+    "device": "device",
+    "consumption": "consumption",
+    "uses": "uses",
+    "liters": "liters",
+    "person": "person",
+    "average": "average",
+    "logout": "Log out",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "save": "Save",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "open": "Open",
+    "create": "Create",
+    "household": "Household",
+    "households": "Households",
+    "name": "Name",
+    "categories": {
+      "all": "All",
+      "shower": "Shower",
+      "washer": "Washer",
+      "toilet": "Toilet",
+      "sink": "Sink",
+      "dishwasher": "Dishwasher",
+      "other": "Other"
+    },
+    "devices": {
+      "shower-room-1": "Shower room 1",
+      "shower-room-2": "Shower room 2",
+      "toilet-room-1": "Toilet room 1",
+      "toilet-room-2": "Toilet room 2",
+      "bathroom-sink": "Bathroom sink",
+      "kitchen-sink": "Kitchen sink",
+      "washer": "Washer",
+      "dishwasher": "Dishwasher"
+    },
+    "nav-pages": {
+      "/home": "Home",
+      "/consumption": "Consumption",
+      "/data": "Data",
+      "/actions": "Actions"
+    },
+    "nav-settings": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "help": "Help",
+      "logout": "Logout"
+    },
+    "navigation": "Navigation",
+    "settings": "Settings"
+  },
+  "consumption-card": {
+    "title": "Selected consumption."
+  },
+  "consumption-per-person": {
+    "title": "Consumption per person."
+  },
+  "consumption-historic": {
+    "title": "Historic consumption."
+  },
+  "consumption-per-time-chart": {
+    "title": {
+      "personalized": "Select a time range.",
+      "other": "Filter the consumption by {resolution}."
+    },
+    "description": {
+      "personalized": "Press the button on the top left to select a time range.",
+      "other": "Select one of the bars to view consumption."
+    }
+  },
+  "consumption-per-category-chart": {
+    "title": "Filter consumption by category.",
+    "description": "Select one of the sections to view consumption."
+  },
+  "consumption-per-device-chart": {
+    "title": "By device.",
+    "description": "Visualize consumption by device."
+  },
+  "edit-household": {
+    "title": "Edit household.",
+    "description": "Modify the household information."
+  },
+  "create-household": {
+    "title": "Create household.",
+    "description": "Enter the household information."
+  }
+}

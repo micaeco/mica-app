@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/_components/ui/select";
+} from "@components/ui/select";
 import { Resolution } from "@/lib/types";
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
   setOpen: (open: boolean) => void;
 };
 
-export default function TimeResolutionDropdown({ resolution, setResolution, setOpen }: Props) {
+export function TimeResolutionSelect({ resolution, setResolution, setOpen }: Props) {
   const common = useTranslations("common");
 
   return (

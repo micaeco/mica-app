@@ -4,7 +4,7 @@ import React from "react";
 
 import EventTable from "./_components/event-table";
 import TablePagination from "./_components/table-pagination";
-import { useSortableTable } from "@/app/_hooks/use-sortable-table";
+import { useSortableTable } from "@hooks/use-sortable-table";
 
 export default function SortableEventTable() {
   const {

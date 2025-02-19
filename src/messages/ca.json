@@ -1,0 +1,104 @@
+{
+  "common": {
+    "add": "Afegir",
+    "remove": "Eliminar",
+    "month": "mes",
+    "week": "setmana",
+    "day": "dia",
+    "personalized": "personalitzat",
+    "hour": "hora",
+    "hours": "hores",
+    "minute": "minut",
+    "minutes": "minuts",
+    "second": "segon",
+    "seconds": "segons",
+    "day-and-time": "dia i hora",
+    "duration": "duració",
+    "device": "dispositiu",
+    "consumption": "consum",
+    "uses": "usos",
+    "liters": "litres",
+    "person": "persona",
+    "average": "mitjana",
+    "logout": "Tancar sessió",
+    "cancel": "Cancel·lar",
+    "submit": "Enviar",
+    "save": "Desar",
+    "close": "Tancar",
+    "back": "Enrere",
+    "next": "Següent",
+    "open": "Obrir",
+    "create": "Crear",
+    "household": "Vivenda",
+    "households": "Vivendes",
+    "name": "Nom",
+    "categories": {
+      "all": "Tots",
+      "shower": "Dutxa",
+      "washer": "Rentadora",
+      "toilet": "Vàter",
+      "sink": "Aixeta",
+      "dishwasher": "Rentavaixelles",
+      "other": "Altres"
+    },
+    "devices": {
+      "shower-room-1": "Dutxa habitació 1",
+      "shower-room-2": "Dutxa habitació 2",
+      "toilet-room-1": "Vàter habitació 1",
+      "toilet-room-2": "Vàter habitació 2",
+      "bathroom-sink": "Aixeta bany",
+      "kitchen-sink": "Aixeta cuina",
+      "washer": "Rentadora",
+      "dishwasher": "Rentavaixelles"
+    },
+    "nav-pages": {
+      "/home": "Inici",
+      "/consumption": "Consum",
+      "/data": "Dades",
+      "/actions": "Accions"
+    },
+    "nav-settings": {
+      "profile": "Perfil",
+      "settings": "Configuració",
+      "help": "Ajuda",
+      "logout": "Sortir"
+    },
+    "navigation": "Navegació",
+    "settings": "Configuració"
+  },
+  "consumption-card": {
+    "title": "Consum seleccionat."
+  },
+  "consumption-per-person": {
+    "title": "Consum per persona."
+  },
+  "consumption-historic": {
+    "title": "Consum històric."
+  },
+  "consumption-per-time-chart": {
+    "title": {
+      "personalized": "Selecciona un rang de dates.",
+      "other": "Filtra el consum per {resolution}."
+    },
+    "description": {
+      "personalized": "Clica el botó a la part superior esquerra per seleccionar el rang de dates.",
+      "other": "Selecciona una de les barres per veure el consum."
+    }
+  },
+  "consumption-per-category-chart": {
+    "title": "Filtra el consum per categoria.",
+    "description": "Selecciona una de les seccions per veure el consum."
+  },
+  "consumption-per-device-chart": {
+    "title": "Per dispositiu.",
+    "description": "Visualitza el consum per dispositiu."
+  },
+  "edit-household": {
+    "title": "Edita la vivenda.",
+    "description": "Modifica la informació de la vivenda."
+  },
+  "create-household": {
+    "title": "Crea una nova vivenda.",
+    "description": "Introdueix la informació de la vivenda."
+  }
+}
