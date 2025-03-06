@@ -1,7 +1,15 @@
 {
   "common": {
+    "all": "Tots",
+    "adress": "Adreça",
     "add": "Afegir",
+    "edit": "Editar",
+    "event": "Esdeveniment",
     "remove": "Eliminar",
+    "notifications": "Notificacions",
+    "language": "Idioma",
+    "help": "Ajuda",
+    "year": "any",
     "month": "mes",
     "week": "setmana",
     "day": "dia",
@@ -27,35 +35,30 @@
     "close": "Tancar",
     "back": "Enrere",
     "next": "Següent",
+    "new": "Nou",
     "open": "Obrir",
     "create": "Crear",
     "household": "Vivenda",
     "households": "Vivendes",
     "name": "Nom",
     "categories": {
-      "all": "Tots",
       "shower": "Dutxa",
       "washer": "Rentadora",
       "toilet": "Vàter",
       "sink": "Aixeta",
       "dishwasher": "Rentavaixelles",
+      "irrigation": "Reg",
+      "bathtub": "Banyera",
+      "unknown": "Desconegut",
+      "leak": "Fuga",
       "other": "Altres"
     },
-    "devices": {
-      "shower-room-1": "Dutxa habitació 1",
-      "shower-room-2": "Dutxa habitació 2",
-      "toilet-room-1": "Vàter habitació 1",
-      "toilet-room-2": "Vàter habitació 2",
-      "bathroom-sink": "Aixeta bany",
-      "kitchen-sink": "Aixeta cuina",
-      "washer": "Rentadora",
-      "dishwasher": "Rentavaixelles"
-    },
     "nav-pages": {
-      "/home": "Inici",
+      "/": "Inici",
       "/consumption": "Consum",
       "/data": "Dades",
-      "/actions": "Accions"
+      "/actions": "Accions",
+      "/404": "Pàgina no trobada"
     },
     "nav-settings": {
       "profile": "Perfil",
@@ -64,6 +67,7 @@
       "logout": "Sortir"
     },
     "navigation": "Navegació",
+    "now": "Ara",
     "settings": "Configuració"
   },
   "consumption-card": {
@@ -76,14 +80,8 @@
     "title": "Consum històric."
   },
   "consumption-per-time-chart": {
-    "title": {
-      "personalized": "Selecciona un rang de dates.",
-      "other": "Filtra el consum per {resolution}."
-    },
-    "description": {
-      "personalized": "Clica el botó a la part superior esquerra per seleccionar el rang de dates.",
-      "other": "Selecciona una de les barres per veure el consum."
-    }
+    "title": "Filtra el consum per {resolution}.",
+    "description": "Selecciona una de les barres per veure el consum."
   },
   "consumption-per-category-chart": {
     "title": "Filtra el consum per categoria.",
@@ -100,5 +98,9 @@
   "create-household": {
     "title": "Crea una nova vivenda.",
     "description": "Introdueix la informació de la vivenda."
+  },
+  "not-found": {
+    "title": "Pàgina no trobada.",
+    "description": "La pàgina que busques no existeix."
   }
 }

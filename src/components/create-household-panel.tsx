@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 
-import { useHouseholdStore } from "@stores/household.store";
+import { useHouseholdStore } from "#/src/stores/household";
 import {
   Form,
   FormControl,
@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@components/ui/form";
+} from "#/src/components/ui/form";
 import {
   Panel,
   PanelContent,
@@ -22,12 +22,13 @@ import {
   PanelHeader,
   PanelTitle,
   PanelTrigger,
-} from "@components/ui/panel";
-import { Button } from "@components/ui/button";
-import { Input } from "@components/ui/input";
+} from "#/src/components/ui/panel";
+import { Button } from "#/src/components/ui/button";
+import { Input } from "#/src/components/ui/input";
 
 const formSchema = z.object({
   newHouseholdName: z.string().min(1, "Aquest camp és obligatori"),
+  newHouseholdAdress: z.string(),
 });
 
 export function CreateHouseholdPanel({
@@ -37,7 +38,7 @@ export function CreateHouseholdPanel({
   children: React.ReactNode;
   className?: string;
 }) {
-  const { addHousehold } = useHouseholdStore();
+  const createHousehold = useHouseholdStore((state) => state.createHousehold);
   const [open, setOpen] = useState(false);
 
   const t = useTranslations("create-household");
@@ -45,13 +46,14 @@ export function CreateHouseholdPanel({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { newHouseholdName: "" },
+    defaultValues: { newHouseholdName: "", newHouseholdAdress: "" },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const name = values.newHouseholdName.trim();
+    const adress = values.newHouseholdAdress.trim();
     if (name) {
-      addHousehold({ id: Date.now().toString(), name, sensorId: "" });
+      createHousehold({ name, adress, sensorId: "" });
       form.reset();
     }
     setOpen(false);
@@ -61,19 +63,32 @@ export function CreateHouseholdPanel({
     <Panel open={open} onOpenChange={setOpen}>
       <PanelTrigger className={className}>{children}</PanelTrigger>
       <PanelContent>
+        <PanelHeader>
+          <PanelTitle>{t("title")}</PanelTitle>
+          <PanelDescription>{t("description")}</PanelDescription>
+        </PanelHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <PanelHeader>
-              <PanelTitle>{t("title")}</PanelTitle>
-              <PanelDescription>{t("description")}</PanelDescription>
-            </PanelHeader>
-            <div className="mt-2">
+          <form className="p-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-2">
               <FormField
                 control={form.control}
                 name="newHouseholdName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{common("name")}</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="w-full rounded border border-gray-300 p-2" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="newHouseholdAdress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{common("adress")}</FormLabel>
                     <FormControl>
                       <Input {...field} className="w-full rounded border border-gray-300 p-2" />
                     </FormControl>

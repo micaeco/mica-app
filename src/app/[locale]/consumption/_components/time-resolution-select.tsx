@@ -3,43 +3,38 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@components/ui/select";
-import { Resolution } from "@/lib/types";
+import { Tabs, TabsList, TabsTrigger } from "#/src/components/ui/tabs";
+import { ConsumptionResolution } from "#/src/lib/types";
 
 type Props = {
-  resolution: Resolution;
-  setResolution: (resolution: Resolution) => void;
-  setOpen: (open: boolean) => void;
+  resolution: ConsumptionResolution;
+  setResolution: (resolution: ConsumptionResolution) => void;
 };
 
-export function TimeResolutionSelect({ resolution, setResolution, setOpen }: Props) {
+export function TimeResolutionSelect({ resolution, setResolution }: Props) {
   const common = useTranslations("common");
 
   return (
-    <Select
+    <Tabs
       value={resolution}
       onValueChange={(value) => {
-        setResolution(value as Resolution);
-        if (value === "personalized") {
-          setOpen(true);
-        }
+        setResolution(value as ConsumptionResolution);
       }}
     >
-      <SelectTrigger className="max-w-36 capitalize">
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent className="capitalize">
-        <SelectItem value="month">{common("month")}</SelectItem>
-        <SelectItem value="week">{common("week")}</SelectItem>
-        <SelectItem value="day">{common("day")}</SelectItem>
-        <SelectItem value="personalized">{common("personalized")}</SelectItem>
-      </SelectContent>
-    </Select>
+      <TabsList className="space-x-2">
+        <TabsTrigger value="month" className="capitalize">
+          {common("month")}
+        </TabsTrigger>
+        <TabsTrigger value="week" className="capitalize">
+          {common("week")}
+        </TabsTrigger>
+        <TabsTrigger value="day" className="capitalize">
+          {common("day")}
+        </TabsTrigger>
+        <TabsTrigger value="hour" className="capitalize">
+          {common("hour")}
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
   );
 }

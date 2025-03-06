@@ -1,7 +1,15 @@
 {
   "common": {
+    "all": "All",
+    "adress": "Address",
     "add": "Add",
+    "edit": "Edit",
+    "event": "Event",
     "remove": "Remove",
+    "notifications": "Notifications",
+    "language": "Language",
+    "help": "Help",
+    "year": "year",
     "month": "month",
     "week": "week",
     "day": "day",
@@ -27,35 +35,30 @@
     "close": "Close",
     "back": "Back",
     "next": "Next",
+    "new": "New",
     "open": "Open",
     "create": "Create",
     "household": "Household",
     "households": "Households",
     "name": "Name",
     "categories": {
-      "all": "All",
       "shower": "Shower",
       "washer": "Washer",
       "toilet": "Toilet",
       "sink": "Sink",
       "dishwasher": "Dishwasher",
+      "irrigation": "Irrigation",
+      "bathtub": "Bathtub",
+      "unknown": "Unknown",
+      "leak": "Leak",
       "other": "Other"
     },
-    "devices": {
-      "shower-room-1": "Shower room 1",
-      "shower-room-2": "Shower room 2",
-      "toilet-room-1": "Toilet room 1",
-      "toilet-room-2": "Toilet room 2",
-      "bathroom-sink": "Bathroom sink",
-      "kitchen-sink": "Kitchen sink",
-      "washer": "Washer",
-      "dishwasher": "Dishwasher"
-    },
     "nav-pages": {
-      "/home": "Home",
+      "/": "Home",
       "/consumption": "Consumption",
       "/data": "Data",
-      "/actions": "Actions"
+      "/actions": "Actions",
+      "/404": "Page not found"
     },
     "nav-settings": {
       "profile": "Profile",
@@ -64,6 +67,7 @@
       "logout": "Logout"
     },
     "navigation": "Navigation",
+    "now": "Now",
     "settings": "Settings"
   },
   "consumption-card": {
@@ -76,14 +80,8 @@
     "title": "Historic consumption."
   },
   "consumption-per-time-chart": {
-    "title": {
-      "personalized": "Select a time range.",
-      "other": "Filter the consumption by {resolution}."
-    },
-    "description": {
-      "personalized": "Press the button on the top left to select a time range.",
-      "other": "Select one of the bars to view consumption."
-    }
+    "title": "Filter the consumption by {resolution}.",
+    "description": "Select one of the bars to view consumption."
   },
   "consumption-per-category-chart": {
     "title": "Filter consumption by category.",
@@ -100,5 +98,9 @@
   "create-household": {
     "title": "Create household.",
     "description": "Enter the household information."
+  },
+  "not-found": {
+    "title": "Page not found.",
+    "description": "The page you are looking for does not exist."
   }
 }

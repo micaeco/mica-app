@@ -19,21 +19,22 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"], // Keeps a general alias for everything inside `src/`
+      "@/*": ["src/*"],
+
       "@app/*": ["src/app/*"],
       "@components/*": ["src/components/*"],
+      "@controllers/*": ["src/controllers/*"],
       "@hooks/*": ["src/hooks/*"],
       "@stores/*": ["src/stores/*"],
       "@providers/*": ["src/providers/*"],
+      "@i18n/*": ["src/i18n/*"],
       "@lib/*": ["src/lib/*"],
       "@messages/*": ["src/messages/*"],
 
       "@core/*": ["core/*"],
-      "@domain/*": ["domain/*"],
       "@infrastructure/*": ["infrastructure/*"],
-      "@config/*": ["config/*"],
 
-      "#/*": ["./*"] // Keeps an alias for everything at the root level
+      "#/*": ["./*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

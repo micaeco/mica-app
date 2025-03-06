@@ -3,60 +3,36 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { ConsumptionPerTimeChart } from "./_components/consumption-per-time-chart";
-import { ConsumptionPerDeviceChart } from "./_components/consumption-per-device-chart";
-import { ConsumptionPerCategoryChart } from "./_components/consumption-per-category-chart";
-import { TimeResolutionSelect } from "./_components/time-resolution-select";
-import { DateRangePanel } from "./_components/date-range-panel";
-import { useEventsContext } from "@providers/events-provider";
+import { Category } from "@core/entities/category";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card";
-import { useTimeWindow } from "@hooks/use-time-window";
-import { Category } from "@/lib/types";
+import { useTimeWindow } from "@app/[locale]/consumption/_hooks/use-time-window";
+import { ConsumptionPerTimeChart } from "@app/[locale]/consumption/_components/consumption-per-time-chart";
+import { ConsumptionPerCategoryChart } from "@app/[locale]/consumption/_components/consumption-per-category-chart";
+import { ConsumptionPerLabelChart } from "@app/[locale]/consumption/_components/consumption-per-event-chart";
+import { TimeResolutionSelect } from "@app/[locale]/consumption/_components/time-resolution-select";
 
-export default function Consumption() {
-  const { timeWindow, setTimeWindow, resolution, setResolution, data } = useTimeWindow();
+export default function ConsumptionPage() {
+  const { timeWindow, setTimeWindow, resolution, setResolution, consumption, isLoading } =
+    useTimeWindow();
   const [category, setCategory] = useState<Category | undefined>(undefined);
-  const [open, setOpen] = useState(false);
-  const { events } = useEventsContext();
 
-  const common = useTranslations("common");
+  const tCommon = useTranslations("common");
   const tTime = useTranslations("consumption-per-time-chart");
   const tCategory = useTranslations("consumption-per-category-chart");
-  const tDevice = useTranslations("consumption-per-device-chart");
 
   return (
     <div className="flex w-full flex-col gap-4 p-4">
       {/* Controls section */}
-      <div className="flex items-center justify-between gap-4 md:justify-normal">
-        <DateRangePanel
-          timeWindow={timeWindow}
-          setTimeWindow={setTimeWindow}
-          setResolution={setResolution}
-          open={open}
-          setOpen={setOpen}
-        />
-        <TimeResolutionSelect
-          resolution={resolution}
-          setResolution={setResolution}
-          setOpen={setOpen}
-        />
-      </div>
+      <TimeResolutionSelect resolution={resolution} setResolution={setResolution} />
 
       {/* Charts section */}
       <div className="flex flex-col gap-4">
-        {/* First row wrapper - for Time and Category charts */}
         <div className="flex flex-col gap-4 xl:flex-row">
           <Card className="h-full xl:w-1/2">
             <CardHeader>
-              <CardTitle>
-                {resolution === "personalized"
-                  ? tTime("title.personalized")
-                  : tTime("title.other", { resolution: common(`${resolution}`) })}
-              </CardTitle>
+              <CardTitle>{tTime("title", { resolution: tCommon(resolution) })}</CardTitle>
               <CardDescription>
-                {resolution === "personalized"
-                  ? tTime("description.personalized")
-                  : tTime("description.other", { resolution: common(`${resolution}`) })}
+                {tTime("description", { resolution: tCommon(resolution) })}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -64,7 +40,8 @@ export default function Consumption() {
                 timeWindow={timeWindow}
                 setTimeWindow={setTimeWindow}
                 resolution={resolution}
-                data={data}
+                consumption={consumption}
+                isLoading={isLoading}
               />
             </CardContent>
           </Card>
@@ -76,27 +53,23 @@ export default function Consumption() {
             </CardHeader>
             <CardContent>
               <ConsumptionPerCategoryChart
-                timeWindow={timeWindow}
+                categoryBreakdown={
+                  consumption.find(
+                    (categoryBreakdown) =>
+                      categoryBreakdown.startDate === timeWindow.startDate &&
+                      categoryBreakdown.endDate === timeWindow.endDate
+                  )?.categoryBreakdown ?? []
+                }
                 category={category}
                 setCategory={setCategory}
-                events={events}
               />
             </CardContent>
           </Card>
         </div>
 
-        {/* Second row - Device chart */}
         <Card className="w-full">
-          <CardHeader>
-            <CardTitle>{tDevice("title")}</CardTitle>
-            <CardDescription>{tDevice("description")}</CardDescription>
-          </CardHeader>
           <CardContent className="p-6">
-            <ConsumptionPerDeviceChart
-              timeWindow={timeWindow}
-              category={category}
-              events={events}
-            />
+            <ConsumptionPerLabelChart timeWindow={timeWindow} category={category} />
           </CardContent>
         </Card>
       </div>

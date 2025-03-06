@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { Trash2 } from "lucide-react";
 
-import { useHouseholdStore } from "@stores/household.store";
+import { useHouseholdStore } from "@stores/household";
 import {
   Form,
   FormControl,
@@ -20,6 +20,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -29,6 +30,7 @@ import { Input } from "@components/ui/input";
 
 const formSchema = z.object({
   householdName: z.string().min(1, "Aquest camp és obligatori"),
+  householdAdress: z.string().min(1, "Aquest camp és obligatori"),
 });
 
 export function EditHouseholdSheet({
@@ -40,15 +42,22 @@ export function EditHouseholdSheet({
   children: React.ReactNode;
   className?: string;
 }) {
-  const { updateName, deleteHousehold, households } = useHouseholdStore();
   const [open, setOpen] = useState(false);
+
+  const households = useHouseholdStore((state) => state.households);
+  const updateName = useHouseholdStore((state) => state.updateName);
+  const deleteHousehold = useHouseholdStore((state) => state.deleteHousehold);
+  const updateSelectedHousehold = useHouseholdStore((state) => state.updateSelectedHousehold);
 
   const t = useTranslations("edit-household");
   const common = useTranslations("common");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { householdName: households.find((h) => h.id === householdId)?.name },
+    defaultValues: {
+      householdName: households.find((h) => h.id === householdId)?.name,
+      householdAdress: households.find((h) => h.id === householdId)?.adress,
+    },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -61,6 +70,7 @@ export function EditHouseholdSheet({
   };
 
   const handleRemove = () => {
+    updateSelectedHousehold(households[0].id);
     deleteHousehold(householdId);
   };
 
@@ -68,34 +78,46 @@ export function EditHouseholdSheet({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger className={className}>{children}</SheetTrigger>
       <SheetContent className="w-full max-w-md">
+        <SheetHeader>
+          <SheetTitle>{t("title")}</SheetTitle>
+          <SheetDescription>{t("description")}</SheetDescription>
+        </SheetHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <SheetHeader>
-              <SheetTitle>{t("title")}</SheetTitle>
-              <SheetDescription>{t("description")}</SheetDescription>
-            </SheetHeader>
-            <div className="mt-2">
-              <FormField
-                control={form.control}
-                name="householdName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{common("name")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="w-full rounded border border-gray-300 p-2" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+          <form className="space-y-2 py-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="householdName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{common("name")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="w-full rounded border border-gray-300 p-2" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <div className="mt-4 flex justify-end gap-2">
-              <Button variant="destructive" type="button" onClick={handleRemove}>
+            <FormField
+              control={form.control}
+              name="householdAdress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{common("adress")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="w-full rounded border border-gray-300 p-2" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <SheetFooter className="mt-4 flex flex-row justify-end gap-2">
+              <Button variant="destructive" onClick={handleRemove}>
                 {common("remove")} {common("household")} <Trash2 />
               </Button>
               <Button type="submit">{common("save")}</Button>
-            </div>
+            </SheetFooter>
           </form>
         </Form>
       </SheetContent>

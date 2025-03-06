@@ -1,7 +1,15 @@
 {
   "common": {
+    "all": "Todos",
+    "adress": "Dirección",
     "add": "Añadir",
+    "edit": "Editar",
+    "event": "Evento",
     "remove": "Eliminar",
+    "notifications": "Notificaciones",
+    "language": "Idioma",
+    "help": "Ayuda",
+    "year": "año",
     "month": "mes",
     "week": "semana",
     "day": "día",
@@ -27,35 +35,30 @@
     "close": "Cerrar",
     "back": "Atrás",
     "next": "Siguiente",
+    "new": "Nuevo",
     "open": "Abrir",
     "create": "Crear",
     "household": "Vivienda",
     "households": "Viviendas",
     "name": "Nombre",
     "categories": {
-      "all": "Todos",
       "shower": "Ducha",
       "washer": "Lavadora",
       "toilet": "Inodoro",
       "sink": "Fregadero",
       "dishwasher": "Lavavajillas",
-      "other": "Otros"
-    },
-    "devices": {
-      "shower-room-1": "Ducha habitación 1",
-      "shower-room-2": "Ducha habitación 2",
-      "toilet-room-1": "Inodoro habitación 1",
-      "toilet-room-2": "Inodoro habitación 2",
-      "bathroom-sink": "Fregadero baño",
-      "kitchen-sink": "Fregadero cocina",
-      "washer": "Lavadora",
-      "dishwasher": "Lavavajillas"
+      "irrigation": "Riego",
+      "bathtub": "Bañera",
+      "unknown": "Desconocido",
+      "leak": "Fuga",
+      "other": "Otro"
     },
     "nav-pages": {
-      "/home": "Inicio",
+      "/": "Inicio",
       "/consumption": "Consumo",
       "/data": "Datos",
-      "/actions": "Acciones"
+      "/actions": "Acciones",
+      "/404": "Página no encontrada"
     },
     "nav-settings": {
       "profile": "Perfil",
@@ -64,6 +67,7 @@
       "logout": "Salir"
     },
     "navigation": "Navegación",
+    "now": "Ahora",
     "settings": "Configuración"
   },
   "consumption-card": {
@@ -76,14 +80,8 @@
     "title": "Consumo histórico."
   },
   "consumption-per-time-chart": {
-    "title": {
-      "personalized": "Selecciona un rango de fechas.",
-      "other": "Filtra el consumo por {resolution}."
-    },
-    "description": {
-      "personalized": "Pulsa en el botón de arriba a la izquierda para seleccionar un rango de fechas.",
-      "other": "Selecciona una de las barras para ver el consumo."
-    }
+    "title": "Filtra el consumo por {resolution}.",
+    "description": "Selecciona una de las barras para ver el consumo."
   },
   "consumption-per-category-chart": {
     "title": "Filtra el consumo por categoría.",
@@ -100,5 +98,9 @@
   "create-household": {
     "title": "Crea una nueva vivienda.",
     "description": "Introduce la información de la vivienda."
+  },
+  "not-found": {
+    "title": "Página no encontrada.",
+    "description": "La página que buscas no existe."
   }
 }

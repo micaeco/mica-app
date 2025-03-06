@@ -7,7 +7,7 @@
   --color-brand-secondary: hsl(var(--brand-secondary));
   --color-brand-tertiary: hsl(var(--brand-tertiary));
   --color-brand-quaternary: hsl(var(--brand-quaternary));
-  --color-brand-accent: hsl(var(--brand-accent));
+  --color-brand-quinary: hsl(var(--brand-quinary));
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -100,8 +100,8 @@
     --brand-primary: 223 31% 23%;
     --brand-secondary: 175 100% 47%;
     --brand-tertiary: 163 100% 92%;
-    --brand-quaternary: 335 71% 64%;
-    --brand-accent: 37 90% 52%;
+    --brand-quaternary: 37 90% 52%;
+    --brand-quinary: 335 71% 64%;
 
     --background: 0 0% 100%;
     --foreground: var(--brand-primary);
@@ -128,7 +128,7 @@
     --chart-2: var(--brand-secondary);
     --chart-3: var(--brand-tertiary);
     --chart-4: var(--brand-quaternary);
-    --chart-5: var(--brand-accent);
+    --chart-5: var(--brand-quinary);
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 5.3% 26.1%;

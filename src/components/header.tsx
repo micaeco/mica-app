@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { useSidebar } from "@components/ui/sidebar";
-import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@components/ui/avatar";
+import { EditProfilePanel } from "@components/edit-profile-panel";
+import { cn } from "@lib/utils";
+import { usePathname } from "@i18n/routing";
 
 export function Header({ className }: { className?: string }) {
   const pathname = usePathname();
@@ -35,17 +36,23 @@ export function Header({ className }: { className?: string }) {
             )}
           </button>
           <p className="text-sm font-semibold">
-            {tNavPages.has(pathname) ? tNavPages(pathname) : tNavPages("/home")}
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
+            {tNavPages.has(pathname as any)
+              ? /* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
+                tNavPages(pathname as any)
+              : pathname == "/"
+                ? tNavPages("/")
+                : tNavPages("/404")}
           </p>
         </div>
 
         <div className="fixed top-2 right-3">
-          <button onClick={() => console.log("clicked")} className="cursor-pointer">
+          <EditProfilePanel>
             <Avatar className="border-brand-primary h-9 w-9 border-2 transition-transform hover:scale-105">
               <AvatarImage className="object-contain" src="/logos/logo.webp" alt="avatar" />
               <AvatarFallback>U</AvatarFallback>
             </Avatar>
-          </button>
+          </EditProfilePanel>
         </div>
       </div>
     </header>

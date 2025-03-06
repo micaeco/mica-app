@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "@/i18n/routing";
+import { useRouter, usePathname } from "@i18n/routing";
 import { Globe } from "lucide-react";
 
 import {
