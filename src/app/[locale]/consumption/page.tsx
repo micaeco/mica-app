@@ -1,24 +1,40 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
-import { Category } from "@core/entities/category";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card";
-import { useTimeWindow } from "@app/[locale]/consumption/_hooks/use-time-window";
+import { useConsumption } from "@/app/[locale]/consumption/_hooks/use-consumption";
 import { ConsumptionPerTimeChart } from "@app/[locale]/consumption/_components/consumption-per-time-chart";
 import { ConsumptionPerCategoryChart } from "@app/[locale]/consumption/_components/consumption-per-category-chart";
-import { ConsumptionPerLabelChart } from "@app/[locale]/consumption/_components/consumption-per-event-chart";
+import { ConsumptionPerEventChart } from "@app/[locale]/consumption/_components/consumption-per-event-chart";
 import { TimeResolutionSelect } from "@app/[locale]/consumption/_components/time-resolution-select";
+import { format } from "date-fns";
+import { getDateFnsLocale } from "@/lib/utils";
 
 export default function ConsumptionPage() {
-  const { timeWindow, setTimeWindow, resolution, setResolution, consumption, isLoading } =
-    useTimeWindow();
-  const [category, setCategory] = useState<Category | undefined>(undefined);
+  const {
+    selectedTimeWindow,
+    setSelectedTimeWindow,
+    moveTimeWindow,
+    canMoveTimeWindowForward,
+    resolution,
+    setResolution,
+    category,
+    setCategory,
+    consumption,
+    events,
+    isLoading,
+  } = useConsumption();
 
+  const locale = useLocale();
   const tCommon = useTranslations("common");
   const tTime = useTranslations("consumption-per-time-chart");
-  const tCategory = useTranslations("consumption-per-category-chart");
+
+  const currentConsumption = consumption.find(
+    (item) =>
+      item.startDate.getTime() === selectedTimeWindow.startDate.getTime() &&
+      item.endDate.getTime() === selectedTimeWindow.endDate.getTime()
+  );
 
   return (
     <div className="flex w-full flex-col gap-4 p-4">
@@ -30,17 +46,39 @@ export default function ConsumptionPage() {
         <div className="flex flex-col gap-4 xl:flex-row">
           <Card className="h-full xl:w-1/2">
             <CardHeader>
-              <CardTitle>{tTime("title", { resolution: tCommon(resolution) })}</CardTitle>
+              <CardTitle className="text-2xl">
+                {(() => {
+                  const dateFnsLocale = getDateFnsLocale(locale);
+                  const sameYear =
+                    selectedTimeWindow.startDate.getFullYear() ===
+                    selectedTimeWindow.endDate.getFullYear();
+                  const sameDay =
+                    selectedTimeWindow.startDate.getDate() === selectedTimeWindow.endDate.getDate();
+                  const sameHour =
+                    selectedTimeWindow.startDate.getHours() ===
+                    selectedTimeWindow.endDate.getHours();
+
+                  return sameHour
+                    ? `${format(selectedTimeWindow.startDate, "dd MMM y", { locale: dateFnsLocale })} | ${format(selectedTimeWindow.startDate, "HH:mm")} - ${format(selectedTimeWindow.endDate, "HH:mm", { locale: dateFnsLocale })}`
+                    : sameDay
+                      ? `${format(selectedTimeWindow.startDate, "dd MMM y", { locale: dateFnsLocale })}`
+                      : sameYear
+                        ? `${format(selectedTimeWindow.startDate, "dd MMM", { locale: dateFnsLocale })} - ${format(selectedTimeWindow.endDate, "dd MMM y", { locale: dateFnsLocale })}`
+                        : `${format(selectedTimeWindow.startDate, "dd MMM y", { locale: dateFnsLocale })} - ${format(selectedTimeWindow.endDate, "dd MMM y", { locale: dateFnsLocale })}`;
+                })()}
+              </CardTitle>
               <CardDescription>
                 {tTime("description", { resolution: tCommon(resolution) })}
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-2">
               <ConsumptionPerTimeChart
-                timeWindow={timeWindow}
-                setTimeWindow={setTimeWindow}
+                selectedTimeWindow={selectedTimeWindow}
+                setSelectedTimeWindow={setSelectedTimeWindow}
                 resolution={resolution}
                 consumption={consumption}
+                moveTimeWindow={moveTimeWindow}
+                canMoveTimeWindowForward={canMoveTimeWindowForward}
                 isLoading={isLoading}
               />
             </CardContent>
@@ -48,18 +86,25 @@ export default function ConsumptionPage() {
 
           <Card className="h-full xl:w-1/2">
             <CardHeader>
-              <CardTitle>{tCategory("title")}</CardTitle>
-              <CardDescription>{tCategory("description")}</CardDescription>
+              <CardTitle className="space-x-4">
+                <span className="text-2xl">{currentConsumption?.consumptionInLiters} L</span>
+                <span className="text-sm">
+                  {currentConsumption?.consumptionPercentDeviationFromBaseline}%
+                  {currentConsumption?.consumptionPercentDeviationFromBaseline !== undefined
+                    ? currentConsumption.consumptionPercentDeviationFromBaseline > 0
+                      ? " ↑"
+                      : " ↓"
+                    : ""}
+                </span>
+              </CardTitle>
+              <CardDescription>
+                {currentConsumption?.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
+                {tCommon("day")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ConsumptionPerCategoryChart
-                categoryBreakdown={
-                  consumption.find(
-                    (categoryBreakdown) =>
-                      categoryBreakdown.startDate === timeWindow.startDate &&
-                      categoryBreakdown.endDate === timeWindow.endDate
-                  )?.categoryBreakdown ?? []
-                }
+                categoryBreakdown={currentConsumption?.categoryBreakdown || []}
                 category={category}
                 setCategory={setCategory}
               />
@@ -69,7 +114,11 @@ export default function ConsumptionPage() {
 
         <Card className="w-full">
           <CardContent className="p-6">
-            <ConsumptionPerLabelChart timeWindow={timeWindow} category={category} />
+            <ConsumptionPerEventChart
+              category={category}
+              events={events}
+              totalConsumption={currentConsumption?.consumptionInLiters ?? 0}
+            />
           </CardContent>
         </Card>
       </div>

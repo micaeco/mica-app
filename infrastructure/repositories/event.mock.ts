@@ -76,10 +76,11 @@ export class MockEventRepository implements EventRepository {
       const eventStartDate = new Date(eventStartTime);
       const eventEndDate = new Date(eventStartTime + eventDuration);
       const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+      const possibleLabels = categoriesToLabel[randomCategory.type];
       const randomLabel =
-        categoriesToLabel[randomCategory.type][
-          Math.floor(Math.random() * categoriesToLabel[randomCategory.type].length)
-        ];
+        Math.random() > 0.3 && possibleLabels.length > 0
+          ? possibleLabels[Math.floor(Math.random() * possibleLabels.length)]
+          : undefined;
       const randomConsumption = Math.round(Math.random() * 100) / 10;
 
       events.push({

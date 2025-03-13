@@ -10,6 +10,9 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   private baseHourlyMin = 0;
   private baseHourlyMax = 10;
   private instanceSeed: number;
+  // Add baseline consumption values for deviation calculation
+  private baselineConsumptionPerDay = 150; // Liters per day
+  private averagePersonCount = 2.5; // Average number of people per household
 
   constructor() {
     this.instanceSeed = Math.random();
@@ -98,6 +101,39 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     return breakdown;
   }
 
+  // Helper function to calculate days between two dates
+  private getDaysBetween(startDate: Date, endDate: Date): number {
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    const diffMs = endDate.getTime() - startDate.getTime();
+    return Math.max(1, Math.ceil(diffMs / oneDayMs));
+  }
+
+  // Helper function to calculate the new fields for Consumption objects
+  private calculateConsumptionMetrics(
+    consumptionInLiters: number,
+    startDate: Date,
+    endDate: Date
+  ): Pick<
+    Consumption,
+    "consumptionInLitersPerDayPerPerson" | "consumptionPercentDeviationFromBaseline"
+  > {
+    const days = this.getDaysBetween(startDate, endDate);
+    const consumptionPerDay = consumptionInLiters / days;
+    const consumptionInLitersPerDayPerPerson = consumptionPerDay / this.averagePersonCount;
+
+    // Calculate deviation from baseline (baselineConsumptionPerDay represents the historical average)
+    const expectedConsumption = this.baselineConsumptionPerDay * days;
+    const consumptionPercentDeviationFromBaseline =
+      ((consumptionInLiters - expectedConsumption) / expectedConsumption) * 100;
+
+    return {
+      consumptionInLitersPerDayPerPerson: Number(consumptionInLitersPerDayPerPerson.toFixed(2)),
+      consumptionPercentDeviationFromBaseline: Number(
+        consumptionPercentDeviationFromBaseline.toFixed(0)
+      ),
+    };
+  }
+
   async getHourlyConsumption(
     sensorId: Sensor["id"],
     startDate: Date,
@@ -124,12 +160,14 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       );
 
       const categoryBreakdown = await this.generateCategoryBreakdown(consumptionInLiters);
+      const metrics = this.calculateConsumptionMetrics(consumptionInLiters, hourStart, hourEnd);
 
       result.push({
         startDate: hourStart,
         endDate: hourEnd,
         consumptionInLiters,
         categoryBreakdown,
+        ...metrics,
       });
 
       currentDate.setHours(currentDate.getHours() + 1);
@@ -162,12 +200,14 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       );
 
       const categoryBreakdown = await this.generateCategoryBreakdown(dailyConsumption);
+      const metrics = this.calculateConsumptionMetrics(dailyConsumption, dayStart, dayEnd);
 
       result.push({
         startDate: dayStart,
         endDate: dayEnd,
         consumptionInLiters: dailyConsumption,
         categoryBreakdown,
+        ...metrics,
       });
 
       currentDate.setDate(currentDate.getDate() + 1);
@@ -183,12 +223,15 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   ): Promise<Consumption[]> {
     const result: Consumption[] = [];
 
+    // Adjust firstDate to Monday (first day of week)
     const firstDate = new Date(startDate);
-    firstDate.setDate(firstDate.getDate() - firstDate.getDay());
+    const dayOfWeek = firstDate.getDay();
+    firstDate.setDate(firstDate.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
     firstDate.setHours(0, 0, 0, 0);
 
+    // Adjust lastDate to Sunday (last day of week)
     const lastDate = new Date(endDate);
-    const daysToAdd = 6 - lastDate.getDay();
+    const daysToAdd = lastDate.getDay() === 0 ? 0 : 7 - lastDate.getDay();
     if (daysToAdd > 0) {
       lastDate.setDate(lastDate.getDate() + daysToAdd);
     }
@@ -211,12 +254,14 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       );
 
       const categoryBreakdown = await this.generateCategoryBreakdown(weeklyConsumption);
+      const metrics = this.calculateConsumptionMetrics(weeklyConsumption, weekStart, weekEnd);
 
       result.push({
         startDate: weekStart,
         endDate: weekEnd,
         consumptionInLiters: weeklyConsumption,
         categoryBreakdown,
+        ...metrics,
       });
 
       currentDate.setDate(currentDate.getDate() + 7);
@@ -258,12 +303,14 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       );
 
       const categoryBreakdown = await this.generateCategoryBreakdown(monthlyConsumption);
+      const metrics = this.calculateConsumptionMetrics(monthlyConsumption, monthStart, monthEnd);
 
       result.push({
         startDate: monthStart,
         endDate: monthEnd,
         consumptionInLiters: monthlyConsumption,
         categoryBreakdown,
+        ...metrics,
       });
 
       currentDate.setMonth(currentDate.getMonth() + 1);
@@ -281,12 +328,14 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     const consumptionInLiters = dailyData.reduce((sum, item) => sum + item.consumptionInLiters, 0);
 
     const categoryBreakdown = await this.generateCategoryBreakdown(consumptionInLiters);
+    const metrics = this.calculateConsumptionMetrics(consumptionInLiters, startDate, endDate);
 
     return {
       startDate,
       endDate,
       consumptionInLiters,
       categoryBreakdown,
+      ...metrics,
     };
   }
 }

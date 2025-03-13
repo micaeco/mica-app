@@ -2,12 +2,13 @@
 
 import { useLocale } from "next-intl";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, LabelProps } from "recharts";
-import { LoaderCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
 
 import { Consumption } from "@core/entities/consumption";
 import { ChartConfig, ChartContainer } from "@components/ui/chart";
 import { TimeWindow, ConsumptionResolution } from "@lib/types";
-import { formatDateRange } from "@lib/utils";
+import { cn, formatDateRange } from "@lib/utils";
+import { Button } from "@/components/ui/button";
 
 const chartConfig = {
   consumption: {
@@ -17,24 +18,28 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 type Props = {
-  timeWindow: TimeWindow;
-  setTimeWindow: (timeWindow: TimeWindow) => void;
+  selectedTimeWindow: TimeWindow;
+  setSelectedTimeWindow: (timeWindow: TimeWindow) => void;
   resolution: ConsumptionResolution;
   consumption: Consumption[];
+  moveTimeWindow: (direction: "forward" | "back") => void;
+  canMoveTimeWindowForward: () => boolean;
   isLoading: boolean;
 };
 
 export function ConsumptionPerTimeChart({
-  timeWindow,
-  setTimeWindow,
+  selectedTimeWindow,
+  setSelectedTimeWindow,
   resolution,
   consumption,
+  moveTimeWindow,
+  canMoveTimeWindowForward,
   isLoading,
 }: Props) {
   const locale = useLocale();
 
   const handleClick = (clickedTimeWindow: TimeWindow) => {
-    setTimeWindow(clickedTimeWindow);
+    setSelectedTimeWindow(clickedTimeWindow);
   };
 
   const handleLabelClick = (label: string) => {
@@ -47,11 +52,11 @@ export function ConsumptionPerTimeChart({
   };
 
   const isSelected = (entry: Consumption) =>
-    entry.startDate.getHours() === timeWindow?.startDate?.getHours() &&
-    entry.startDate.getDate() === timeWindow?.startDate?.getDate() &&
-    entry.endDate.getDate() === timeWindow?.endDate?.getDate() &&
-    entry.startDate.getMonth() === timeWindow?.startDate?.getMonth() &&
-    entry.endDate.getFullYear() === timeWindow?.endDate?.getFullYear();
+    entry.startDate.getHours() === selectedTimeWindow?.startDate?.getHours() &&
+    entry.startDate.getDate() === selectedTimeWindow?.startDate?.getDate() &&
+    entry.endDate.getDate() === selectedTimeWindow?.endDate?.getDate() &&
+    entry.startDate.getMonth() === selectedTimeWindow?.startDate?.getMonth() &&
+    entry.endDate.getFullYear() === selectedTimeWindow?.endDate?.getFullYear();
 
   if (isLoading) {
     return (
@@ -64,55 +69,63 @@ export function ConsumptionPerTimeChart({
   }
 
   return (
-    <ChartContainer config={chartConfig} className="aspect-13/9 w-full">
-      <BarChart
-        data={consumption}
-        barSize={30}
-        margin={{ top: 25, bottom: 20, left: 10, right: 10 }}
-      >
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey={(entry) => formatDateRange(entry.startDate, entry.endDate, resolution, locale)}
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-          tick={(props) => (
-            <CustomTick
-              {...props}
-              onClick={handleLabelClick}
-              isSelected={props.index !== undefined && isSelected(consumption[props.index])}
-            />
-          )}
-        />
-        <Bar dataKey="consumptionInLiters" radius={20}>
-          {consumption.map((entry, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={
-                isSelected(entry)
-                  ? "hsl(var(--brand-secondary))"
-                  : "hsl(var(--brand-secondary) / 0.2)"
-              }
-              onClick={() => handleClick(entry)}
-              className="cursor-pointer transition-all duration-300 ease-in-out hover:opacity-80"
-            />
-          ))}
-          <LabelList
-            dataKey="consumptionInLiters"
-            content={(props: LabelProps & { index?: number }) =>
-              renderCustomizedLabel({
-                x: Number(props.x) || 0,
-                y: Number(props.y) || 0,
-                width: Number(props.width) || 0,
-                value: Number(props.value) || 0,
-                isSelected:
-                  props.index !== undefined ? isSelected(consumption[props.index]) : false,
-              })
-            }
+    <div className="flex flex-row items-center">
+      <ChevronLeft onClick={() => moveTimeWindow("back")} />
+
+      <ChartContainer config={chartConfig} className="w-full">
+        <BarChart
+          data={consumption}
+          barSize={30}
+          margin={{ top: 25, bottom: 10, left: 10, right: 10 }}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey={(entry) => formatDateRange(entry.startDate, entry.endDate, resolution, locale)}
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tick={(props) => (
+              <CustomTick
+                {...props}
+                onClick={handleLabelClick}
+                isSelected={props.index !== undefined && isSelected(consumption[props.index])}
+              />
+            )}
           />
-        </Bar>
-      </BarChart>
-    </ChartContainer>
+          <Bar dataKey="consumptionInLiters" radius={20}>
+            {consumption.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={
+                  isSelected(entry)
+                    ? "hsl(var(--brand-secondary))"
+                    : "hsl(var(--brand-secondary) / 0.2)"
+                }
+                onClick={() => handleClick(entry)}
+                className="cursor-pointer transition-all duration-300 ease-in-out hover:opacity-80"
+              />
+            ))}
+            <LabelList
+              dataKey="consumptionInLiters"
+              content={(props: LabelProps & { index?: number }) =>
+                renderCustomizedLabel({
+                  x: Number(props.x) || 0,
+                  y: Number(props.y) || 0,
+                  width: Number(props.width) || 0,
+                  value: Number(props.value) || 0,
+                  isSelected:
+                    props.index !== undefined ? isSelected(consumption[props.index]) : false,
+                })
+              }
+            />
+          </Bar>
+        </BarChart>
+      </ChartContainer>
+      <ChevronRight
+        onClick={() => moveTimeWindow("forward")}
+        className={cn(!canMoveTimeWindowForward() && "opacity-0")}
+      />
+    </div>
   );
 }
 

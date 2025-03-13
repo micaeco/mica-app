@@ -80,21 +80,14 @@ export function formatDateRange(
   const dateFnsLocale = getDateFnsLocale(locale);
   const formatOptions = { locale: dateFnsLocale };
 
-  const formatPatterns = {
-    day: "d MMM",
-    week: "d-d",
-    month: "MMM",
-    personalized: "d-d MMM",
-  };
-
   switch (resolution) {
     case "hour":
       return format(start, "HH:mm", formatOptions);
     case "day":
-      return format(start, formatPatterns.day, formatOptions);
+      return format(start, "d MMM", formatOptions);
     case "week":
       return `${format(start, "d", formatOptions)}-${format(end, "d", formatOptions)}`;
     case "month":
-      return format(start, formatPatterns.month, formatOptions);
+      return format(start, "MMM", formatOptions);
   }
 }
