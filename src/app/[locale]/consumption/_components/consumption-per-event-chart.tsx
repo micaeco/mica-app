@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 import { Category } from "@core/entities/category";
 import { Event } from "@core/entities/event";
 import {
@@ -9,103 +11,100 @@ import {
 import { EventBar } from "@/components/event";
 
 type Props = {
-  category: Category | undefined;
+  selectedCategories: Category[] | undefined;
   events: Event[];
-  totalConsumption: number;
 };
 
-export function ConsumptionPerEventChart({ category, events, totalConsumption }: Props) {
-  const filteredEvents = category
-    ? events.filter((event) => event.category.type === category.type)
+export function ConsumptionPerEventChart({ selectedCategories, events }: Props) {
+  const t = useTranslations("consumption-per-event-chart");
+
+  const hasCategories = selectedCategories && selectedCategories.length > 0;
+  const filteredEvents = hasCategories
+    ? events.filter((event) =>
+        selectedCategories.some((category) => category.type === event.category.type)
+      )
     : events;
 
   if (filteredEvents.length === 0) {
-    return <div className="text-muted-foreground py-8 text-center">No events found</div>;
+    return (
+      <div className="flex items-center justify-center">
+        <p className="text-muted-foreground max-w-md text-center text-sm">{t("no-events-found")}</p>
+      </div>
+    );
   }
 
-  if (category) {
-    const labeledEvents = new Map<string, Event[]>();
-    const unlabeledEvents: Event[] = [];
+  const sortedEvents = [...filteredEvents].sort(
+    (a, b) => b.consumptionInLiters - a.consumptionInLiters
+  );
 
-    filteredEvents.forEach((event) => {
-      if (event.label) {
-        const labelName = event.label.name;
-        if (!labeledEvents.has(labelName)) {
-          labeledEvents.set(labelName, []);
-        }
-        labeledEvents.get(labelName)!.push(event);
-      } else {
-        unlabeledEvents.push(event);
-      }
-    });
+  const maxConsumption = sortedEvents[0]?.consumptionInLiters || 0;
+  const isSingleCategory = selectedCategories?.length === 1;
 
-    const hasLabeledEvents = labeledEvents.size > 0;
-
+  if (!isSingleCategory) {
     return (
-      <div className="space-y-6">
-        {hasLabeledEvents ? (
-          <Accordion type="multiple" className="mb-6">
-            {Array.from(labeledEvents).map(([labelName, events]) => (
-              <AccordionItem key={labelName} value={labelName}>
-                <AccordionTrigger className="py-3">
-                  <div className="flex items-center">
-                    <span className="font-medium">{labelName}</span>
-                    <span className="bg-brand-tertiary/80 text-foreground ml-3 rounded-full px-3 py-0.5 text-xs">
-                      {events.length} events •{" "}
-                      {events.reduce((sum, event) => sum + event.consumptionInLiters, 0).toFixed(1)}
-                      L
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-4 pt-2">
-                    {events.map((event) => (
-                      <EventBar key={event.id} event={event} totalConsumption={totalConsumption} />
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-            {unlabeledEvents.length > 0 && (
-              <AccordionItem key="unlabeled" value="unlabeled">
-                <AccordionTrigger className="py-3">
-                  <div className="flex items-center">
-                    <span className="font-medium">unlabeled</span>
-                    <span className="bg-brand-tertiary/80 text-foreground ml-3 rounded-full px-3 py-0.5 text-xs">
-                      {unlabeledEvents.length} events •{" "}
-                      {unlabeledEvents
-                        .reduce((sum, event) => sum + event.consumptionInLiters, 0)
-                        .toFixed(1)}
-                      L
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-4">
-                    {unlabeledEvents.map((event) => (
-                      <EventBar key={event.id} event={event} totalConsumption={totalConsumption} />
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-          </Accordion>
-        ) : (
-          <div className="space-y-4">
-            {unlabeledEvents.map((event) => (
-              <EventBar key={event.id} event={event} totalConsumption={totalConsumption} />
-            ))}
-          </div>
-        )}
+      <div className="space-y-4">
+        {sortedEvents.map((event) => (
+          <EventBar key={event.id} event={event} totalConsumption={maxConsumption} />
+        ))}
+      </div>
+    );
+  }
+
+  const eventsByLabel = sortedEvents.reduce(
+    (groups, event) => {
+      const labelName = event.label?.name || "unlabeled";
+      if (!groups[labelName]) {
+        groups[labelName] = [];
+      }
+      groups[labelName].push(event);
+      return groups;
+    },
+    {} as Record<string, Event[]>
+  );
+
+  const labelEntries = Object.entries(eventsByLabel);
+  const hasLabels = labelEntries.some(([label]) => label !== "unlabeled");
+
+  if (!hasLabels) {
+    return (
+      <div className="space-y-4">
+        {sortedEvents.map((event) => (
+          <EventBar key={event.id} event={event} totalConsumption={maxConsumption} />
+        ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {filteredEvents.map((event) => (
-        <EventBar key={event.id} event={event} totalConsumption={totalConsumption} />
-      ))}
+    <div className="space-y-6">
+      <Accordion type="multiple" className="mb-6">
+        {labelEntries.map(([labelName, labelEvents]) => {
+          const totalConsumption = labelEvents.reduce(
+            (sum, event) => sum + event.consumptionInLiters,
+            0
+          );
+
+          return (
+            <AccordionItem key={labelName} value={labelName}>
+              <AccordionTrigger className="py-3">
+                <div className="flex items-center">
+                  <span className="font-medium">{labelName}</span>
+                  <span className="bg-brand-tertiary/80 text-foreground ml-3 rounded-full px-3 py-0.5 text-xs">
+                    {labelEvents.length} events • {totalConsumption.toFixed(1)}L
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-4 pt-2">
+                  {labelEvents.map((event) => (
+                    <EventBar key={event.id} event={event} totalConsumption={maxConsumption} />
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
+      </Accordion>
     </div>
   );
 }

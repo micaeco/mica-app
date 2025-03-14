@@ -51,7 +51,8 @@
       "pool": "Piscina",
       "unknown": "Desconocido",
       "leak": "Fuga",
-      "other": "Otro"
+      "other": "Otro",
+      "rest": "Resto"
     },
     "nav-pages": {
       "/": "Inicio",
@@ -87,9 +88,8 @@
     "title": "Filtra el consumo por categoría.",
     "description": "Selecciona una de las secciones para ver el consumo."
   },
-  "consumption-per-device-chart": {
-    "title": "Por dispositivo.",
-    "description": "Visualiza el consumo por dispositivo."
+  "consumption-per-event-chart": {
+    "no-events-found": "Aquí encontrarás los eventos ordenados de mayor a menor consumo. En caso de que la categoría seleccionada tenga una o más etiquetas, los eventos se clasificarán en etiquetas."
   },
   "edit-household": {
     "title": "Edita la vivienda.",

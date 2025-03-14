@@ -51,7 +51,8 @@
       "pool": "Pool",
       "unknown": "Unknown",
       "leak": "Leak",
-      "other": "Other"
+      "other": "Other",
+      "rest": "Rest"
     },
     "nav-pages": {
       "/": "Home",
@@ -87,9 +88,8 @@
     "title": "Filter consumption by category.",
     "description": "Select one of the sections to view consumption."
   },
-  "consumption-per-device-chart": {
-    "title": "By device.",
-    "description": "Visualize consumption by device."
+  "consumption-per-event-chart": {
+    "no-events-found": "Here you will find the events ordered by highest to lowest consumption. In case the category selected has one or more labels, the events will be classified into labels."
   },
   "edit-household": {
     "title": "Edit household.",

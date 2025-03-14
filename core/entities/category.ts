@@ -11,6 +11,7 @@ export const CategoryType = z.enum([
   "leak",
   "other",
   "unknown",
+  "rest",
 ]);
 
 export type CategoryType = z.infer<typeof CategoryType>;
@@ -52,12 +53,12 @@ export const categories: Category[] = [
   {
     type: "irrigation",
     icon: "/icons/irrigation.webp",
-    color: "chart-2",
+    color: "chart-1",
   },
   {
     type: "pool",
     icon: "/icons/pool.webp",
-    color: "chart-1",
+    color: "chart-2",
   },
   {
     type: "leak",
@@ -73,5 +74,10 @@ export const categories: Category[] = [
     type: "unknown",
     icon: "/icons/unknown.webp",
     color: "chart-5",
+  },
+  {
+    type: "rest",
+    icon: "/icons/rest.webp",
+    color: "muted-foreground",
   },
 ];

@@ -20,7 +20,7 @@ export class MockEventRepository implements EventRepository {
     // Add variance (70% to 130% of expected)
     const numberOfEvents = Math.max(1, Math.round(expectedEvents * (0.7 + Math.random() * 0.6)));
 
-    const categoriesToLabel: Record<CategoryType, Label[]> = {
+    const categoriesToLabel: Partial<Record<CategoryType, Label[]>> = {
       shower: [
         {
           name: "nens",
@@ -62,13 +62,6 @@ export class MockEventRepository implements EventRepository {
           householdId: "1",
         },
       ],
-      sink: [],
-      toilet: [],
-      irrigation: [],
-      pool: [],
-      leak: [],
-      other: [],
-      unknown: [],
     };
 
     for (let i = 0; i < numberOfEvents; i++) {
@@ -88,16 +81,17 @@ export class MockEventRepository implements EventRepository {
       } else {
         // Generate a normal event (not leak or unknown)
         const normalCategories = categories.filter(
-          (c) => c.type !== "leak" && c.type !== "unknown"
+          (c) => c.type !== "leak" && c.type !== "unknown" && c.type !== "rest"
         );
         randomCategory = normalCategories[Math.floor(Math.random() * normalCategories.length)];
       }
 
       const possibleLabels = categoriesToLabel[randomCategory.type];
-      const randomLabel =
-        Math.random() > 0.3 && possibleLabels.length > 0
+      const randomLabel = possibleLabels
+        ? Math.random() > 0.3 && possibleLabels.length > 0
           ? possibleLabels[Math.floor(Math.random() * possibleLabels.length)]
-          : undefined;
+          : undefined
+        : undefined;
       const randomConsumption = Math.round(Math.random() * 100) / 10;
 
       events.push({
@@ -111,7 +105,7 @@ export class MockEventRepository implements EventRepository {
       });
     }
 
-    return events.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+    return events;
   }
 
   getEvents(sensorId: Sensor["id"], startDate: Date, endDate: Date): Event[] {

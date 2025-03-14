@@ -19,16 +19,15 @@ export default function ConsumptionPage() {
     canMoveTimeWindowForward,
     resolution,
     setResolution,
-    category,
-    setCategory,
+    selectedCategories,
+    setSelectedCategories,
     consumption,
     events,
-    isLoading,
   } = useConsumption();
 
   const locale = useLocale();
+  const t = useTranslations("consumption-per-time-chart");
   const tCommon = useTranslations("common");
-  const tTime = useTranslations("consumption-per-time-chart");
 
   const currentConsumption = consumption.find(
     (item) =>
@@ -68,7 +67,7 @@ export default function ConsumptionPage() {
                 })()}
               </CardTitle>
               <CardDescription>
-                {tTime("description", { resolution: tCommon(resolution) })}
+                {t("description", { resolution: tCommon(resolution) })}
               </CardDescription>
             </CardHeader>
             <CardContent className="px-2">
@@ -79,7 +78,6 @@ export default function ConsumptionPage() {
                 consumption={consumption}
                 moveTimeWindow={moveTimeWindow}
                 canMoveTimeWindowForward={canMoveTimeWindowForward}
-                isLoading={isLoading}
               />
             </CardContent>
           </Card>
@@ -105,8 +103,7 @@ export default function ConsumptionPage() {
             <CardContent>
               <ConsumptionPerCategoryChart
                 categoryBreakdown={currentConsumption?.categoryBreakdown || []}
-                category={category}
-                setCategory={setCategory}
+                setSelectedCategories={setSelectedCategories}
               />
             </CardContent>
           </Card>
@@ -114,11 +111,7 @@ export default function ConsumptionPage() {
 
         <Card className="w-full">
           <CardContent className="p-6">
-            <ConsumptionPerEventChart
-              category={category}
-              events={events}
-              totalConsumption={currentConsumption?.consumptionInLiters ?? 0}
-            />
+            <ConsumptionPerEventChart selectedCategories={selectedCategories} events={events} />
           </CardContent>
         </Card>
       </div>

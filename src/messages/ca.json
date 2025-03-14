@@ -51,7 +51,8 @@
       "pool": "Piscina",
       "unknown": "Desconegut",
       "leak": "Fuga",
-      "other": "Altres"
+      "other": "Altres",
+      "rest": "Resta"
     },
     "nav-pages": {
       "/": "Inici",
@@ -87,9 +88,8 @@
     "title": "Filtra el consum per categoria.",
     "description": "Selecciona una de les seccions per veure el consum."
   },
-  "consumption-per-device-chart": {
-    "title": "Per dispositiu.",
-    "description": "Visualitza el consum per dispositiu."
+  "consumption-per-event-chart": {
+    "no-events-found": "Aquí trobaràs els esdeveniments ordenats de major a menor consum. En cas que la categoria seleccionada tingui una o més etiquetes, els esdeveniments es classificaran en etiquetes."
   },
   "edit-household": {
     "title": "Edita la vivenda.",

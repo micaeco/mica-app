@@ -26,7 +26,7 @@ export function useConsumption() {
     startDate: new Date(),
     endDate: new Date(),
   });
-  const [category, setCategory] = useState<Category | undefined>(undefined);
+  const [selectedCategories, setSelectedCategories] = useState<Category[] | undefined>(undefined);
   const [consumption, setConsumption] = useState<Consumption[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -109,6 +109,10 @@ export function useConsumption() {
   }, [resolution, selectedHouseholdSensorId, fetchConsumption]);
 
   function canMoveTimeWindowForward() {
+    if (consumption.length === 0) {
+      return false;
+    }
+
     const lastUpdatedDate = new Date(consumption[consumption.length - 1].endDate);
 
     return lastUpdatedDate < new Date();
@@ -209,8 +213,8 @@ export function useConsumption() {
     setSelectedTimeWindow,
     resolution,
     setResolution,
-    category,
-    setCategory,
+    selectedCategories,
+    setSelectedCategories,
     consumption,
     events,
     isLoading,

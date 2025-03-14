@@ -102,6 +102,8 @@
     --brand-tertiary: 163 100% 92%;
     --brand-quaternary: 37 90% 52%;
     --brand-quinary: 335 71% 64%;
+    --brand-senary: 113 45% 35%;
+    --brand-septenary: 316 50% 40%;
 
     --background: 0 0% 100%;
     --foreground: var(--brand-primary);
@@ -124,11 +126,11 @@
     --ring: var(--brand-primary);
     --radius: 0.5rem;
 
-    --chart-1: var(--brand-primary);
-    --chart-2: var(--brand-secondary);
-    --chart-3: var(--brand-tertiary);
-    --chart-4: var(--brand-quaternary);
-    --chart-5: var(--brand-quinary);
+    --chart-1: var(--brand-secondary);
+    --chart-2: var(--brand-quaternary);
+    --chart-3: var(--brand-quinary);
+    --chart-4: var(--brand-senary);
+    --chart-5: var(--brand-septenary);
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 5.3% 26.1%;

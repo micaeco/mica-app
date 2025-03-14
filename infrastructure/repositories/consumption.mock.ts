@@ -62,6 +62,10 @@ export class MockConsumptionRepository implements ConsumptionRepository {
         consumptionInLiters: 0,
       },
       {
+        type: "pool",
+        consumptionInLiters: 0,
+      },
+      {
         type: "other",
         consumptionInLiters: 0,
       },
@@ -98,7 +102,25 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       }
     }
 
-    return breakdown;
+    // Limit to top 4 categories + rest
+    const sortedBreakdown = [...breakdown].sort(
+      (a, b) => b.consumptionInLiters - a.consumptionInLiters
+    );
+
+    const topCategories = sortedBreakdown.slice(0, 5);
+    const restConsumption = sortedBreakdown
+      .slice(4)
+      .reduce((sum, item) => sum + item.consumptionInLiters, 0);
+
+    const finalBreakdown: CategoryBreakdown[] = [
+      ...topCategories,
+      {
+        type: "rest" as const,
+        consumptionInLiters: Math.round(restConsumption * 10) / 10,
+      },
+    ];
+
+    return finalBreakdown;
   }
 
   // Helper function to calculate days between two dates

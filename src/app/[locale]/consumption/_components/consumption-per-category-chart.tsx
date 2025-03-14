@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Cell, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
@@ -6,8 +7,7 @@ import { CategoryBreakdown } from "@core/entities/consumption";
 import { ChartConfig, ChartContainer } from "@components/ui/chart";
 
 type Props = {
-  category: Category | undefined;
-  setCategory: (category: Category | undefined) => void;
+  setSelectedCategories: (category: Category[] | undefined) => void;
   categoryBreakdown: CategoryBreakdown[];
 };
 
@@ -19,13 +19,24 @@ const chartConfig: ChartConfig = categories.reduce((config: ChartConfig, categor
   return config;
 }, {});
 
-export function ConsumptionPerCategoryChart({ category, setCategory, categoryBreakdown }: Props) {
-  const activeType = category?.type;
+export function ConsumptionPerCategoryChart({ setSelectedCategories, categoryBreakdown }: Props) {
+  const [activeCategory, setActiveCategory] = useState<Category | undefined>(undefined);
 
-  const handlePieSectionClick = (clickedType: string) => {
-    const clickedCategory = categories.find((c) => c.type === clickedType);
-    if (clickedCategory) {
-      setCategory(category?.type === clickedType ? undefined : clickedCategory);
+  const handlePieSectionClick = (clickedCategory: Category) => {
+    if (activeCategory && activeCategory.type === clickedCategory.type) {
+      setActiveCategory(undefined);
+      setSelectedCategories(undefined);
+    } else {
+      if (clickedCategory.type === "rest") {
+        const restCategories = categories.filter(
+          (category) => !categoryBreakdown.some((item) => item.type === category.type)
+        );
+        setActiveCategory(clickedCategory);
+        setSelectedCategories(restCategories);
+      } else {
+        setActiveCategory(clickedCategory);
+        setSelectedCategories([clickedCategory]);
+      }
     }
   };
 
@@ -38,7 +49,7 @@ export function ConsumptionPerCategoryChart({ category, setCategory, categoryBre
           nameKey="type"
           outerRadius="70%"
           innerRadius="50%"
-          activeIndex={categoryBreakdown.findIndex((item) => item.type === activeType)}
+          activeIndex={categoryBreakdown.findIndex((item) => item.type === activeCategory?.type)}
           isAnimationActive={false}
           activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
             <Sector {...props} outerRadius={outerRadius + 10} />
@@ -47,7 +58,7 @@ export function ConsumptionPerCategoryChart({ category, setCategory, categoryBre
           label={(props) =>
             renderCustomizedLabel({
               ...props,
-              activeType,
+              isActive: props.payload.type === activeCategory?.type,
               handlePieSectionClick,
             })
           }
@@ -57,7 +68,7 @@ export function ConsumptionPerCategoryChart({ category, setCategory, categoryBre
             const matchingCategory = categories.find((c) => c.type === item.type);
             if (!matchingCategory) return null;
 
-            const isActive = activeType === item.type;
+            const isActive = activeCategory?.type === item.type;
 
             return (
               <Cell
@@ -67,8 +78,8 @@ export function ConsumptionPerCategoryChart({ category, setCategory, categoryBre
                     ? `hsl(var(--${matchingCategory.color}))`
                     : `hsl(var(--${matchingCategory.color})/0.5)`
                 }
-                onClick={() => handlePieSectionClick(item.type)}
-                className="cursor-pointer"
+                onClick={() => handlePieSectionClick(matchingCategory)}
+                className="cursor-pointer transition-colors duration-200 hover:opacity-90"
               />
             );
           })}
@@ -85,7 +96,7 @@ const renderCustomizedLabel = ({
   outerRadius,
   percent,
   payload,
-  activeType,
+  isActive,
   handlePieSectionClick,
 }: {
   cx: number;
@@ -94,15 +105,14 @@ const renderCustomizedLabel = ({
   outerRadius: number;
   percent: number;
   payload: CategoryBreakdown;
-  activeType: string | undefined;
-  handlePieSectionClick: (type: string) => void;
+  isActive: boolean;
+  handlePieSectionClick: (category: Category) => void;
 }) => {
   if (!payload) return null;
 
   const matchingCategory = categories.find((c) => c.type === payload.type);
   if (!matchingCategory) return null;
 
-  const isActive = payload.type === activeType;
   const RADIAN = Math.PI / 180;
   const radius = outerRadius * (isActive ? 1.3 : 1.2);
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -119,7 +129,7 @@ const renderCustomizedLabel = ({
         y={y - 20}
         width={40}
         height={40}
-        onClick={() => handlePieSectionClick(payload.type)}
+        onClick={() => handlePieSectionClick(matchingCategory)}
         style={{ cursor: "pointer" }}
       />
       {isActive && (

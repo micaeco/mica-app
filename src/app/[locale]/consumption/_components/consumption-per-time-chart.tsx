@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, LabelProps } from "recharts";
-import { ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Consumption } from "@core/entities/consumption";
 import { ChartConfig, ChartContainer } from "@components/ui/chart";
@@ -23,7 +23,6 @@ type Props = {
   consumption: Consumption[];
   moveTimeWindow: (direction: "forward" | "back") => void;
   canMoveTimeWindowForward: () => boolean;
-  isLoading: boolean;
 };
 
 export function ConsumptionPerTimeChart({
@@ -33,7 +32,6 @@ export function ConsumptionPerTimeChart({
   consumption,
   moveTimeWindow,
   canMoveTimeWindowForward,
-  isLoading,
 }: Props) {
   const locale = useLocale();
 
@@ -51,21 +49,8 @@ export function ConsumptionPerTimeChart({
   };
 
   const isSelected = (entry: Consumption) =>
-    entry.startDate.getHours() === selectedTimeWindow?.startDate?.getHours() &&
-    entry.startDate.getDate() === selectedTimeWindow?.startDate?.getDate() &&
-    entry.endDate.getDate() === selectedTimeWindow?.endDate?.getDate() &&
-    entry.startDate.getMonth() === selectedTimeWindow?.startDate?.getMonth() &&
-    entry.endDate.getFullYear() === selectedTimeWindow?.endDate?.getFullYear();
-
-  if (isLoading) {
-    return (
-      <div className="aspect-13/9 w-full">
-        <div className="flex h-full items-center justify-center">
-          <LoaderCircle size={64} className="animate-spin" />
-        </div>
-      </div>
-    );
-  }
+    entry.startDate.getTime() === selectedTimeWindow.startDate.getTime() &&
+    entry.endDate.getTime() === selectedTimeWindow.endDate.getTime();
 
   return (
     <div className="flex flex-row items-center">
