@@ -3,7 +3,7 @@ import "server-only";
 import { Household } from "@core/entities/household";
 import { HouseholdRepository } from "@core/repositories/household";
 
-const initialHouseholds: Household[] = [
+export const mockHouseholds: Household[] = [
   {
     id: "1",
     name: "Household 1",
@@ -62,7 +62,7 @@ const initialHouseholds: Household[] = [
 
 export class MockHouseholdRepository implements HouseholdRepository {
   private getHouseholds(): Household[] {
-    return initialHouseholds;
+    return mockHouseholds;
   }
 
   findAll() {

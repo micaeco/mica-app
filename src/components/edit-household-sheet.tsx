@@ -45,9 +45,6 @@ export function EditHouseholdSheet({
   const [open, setOpen] = useState(false);
 
   const households = useHouseholdStore((state) => state.households);
-  const updateName = useHouseholdStore((state) => state.updateName);
-  const deleteHousehold = useHouseholdStore((state) => state.deleteHousehold);
-  const updateSelectedHousehold = useHouseholdStore((state) => state.updateSelectedHousehold);
 
   const t = useTranslations("edit-household");
   const common = useTranslations("common");
@@ -56,23 +53,19 @@ export function EditHouseholdSheet({
     resolver: zodResolver(formSchema),
     defaultValues: {
       householdName: households.find((h) => h.id === householdId)?.name,
-      householdAdress: households.find((h) => h.id === householdId)?.adress,
+      householdAdress: households.find((h) => h.id === householdId)?.street1,
     },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const name = values.householdName.trim();
     if (name) {
-      updateName(householdId, name);
       form.reset({ householdName: name });
       setOpen(false);
     }
   };
 
-  const handleRemove = () => {
-    updateSelectedHousehold(households[0].id);
-    deleteHousehold(householdId);
-  };
+  const handleRemove = () => {};
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

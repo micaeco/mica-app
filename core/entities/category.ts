@@ -7,6 +7,7 @@ export const CategoryType = z.enum([
   "dishwasher",
   "washer",
   "irrigation",
+  "pool",
   "leak",
   "other",
   "unknown",
@@ -52,6 +53,11 @@ export const categories: Category[] = [
     type: "irrigation",
     icon: "/icons/irrigation.webp",
     color: "chart-2",
+  },
+  {
+    type: "pool",
+    icon: "/icons/pool.webp",
+    color: "chart-1",
   },
   {
     type: "leak",

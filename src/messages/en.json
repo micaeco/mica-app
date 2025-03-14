@@ -48,7 +48,7 @@
       "sink": "Sink",
       "dishwasher": "Dishwasher",
       "irrigation": "Irrigation",
-      "bathtub": "Bathtub",
+      "pool": "Pool",
       "unknown": "Unknown",
       "leak": "Leak",
       "other": "Other"

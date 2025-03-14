@@ -65,6 +65,7 @@ export class MockEventRepository implements EventRepository {
       sink: [],
       toilet: [],
       irrigation: [],
+      pool: [],
       leak: [],
       other: [],
       unknown: [],
@@ -75,7 +76,23 @@ export class MockEventRepository implements EventRepository {
       const eventDuration = this.averageEventDurationMs * (0.5 + Math.random());
       const eventStartDate = new Date(eventStartTime);
       const eventEndDate = new Date(eventStartTime + eventDuration);
-      const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+
+      // Make leak and unknown events rare
+      let randomCategory;
+      const rareProbability = 0.05; // 5% chance for rare events
+
+      if (Math.random() < rareProbability) {
+        // Generate a leak or unknown event
+        const rareCategories = categories.filter((c) => c.type === "leak" || c.type === "unknown");
+        randomCategory = rareCategories[Math.floor(Math.random() * rareCategories.length)];
+      } else {
+        // Generate a normal event (not leak or unknown)
+        const normalCategories = categories.filter(
+          (c) => c.type !== "leak" && c.type !== "unknown"
+        );
+        randomCategory = normalCategories[Math.floor(Math.random() * normalCategories.length)];
+      }
+
       const possibleLabels = categoriesToLabel[randomCategory.type];
       const randomLabel =
         Math.random() > 0.3 && possibleLabels.length > 0
@@ -99,5 +116,21 @@ export class MockEventRepository implements EventRepository {
 
   getEvents(sensorId: Sensor["id"], startDate: Date, endDate: Date): Event[] {
     return this.generateEvents(sensorId, startDate, endDate);
+  }
+
+  getLeakEvents(sensorId: Sensor["id"]): Event[] {
+    const now = new Date();
+
+    return this.generateEvents(sensorId, new Date(now.setDate(now.getDate() + 3)), new Date())
+      .filter((e) => e.category.type === "leak")
+      .slice(0, 3);
+  }
+
+  getUnknownEvents(sensorId: Sensor["id"]): Event[] {
+    const now = new Date();
+
+    return this.generateEvents(sensorId, new Date(now.setDate(now.getDate() + 3)), new Date())
+      .filter((e) => e.category.type === "unknown")
+      .slice(0, 3);
   }
 }

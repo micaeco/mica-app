@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useHouseholdStore } from "#/src/stores/household";
 import {
   Form,
   FormControl,
@@ -14,7 +13,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "#/src/components/ui/form";
+} from "@components/ui/form";
 import {
   Panel,
   PanelContent,
@@ -22,9 +21,9 @@ import {
   PanelHeader,
   PanelTitle,
   PanelTrigger,
-} from "#/src/components/ui/panel";
-import { Button } from "#/src/components/ui/button";
-import { Input } from "#/src/components/ui/input";
+} from "@components/ui/panel";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
 
 const formSchema = z.object({
   newHouseholdName: z.string().min(1, "Aquest camp és obligatori"),
@@ -38,7 +37,6 @@ export function CreateHouseholdPanel({
   children: React.ReactNode;
   className?: string;
 }) {
-  const createHousehold = useHouseholdStore((state) => state.createHousehold);
   const [open, setOpen] = useState(false);
 
   const t = useTranslations("create-household");
@@ -51,9 +49,8 @@ export function CreateHouseholdPanel({
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const name = values.newHouseholdName.trim();
-    const adress = values.newHouseholdAdress.trim();
+    // const adress = values.newHouseholdAdress.trim();
     if (name) {
-      createHousehold({ name, adress, sensorId: "" });
       form.reset();
     }
     setOpen(false);

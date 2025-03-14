@@ -8,7 +8,6 @@ import { Consumption } from "@core/entities/consumption";
 import { ChartConfig, ChartContainer } from "@components/ui/chart";
 import { TimeWindow, ConsumptionResolution } from "@lib/types";
 import { cn, formatDateRange } from "@lib/utils";
-import { Button } from "@/components/ui/button";
 
 const chartConfig = {
   consumption: {
@@ -60,7 +59,7 @@ export function ConsumptionPerTimeChart({
 
   if (isLoading) {
     return (
-      <div className="aspect-16/9 w-full">
+      <div className="aspect-13/9 w-full">
         <div className="flex h-full items-center justify-center">
           <LoaderCircle size={64} className="animate-spin" />
         </div>

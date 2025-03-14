@@ -6,7 +6,7 @@ import { findAllHouseholds } from "@lib/actions";
 interface HouseholdState {
   selectedHouseholdId: Household["id"];
   selectedHouseholdSensorId: Sensor["id"];
-  households: Array<Pick<Household, "id" | "name" | "icon" | "sensor">>;
+  households: Array<Household>;
   isLoading: boolean;
   fetchHouseholds: () => Promise<void>;
   selectHousehold: (id: string) => void;

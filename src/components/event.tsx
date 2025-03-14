@@ -1,23 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Timer } from "lucide-react";
+import { format } from "date-fns";
 
 import { Event } from "@core/entities/event";
+import { getDateFnsLocale } from "@lib/utils";
 
 export function EventBar({ event, totalConsumption }: { event: Event; totalConsumption: number }) {
   const tCommon = useTranslations("common");
   const tCategories = useTranslations("common.categories");
+  const locale = useLocale();
+  const dateLocale = getDateFnsLocale(locale);
   const consumptionPercentage = (event.consumptionInLiters / totalConsumption) * 100;
-
-  const formatTime = (date: Date) => {
-    return new Intl.DateTimeFormat(undefined, {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).format(date);
-  };
 
   if (event.endDate) {
     return (
@@ -35,7 +31,8 @@ export function EventBar({ event, totalConsumption }: { event: Event; totalConsu
               )}
             </div>
             <span>
-              {formatTime(event.startDate)} - {formatTime(event.endDate)}
+              {format(event.startDate, "HH:mm", { locale: dateLocale })} -{" "}
+              {format(event.endDate, "HH:mm", { locale: dateLocale })}
             </span>
           </div>
           <div className="flex flex-row items-center gap-2">

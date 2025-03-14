@@ -1,7 +1,7 @@
 import { User } from "@core/entities/user";
 import { UserRepository } from "@core/repositories/user";
 
-const mockUsers: User[] = [
+export const mockUsers: User[] = [
   {
     id: "1",
     name: "Gabriel Escobar",
