@@ -5,9 +5,9 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Plus, SquarePen, Bell, CircleHelp, ChevronRight } from "lucide-react";
 
-import { EditHouseholdSheet } from "./edit-household-sheet";
-import { CreateHouseholdPanel } from "./create-household-panel";
-import { LanguageSwitcher } from "./language-switcher";
+import { EditHouseholdSheet } from "@components/edit-household-sheet";
+import { CreateHouseholdPanel } from "@components/create-household-panel";
+import { LanguageSwitcher } from "@components/language-switcher";
 import {
   Sidebar,
   SidebarContent,
