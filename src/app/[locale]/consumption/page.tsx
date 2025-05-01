@@ -3,13 +3,13 @@
 import { useLocale, useTranslations } from "next-intl";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card";
-import { useConsumption } from "@/app/[locale]/consumption/_hooks/use-consumption";
+import { useConsumption } from "@app/[locale]/consumption/_hooks/use-consumption";
 import { ConsumptionPerTimeChart } from "@app/[locale]/consumption/_components/consumption-per-time-chart";
 import { ConsumptionPerCategoryChart } from "@app/[locale]/consumption/_components/consumption-per-category-chart";
 import { ConsumptionPerEventChart } from "@app/[locale]/consumption/_components/consumption-per-event-chart";
 import { TimeResolutionSelect } from "@app/[locale]/consumption/_components/time-resolution-select";
 import { format } from "date-fns";
-import { getDateFnsLocale } from "@/lib/utils";
+import { cn, getDateFnsLocale } from "@lib/utils";
 
 export default function ConsumptionPage() {
   const {
@@ -86,13 +86,17 @@ export default function ConsumptionPage() {
             <CardHeader>
               <CardTitle className="space-x-4">
                 <span className="text-2xl">{currentConsumption?.consumptionInLiters} L</span>
-                <span className="text-sm">
+                <span
+                  className={cn(
+                    "text-sm",
+                    (currentConsumption?.consumptionPercentDeviationFromBaseline ?? 0) > 0
+                      ? "text-red-500"
+                      : "text-green-500"
+                  )}
+                >
                   {currentConsumption?.consumptionPercentDeviationFromBaseline}%
-                  {currentConsumption?.consumptionPercentDeviationFromBaseline !== undefined
-                    ? currentConsumption.consumptionPercentDeviationFromBaseline > 0
-                      ? " ↑"
-                      : " ↓"
-                    : ""}
+                  {currentConsumption?.consumptionPercentDeviationFromBaseline !== undefined &&
+                    (currentConsumption.consumptionPercentDeviationFromBaseline > 0 ? " ↑" : " ↓")}
                 </span>
               </CardTitle>
               <CardDescription>

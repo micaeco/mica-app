@@ -16,11 +16,7 @@ export const mockHouseholds: Household[] = [
     zip: "12345",
     country: "USA",
 
-    sensor: {
-      id: "1",
-      battery: 100,
-      state: "active",
-    },
+    sensorId: "1",
   },
   {
     id: "2",
@@ -34,11 +30,7 @@ export const mockHouseholds: Household[] = [
     zip: "54321",
     country: "USA",
 
-    sensor: {
-      id: "2",
-      battery: 50,
-      state: "active",
-    },
+    sensorId: "2",
   },
   {
     id: "3",
@@ -52,11 +44,7 @@ export const mockHouseholds: Household[] = [
     zip: "67890",
     country: "USA",
 
-    sensor: {
-      id: "3",
-      battery: 75,
-      state: "active",
-    },
+    sensorId: "3",
   },
 ];
 

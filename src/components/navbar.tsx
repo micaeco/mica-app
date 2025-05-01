@@ -7,9 +7,9 @@ import { Home, PieChart, CopyCheck } from "lucide-react";
 import { cn } from "@lib/utils";
 
 const navItems = [
-  { icon: PieChart, label: "Consumption", href: "/consumption" },
-  { icon: Home, label: "Home", href: "/" },
-  { icon: CopyCheck, label: "Actions", href: "/actions" },
+  { icon: PieChart, tag: "Consumption", href: "/consumption" },
+  { icon: Home, tag: "Home", href: "/" },
+  { icon: CopyCheck, tag: "Actions", href: "/actions" },
 ];
 
 export function Navbar({ className }: { className?: string }) {

@@ -1,8 +1,15 @@
 import { Event } from "@core/entities/event";
-import { Sensor } from "@core/entities/sensor";
 
 export interface EventRepository {
-  getEvents(sensorId: Sensor["id"], startDate: Date, endDate: Date): Event[];
-  getLeakEvents(sensorId: Sensor["id"]): Event[];
-  getUnknownEvents(sensorId: Sensor["id"]): Event[];
+  getEvents(householdId: string, startDate: Date, endDate: Date): Promise<Event[]>;
+
+  getPaginatedEvents(householdId: string, offset: number, numberOfEvents: number): Promise<Event[]>;
+
+  getLeakEvents(householdId: string): Promise<Event[]>;
+
+  getNumberOfLeakEvents(householdId: string): Promise<number>;
+
+  getUnknownEvents(householdId: string): Promise<Event[]>;
+
+  getNumberOfUnknownEvents(householdId: string): Promise<number>;
 }

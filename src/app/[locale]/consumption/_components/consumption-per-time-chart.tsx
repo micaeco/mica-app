@@ -4,9 +4,9 @@ import { useLocale } from "next-intl";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, LabelProps } from "recharts";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { Consumption } from "@core/entities/consumption";
+import { Consumption, ConsumptionGranularity } from "@core/entities/consumption";
 import { ChartConfig, ChartContainer } from "@components/ui/chart";
-import { TimeWindow, ConsumptionResolution } from "@lib/types";
+import { TimeWindow } from "@lib/types";
 import { cn, formatDateRange } from "@lib/utils";
 
 const chartConfig = {
@@ -19,7 +19,7 @@ const chartConfig = {
 type Props = {
   selectedTimeWindow: TimeWindow;
   setSelectedTimeWindow: (timeWindow: TimeWindow) => void;
-  resolution: ConsumptionResolution;
+  resolution: ConsumptionGranularity;
   consumption: Consumption[];
   moveTimeWindow: (direction: "forward" | "back") => void;
   canMoveTimeWindowForward: () => boolean;
@@ -39,9 +39,9 @@ export function ConsumptionPerTimeChart({
     setSelectedTimeWindow(clickedTimeWindow);
   };
 
-  const handleLabelClick = (label: string) => {
+  const handleLabelClick = (tag: string) => {
     const clickedEntry = consumption.find(
-      (entry) => formatDateRange(entry.startDate, entry.endDate, resolution, locale) === label
+      (entry) => formatDateRange(entry.startDate, entry.endDate, resolution, locale) === tag
     );
     if (clickedEntry) {
       handleClick(clickedEntry);

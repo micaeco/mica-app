@@ -1,14 +1,11 @@
 "use server";
 
 import { ErrorKey } from "@core/entities/error";
-import { Event } from "@core/entities/event";
-import { Sensor } from "@core/entities/sensor";
 import { Consumption } from "@core/entities/consumption";
 import { MockConsumptionRepository } from "@infrastructure/repositories/consumption.mock";
-import { MockEventRepository } from "@infrastructure/repositories/event.mock";
 
 async function getConsumption(
-  sensorId: Sensor["id"],
+  sensorId: string,
   startDate: Date,
   endDate: Date
 ): Promise<{ success: true; data: Consumption } | { success: false; error: ErrorKey }> {
@@ -23,7 +20,7 @@ async function getConsumption(
 }
 
 async function getMonthlyConsumption(
-  sensorId: Sensor["id"],
+  sensorId: string,
   startDate: Date,
   endDate: Date
 ): Promise<{ success: true; data: Consumption[] } | { success: false; error: ErrorKey }> {
@@ -38,7 +35,7 @@ async function getMonthlyConsumption(
 }
 
 async function getWeeklyConsumption(
-  sensorId: Sensor["id"],
+  sensorId: string,
   startDate: Date,
   endDate: Date
 ): Promise<{ success: true; data: Consumption[] } | { success: false; error: ErrorKey }> {
@@ -53,7 +50,7 @@ async function getWeeklyConsumption(
 }
 
 async function getDailyConsumption(
-  sensorId: Sensor["id"],
+  sensorId: string,
   startDate: Date,
   endDate: Date
 ): Promise<{ success: true; data: Consumption[] } | { success: false; error: ErrorKey }> {
@@ -68,7 +65,7 @@ async function getDailyConsumption(
 }
 
 async function getHourlyConsumption(
-  sensorId: Sensor["id"],
+  sensorId: string,
   startDate: Date,
   endDate: Date
 ): Promise<{ success: true; data: Consumption[] } | { success: false; error: ErrorKey }> {
@@ -82,26 +79,10 @@ async function getHourlyConsumption(
   }
 }
 
-async function getEvents(
-  sensorId: Sensor["id"],
-  startDate: Date,
-  endDate: Date
-): Promise<{ success: true; data: Event[] } | { success: false; error: ErrorKey }> {
-  try {
-    const eventRepo = new MockEventRepository();
-    const data = await eventRepo.getEvents(sensorId, startDate, endDate);
-    return { success: true, data };
-  } catch (error) {
-    console.error("[getEvents]", error);
-    return { success: false, error: "INTERNAL_SERVER_ERROR" };
-  }
-}
-
 export {
   getConsumption,
   getMonthlyConsumption,
   getWeeklyConsumption,
   getDailyConsumption,
   getHourlyConsumption,
-  getEvents,
 };

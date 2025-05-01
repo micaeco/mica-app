@@ -1,7 +1,6 @@
 import "server-only";
 
 import { CategoryBreakdown, Consumption } from "@core/entities/consumption";
-import { Sensor } from "@core/entities/sensor";
 import { categories } from "@core/entities/category";
 import { ConsumptionRepository } from "@core/repositories/consumption";
 
@@ -10,16 +9,15 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   private baseHourlyMin = 0;
   private baseHourlyMax = 10;
   private instanceSeed: number;
-  // Add baseline consumption values for deviation calculation
-  private baselineConsumptionPerDay = 150; // Liters per day
-  private averagePersonCount = 2.5; // Average number of people per household
+  private baselineConsumptionPerDay = 150;
+  private averagePersonCount = 2.5;
 
   constructor() {
     this.instanceSeed = Math.random();
   }
 
-  private getSeed(sensorId: string, date: Date): number {
-    const key = `${sensorId}-${date.toISOString().split("T")[0]}`;
+  private getSeed(householdId: string, date: Date): number {
+    const key = `${householdId}-${date.toISOString().split("T")[0]}`;
 
     if (!this.seedMap.has(key)) {
       // Add more variability with date components
@@ -38,43 +36,43 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   private async generateCategoryBreakdown(totalConsumption: number): Promise<CategoryBreakdown[]> {
     const breakdown: CategoryBreakdown[] = [
       {
-        type: "sink",
+        category: "sink",
         consumptionInLiters: 0,
       },
       {
-        type: "shower",
+        category: "shower",
         consumptionInLiters: 0,
       },
       {
-        type: "toilet",
+        category: "toilet",
         consumptionInLiters: 0,
       },
       {
-        type: "washer",
+        category: "washer",
         consumptionInLiters: 0,
       },
       {
-        type: "dishwasher",
+        category: "dishwasher",
         consumptionInLiters: 0,
       },
       {
-        type: "irrigation",
+        category: "irrigation",
         consumptionInLiters: 0,
       },
       {
-        type: "pool",
+        category: "pool",
         consumptionInLiters: 0,
       },
       {
-        type: "other",
+        category: "other",
         consumptionInLiters: 0,
       },
       {
-        type: "leak",
+        category: "leak",
         consumptionInLiters: 0,
       },
       {
-        type: "unknown",
+        category: "unknown",
         consumptionInLiters: 0,
       },
     ];
@@ -86,7 +84,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       const category = categories[i];
       if (i === categories.length - 1) {
         // Last category gets whatever is left to ensure they sum to total
-        const index = breakdown.findIndex((item) => item.type === category.type);
+        const index = breakdown.findIndex((item) => item.category === category);
         if (index !== -1) {
           breakdown[index].consumptionInLiters = Math.round(remainingConsumption * 10) / 10;
         }
@@ -94,7 +92,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
         // Assign a random portion of the remaining consumption
         const portion = Math.random() * 0.5 * remainingConsumption;
         const value = Math.round(portion * 10) / 10; // Round to 1 decimal place
-        const index = breakdown.findIndex((item) => item.type === category.type);
+        const index = breakdown.findIndex((item) => item.category === category);
         if (index !== -1) {
           breakdown[index].consumptionInLiters = value;
         }
@@ -115,7 +113,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     const finalBreakdown: CategoryBreakdown[] = [
       ...topCategories,
       {
-        type: "rest" as const,
+        category: "rest" as const,
         consumptionInLiters: Math.round(restConsumption * 10) / 10,
       },
     ];
@@ -123,14 +121,12 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     return finalBreakdown;
   }
 
-  // Helper function to calculate days between two dates
   private getDaysBetween(startDate: Date, endDate: Date): number {
     const oneDayMs = 24 * 60 * 60 * 1000;
     const diffMs = endDate.getTime() - startDate.getTime();
     return Math.max(1, Math.ceil(diffMs / oneDayMs));
   }
 
-  // Helper function to calculate the new fields for Consumption objects
   private calculateConsumptionMetrics(
     consumptionInLiters: number,
     startDate: Date,
@@ -143,7 +139,6 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     const consumptionPerDay = consumptionInLiters / days;
     const consumptionInLitersPerDayPerPerson = consumptionPerDay / this.averagePersonCount;
 
-    // Calculate deviation from baseline (baselineConsumptionPerDay represents the historical average)
     const expectedConsumption = this.baselineConsumptionPerDay * days;
     const consumptionPercentDeviationFromBaseline =
       ((consumptionInLiters - expectedConsumption) / expectedConsumption) * 100;
@@ -157,7 +152,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   }
 
   async getHourlyConsumption(
-    sensorId: Sensor["id"],
+    householdId: string,
     startDate: Date,
     endDate: Date
   ): Promise<Consumption[]> {
@@ -173,7 +168,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       const hourEnd = new Date(currentDate);
       hourEnd.setMinutes(59, 59, 999);
 
-      const seed = this.getSeed(sensorId, currentDate);
+      const seed = this.getSeed(householdId, currentDate);
       const hourSeed = (seed * (currentDate.getHours() + 1)) / 23;
       const consumptionInLiters = this.getRandomValue(
         this.baseHourlyMin,
@@ -199,7 +194,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   }
 
   async getDailyConsumption(
-    sensorId: Sensor["id"],
+    householdId: string,
     startDate: Date,
     endDate: Date
   ): Promise<Consumption[]> {
@@ -216,7 +211,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       const dayEnd = new Date(currentDate);
       dayEnd.setHours(23, 59, 59, 999);
 
-      const hourlyData = await this.getHourlyConsumption(sensorId, dayStart, dayEnd);
+      const hourlyData = await this.getHourlyConsumption(householdId, dayStart, dayEnd);
       const dailyConsumption = Math.round(
         hourlyData.reduce((sum, item) => sum + item.consumptionInLiters, 0)
       );
@@ -239,7 +234,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   }
 
   async getWeeklyConsumption(
-    sensorId: Sensor["id"],
+    householdId: string,
     startDate: Date,
     endDate: Date
   ): Promise<Consumption[]> {
@@ -270,7 +265,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       const effectiveStart = weekStart < startDate ? startDate : weekStart;
       const effectiveEnd = weekEnd > endDate ? endDate : weekEnd;
 
-      const dailyData = await this.getDailyConsumption(sensorId, effectiveStart, effectiveEnd);
+      const dailyData = await this.getDailyConsumption(householdId, effectiveStart, effectiveEnd);
       const weeklyConsumption = Math.round(
         dailyData.reduce((sum, item) => sum + item.consumptionInLiters, 0)
       );
@@ -293,7 +288,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   }
 
   async getMonthlyConsumption(
-    sensorId: Sensor["id"],
+    householdId: string,
     startDate: Date,
     endDate: Date
   ): Promise<Consumption[]> {
@@ -319,7 +314,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       const effectiveStart = monthStart < startDate ? startDate : monthStart;
       const effectiveEnd = monthEnd > endDate ? endDate : monthEnd;
 
-      const dailyData = await this.getDailyConsumption(sensorId, effectiveStart, effectiveEnd);
+      const dailyData = await this.getDailyConsumption(householdId, effectiveStart, effectiveEnd);
       const monthlyConsumption = Math.round(
         dailyData.reduce((sum, item) => sum + item.consumptionInLiters, 0)
       );
@@ -341,12 +336,8 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     return result;
   }
 
-  async getConsumption(
-    sensorId: Sensor["id"],
-    startDate: Date,
-    endDate: Date
-  ): Promise<Consumption> {
-    const dailyData = await this.getDailyConsumption(sensorId, startDate, endDate);
+  async getConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption> {
+    const dailyData = await this.getDailyConsumption(householdId, startDate, endDate);
     const consumptionInLiters = dailyData.reduce((sum, item) => sum + item.consumptionInLiters, 0);
 
     const categoryBreakdown = await this.generateCategoryBreakdown(consumptionInLiters);
@@ -359,5 +350,27 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       categoryBreakdown,
       ...metrics,
     };
+  }
+
+  getCurrentMonthConsumption(householdId: string): Promise<Consumption> {
+    const startDate = new Date();
+    startDate.setDate(1);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date();
+    endDate.setMonth(endDate.getMonth() + 1, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    return this.getConsumption(householdId, startDate, endDate);
+  }
+
+  getCurrentDayConsumption(householdId: string): Promise<Consumption> {
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+
+    return this.getConsumption(householdId, startDate, endDate);
   }
 }

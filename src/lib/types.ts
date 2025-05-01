@@ -11,5 +11,3 @@ export interface TimeWindow {
   endDate: Date;
   consumption?: number;
 }
-
-export type ConsumptionResolution = "day" | "week" | "month" | "hour";

@@ -1,5 +1,20 @@
 {
   "common": {
+    "untagged": "Sin etiqueta",
+    "start": "Empezar",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "reset": "Reiniciar",
+    "start-time": "Hora de inicio",
+    "starts-now": "Comienza ahora",
+    "starts-later": "Comienza más tarde",
+    "consumption-point": "Punto de consumo",
+    "tag": "Etiqueta",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "this": "Este",
+    "categorize": "Categoriza",
+    "leaks": "Fugas",
     "all": "Todos",
     "adress": "Dirección",
     "add": "Añadir",
@@ -29,6 +44,7 @@
     "person": "persona",
     "average": "media",
     "logout": "Cerrar sesión",
+    "loading": "Cargando",
     "cancel": "Cancelar",
     "submit": "Enviar",
     "save": "Guardar",
@@ -99,8 +115,35 @@
     "title": "Crea una nueva vivienda.",
     "description": "Introduce la información de la vivienda."
   },
+  "action-cards": {
+    "leaks": {
+      "title": "Fugas",
+      "description": "{count, plural, =0 {No tienes fugas} =1 {Tienes 1 fuga} other {Tienes # fugas}}"
+    },
+    "categorize": {
+      "title": "Categorizar",
+      "description": "{count, plural, =0 {No tienes eventos para categorizar} =1 {Categoriza 1 evento} other {Categoriza # eventos}}"
+    }
+  },
+  "events-list": {
+    "title": "Eventos"
+  },
+  "new-event-sheet": {
+    "no-tags-for-category": "Esta categoria no tiene ninguna etiqueta creada"
+  },
+  "actions": {
+    "no-leaks": "No hay fugas",
+    "no-unknowns": "No hay eventos para categorizar"
+  },
   "not-found": {
     "title": "Página no encontrada.",
     "description": "La página que buscas no existe."
+  },
+  "errors": {
+    "NOT_FOUND": "Página no encontrada.",
+    "UNAUTHORIZED": "No estás autorizado para ver esta página.",
+    "FORBIDDEN": "No tienes permiso para ver esta página.",
+    "BAD_REQUEST": "La petición no es válida.",
+    "INTERNAL_SERVER_ERROR": "Error interno del servidor."
   }
 }

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, LucideIcon } from "lucide-react";
 
 import { cn } from "@lib/utils";
 
@@ -23,11 +23,18 @@ function AccordionItem({
   );
 }
 
+interface AccordionTriggerProps extends React.ComponentProps<typeof AccordionPrimitive.Trigger> {
+  Icon?: LucideIcon;
+  iconOnRight?: boolean;
+}
+
 function AccordionTrigger({
   className,
   children,
+  Icon = ChevronRightIcon,
+  iconOnRight = false,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+}: AccordionTriggerProps) {
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
@@ -38,8 +45,13 @@ function AccordionTrigger({
         )}
         {...props}
       >
-        <ChevronRightIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
+        {!iconOnRight && (
+          <Icon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
+        )}
         {children}
+        {iconOnRight && (
+          <Icon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
+        )}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );

@@ -1,6 +1,4 @@
 import { HouseholdUser } from "@core/entities/household-user";
-import { Household } from "@core/entities/household";
-import { User } from "@core/entities/user";
 
 export interface HouseholdUserRepository {
   create(householdUser: HouseholdUser): Promise<HouseholdUser>;
@@ -11,9 +9,9 @@ export interface HouseholdUserRepository {
 
   findByUserId(userId: string): Promise<HouseholdUser[]>;
 
-  findUsersByHouseholdId(householdId: string): Promise<User[]>;
+  findUsersByHouseholdId(householdId: string): Promise<string[]>;
 
-  findHouseholdsByUserId(userId: string): Promise<Household[]>;
+  findHouseholdsByUserId(userId: string): Promise<string[]>;
 
   updateRole(
     householdId: string,

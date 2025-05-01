@@ -1,11 +1,9 @@
 import { create } from "zustand";
 import { Household } from "@core/entities/household";
-import { Sensor } from "@core/entities/sensor";
 import { findAllHouseholds } from "@lib/actions";
 
 interface HouseholdState {
   selectedHouseholdId: Household["id"];
-  selectedHouseholdSensorId: Sensor["id"];
   households: Array<Household>;
   isLoading: boolean;
   fetchHouseholds: () => Promise<void>;
@@ -22,7 +20,6 @@ export const useHouseholdStore = create<HouseholdState>((set) => {
         isLoading: false,
         selectedHouseholdId:
           state.selectedHouseholdId || (households.length > 0 ? households[0].id : ""),
-        selectedHouseholdSensorId: state.selectedHouseholdSensorId || households[0].sensor.id,
       }));
     } catch (error) {
       console.error("Error fetching households:", error);
@@ -32,7 +29,6 @@ export const useHouseholdStore = create<HouseholdState>((set) => {
 
   return {
     selectedHouseholdId: "",
-    selectedHouseholdSensorId: "",
     households: [],
     isLoading: true,
     fetchHouseholds,

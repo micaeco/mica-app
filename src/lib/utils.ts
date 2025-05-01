@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { format, LocalizeFn, Month } from "date-fns";
 import { ca, enUS, es, Locale } from "date-fns/locale";
 
-import { ConsumptionResolution } from "@lib/types";
+import { ConsumptionGranularity } from "@core/entities/consumption";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -74,7 +74,7 @@ export function formatDate(date: Date, locale: string) {
 export function formatDateRange(
   start: Date,
   end: Date,
-  resolution: ConsumptionResolution,
+  resolution: ConsumptionGranularity,
   locale: string
 ) {
   const dateFnsLocale = getDateFnsLocale(locale);

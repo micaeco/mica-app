@@ -1,31 +1,23 @@
 import "server-only";
 
 import { Consumption } from "@core/entities/consumption";
-import { Sensor } from "@core/entities/sensor";
+
 export interface ConsumptionRepository {
-  getConsumption(sensorId: Sensor["id"], startDate: Date, endDate: Date): Promise<Consumption>;
+  getConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption>;
 
   getMonthlyConsumption(
-    sensorId: Sensor["id"],
+    householdId: string,
     startDate: Date,
     endDate: Date
   ): Promise<Consumption[]>;
 
-  getWeeklyConsumption(
-    sensorId: Sensor["id"],
-    startDate: Date,
-    endDate: Date
-  ): Promise<Consumption[]>;
+  getWeeklyConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption[]>;
 
-  getDailyConsumption(
-    sensorId: Sensor["id"],
-    startDate: Date,
-    endDate: Date
-  ): Promise<Consumption[]>;
+  getDailyConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption[]>;
 
-  getHourlyConsumption(
-    sensorId: Sensor["id"],
-    startDate: Date,
-    endDate: Date
-  ): Promise<Consumption[]>;
+  getHourlyConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption[]>;
+
+  getCurrentMonthConsumption(householdId: string): Promise<Consumption>;
+
+  getCurrentDayConsumption(householdId: string): Promise<Consumption>;
 }

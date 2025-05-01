@@ -1,3 +1,43 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { CirclePlus } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { ActionCards } from "@app/[locale]/(home)/_components/action-cards";
+import { ConsumptionTabs } from "@app/[locale]/(home)/_components/consumption-tabs";
+import { LabelEventSheet } from "@app/[locale]/(home)/_components/label-event-sheet";
+import { EventsList } from "@src/components/events-list";
+
 export default function Home() {
-  return <div className="p-4"></div>;
+  const tEventsList = useTranslations("events-list");
+
+  return (
+    <div className="relative flex flex-col gap-4 p-4 xl:h-[calc(100svh-var(--navbar-height)-var(--header-height))] xl:flex-row">
+      <div className="flex flex-col gap-4">
+        <ActionCards />
+
+        <Card className="flex justify-center">
+          <CardContent className="pt-4">
+            <ConsumptionTabs />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Event list */}
+      <Card className="w-full xl:overflow-y-auto">
+        <CardHeader>
+          <CardTitle className="flex flex-row items-center gap-2">
+            {tEventsList("title")}
+            <LabelEventSheet>
+              <CirclePlus className="cursor-pointer" />
+            </LabelEventSheet>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EventsList />
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

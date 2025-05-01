@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { CategoryType } from "@core/entities/category";
+import { Category } from "@core/entities/category";
 
 export const CategoryBreakdown = z.object({
-  type: CategoryType,
+  category: Category,
   consumptionInLiters: z.number(),
 });
 
@@ -19,3 +19,7 @@ export const Consumption = z.object({
 });
 
 export type Consumption = z.infer<typeof Consumption>;
+
+export const ConsumptionGranularity = z.enum(["day", "week", "month", "hour"]);
+
+export type ConsumptionGranularity = z.infer<typeof ConsumptionGranularity>;

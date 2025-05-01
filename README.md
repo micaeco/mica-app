@@ -1,37 +1,93 @@
-# MICA Web App
+# 💧 MICA APP
 
-A web application made using nextjs for monitoring water usage in private households in Barcelona.
+**MICA APP** is a fullstack web application built by [mica.eco](https://mica.eco) to help households and communities **track water consumption** and **categorize usage** across different activities (e.g. shower, dishwasher, toilet, etc.).
 
-## Overview
+> Built with ❤️ by [mica.eco](https://mica.eco) — technology for sustainable living.
 
-This project follows a simplified Clean Architecture:
+## 🌱 What is MICA?
 
-- **Core:** Contains domain entities, repositories, services, and use cases.
-- **Infrastructure:** Manages data access, external APIs, and persistence.
-- **Interface (src):** The presentation layer built with Next.js (App Router).
+MICA is a smart water tracking ecosystem that empowers people to reduce water waste by:
 
-_Note: While our presentation layer is in the `src` folder (to conform with Next.js conventions), it represents our "interface" layer._
+- Monitoring real-time and historical water usage
+- Categorizing consumption (e.g. shower vs. dishwasher)
+- Linking events with tags and sensors
+- Providing actionable insights for more sustainable habits
 
-## Tech Stack
+## 🛠 Tech Stack
 
-- **Next.js 14.2.4 (App Router):** Modern routing with server and client-side rendering.
-- **Tailwind CSS:** Styling.
-- **Shadcn:** UI components.
-- **next-intl:** Internationalization support.
-- **zod:** Schema validation.
-- **zustand:** Global state management.
-- **Prettier & ESLint:** Code formatting and linting.
+- **Framework**: [Next.js](https://nextjs.org/) (Fullstack)
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: Drizzle or Prisma (plug-and-play via repository interfaces)
+- **Architecture**: Clean Architecture (Entities, Repositories, Use Cases)
+- **UI**: Tailwind CSS
 
-## Getting Started
+## 🧱 Folder Overview
 
-1. **Install dependencies:**
+The folder structure is designed to follow 'some' of the principles of Clean Architecture, separating concerns and promoting maintainability. Here's a brief overview of the main folders:
+
+- **src**: Contains all of the code for the presentation layer of the application:
+- **core**: Contains the core business logic, including entities, use cases, repositories and services.
+- **infrastructure**: Contains the implementation of the repositories and services, as well as the database connection and migrations.
+
+## ✅ Features
+
+- Track individual water usage events (start, end, volume)
+- Tag events by category (shower, kitchen, etc.)
+- View usage history and trends
+- Clean, modular architecture
+- Ready to plug into MICA hardware sensors
+
+## 🚀 Getting Started
+
+Clone the repo
+
+```bash
+git clone https://github.com/micaeco/mica-app.git
+cd mica-app
+```
+
+Install dependencies
 
 ```bash
 npm install
 ```
 
-2. **Run the development server:**
+Set up environment variables
+
+```bash
+cp .env.example .env
+```
+
+Run the app locally
 
 ```bash
 npm run dev
 ```
+
+## ⚙️ Scripts
+
+```bash
+npm run dev       # Start dev server
+npm run build     # Build for production
+npm run lint      # Run linter
+```
+
+## 📦 Deployment
+
+MICA APP can be deployed to:
+
+- Vercel (recommended for Next.js)
+- Docker
+- Your own server
+
+Configure environment variables and database access accordingly.
+
+## 👥 Contributing
+
+We welcome contributions from sustainability-focused developers!
+Please check out our CONTRIBUTING.md and open an issue or PR.
+
+## 📄 License
+
+MIT

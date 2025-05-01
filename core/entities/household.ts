@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { Sensor } from "@core/entities/sensor";
-
 export const Household = z.object({
   id: z.string(),
   name: z.string(),
@@ -15,7 +13,7 @@ export const Household = z.object({
   zip: z.string(),
   country: z.string(),
 
-  sensor: Sensor,
+  sensorId: z.string(),
 });
 
 export type Household = z.infer<typeof Household>;

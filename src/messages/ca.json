@@ -1,5 +1,20 @@
 {
   "common": {
+    "untagged": "Sense etiqueta",
+    "start": "Iniciar",
+    "pause": "Pausar",
+    "resume": "Reprendre ",
+    "reset": "Reiniciar",
+    "start-time": "Hora d'inici",
+    "starts-now": "Comença ara",
+    "starts-later": "Comença més tard",
+    "consumption-point": "Punt de consum",
+    "tag": "Etiqueta",
+    "today": "Avui",
+    "yesterday": "Ahir",
+    "this": "Aquest",
+    "categorize": "Categoritza",
+    "leaks": "Fuites",
     "all": "Tots",
     "adress": "Adreça",
     "add": "Afegir",
@@ -29,6 +44,7 @@
     "person": "persona",
     "average": "mitjana",
     "logout": "Tancar sessió",
+    "loading": "Carregant",
     "cancel": "Cancel·lar",
     "submit": "Enviar",
     "save": "Desar",
@@ -50,7 +66,7 @@
       "irrigation": "Reg",
       "pool": "Piscina",
       "unknown": "Desconegut",
-      "leak": "Fuga",
+      "leak": "Fuita",
       "other": "Altres",
       "rest": "Resta"
     },
@@ -99,8 +115,35 @@
     "title": "Crea una nova vivenda.",
     "description": "Introdueix la informació de la vivenda."
   },
+  "action-cards": {
+    "leaks": {
+      "title": "Fuites",
+      "description": "{count, plural, =0 {No tens fuites} =1 {Tens 1 fuita} other {Tens # fuites}} "
+    },
+    "categorize": {
+      "title": "Categoritza",
+      "description": "{count, plural, =0 {No tens res per categoritzar} =1 {Categoritza 1 esdeveniment} other {Categoritza # esdeveniments}}"
+    }
+  },
+  "events-list": {
+    "title": "Esdeveniments"
+  },
+  "new-event-sheet": {
+    "no-Tags-for-category": "Aquesta categoria no té cap etiqueta creada"
+  },
+  "actions": {
+    "no-leaks": "No hi ha fuites",
+    "no-unknowns": "No hi ha events per categoritzar"
+  },
   "not-found": {
     "title": "Pàgina no trobada.",
     "description": "La pàgina que busques no existeix."
+  },
+  "errors": {
+    "NOT_FOUND": "No s'ha trobat la pàgina.",
+    "UNAUTHORIZED": "No estàs autoritzat per veure aquesta pàgina.",
+    "FORBIDDEN": "No tens permís per veure aquesta pàgina.",
+    "BAD_REQUEST": "La petició no és vàlida.",
+    "INTERNAL_SERVER_ERROR": "Error intern del servidor."
   }
 }

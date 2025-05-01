@@ -5,33 +5,33 @@ import { mockUsers } from "@infrastructure/repositories/user.mock";
 
 const mockHouseholdUsers: HouseholdUser[] = [
   {
-    household: mockHouseholds[0],
-    user: mockUsers[0],
+    householdId: mockHouseholds[0].id,
+    userId: mockUsers[0].id,
     role: "admin",
   },
   {
-    household: mockHouseholds[0],
-    user: mockUsers[1],
+    householdId: mockHouseholds[0].id,
+    userId: mockUsers[1].id,
     role: "member",
   },
   {
-    household: mockHouseholds[1],
-    user: mockUsers[0],
+    householdId: mockHouseholds[1].id,
+    userId: mockUsers[0].id,
     role: "admin",
   },
   {
-    household: mockHouseholds[1],
-    user: mockUsers[2],
+    householdId: mockHouseholds[1].id,
+    userId: mockUsers[2].id,
     role: "member",
   },
   {
-    household: mockHouseholds[2],
-    user: mockUsers[1],
+    householdId: mockHouseholds[2].id,
+    userId: mockUsers[1].id,
     role: "admin",
   },
   {
-    household: mockHouseholds[2],
-    user: mockUsers[2],
+    householdId: mockHouseholds[2].id,
+    userId: mockUsers[2].id,
     role: "member",
   },
 ];
@@ -49,34 +49,34 @@ export class HouseholdUserMockRepository implements HouseholdUserRepository {
   async findById(householdId: string, userId: string) {
     return (
       mockHouseholdUsers.find(
-        (relation) => relation.household.id === householdId && relation.user.id === userId
+        (relation) => relation.householdId === householdId && relation.userId === userId
       ) || null
     );
   }
 
   async findByUserId(userId: string) {
-    return mockHouseholdUsers.filter((relation) => relation.user.id === userId);
+    return mockHouseholdUsers.filter((relation) => relation.userId === userId);
   }
 
   async findByHouseholdId(householdId: string) {
-    return mockHouseholdUsers.filter((relation) => relation.household.id === householdId);
+    return mockHouseholdUsers.filter((relation) => relation.householdId === householdId);
   }
 
   async findUsersByHouseholdId(householdId: string) {
     return mockHouseholdUsers
-      .filter((relation) => relation.household.id === householdId)
-      .map((relation) => relation.user);
+      .filter((relation) => relation.householdId === householdId)
+      .map((relation) => relation.userId);
   }
 
   async findHouseholdsByUserId(userId: string) {
     return mockHouseholdUsers
-      .filter((relation) => relation.user.id === userId)
-      .map((relation) => relation.household);
+      .filter((relation) => relation.userId === userId)
+      .map((relation) => relation.householdId);
   }
 
   async updateRole(householdId: string, userId: string, role: HouseholdUser["role"]) {
     const index = mockHouseholdUsers.findIndex(
-      (relation) => relation.household.id === householdId && relation.user.id === userId
+      (relation) => relation.householdId === householdId && relation.userId === userId
     );
     if (index === -1) {
       return null;
@@ -87,7 +87,7 @@ export class HouseholdUserMockRepository implements HouseholdUserRepository {
 
   async delete(householdId: string, userId: string) {
     const index = mockHouseholdUsers.findIndex(
-      (relation) => relation.household.id === householdId && relation.user.id === userId
+      (relation) => relation.householdId === householdId && relation.userId === userId
     );
     if (index === -1) {
       return false;

@@ -2,22 +2,22 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { Consumption } from "@core/entities/consumption";
+import { Category } from "@core/entities/category";
+import { ErrorKey } from "@core/entities/error";
+import { Consumption, ConsumptionGranularity } from "@core/entities/consumption";
 import { Event } from "@core/entities/event";
-import { ConsumptionResolution, TimeWindow } from "@lib/types";
+import { TimeWindow } from "@lib/types";
 import { useHouseholdStore } from "@stores/household";
 import {
   getDailyConsumption,
-  getEvents,
   getHourlyConsumption,
   getMonthlyConsumption,
   getWeeklyConsumption,
 } from "@app/[locale]/consumption/actions";
-import { Category } from "@core/entities/category";
-import { ErrorKey } from "@core/entities/error";
+import { getEvents } from "@lib/actions";
 
 export function useConsumption() {
-  const [resolution, setResolution] = useState<ConsumptionResolution>("month");
+  const [resolution, setResolution] = useState<ConsumptionGranularity>("month");
   const [timeWindow, setTimeWindow] = useState<TimeWindow>({
     startDate: new Date(),
     endDate: new Date(),
@@ -31,7 +31,8 @@ export function useConsumption() {
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<ErrorKey | undefined>(undefined);
-  const { selectedHouseholdSensorId } = useHouseholdStore();
+
+  const { selectedHouseholdId } = useHouseholdStore();
 
   const timeWindowLength = 4;
 
@@ -41,12 +42,12 @@ export function useConsumption() {
 
       const consumptionResult =
         resolution === "month"
-          ? await getMonthlyConsumption(selectedHouseholdSensorId, startDate, endDate)
+          ? await getMonthlyConsumption(selectedHouseholdId, startDate, endDate)
           : resolution === "week"
-            ? await getWeeklyConsumption(selectedHouseholdSensorId, startDate, endDate)
+            ? await getWeeklyConsumption(selectedHouseholdId, startDate, endDate)
             : resolution === "day"
-              ? await getDailyConsumption(selectedHouseholdSensorId, startDate, endDate)
-              : await getHourlyConsumption(selectedHouseholdSensorId, startDate, endDate);
+              ? await getDailyConsumption(selectedHouseholdId, startDate, endDate)
+              : await getHourlyConsumption(selectedHouseholdId, startDate, endDate);
 
       if (consumptionResult.success) {
         setConsumption(consumptionResult.data);
@@ -64,13 +65,13 @@ export function useConsumption() {
 
       setIsLoading(false);
     },
-    [resolution, selectedHouseholdSensorId]
+    [resolution, selectedHouseholdId]
   );
 
   useEffect(() => {
     const fetchEvents = async () => {
       const eventsResult = await getEvents(
-        selectedHouseholdSensorId,
+        selectedHouseholdId,
         selectedTimeWindow.startDate,
         selectedTimeWindow.endDate
       );
@@ -83,7 +84,7 @@ export function useConsumption() {
     };
 
     fetchEvents();
-  }, [selectedHouseholdSensorId, selectedTimeWindow]);
+  }, [selectedHouseholdId, selectedTimeWindow]);
 
   useEffect(() => {
     const startDate = new Date();
@@ -106,7 +107,7 @@ export function useConsumption() {
 
     setTimeWindow({ startDate, endDate });
     fetchConsumption(startDate, endDate);
-  }, [resolution, selectedHouseholdSensorId, fetchConsumption]);
+  }, [resolution, selectedHouseholdId, fetchConsumption]);
 
   function canMoveTimeWindowForward() {
     if (consumption.length === 0) {

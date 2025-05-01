@@ -1,12 +1,9 @@
 import { z } from "zod";
 
-import { Household } from "@core/entities/household";
-import { User } from "@core/entities/user";
-
 export const HouseholdUser = z.object({
-  household: Household,
-  user: User,
-  role: z.enum(["admin", "member"]),
+  householdId: z.string(),
+  userId: z.string(),
+  role: z.string(),
 });
 
 export type HouseholdUser = z.infer<typeof HouseholdUser>;

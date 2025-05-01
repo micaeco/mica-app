@@ -8,8 +8,14 @@ import { format } from "date-fns";
 import { Event } from "@core/entities/event";
 import { getDateFnsLocale } from "@lib/utils";
 import { ConsumptionBar } from "@components/consumption-bar";
+import { categoryMap } from "@core/entities/category";
 
-export function EventBar({ event, totalConsumption }: { event: Event; totalConsumption: number }) {
+interface EventBarProps {
+  event: Event;
+  totalConsumption: number;
+}
+
+export function EventBar({ event, totalConsumption }: EventBarProps) {
   const tCommon = useTranslations("common");
   const tCategories = useTranslations("common.categories");
   const locale = useLocale();
@@ -20,20 +26,22 @@ export function EventBar({ event, totalConsumption }: { event: Event; totalConsu
   if (event.endDate) {
     return (
       <div className="flex flex-row items-center gap-2">
-        <Image src={event.category.icon} alt={event.category.type} width={32} height={32} />
+        <Image src={categoryMap[event.category].icon} alt={event.category} width={32} height={32} />
 
         <div className="flex w-full flex-col">
           <div className="flex flex-row justify-between gap-2">
             <div className="flex flex-row space-x-2">
-              <span className="font-medium">{tCategories(event.category.type)}</span>
-              {event.label && (
+              <span className="max-w-[6ch] truncate font-medium sm:max-w-none">
+                {tCategories(event.category)}
+              </span>
+              {event.tag && (
                 <div className="bg-brand-secondary flex items-center justify-center rounded-full px-3 py-0.5 text-xs">
-                  {event.label.name}
+                  <span className="xs:max-w-none max-w-[6ch] truncate">{event.tag}</span>
                 </div>
               )}
             </div>
-            <span>
-              {format(event.startDate, "HH:mm", { locale: dateLocale })} -{" "}
+            <span className="line-clamp-1">
+              {format(event.startDate, "HH:mm", { locale: dateLocale })} –{" "}
               {format(event.endDate, "HH:mm", { locale: dateLocale })}
             </span>
           </div>

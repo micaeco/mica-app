@@ -1,12 +1,11 @@
 "use server";
 
 import { ErrorKey } from "@core/entities/error";
-import { Sensor } from "@core/entities/sensor";
 import { Event } from "@core/entities/event";
 import { MockEventRepository } from "@infrastructure/repositories/event.mock";
 
 async function getLeakEvents(
-  sensorId: Sensor["id"]
+  sensorId: string
 ): Promise<{ success: true; data: Event[] } | { success: false; error: ErrorKey }> {
   const eventRepo = new MockEventRepository();
 
@@ -20,7 +19,7 @@ async function getLeakEvents(
 }
 
 async function getUnknownEvents(
-  sensorId: Sensor["id"]
+  sensorId: string
 ): Promise<{ success: true; data: Event[] } | { success: false; error: ErrorKey }> {
   const eventRepo = new MockEventRepository();
 

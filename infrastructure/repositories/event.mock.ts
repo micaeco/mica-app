@@ -1,16 +1,19 @@
 import "server-only";
 
 import { Event } from "@core/entities/event";
-import { Sensor } from "@core/entities/sensor";
-import { categories, CategoryType } from "@core/entities/category";
-import { Label } from "@core/entities/label";
+import { categories } from "@core/entities/category";
 import { EventRepository } from "@core/repositories/event";
+import { MockTagRepository } from "@infrastructure/repositories/tag.mock";
 
 export class MockEventRepository implements EventRepository {
   private eventsPerDay = 12;
   private averageEventDurationMs = 10 * 60 * 1000;
 
-  private generateEvents(sensorId: Sensor["id"], startDate: Date, endDate: Date): Event[] {
+  private async generateEvents(
+    householdId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<Event[]> {
     const events: Event[] = [];
     const timeDiff = endDate.getTime() - startDate.getTime();
     const daysFraction = timeDiff / (1000 * 60 * 60 * 24); // This is now a fraction of a day
@@ -20,49 +23,8 @@ export class MockEventRepository implements EventRepository {
     // Add variance (70% to 130% of expected)
     const numberOfEvents = Math.max(1, Math.round(expectedEvents * (0.7 + Math.random() * 0.6)));
 
-    const categoriesToLabel: Partial<Record<CategoryType, Label[]>> = {
-      shower: [
-        {
-          name: "nens",
-          categoryType: "shower",
-          householdId: "1",
-        },
-        {
-          name: "pares",
-          categoryType: "shower",
-          householdId: "1",
-        },
-      ],
-      washer: [
-        {
-          name: "eco",
-          categoryType: "washer",
-          householdId: "1",
-        },
-        {
-          name: "normal",
-          categoryType: "washer",
-          householdId: "1",
-        },
-        {
-          name: "sport",
-          categoryType: "washer",
-          householdId: "1",
-        },
-      ],
-      dishwasher: [
-        {
-          name: "eco",
-          categoryType: "dishwasher",
-          householdId: "1",
-        },
-        {
-          name: "normal",
-          categoryType: "dishwasher",
-          householdId: "1",
-        },
-      ],
-    };
+    const tagRepo = new MockTagRepository();
+    const tags = await tagRepo.getHouseholdTags("1");
 
     for (let i = 0; i < numberOfEvents; i++) {
       const eventStartTime = startDate.getTime() + Math.random() * timeDiff;
@@ -76,55 +38,92 @@ export class MockEventRepository implements EventRepository {
 
       if (Math.random() < rareProbability) {
         // Generate a leak or unknown event
-        const rareCategories = categories.filter((c) => c.type === "leak" || c.type === "unknown");
+        const rareCategories = categories.filter(
+          (category) => category === "leak" || category === "unknown"
+        );
         randomCategory = rareCategories[Math.floor(Math.random() * rareCategories.length)];
       } else {
         // Generate a normal event (not leak or unknown)
         const normalCategories = categories.filter(
-          (c) => c.type !== "leak" && c.type !== "unknown" && c.type !== "rest"
+          (category) => category !== "leak" && category !== "unknown" && category !== "rest"
         );
         randomCategory = normalCategories[Math.floor(Math.random() * normalCategories.length)];
       }
 
-      const possibleLabels = categoriesToLabel[randomCategory.type];
-      const randomLabel = possibleLabels
-        ? Math.random() > 0.3 && possibleLabels.length > 0
-          ? possibleLabels[Math.floor(Math.random() * possibleLabels.length)]
+      const possibleTags = tags.filter((tag) => tag.category === randomCategory);
+      const randomTag = possibleTags
+        ? Math.random() > 0.3 && possibleTags.length > 0
+          ? possibleTags[Math.floor(Math.random() * possibleTags.length)]
           : undefined
         : undefined;
       const randomConsumption = Math.round(Math.random() * 100) / 10;
 
       events.push({
         id: i.toString(),
+        category: randomCategory,
+        householdId: "1",
         startDate: eventStartDate,
         endDate: eventEndDate,
-        category: randomCategory,
         consumptionInLiters: randomConsumption,
         notes: [],
-        label: randomLabel,
+        tag: randomTag?.name,
       });
     }
 
     return events;
   }
 
-  getEvents(sensorId: Sensor["id"], startDate: Date, endDate: Date): Event[] {
-    return this.generateEvents(sensorId, startDate, endDate);
+  async getEvents(householdId: string, startDate: Date, endDate: Date): Promise<Event[]> {
+    return this.generateEvents(householdId, startDate, endDate);
   }
 
-  getLeakEvents(sensorId: Sensor["id"]): Event[] {
-    const now = new Date();
+  async getPaginatedEvents(
+    householdId: string,
+    offset: number,
+    numberOfEvents: number
+  ): Promise<Event[]> {
+    const events = await this.generateEvents(
+      householdId,
+      new Date(new Date().setFullYear(2020)),
+      new Date()
+    );
 
-    return this.generateEvents(sensorId, new Date(now.setDate(now.getDate() + 3)), new Date())
-      .filter((e) => e.category.type === "leak")
-      .slice(0, 3);
+    return events
+      .sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
+      .slice(offset, offset + numberOfEvents);
   }
 
-  getUnknownEvents(sensorId: Sensor["id"]): Event[] {
+  async getLeakEvents(householdId: string): Promise<Event[]> {
     const now = new Date();
 
-    return this.generateEvents(sensorId, new Date(now.setDate(now.getDate() + 3)), new Date())
-      .filter((e) => e.category.type === "unknown")
-      .slice(0, 3);
+    const events = await this.generateEvents(
+      householdId,
+      new Date(now.setDate(now.getDate() - 10)),
+      new Date()
+    );
+
+    return events.filter((event) => event.category === "leak");
+  }
+
+  async getNumberOfLeakEvents(householdId: string): Promise<number> {
+    const leakEvents = await this.getLeakEvents(householdId);
+    return leakEvents.length;
+  }
+
+  async getUnknownEvents(householdId: string): Promise<Event[]> {
+    const now = new Date();
+
+    const events = await this.generateEvents(
+      householdId,
+      new Date(now.setDate(now.getDate() - 10)),
+      new Date()
+    );
+
+    return events.filter((event) => event.category === "unknown");
+  }
+
+  async getNumberOfUnknownEvents(householdId: string): Promise<number> {
+    const leakEvents = await this.getLeakEvents(householdId);
+    return leakEvents.length;
   }
 }

@@ -30,7 +30,7 @@ export async function BaseLayout({
               <div className="pt-(--header-height)">{children}</div>
             </main>
             <Navbar />
-            <Toaster />
+            <Toaster richColors />
           </SidebarProvider>
         </NextIntlClientProvider>
       </body>

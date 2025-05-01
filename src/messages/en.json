@@ -1,5 +1,20 @@
 {
   "common": {
+    "untagged": "No tag",
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "reset": "Reset",
+    "start-time": "Start time",
+    "starts-now": "Starts now",
+    "starts-later": "Starts later",
+    "consumption-point": "Consumption point",
+    "tag": "Tag",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "this": "This",
+    "categorize": "Categorize",
+    "leaks": "Leaks",
     "all": "All",
     "adress": "Address",
     "add": "Add",
@@ -29,6 +44,7 @@
     "person": "person",
     "average": "average",
     "logout": "Log out",
+    "loading": "Loading",
     "cancel": "Cancel",
     "submit": "Submit",
     "save": "Save",
@@ -89,7 +105,7 @@
     "description": "Select one of the sections to view consumption."
   },
   "consumption-per-event-chart": {
-    "no-events-found": "Here you will find the events ordered by highest to lowest consumption. In case the category selected has one or more labels, the events will be classified into labels."
+    "no-events-found": "Here you will find the events ordered by highest to lowest consumption. In case the category selected has one or more Tags, the events will be classified into Tags."
   },
   "edit-household": {
     "title": "Edit household.",
@@ -99,8 +115,35 @@
     "title": "Create household.",
     "description": "Enter the household information."
   },
+  "action-cards": {
+    "leaks": {
+      "title": "Leaks",
+      "description": "{count, plural, =0 {You have no leaks} =1 {You have 1 leak} other {You have # leaks}}"
+    },
+    "categorize": {
+      "title": "Categorize",
+      "description": "{count, plural, =0 {You have no events to categorize} =1 {Categorize 1 event} other {Categorize # events}}"
+    }
+  },
+  "events-list": {
+    "title": "Events"
+  },
+  "new-event-sheet": {
+    "no-tags-for-category": "This category has no tags created"
+  },
+  "actions": {
+    "no-leaks": "No leaks",
+    "no-unknowns": "No events to categorize"
+  },
   "not-found": {
     "title": "Page not found.",
     "description": "The page you are looking for does not exist."
+  },
+  "errors": {
+    "NOT_FOUND": "Page not found.",
+    "UNAUTHORIZED": "You are not authorized to view this page.",
+    "FORBIDDEN": "You do not have permission to view this page.",
+    "BAD_REQUEST": "The request is not valid.",
+    "INTERNAL_SERVER_ERROR": "Internal server error."
   }
 }

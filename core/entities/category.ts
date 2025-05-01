@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CategoryType = z.enum([
+export const categories = [
   "sink",
   "shower",
   "toilet",
@@ -12,72 +12,62 @@ export const CategoryType = z.enum([
   "other",
   "unknown",
   "rest",
-]);
+] as const;
 
-export type CategoryType = z.infer<typeof CategoryType>;
+export const Category = z.enum(categories);
 
-export const Category = z.object({
-  type: CategoryType,
+export type Category = z.infer<typeof Category>;
+
+export const CategoryMetadata = z.object({
   icon: z.string(),
   color: z.string(),
 });
 
-export type Category = z.infer<typeof Category>;
+export type CategoryMetadata = z.infer<typeof CategoryMetadata>;
 
-export const categories: Category[] = [
-  {
-    type: "sink",
+export const categoryMap: Record<Category, CategoryMetadata> = {
+  sink: {
     icon: "/icons/sink.webp",
     color: "chart-1",
   },
-  {
-    type: "shower",
+  shower: {
     icon: "/icons/shower.webp",
     color: "chart-2",
   },
-  {
-    type: "toilet",
+  toilet: {
     icon: "/icons/toilet.webp",
     color: "chart-3",
   },
-  {
-    type: "dishwasher",
+  dishwasher: {
     icon: "/icons/dishwasher.webp",
     color: "chart-4",
   },
-  {
-    type: "washer",
+  washer: {
     icon: "/icons/washer.webp",
     color: "chart-5",
   },
-  {
-    type: "irrigation",
+  irrigation: {
     icon: "/icons/irrigation.webp",
     color: "chart-1",
   },
-  {
-    type: "pool",
+  pool: {
     icon: "/icons/pool.webp",
     color: "chart-2",
   },
-  {
-    type: "leak",
+  leak: {
     icon: "/icons/leak.webp",
     color: "chart-3",
   },
-  {
-    type: "other",
+  other: {
     icon: "/icons/other.webp",
     color: "chart-4",
   },
-  {
-    type: "unknown",
+  unknown: {
     icon: "/icons/unknown.webp",
     color: "chart-5",
   },
-  {
-    type: "rest",
+  rest: {
     icon: "/icons/rest.webp",
     color: "muted-foreground",
   },
-];
+};
