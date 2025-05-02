@@ -3,7 +3,7 @@ import "server-only";
 import { Event } from "@domain/entities/event";
 import { categories } from "@domain/entities/category";
 import { EventRepository } from "@domain/repositories/event";
-import { MockTagRepository } from "@infra/repositories/tag.mock";
+import { MockTagRepository } from "@infrastructure/repositories/tag.mock";
 
 export class MockEventRepository implements EventRepository {
   private eventsPerDay = 12;

@@ -1,7 +1,7 @@
 import { HouseholdUser } from "@domain/entities/household-user";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
-import { mockHouseholds } from "@infra/repositories/household.mock";
-import { mockUsers } from "@infra/repositories/user.mock";
+import { mockHouseholds } from "@infrastructure/repositories/household.mock";
+import { mockUsers } from "@infrastructure/repositories/user.mock";
 
 const mockHouseholdUsers: HouseholdUser[] = [
   {

@@ -2,7 +2,7 @@
 
 import { ErrorKey } from "@domain/entities/error";
 import { Event } from "@domain/entities/event";
-import { MockEventRepository } from "@infra/repositories/event.mock";
+import { MockEventRepository } from "@infrastructure/repositories/event.mock";
 
 async function getLeakEvents(
   sensorId: string

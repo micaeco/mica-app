@@ -2,7 +2,7 @@
 
 import { ErrorKey } from "@domain/entities/error";
 import { Consumption } from "@domain/entities/consumption";
-import { MockConsumptionRepository } from "@infra/repositories/consumption.mock";
+import { MockConsumptionRepository } from "@infrastructure/repositories/consumption.mock";
 
 async function getConsumption(
   sensorId: string,

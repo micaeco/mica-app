@@ -3,8 +3,8 @@
 import { ErrorKey } from "@domain/entities/error";
 import { Household } from "@domain/entities/household";
 import { Event, EventsForDay } from "@domain/entities/event";
-import { MockEventRepository } from "@infra/repositories/event.mock";
-import { MockHouseholdRepository } from "@infra/repositories/household.mock";
+import { MockEventRepository } from "@infrastructure/repositories/event.mock";
+import { MockHouseholdRepository } from "@infrastructure/repositories/household.mock";
 
 async function findAllHouseholds(): Promise<Household[]> {
   const householdRepo = new MockHouseholdRepository();
