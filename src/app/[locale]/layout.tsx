@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { BaseLayout } from "@components/base-layout";
-import { Locale, routing } from "@i18n/routing";
+import { BaseLayout } from "@presentation/components/base-layout";
+import { Locale, routing } from "@presentation/i18n/routing";
 
 export const metadata: Metadata = {
   title: "MICA App",

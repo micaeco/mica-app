@@ -2,14 +2,20 @@
 
 import { useLocale, useTranslations } from "next-intl";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@presentation/components/ui/card";
+import { cn, getDateFnsLocale } from "@presentation/lib/utils";
 import { useConsumption } from "@app/[locale]/consumption/_hooks/use-consumption";
 import { ConsumptionPerTimeChart } from "@app/[locale]/consumption/_components/consumption-per-time-chart";
 import { ConsumptionPerCategoryChart } from "@app/[locale]/consumption/_components/consumption-per-category-chart";
 import { ConsumptionPerEventChart } from "@app/[locale]/consumption/_components/consumption-per-event-chart";
 import { TimeResolutionSelect } from "@app/[locale]/consumption/_components/time-resolution-select";
 import { format } from "date-fns";
-import { cn, getDateFnsLocale } from "@lib/utils";
 
 export default function ConsumptionPage() {
   const {

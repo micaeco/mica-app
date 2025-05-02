@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
-import { Consumption } from "@core/entities/consumption";
-import { cn } from "@lib/utils";
-import { useHouseholdStore } from "@stores/household";
-import { Tabs, TabsContent, TabsTrigger, TabsList } from "@components/ui/tabs";
+import { Consumption } from "@domain/entities/consumption";
+import { cn } from "@presentation/lib/utils";
+import { useHouseholdStore } from "@presentation/stores/household";
+import { Tabs, TabsContent, TabsTrigger, TabsList } from "@presentation/components/ui/tabs";
 import { getCurrentDayConsumption, getCurrentMonthConsumption } from "@app/[locale]/(home)/actions";
 
 export function ConsumptionTabs() {

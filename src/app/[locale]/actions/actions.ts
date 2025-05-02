@@ -1,8 +1,8 @@
 "use server";
 
-import { ErrorKey } from "@core/entities/error";
-import { Event } from "@core/entities/event";
-import { MockEventRepository } from "@infrastructure/repositories/event.mock";
+import { ErrorKey } from "@domain/entities/error";
+import { Event } from "@domain/entities/event";
+import { MockEventRepository } from "@infra/repositories/event.mock";
 
 async function getLeakEvents(
   sensorId: string

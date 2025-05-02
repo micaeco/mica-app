@@ -1,11 +1,11 @@
 "use server";
 
-import { Consumption } from "@core/entities/consumption";
-import { ErrorKey } from "@core/entities/error";
-import { Tag } from "@core/entities/tag";
-import { MockConsumptionRepository } from "@infrastructure/repositories/consumption.mock";
-import { MockEventRepository } from "@infrastructure/repositories/event.mock";
-import { MockTagRepository } from "@infrastructure/repositories/tag.mock";
+import { Consumption } from "@domain/entities/consumption";
+import { ErrorKey } from "@domain/entities/error";
+import { Tag } from "@domain/entities/tag";
+import { MockConsumptionRepository } from "@infra/repositories/consumption.mock";
+import { MockEventRepository } from "@infra/repositories/event.mock";
+import { MockTagRepository } from "@infra/repositories/tag.mock";
 
 async function getHouseholdTags(
   householdId: string

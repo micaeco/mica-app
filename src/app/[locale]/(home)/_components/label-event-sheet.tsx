@@ -6,16 +6,22 @@ import { useEffect, useState } from "react";
 import { CircleCheck, Plus } from "lucide-react";
 import { toast } from "sonner";
 
-import { Tag } from "@core/entities/tag";
-import { categoryMap, Category, categories } from "@core/entities/category";
-import { Button } from "@components/ui/button";
-import { ToggleGroup, ToggleGroupItem } from "@components/ui/toggle-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@components/ui/sheet";
-import { getHouseholdTags, createHouseholdTag } from "@app/[locale]/(home)/actions";
+import { Tag } from "@domain/entities/tag";
+import { categoryMap, Category, categories } from "@domain/entities/category";
+import { Button } from "@presentation/components/ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@presentation/components/ui/tabs";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@presentation/components/ui/sheet";
+import { useHouseholdStore } from "@presentation/stores/household";
+import { cn } from "@presentation/lib/utils";
 import { EventStopwatch } from "@app/[locale]/(home)/_components/event-stopwatch";
-import { useHouseholdStore } from "@stores/household";
-import { cn } from "@lib/utils";
+import { getHouseholdTags, createHouseholdTag } from "@app/[locale]/(home)/actions";
 
 export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const filteredCategories = categories.filter(
@@ -27,7 +33,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
 
   const [selectedCategory, setSelectedCategory] = useState<Category>(filteredCategories[0]);
 
-  const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined);
+  const [selectedTag, setSelectedTag] = useState<string>("");
   const [tags, setTags] = useState<Tag[]>([]);
 
   const { selectedHouseholdId } = useHouseholdStore();
@@ -100,7 +106,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
               onValueChange={(value) => {
                 if (value) {
                   setSelectedCategory(value as Category);
-                  setSelectedTag(undefined);
+                  setSelectedTag("");
                 }
               }}
               className="flex flex-wrap gap-2"
@@ -136,7 +142,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
                 value={selectedTag}
                 onValueChange={(value) => {
                   if (value === selectedTag) {
-                    setSelectedTag(undefined);
+                    setSelectedTag("");
                   } else {
                     setSelectedTag(value);
                   }

@@ -2,19 +2,19 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { Category } from "@core/entities/category";
-import { ErrorKey } from "@core/entities/error";
-import { Consumption, ConsumptionGranularity } from "@core/entities/consumption";
-import { Event } from "@core/entities/event";
-import { TimeWindow } from "@lib/types";
-import { useHouseholdStore } from "@stores/household";
+import { Category } from "@domain/entities/category";
+import { ErrorKey } from "@domain/entities/error";
+import { Consumption, ConsumptionGranularity } from "@domain/entities/consumption";
+import { Event } from "@domain/entities/event";
+import { getEvents } from "@presentation/lib/actions";
+import { TimeWindow } from "@presentation/lib/types";
+import { useHouseholdStore } from "@presentation/stores/household";
 import {
   getDailyConsumption,
   getHourlyConsumption,
   getMonthlyConsumption,
   getWeeklyConsumption,
 } from "@app/[locale]/consumption/actions";
-import { getEvents } from "@lib/actions";
 
 export function useConsumption() {
   const [resolution, setResolution] = useState<ConsumptionGranularity>("month");

@@ -3,12 +3,12 @@
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@i18n/routing";
+import { useRouter } from "@presentation/i18n/routing";
 import { ArrowRight, Bell, CircleHelp } from "lucide-react";
 
-import { useHouseholdStore } from "@stores/household";
-import { cn } from "@lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { useHouseholdStore } from "@presentation/stores/household";
+import { cn } from "@presentation/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@presentation/components/ui/card";
 import { getNumberOfLeakEvents, getNumberOfUnknownEvents } from "@app/[locale]/(home)/actions";
 
 export function ActionCards({ className }: { className?: string }) {

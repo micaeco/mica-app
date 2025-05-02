@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Cell, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
-import { categories, Category, categoryMap } from "@core/entities/category";
-import { CategoryBreakdown } from "@core/entities/consumption";
-import { ChartConfig, ChartContainer } from "@components/ui/chart";
+import { categories, Category, categoryMap } from "@domain/entities/category";
+import { CategoryBreakdown } from "@domain/entities/consumption";
+import { ChartConfig, ChartContainer } from "@presentation/components/ui/chart";
 
 type Props = {
   setSelectedCategories: (category: Category[] | undefined) => void;

@@ -1,15 +1,15 @@
 import { useTranslations } from "next-intl";
 
-import { Category, categoryMap } from "@core/entities/category";
-import { Event } from "@core/entities/event";
+import { Category, categoryMap } from "@domain/entities/category";
+import { Event } from "@domain/entities/event";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@components/ui/accordion";
-import { EventBar } from "@components/event-bar";
-import { ConsumptionBar } from "@components/consumption-bar";
+} from "@presentation/components/ui/accordion";
+import { EventBar } from "@presentation/components/event-bar";
+import { ConsumptionBar } from "@presentation/components/consumption-bar";
 
 type Props = {
   selectedCategories: Category[] | undefined;

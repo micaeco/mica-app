@@ -7,25 +7,25 @@ import { Bell, ChevronDown, CircleCheck, HelpCircle } from "lucide-react";
 import { format, isToday, isYesterday } from "date-fns";
 import { toast } from "sonner";
 
-import { Event } from "@core/entities/event";
-import { categories, Category, categoryMap } from "@core/entities/category";
-import { Card, CardContent } from "@components/ui/card";
+import { Event } from "@domain/entities/event";
+import { categories, Category, categoryMap } from "@domain/entities/category";
+import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
+import { Card, CardContent } from "@presentation/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@components/ui/carousel";
+} from "@presentation/components/ui/carousel";
 import {
   Accordion,
   AccordionItem,
   AccordionContent,
   AccordionTrigger,
-} from "@components/ui/accordion";
-import { ToggleGroup, ToggleGroupItem } from "@components/ui/toggle-group";
-import { useHouseholdStore } from "@stores/household";
-import { getDateFnsLocale } from "@lib/utils";
+} from "@presentation/components/ui/accordion";
+import { useHouseholdStore } from "@presentation/stores/household";
+import { getDateFnsLocale } from "@presentation/lib/utils";
 import { getLeakEvents, getUnknownEvents } from "@app/[locale]/actions/actions";
 
 export default function Actions() {
