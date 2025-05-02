@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import { cn } from "@presentation/lib/utils";
-import { useMediaQuery } from "@presentation/hooks/use-media-query";
 import {
   Dialog,
   DialogClose,
@@ -24,6 +22,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@presentation/components/ui/drawer";
+import { useMediaQuery } from "@presentation/hooks/use-media-query";
+import { cn } from "@presentation/lib/utils";
 
 interface BaseProps {
   children: React.ReactNode;

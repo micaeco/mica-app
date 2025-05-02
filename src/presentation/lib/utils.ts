@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { format, LocalizeFn, Month } from "date-fns";
 import { ca, enUS, es, Locale } from "date-fns/locale";
+import { twMerge } from "tailwind-merge";
 
 import { ConsumptionGranularity } from "@domain/entities/consumption";
 

@@ -1,15 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
-import { Bell, ChevronDown, CircleCheck, HelpCircle } from "lucide-react";
+
 import { format, isToday, isYesterday } from "date-fns";
+import { Bell, ChevronDown, CircleCheck, HelpCircle } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { Event } from "@domain/entities/event";
+import { getLeakEvents, getUnknownEvents } from "@app/[locale]/actions/actions";
 import { categories, Category, categoryMap } from "@domain/entities/category";
-import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
+import { Event } from "@domain/entities/event";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionContent,
+  AccordionTrigger,
+} from "@presentation/components/ui/accordion";
 import { Card, CardContent } from "@presentation/components/ui/card";
 import {
   Carousel,
@@ -18,15 +26,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@presentation/components/ui/carousel";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionContent,
-  AccordionTrigger,
-} from "@presentation/components/ui/accordion";
-import { useHouseholdStore } from "@presentation/stores/household";
+import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
 import { getDateFnsLocale } from "@presentation/lib/utils";
-import { getLeakEvents, getUnknownEvents } from "@app/[locale]/actions/actions";
+import { useHouseholdStore } from "@presentation/stores/household";
 
 export default function Actions() {
   const [leakEvents, setLeakEvents] = useState<Event[]>([]);

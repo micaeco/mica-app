@@ -1,12 +1,13 @@
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
 import { Montserrat } from "next/font/google";
 
-import { AppSidebar } from "@presentation/components/sidebar";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+
 import { Header } from "@presentation/components/header";
 import { Navbar } from "@presentation/components/navbar";
-import { Toaster } from "@presentation/components/ui/sonner";
+import { AppSidebar } from "@presentation/components/sidebar";
 import { SidebarProvider } from "@presentation/components/ui/sidebar";
+import { Toaster } from "@presentation/components/ui/sonner";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 

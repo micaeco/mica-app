@@ -1,5 +1,3 @@
-import "server-only";
-
 import { Consumption } from "@domain/entities/consumption";
 
 export interface ConsumptionRepository {

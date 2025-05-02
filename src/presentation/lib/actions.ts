@@ -1,21 +1,20 @@
 "use server";
 
+import { diContainer } from "@di/container";
 import { ErrorKey } from "@domain/entities/error";
-import { Household } from "@domain/entities/household";
 import { Event, EventsForDay } from "@domain/entities/event";
-import { MockEventRepository } from "@infrastructure/repositories/event.mock";
-import { MockHouseholdRepository } from "@infrastructure/repositories/household.mock";
+import { Household } from "@domain/entities/household";
 
 async function findAllHouseholds(): Promise<Household[]> {
-  const householdRepo = new MockHouseholdRepository();
+  const householdRepo = diContainer.getHouseholdRepository();
   return householdRepo.findAll();
 }
 
 async function updateHousehold(
-  householdId: Household["id"],
+  householdId: string,
   household: Partial<Omit<Household, "id">>
 ): Promise<void> {
-  const householdRepo = new MockHouseholdRepository();
+  const householdRepo = diContainer.getHouseholdRepository();
   householdRepo.update(householdId, household);
 }
 
@@ -25,7 +24,7 @@ async function getEvents(
   endDate: Date
 ): Promise<{ success: true; data: Event[] } | { success: false; error: ErrorKey }> {
   try {
-    const eventRepo = new MockEventRepository();
+    const eventRepo = diContainer.getEventRepository();
     const data = await eventRepo.getEvents(sensorId, startDate, endDate);
     return { success: true, data };
   } catch (error) {
@@ -40,7 +39,7 @@ async function getPaginatedEventsGroupedByDay(
   numberOfEvents: number
 ): Promise<{ success: true; data: EventsForDay[] } | { success: false; error: ErrorKey }> {
   try {
-    const eventRepo = new MockEventRepository();
+    const eventRepo = diContainer.getEventRepository();
     const events = await eventRepo.getPaginatedEvents(sensorId, offset, numberOfEvents);
 
     events.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());

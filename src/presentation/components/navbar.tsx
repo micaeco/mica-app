@@ -1,9 +1,10 @@
 "use client";
 
-import { Link } from "@presentation/i18n/routing";
 import { usePathname } from "next/navigation";
+
 import { Home, PieChart, CopyCheck } from "lucide-react";
 
+import { Link } from "@presentation/i18n/routing";
 import { cn } from "@presentation/lib/utils";
 
 const navItems = [

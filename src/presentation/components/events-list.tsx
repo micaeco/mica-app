@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { useInView } from "react-intersection-observer";
-import { useLocale, useTranslations } from "next-intl";
+
 import { format, isToday, isYesterday } from "date-fns";
+import { useLocale, useTranslations } from "next-intl";
+import { useInView } from "react-intersection-observer";
+import { toast } from "sonner";
 
 import { EventsForDay } from "@domain/entities/event";
-import { useHouseholdStore } from "@presentation/stores/household";
+import { EventBar } from "@presentation/components/event-bar";
 import { getPaginatedEventsGroupedByDay } from "@presentation/lib/actions";
 import { getDateFnsLocale } from "@presentation/lib/utils";
-import { EventBar } from "@presentation/components/event-bar";
+import { useHouseholdStore } from "@presentation/stores/household";
 
 const NUMBER_OF_EVENTS = 20;
 

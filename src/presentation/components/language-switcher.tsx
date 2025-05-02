@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "@presentation/i18n/routing";
+
 import { Globe } from "lucide-react";
+import { useLocale } from "next-intl";
 
 import {
   Select,
@@ -12,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@presentation/components/ui/select";
+import { useRouter, usePathname } from "@presentation/i18n/routing";
+
 
 type Locale = "en" | "es" | "ca";
 

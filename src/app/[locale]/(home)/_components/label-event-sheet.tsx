@@ -1,16 +1,18 @@
 "use client";
 
-import Image from "next/image";
-import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+
+import Image from "next/image";
+
 import { CircleCheck, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { Tag } from "@domain/entities/tag";
+import { EventStopwatch } from "@app/[locale]/(home)/_components/event-stopwatch";
+import { getHouseholdTags, createHouseholdTag } from "@app/[locale]/(home)/actions";
 import { categoryMap, Category, categories } from "@domain/entities/category";
+import { Tag } from "@domain/entities/tag";
 import { Button } from "@presentation/components/ui/button";
-import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@presentation/components/ui/tabs";
 import {
   Sheet,
   SheetContent,
@@ -18,10 +20,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@presentation/components/ui/sheet";
-import { useHouseholdStore } from "@presentation/stores/household";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@presentation/components/ui/tabs";
+import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
 import { cn } from "@presentation/lib/utils";
-import { EventStopwatch } from "@app/[locale]/(home)/_components/event-stopwatch";
-import { getHouseholdTags, createHouseholdTag } from "@app/[locale]/(home)/actions";
+import { useHouseholdStore } from "@presentation/stores/household";
 
 export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const filteredCategories = categories.filter(

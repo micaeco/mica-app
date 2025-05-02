@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
-import { Trash2 } from "lucide-react";
 
-import { useHouseholdStore } from "@presentation/stores/household";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@presentation/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@presentation/components/ui/form";
+import { Input } from "@presentation/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -25,8 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@presentation/components/ui/sheet";
-import { Button } from "@presentation/components/ui/button";
-import { Input } from "@presentation/components/ui/input";
+import { useHouseholdStore } from "@presentation/stores/household";
 
 const formSchema = z.object({
   householdName: z.string().min(1, "Aquest camp és obligatori"),

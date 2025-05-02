@@ -1,13 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { Plus, SquarePen, Bell, CircleHelp, ChevronRight } from "lucide-react";
 
-import { EditHouseholdSheet } from "@presentation/components/edit-household-sheet";
+import Image from "next/image";
+
+import { Plus, SquarePen, Bell, CircleHelp, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { CreateHouseholdPanel } from "@presentation/components/create-household-panel";
+import { EditHouseholdSheet } from "@presentation/components/edit-household-sheet";
 import { LanguageSwitcher } from "@presentation/components/language-switcher";
+import { Avatar, AvatarFallback, AvatarImage } from "@presentation/components/ui/avatar";
+import { Button } from "@presentation/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -20,11 +24,9 @@ import {
   SidebarMenuButton,
   SidebarRail,
 } from "@presentation/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@presentation/components/ui/avatar";
-import { Button } from "@presentation/components/ui/button";
-import { useHouseholdStore } from "@presentation/stores/household";
-import { cn } from "@presentation/lib/utils";
 import { Link } from "@presentation/i18n/routing";
+import { cn } from "@presentation/lib/utils";
+import { useHouseholdStore } from "@presentation/stores/household";
 
 export function AppSidebar({ className }: { className?: string }) {
   const households = useHouseholdStore((state) => state.households);

@@ -1,8 +1,8 @@
 "use client";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale } from "next-intl";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, LabelProps } from "recharts";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Consumption, ConsumptionGranularity } from "@domain/entities/consumption";
 import { ChartConfig, ChartContainer } from "@presentation/components/ui/chart";

@@ -1,3 +1,65 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript", "eslint-config-prettier"]
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:import/typescript",
+    // IMPORTANT: Keep eslint-config-prettier last so it can disable conflicting rules
+    "eslint-config-prettier"
+  ],
+  "plugins": ["import"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json"
+      },
+      "node": true
+    }
+  },
+  "rules": {
+    "import/no-restricted-paths": [
+      "error",
+      {
+        "zones": [
+          {
+            "target": "./src/domain/**",
+            "from": ["./src/infrastructure/**", "./src/presentation/**", "./src/app/**"],
+            "message": "Violation: Domain layer cannot import from Infrastructure, Presentation, or App layers."
+          },
+          {
+            "target": "./src/presentation/**",
+            "from": ["./src/infrastructure/**", "./src/app/**"],
+            "message": "Violation: Presentation layer cannot import from Infrastructure or App layers."
+          },
+          {
+            "target": "./src/infrastructure/**",
+            "from": ["./src/presentation/**", "./src/app/**"],
+            "message": "Violation: Infrastructure layer cannot import from Presentation or App layers."
+          }
+        ]
+      }
+    ],
+    "import/order": [
+      "warn",
+      {
+        "groups": ["builtin", "external", "internal", ["parent", "sibling", "index"], "type"],
+        "pathGroups": [
+          { "pattern": "react", "group": "external", "position": "before" },
+          { "pattern": "next/**", "group": "external", "position": "before" },
+          { "pattern": "@/**", "group": "internal", "position": "before" }
+        ],
+        "pathGroupsExcludedImportTypes": ["react", "next/**"],
+
+        "newlines-between": "always",
+
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+
+    "import/no-unresolved": "error",
+    "import/no-duplicates": "error"
+  }
 }

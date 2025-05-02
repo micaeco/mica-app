@@ -1,7 +1,5 @@
-import "server-only";
-
-import { Event } from "@domain/entities/event";
 import { categories } from "@domain/entities/category";
+import { Event } from "@domain/entities/event";
 import { EventRepository } from "@domain/repositories/event";
 import { MockTagRepository } from "@infrastructure/repositories/tag.mock";
 

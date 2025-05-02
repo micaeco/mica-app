@@ -1,15 +1,16 @@
 "use client";
 
-import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "@presentation/i18n/routing";
-import { ArrowRight, Bell, CircleHelp } from "lucide-react";
 
-import { useHouseholdStore } from "@presentation/stores/household";
-import { cn } from "@presentation/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@presentation/components/ui/card";
+import { ArrowRight, Bell, CircleHelp } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+
 import { getNumberOfLeakEvents, getNumberOfUnknownEvents } from "@app/[locale]/(home)/actions";
+import { Card, CardContent, CardHeader, CardTitle } from "@presentation/components/ui/card";
+import { useRouter } from "@presentation/i18n/routing";
+import { cn } from "@presentation/lib/utils";
+import { useHouseholdStore } from "@presentation/stores/household";
 
 export function ActionCards({ className }: { className?: string }) {
   const [leakEvents, setLeakEvents] = useState<number | null>(null);

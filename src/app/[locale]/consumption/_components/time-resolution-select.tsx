@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import { useTranslations } from "next-intl";
 
 import { ConsumptionGranularity } from "@domain/entities/consumption";

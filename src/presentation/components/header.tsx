@@ -1,14 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { useSidebar } from "@presentation/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@presentation/components/ui/avatar";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { EditProfilePanel } from "@presentation/components/edit-profile-panel";
-import { cn } from "@presentation/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@presentation/components/ui/avatar";
+import { useSidebar } from "@presentation/components/ui/sidebar";
 import { usePathname } from "@presentation/i18n/routing";
+import { cn } from "@presentation/lib/utils";
 
 export function Header({ className }: { className?: string }) {
   const pathname = usePathname();

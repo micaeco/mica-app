@@ -1,5 +1,3 @@
-import "server-only";
-
 import { Household } from "@domain/entities/household";
 import { HouseholdRepository } from "@domain/repositories/household";
 

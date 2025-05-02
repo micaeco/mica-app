@@ -1,7 +1,5 @@
-import "server-only";
-
-import { CategoryBreakdown, Consumption } from "@domain/entities/consumption";
 import { categories } from "@domain/entities/category";
+import { CategoryBreakdown, Consumption } from "@domain/entities/consumption";
 import { ConsumptionRepository } from "@domain/repositories/consumption";
 
 export class MockConsumptionRepository implements ConsumptionRepository {

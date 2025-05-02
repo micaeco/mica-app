@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { Category } from "@domain/entities/category";
 
 export const Event = z.object({

@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useTranslations } from "next-intl";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@presentation/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@presentation/components/ui/form";
+import { Input } from "@presentation/components/ui/input";
 import {
   Panel,
   PanelContent,
@@ -22,8 +25,6 @@ import {
   PanelTitle,
   PanelTrigger,
 } from "@presentation/components/ui/panel";
-import { Button } from "@presentation/components/ui/button";
-import { Input } from "@presentation/components/ui/input";
 
 const formSchema = z.object({
   newHouseholdName: z.string().min(1, "Aquest camp és obligatori"),

@@ -1,13 +1,13 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { CirclePlus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-import { EventsList } from "@presentation/components/events-list";
-import { Card, CardContent, CardHeader, CardTitle } from "@presentation/components/ui/card";
 import { ActionCards } from "@app/[locale]/(home)/_components/action-cards";
 import { ConsumptionTabs } from "@app/[locale]/(home)/_components/consumption-tabs";
 import { LabelEventSheet } from "@app/[locale]/(home)/_components/label-event-sheet";
+import { EventsList } from "@presentation/components/events-list";
+import { Card, CardContent, CardHeader, CardTitle } from "@presentation/components/ui/card";
 
 export default function Home() {
   const tEventsList = useTranslations("events-list");

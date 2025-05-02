@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import { Household } from "@domain/entities/household";
 import { findAllHouseholds } from "@presentation/lib/actions";
 

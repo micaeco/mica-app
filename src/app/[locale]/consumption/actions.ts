@@ -1,7 +1,7 @@
 "use server";
 
-import { ErrorKey } from "@domain/entities/error";
 import { Consumption } from "@domain/entities/consumption";
+import { ErrorKey } from "@domain/entities/error";
 import { MockConsumptionRepository } from "@infrastructure/repositories/consumption.mock";
 
 async function getConsumption(

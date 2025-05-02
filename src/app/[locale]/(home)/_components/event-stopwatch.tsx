@@ -1,7 +1,7 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { PauseIcon, PlayIcon, RefreshCwIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useStopwatch } from "react-timer-hook";
 
 import { Button } from "@presentation/components/ui/button";

@@ -1,14 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations, useLocale } from "next-intl";
-import { Timer } from "lucide-react";
-import { format } from "date-fns";
 
-import { Event } from "@domain/entities/event";
-import { getDateFnsLocale } from "@presentation/lib/utils";
-import { ConsumptionBar } from "@presentation/components/consumption-bar";
+import { format } from "date-fns";
+import { Timer } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
+
 import { categoryMap } from "@domain/entities/category";
+import { Event } from "@domain/entities/event";
+import { ConsumptionBar } from "@presentation/components/consumption-bar";
+import { getDateFnsLocale } from "@presentation/lib/utils";
 
 interface EventBarProps {
   event: Event;

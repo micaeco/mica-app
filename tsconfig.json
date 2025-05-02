@@ -23,7 +23,8 @@
       "@presentation/*": ["src/presentation/*"],
       "@domain/*": ["src/domain/*"],
       "@use-cases/*": ["src/use-cases/*"],
-      "@infrastructure/*": ["src/infrastructure/*"]
+      "@infrastructure/*": ["src/infrastructure/*"],
+      "@di/*": ["src/di/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
