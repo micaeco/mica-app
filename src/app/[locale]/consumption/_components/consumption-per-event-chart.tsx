@@ -29,8 +29,8 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
   const tErrors = useTranslations("common.errors");
 
   const [events, setEvents] = useState<Event[]>([]);
-  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
-  const [errorEvents, setErrorEvents] = useState<ErrorKey | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<ErrorKey | undefined>(undefined);
 
   const { selectedHouseholdId } = useHouseholdStore();
 
@@ -38,37 +38,35 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     const fetchEvents = async () => {
       if (!selectedTimeWindow || !selectedHouseholdId) {
         setEvents([]);
-        // Set loading to false only if we are not expecting a fetch later
         if (!selectedTimeWindow || !selectedHouseholdId) {
-          setIsLoadingEvents(false);
+          setIsLoading(false);
         }
         return;
       }
 
-      setIsLoadingEvents(true);
-      setErrorEvents(undefined);
+      setIsLoading(true);
+      setError(undefined);
 
-      const eventsResult = await getEvents(
+      const result = await getEvents(
         selectedHouseholdId,
         selectedTimeWindow.startDate,
         selectedTimeWindow.endDate
       );
 
-      if (eventsResult.success) {
-        setEvents(eventsResult.data);
+      if (result.success) {
+        setEvents(result.data);
       } else {
-        setErrorEvents(eventsResult.error);
+        setError(result.error);
         setEvents([]);
       }
-      setIsLoadingEvents(false);
+      setIsLoading(false);
     };
 
-    // Reset loading state when dependencies change before fetching
-    setIsLoadingEvents(true);
+    setIsLoading(true);
     fetchEvents();
   }, [selectedHouseholdId, selectedTimeWindow]);
 
-  if (isLoadingEvents) {
+  if (isLoading) {
     return (
       <div className="space-y-4">
         <Skeleton className="h-10 w-full" />
@@ -78,11 +76,9 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     );
   }
 
-  if (errorEvents) {
+  if (error) {
     return (
-      <div className="text-destructive flex items-center justify-center p-6">
-        {tErrors(errorEvents)}
-      </div>
+      <div className="text-destructive flex items-center justify-center p-6">{tErrors(error)}</div>
     );
   }
 
