@@ -1,15 +1,20 @@
 import { useState } from "react";
 
+import { LoaderCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Cell, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 import { categories, Category, categoryMap } from "@domain/entities/category";
 import { CategoryBreakdown } from "@domain/entities/consumption";
+import { ErrorKey } from "@domain/entities/error";
 import { ChartConfig, ChartContainer } from "@presentation/components/ui/chart";
 
 type Props = {
   setSelectedCategories: (category: Category[] | undefined) => void;
   categoryBreakdown: CategoryBreakdown[];
+  isLoading: boolean;
+  error?: ErrorKey;
 };
 
 const chartConfig: ChartConfig = categories.reduce((config: ChartConfig, category) => {
@@ -20,8 +25,15 @@ const chartConfig: ChartConfig = categories.reduce((config: ChartConfig, categor
   return config;
 }, {});
 
-export function ConsumptionPerCategoryChart({ setSelectedCategories, categoryBreakdown }: Props) {
+export function ConsumptionPerCategoryChart({
+  setSelectedCategories,
+  categoryBreakdown,
+  isLoading,
+  error,
+}: Props) {
   const [activeCategory, setActiveCategory] = useState<Category | undefined>(undefined);
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("common.errors");
 
   const handlePieSectionClick = (clickedCategory: Category) => {
     if (activeCategory && activeCategory === clickedCategory) {
@@ -30,10 +42,11 @@ export function ConsumptionPerCategoryChart({ setSelectedCategories, categoryBre
     } else {
       if (clickedCategory === "rest") {
         const restCategories = categories.filter(
-          (category) => !categoryBreakdown.some((item) => item.category === category)
+          (category) =>
+            !categoryBreakdown.some((item) => item.category === category) && category !== "rest"
         );
         setActiveCategory(clickedCategory);
-        setSelectedCategories(restCategories);
+        setSelectedCategories(restCategories.length > 0 ? restCategories : undefined);
       } else {
         setActiveCategory(clickedCategory);
         setSelectedCategories([clickedCategory]);
@@ -41,33 +54,56 @@ export function ConsumptionPerCategoryChart({ setSelectedCategories, categoryBre
     }
   };
 
+  if (isLoading) {
+    return <LoaderCircle className="animate-spin" />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-destructive flex aspect-13/9 min-h-[280px] w-full items-center justify-center">
+        {tErrors(error)}
+      </div>
+    );
+  }
+
+  if (categoryBreakdown.length === 0) {
+    return (
+      <div className="text-muted-foreground flex aspect-13/9 min-h-[280px] w-full items-center justify-center">
+        {tCommon("no-data")}
+      </div>
+    );
+  }
+
+  const activeIndex = categoryBreakdown.findIndex((item) => item.category === activeCategory);
+
   return (
     <ChartContainer config={chartConfig} className="aspect-13/9 min-h-[280px] w-full">
       <PieChart>
         <Pie
           data={categoryBreakdown}
           dataKey="consumptionInLiters"
-          nameKey="type"
+          nameKey="category"
           outerRadius="70%"
           innerRadius="50%"
-          activeIndex={categoryBreakdown.findIndex((item) => item.category === activeCategory)}
+          activeIndex={activeIndex}
           isAnimationActive={false}
           activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
-            <Sector {...props} outerRadius={outerRadius + 10} />
+            <Sector {...props} outerRadius={Number(outerRadius) + 10} />
           )}
           labelLine={false}
           label={(props) =>
             renderCustomizedLabel({
               ...props,
-              isActive: props.payload.category === activeCategory,
+              payload: props.payload as CategoryBreakdown,
+              isActive: props.index === activeIndex,
               handlePieSectionClick,
             })
           }
           paddingAngle={2}
         >
           {categoryBreakdown.map((item) => {
-            const matchingCategory = categories.find((category) => category === item.category);
-            if (!matchingCategory) return null;
+            const categoryInfo = categoryMap[item.category];
+            if (!categoryInfo) return null;
 
             const isActive = activeCategory === item.category;
 
@@ -76,10 +112,10 @@ export function ConsumptionPerCategoryChart({ setSelectedCategories, categoryBre
                 key={item.category}
                 fill={
                   isActive
-                    ? `hsl(var(--${categoryMap[matchingCategory].color}))`
-                    : `hsl(var(--${categoryMap[matchingCategory].color})/0.5)`
+                    ? `hsl(var(--${categoryInfo.color}))`
+                    : `hsl(var(--${categoryInfo.color})/0.5)`
                 }
-                onClick={() => handlePieSectionClick(matchingCategory)}
+                onClick={() => handlePieSectionClick(item.category)}
                 className="cursor-pointer transition-colors duration-200 hover:opacity-90"
               />
             );
@@ -105,19 +141,19 @@ const renderCustomizedLabel = ({
   midAngle: number;
   outerRadius: number;
   percent: number;
-  payload: CategoryBreakdown;
+  payload: CategoryBreakdown | null;
   isActive: boolean;
   handlePieSectionClick: (category: Category) => void;
 }) => {
-  if (!payload) return null;
+  if (!payload || !payload.category) return null;
 
-  const matchingCategory = categories.find((category) => category === payload.category);
-  if (!matchingCategory) return null;
+  const categoryInfo = categoryMap[payload.category];
+  if (!categoryInfo) return null;
 
   const RADIAN = Math.PI / 180;
-  const radius = outerRadius * (isActive ? 1.3 : 1.2);
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  const labelRadius = outerRadius * (isActive ? 1.35 : 1.25);
+  const x = cx + labelRadius * Math.cos(-midAngle * RADIAN);
+  const y = cy + labelRadius * Math.sin(-midAngle * RADIAN);
 
   const percentage = (percent * 100).toFixed(1);
   const textClasses = "select-none text-center";
@@ -125,12 +161,12 @@ const renderCustomizedLabel = ({
   return (
     <g>
       <image
-        href={categoryMap[matchingCategory].icon}
+        href={categoryInfo.icon}
         x={x - 20}
         y={y - 20}
         width={40}
         height={40}
-        onClick={() => handlePieSectionClick(matchingCategory)}
+        onClick={() => handlePieSectionClick(payload.category)}
         style={{ cursor: "pointer" }}
       />
       {isActive && (
@@ -151,7 +187,7 @@ const renderCustomizedLabel = ({
             textAnchor="middle"
             dominantBaseline="middle"
           >
-            {payload.consumptionInLiters} L
+            {payload.consumptionInLiters.toFixed(1)} L
           </text>
         </>
       )}

@@ -1,5 +1,6 @@
 {
   "common": {
+    "no-data": "No hay datos",
     "untagged": "Sin etiqueta",
     "start": "Empezar",
     "pause": "Pausar",
@@ -39,6 +40,7 @@
     "duration": "duración",
     "device": "dispositivo",
     "consumption": "consumo",
+    "use": "uso",
     "uses": "usos",
     "liters": "litros",
     "person": "persona",
@@ -82,6 +84,13 @@
       "settings": "Configuración",
       "help": "Ayuda",
       "logout": "Salir"
+    },
+    "errors": {
+      "NOT_FOUND": "Página no encontrada.",
+      "UNAUTHORIZED": "No estás autorizado para ver esta página.",
+      "FORBIDDEN": "No tienes permiso para ver esta página.",
+      "BAD_REQUEST": "La petición no es válida.",
+      "INTERNAL_SERVER_ERROR": "Error interno del servidor."
     },
     "navigation": "Navegación",
     "now": "Ahora",
@@ -138,12 +147,5 @@
   "not-found": {
     "title": "Página no encontrada.",
     "description": "La página que buscas no existe."
-  },
-  "errors": {
-    "NOT_FOUND": "Página no encontrada.",
-    "UNAUTHORIZED": "No estás autorizado para ver esta página.",
-    "FORBIDDEN": "No tienes permiso para ver esta página.",
-    "BAD_REQUEST": "La petición no es válida.",
-    "INTERNAL_SERVER_ERROR": "Error interno del servidor."
   }
 }

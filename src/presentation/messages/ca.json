@@ -1,5 +1,6 @@
 {
   "common": {
+    "no-data": "No hi ha dades",
     "untagged": "Sense etiqueta",
     "start": "Iniciar",
     "pause": "Pausar",
@@ -39,6 +40,7 @@
     "duration": "duració",
     "device": "dispositiu",
     "consumption": "consum",
+    "use": "us",
     "uses": "usos",
     "liters": "litres",
     "person": "persona",
@@ -82,6 +84,13 @@
       "settings": "Configuració",
       "help": "Ajuda",
       "logout": "Sortir"
+    },
+    "errors": {
+      "NOT_FOUND": "No s'ha trobat la pàgina.",
+      "UNAUTHORIZED": "No estàs autoritzat per veure aquesta pàgina.",
+      "FORBIDDEN": "No tens permís per veure aquesta pàgina.",
+      "BAD_REQUEST": "La petició no és vàlida.",
+      "INTERNAL_SERVER_ERROR": "Error intern del servidor."
     },
     "navigation": "Navegació",
     "now": "Ara",
@@ -138,12 +147,5 @@
   "not-found": {
     "title": "Pàgina no trobada.",
     "description": "La pàgina que busques no existeix."
-  },
-  "errors": {
-    "NOT_FOUND": "No s'ha trobat la pàgina.",
-    "UNAUTHORIZED": "No estàs autoritzat per veure aquesta pàgina.",
-    "FORBIDDEN": "No tens permís per veure aquesta pàgina.",
-    "BAD_REQUEST": "La petició no és vàlida.",
-    "INTERNAL_SERVER_ERROR": "Error intern del servidor."
   }
 }

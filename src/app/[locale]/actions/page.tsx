@@ -40,7 +40,7 @@ export default function Actions() {
   const tActions = useTranslations("actions");
   const tCategories = useTranslations("common.categories");
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("errors");
+  const tErrors = useTranslations("common.errors");
   const locale = useLocale();
   const dateFnsLocale = getDateFnsLocale(locale);
 

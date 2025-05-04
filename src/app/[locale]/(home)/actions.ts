@@ -11,6 +11,7 @@ async function getHouseholdTags(
   householdId: string
 ): Promise<{ success: true; data: Tag[] } | { success: false; error: ErrorKey }> {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const tagRepo = new MockTagRepository();
 
     const tags = await tagRepo.getHouseholdTags(householdId);
@@ -71,6 +72,8 @@ async function getCurrentMonthConsumption(
   householdId: string
 ): Promise<{ success: true; data: Consumption } | { success: false; error: ErrorKey }> {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
     const consumptionRepo = new MockConsumptionRepository();
 
     const consumption = await consumptionRepo.getCurrentMonthConsumption(householdId);
@@ -86,6 +89,8 @@ async function getCurrentDayConsumption(
   householdId: string
 ): Promise<{ success: true; data: Consumption } | { success: false; error: ErrorKey }> {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
     const consumptionRepo = new MockConsumptionRepository();
 
     const consumption = await consumptionRepo.getCurrentDayConsumption(householdId);

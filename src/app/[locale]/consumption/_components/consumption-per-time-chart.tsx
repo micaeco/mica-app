@@ -1,10 +1,11 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useLocale } from "next-intl";
+import { ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, LabelProps } from "recharts";
 
 import { Consumption, ConsumptionGranularity } from "@domain/entities/consumption";
+import { ErrorKey } from "@domain/entities/error";
 import { ChartConfig, ChartContainer } from "@presentation/components/ui/chart";
 import { TimeWindow } from "@presentation/lib/types";
 import { cn, formatDateRange } from "@presentation/lib/utils";
@@ -17,12 +18,14 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 type Props = {
-  selectedTimeWindow: TimeWindow;
+  selectedTimeWindow: TimeWindow | null;
   setSelectedTimeWindow: (timeWindow: TimeWindow) => void;
   resolution: ConsumptionGranularity;
   consumption: Consumption[];
   moveTimeWindow: (direction: "forward" | "back") => void;
   canMoveTimeWindowForward: () => boolean;
+  isLoading: boolean;
+  error?: ErrorKey;
 };
 
 export function ConsumptionPerTimeChart({
@@ -32,11 +35,18 @@ export function ConsumptionPerTimeChart({
   consumption,
   moveTimeWindow,
   canMoveTimeWindowForward,
+  isLoading,
+  error,
 }: Props) {
   const locale = useLocale();
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("common.errors");
 
-  const handleClick = (clickedTimeWindow: TimeWindow) => {
-    setSelectedTimeWindow(clickedTimeWindow);
+  const handleClick = (clickedConsumptionItem: Consumption) => {
+    setSelectedTimeWindow({
+      startDate: clickedConsumptionItem.startDate,
+      endDate: clickedConsumptionItem.endDate,
+    });
   };
 
   const handleLabelClick = (tag: string) => {
@@ -49,12 +59,36 @@ export function ConsumptionPerTimeChart({
   };
 
   const isSelected = (entry: Consumption) =>
+    selectedTimeWindow !== null &&
     entry.startDate.getTime() === selectedTimeWindow.startDate.getTime() &&
     entry.endDate.getTime() === selectedTimeWindow.endDate.getTime();
 
+  if (isLoading) {
+    return <LoaderCircle className="animate-spin" />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-destructive flex h-[350px] w-full items-center justify-center">
+        {tErrors(error)}
+      </div>
+    );
+  }
+
+  if (consumption.length === 0) {
+    return (
+      <div className="text-muted-foreground flex h-[350px] w-full items-center justify-center">
+        {tCommon("no-data")}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-row items-center">
-      <ChevronLeft onClick={() => moveTimeWindow("back")} />
+    <div className="flex w-full flex-row items-center">
+      <ChevronLeft
+        onClick={() => moveTimeWindow("back")}
+        className="text-muted-foreground hover:text-foreground cursor-pointer"
+      />
 
       <ChartContainer config={chartConfig} className="w-full">
         <BarChart
@@ -68,6 +102,7 @@ export function ConsumptionPerTimeChart({
             tickLine={false}
             tickMargin={10}
             axisLine={false}
+            interval={0}
             tick={(props) => (
               <CustomTick
                 {...props}
@@ -79,7 +114,7 @@ export function ConsumptionPerTimeChart({
           <Bar dataKey="consumptionInLiters" radius={20}>
             {consumption.map((entry, index) => (
               <Cell
-                key={`cell-${index}`}
+                key={`cell-${index}-${entry.startDate.toISOString()}`}
                 fill={
                   isSelected(entry)
                     ? "hsl(var(--brand-secondary))"
@@ -107,7 +142,10 @@ export function ConsumptionPerTimeChart({
       </ChartContainer>
       <ChevronRight
         onClick={() => moveTimeWindow("forward")}
-        className={cn(!canMoveTimeWindowForward() && "opacity-0")}
+        className={cn(
+          "text-muted-foreground hover:text-foreground cursor-pointer",
+          !canMoveTimeWindowForward() && "pointer-events-none opacity-30"
+        )}
       />
     </div>
   );
@@ -127,7 +165,15 @@ const CustomTick = ({
   isSelected: boolean;
 }) => (
   <g transform={`translate(${x},${y})`} onClick={() => onClick(payload.value)}>
-    <text x={0} y={0} dy={12} textAnchor="middle" fill="#666" style={{ cursor: "pointer" }}>
+    <text
+      x={0}
+      y={0}
+      dy={12}
+      textAnchor="middle"
+      fill="#666"
+      style={{ cursor: "pointer" }}
+      fontSize={12}
+    >
       {payload.value}
     </text>
     {isSelected && (
@@ -154,23 +200,23 @@ const renderCustomizedLabel = (props: {
   const { x, y, width, value, isSelected } = props;
   const radius = 10;
 
+  if (!isSelected) {
+    return null;
+  }
+
   return (
-    <>
-      {isSelected && (
-        <g>
-          <text
-            x={x + width / 2}
-            y={y - radius - 5}
-            fill="hsl(var(--brand-secondary))"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontWeight="bold"
-            className="text-sm"
-          >
-            {value} L
-          </text>
-        </g>
-      )}
-    </>
+    <g>
+      <text
+        x={x + width / 2}
+        y={y - radius - 5}
+        fill="hsl(var(--brand-secondary))"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontWeight="bold"
+        className="text-sm"
+      >
+        {value.toFixed(0)} L
+      </text>
+    </g>
   );
 };

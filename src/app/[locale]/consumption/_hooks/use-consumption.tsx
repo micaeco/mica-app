@@ -1,6 +1,24 @@
-"use client";
+import { useState, useEffect, useCallback, useRef } from "react";
 
-import { useCallback, useEffect, useState } from "react";
+import {
+  addDays,
+  addHours,
+  addMonths,
+  addWeeks,
+  subDays,
+  subHours,
+  subMonths,
+  subWeeks,
+  startOfDay,
+  startOfHour,
+  startOfMonth,
+  startOfWeek,
+  endOfDay,
+  endOfHour,
+  endOfMonth,
+  endOfWeek,
+  min,
+} from "date-fns";
 
 import {
   getDailyConsumption,
@@ -8,217 +26,145 @@ import {
   getMonthlyConsumption,
   getWeeklyConsumption,
 } from "@app/[locale]/consumption/actions";
-import { Category } from "@domain/entities/category";
 import { Consumption, ConsumptionGranularity } from "@domain/entities/consumption";
 import { ErrorKey } from "@domain/entities/error";
-import { Event } from "@domain/entities/event";
-import { getEvents } from "@presentation/lib/actions";
 import { TimeWindow } from "@presentation/lib/types";
 import { useHouseholdStore } from "@presentation/stores/household";
 
+const resolutionConfig = {
+  month: {
+    fetchFn: getMonthlyConsumption,
+    add: addMonths,
+    sub: subMonths,
+    startOf: startOfMonth,
+    endOf: endOfMonth,
+  },
+  week: {
+    fetchFn: getWeeklyConsumption,
+    add: addWeeks,
+    sub: subWeeks,
+    startOf: startOfWeek,
+    endOf: endOfWeek,
+  },
+  day: {
+    fetchFn: getDailyConsumption,
+    add: addDays,
+    sub: subDays,
+    startOf: startOfDay,
+    endOf: endOfDay,
+  },
+  hour: {
+    fetchFn: getHourlyConsumption,
+    add: addHours,
+    sub: subHours,
+    startOf: startOfHour,
+    endOf: endOfHour,
+  },
+};
+
 export function useConsumption() {
+  const { selectedHouseholdId } = useHouseholdStore();
   const [resolution, setResolution] = useState<ConsumptionGranularity>("month");
-  const [timeWindow, setTimeWindow] = useState<TimeWindow>({
+  const [fetchTimeWindow, setFetchTimeWindow] = useState<TimeWindow>({
     startDate: new Date(),
     endDate: new Date(),
   });
-  const [selectedTimeWindow, setSelectedTimeWindow] = useState<TimeWindow>({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
-  const [selectedCategories, setSelectedCategories] = useState<Category[] | undefined>(undefined);
+  const [selectedTimeWindow, setSelectedTimeWindow] = useState<TimeWindow | null>(null);
   const [consumption, setConsumption] = useState<Consumption[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<ErrorKey | undefined>(undefined);
+  const latestFetchId = useRef(0);
 
-  const { selectedHouseholdId } = useHouseholdStore();
+  const intervals = 4;
+  const config = resolutionConfig[resolution];
 
-  const timeWindowLength = 4;
-
-  const fetchConsumption = useCallback(
-    async (startDate: Date, endDate: Date) => {
-      setIsLoading(true);
-
-      const consumptionResult =
-        resolution === "month"
-          ? await getMonthlyConsumption(selectedHouseholdId, startDate, endDate)
-          : resolution === "week"
-            ? await getWeeklyConsumption(selectedHouseholdId, startDate, endDate)
-            : resolution === "day"
-              ? await getDailyConsumption(selectedHouseholdId, startDate, endDate)
-              : await getHourlyConsumption(selectedHouseholdId, startDate, endDate);
-
-      if (consumptionResult.success) {
-        setConsumption(consumptionResult.data);
-        if (consumptionResult.data.length > 0) {
-          const lastItem = consumptionResult.data[consumptionResult.data.length - 1];
-
-          setSelectedTimeWindow({
-            startDate: lastItem.startDate,
-            endDate: lastItem.endDate,
-          });
-        }
-      } else {
-        setError(consumptionResult.error);
-      }
-
+  const fetchData = useCallback(async () => {
+    if (!selectedHouseholdId) {
+      setConsumption([]);
+      setSelectedTimeWindow(null);
+      setError(undefined);
       setIsLoading(false);
-    },
-    [resolution, selectedHouseholdId]
-  );
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const eventsResult = await getEvents(
-        selectedHouseholdId,
-        selectedTimeWindow.startDate,
-        selectedTimeWindow.endDate
-      );
-
-      if (eventsResult.success) {
-        setEvents(eventsResult.data);
-      } else {
-        setError(eventsResult.error);
-      }
-    };
-
-    fetchEvents();
-  }, [selectedHouseholdId, selectedTimeWindow]);
-
-  useEffect(() => {
-    const startDate = new Date();
-    const endDate = new Date();
-
-    switch (resolution) {
-      case "month":
-        startDate.setMonth(startDate.getMonth() - (timeWindowLength - 1));
-        break;
-      case "week":
-        startDate.setDate(startDate.getDate() - (timeWindowLength - 1) * 7);
-        break;
-      case "day":
-        startDate.setDate(startDate.getDate() - (timeWindowLength - 1));
-        break;
-      case "hour":
-        startDate.setTime(startDate.getTime() - (timeWindowLength - 1) * 60 * 60 * 1000);
-        break;
-    }
-
-    setTimeWindow({ startDate, endDate });
-    fetchConsumption(startDate, endDate);
-  }, [resolution, selectedHouseholdId, fetchConsumption]);
-
-  function canMoveTimeWindowForward() {
-    if (consumption.length === 0) {
-      return false;
-    }
-
-    const lastUpdatedDate = new Date(consumption[consumption.length - 1].endDate);
-
-    return lastUpdatedDate < new Date();
-  }
-
-  function moveTimeWindow(direction: "back" | "forward") {
-    if (direction === "forward" && !canMoveTimeWindowForward()) {
       return;
     }
 
-    let startDate: Date, endDate: Date;
+    const fetchId = ++latestFetchId.current;
 
-    switch (resolution) {
-      case "month":
-        if (direction === "back") {
-          const referenceDate = new Date(timeWindow.startDate);
-          endDate = new Date(referenceDate);
-          endDate.setMonth(endDate.getMonth() - 1);
-          startDate = new Date(referenceDate);
-          startDate.setMonth(startDate.getMonth() - timeWindowLength);
-        } else {
-          const referenceDate = new Date(timeWindow.endDate);
-          startDate = new Date(referenceDate);
-          startDate.setMonth(startDate.getMonth() + 1);
-          endDate = new Date(referenceDate);
-          endDate.setMonth(endDate.getMonth() + timeWindowLength);
-          const now = new Date();
-          if (endDate > now) {
-            endDate = now;
-          }
-        }
-        break;
-      case "week":
-        if (direction === "back") {
-          const referenceDate = new Date(timeWindow.startDate);
-          endDate = new Date(referenceDate);
-          endDate.setDate(endDate.getDate() - 1 * 7);
-          startDate = new Date(referenceDate);
-          startDate.setDate(startDate.getDate() - 7 * timeWindowLength);
-        } else {
-          const referenceDate = new Date(timeWindow.endDate);
-          startDate = new Date(referenceDate);
-          startDate.setDate(startDate.getDate() + 1 * 7);
-          endDate = new Date(referenceDate);
-          endDate.setDate(endDate.getDate() + timeWindowLength * 7);
-          const now = new Date();
-          if (endDate > now) {
-            endDate = now;
-          }
-        }
-        break;
-      case "day":
-        if (direction === "back") {
-          const referenceDate = new Date(timeWindow.startDate);
-          endDate = new Date(referenceDate);
-          endDate.setDate(endDate.getDate() - 1);
-          startDate = new Date(referenceDate);
-          startDate.setDate(startDate.getDate() - timeWindowLength);
-        } else {
-          const referenceDate = new Date(timeWindow.endDate);
-          startDate = new Date(referenceDate);
-          startDate.setDate(startDate.getDate() + 1);
-          endDate = new Date(referenceDate);
-          endDate.setDate(endDate.getDate() + timeWindowLength);
-          const now = new Date();
-          if (endDate > now) {
-            endDate = now;
-          }
-        }
-        break;
-      case "hour":
-        if (direction === "back") {
-          const referenceDate = new Date(timeWindow.startDate);
-          endDate = new Date(referenceDate.getTime() - 1 * 60 * 60 * 1000);
-          startDate = new Date(referenceDate.getTime() - timeWindowLength * 60 * 60 * 1000);
-        } else {
-          const referenceDate = new Date(timeWindow.endDate);
-          startDate = new Date(referenceDate.getTime() + 1 * 60 * 60 * 1000);
-          endDate = new Date(referenceDate.getTime() + timeWindowLength * 60 * 60 * 1000);
-          const now = new Date();
-          if (endDate > now) {
-            endDate = now;
-          }
-        }
-        break;
+    setIsLoading(true);
+    setError(undefined);
+
+    const result = await config.fetchFn(
+      selectedHouseholdId,
+      fetchTimeWindow.startDate,
+      fetchTimeWindow.endDate
+    );
+
+    if (fetchId !== latestFetchId.current) return;
+
+    if (!result.success) {
+      setError(result.error);
+      setConsumption([]);
+      setSelectedTimeWindow(null);
+    } else {
+      setConsumption(result.data);
+      if (result.data.length > 0) {
+        const last = result.data[result.data.length - 1];
+        setSelectedTimeWindow({
+          startDate: new Date(last.startDate),
+          endDate: new Date(last.endDate),
+        });
+      } else {
+        setSelectedTimeWindow(null);
+      }
     }
 
-    setTimeWindow({ startDate, endDate });
-    fetchConsumption(startDate, endDate);
-  }
+    setIsLoading(false);
+  }, [selectedHouseholdId, fetchTimeWindow, config]);
+
+  useEffect(() => {
+    const now = new Date();
+    const start = config.sub(now, intervals - 1);
+    const alignedStart =
+      resolution === "hour" ? config.startOf(start) : startOfDay(config.startOf(start));
+
+    setFetchTimeWindow({ startDate: alignedStart, endDate: now });
+    setSelectedTimeWindow(null);
+  }, [resolution, config]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const canMoveTimeWindowForward = useCallback(() => {
+    return fetchTimeWindow.endDate < config.sub(new Date(), 1);
+  }, [fetchTimeWindow, config]);
+
+  const moveTimeWindow = useCallback(
+    (direction: "back" | "forward") => {
+      if (direction === "forward" && !canMoveTimeWindowForward()) return;
+
+      const shift = direction === "back" ? -intervals : intervals;
+      const rawStart = config.add(fetchTimeWindow.startDate, shift);
+      const rawEnd = config.add(fetchTimeWindow.endDate, shift);
+
+      const newEnd = direction === "forward" ? min([rawEnd, new Date()]) : config.endOf(rawEnd);
+
+      const newStart =
+        resolution === "hour" ? config.startOf(rawStart) : startOfDay(config.startOf(rawStart));
+
+      setFetchTimeWindow({ startDate: newStart, endDate: newEnd });
+    },
+    [fetchTimeWindow, config, canMoveTimeWindowForward, resolution]
+  );
 
   return {
-    timeWindow,
-    setTimeWindow,
-    moveTimeWindow,
-    canMoveTimeWindowForward,
-    selectedTimeWindow,
-    setSelectedTimeWindow,
     resolution,
     setResolution,
-    selectedCategories,
-    setSelectedCategories,
+    selectedTimeWindow,
+    setSelectedTimeWindow,
     consumption,
-    events,
     isLoading,
     error,
+    moveTimeWindow,
+    canMoveTimeWindowForward,
   } as const;
 }

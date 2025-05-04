@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { format } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -8,6 +10,7 @@ import { ConsumptionPerEventChart } from "@app/[locale]/consumption/_components/
 import { ConsumptionPerTimeChart } from "@app/[locale]/consumption/_components/consumption-per-time-chart";
 import { TimeResolutionSelect } from "@app/[locale]/consumption/_components/time-resolution-select";
 import { useConsumption } from "@app/[locale]/consumption/_hooks/use-consumption";
+import { Category } from "@domain/entities/category";
 import {
   Card,
   CardContent,
@@ -15,68 +18,78 @@ import {
   CardHeader,
   CardTitle,
 } from "@presentation/components/ui/card";
+import { Skeleton } from "@presentation/components/ui/skeleton";
 import { cn, getDateFnsLocale } from "@presentation/lib/utils";
 
 export default function ConsumptionPage() {
-  const {
-    selectedTimeWindow,
-    setSelectedTimeWindow,
-    moveTimeWindow,
-    canMoveTimeWindowForward,
-    resolution,
-    setResolution,
-    selectedCategories,
-    setSelectedCategories,
-    consumption,
-    events,
-  } = useConsumption();
-
   const locale = useLocale();
   const t = useTranslations("consumption-per-time-chart");
   const tCommon = useTranslations("common");
 
+  const {
+    resolution,
+    setResolution,
+    selectedTimeWindow,
+    setSelectedTimeWindow,
+    consumption,
+    isLoading: isLoadingConsumption,
+    error: errorConsumption,
+    moveTimeWindow,
+    canMoveTimeWindowForward,
+  } = useConsumption();
+
+  const [selectedCategories, setSelectedCategories] = useState<Category[] | undefined>(undefined);
+
   const currentConsumption = consumption.find(
     (item) =>
+      selectedTimeWindow &&
       item.startDate.getTime() === selectedTimeWindow.startDate.getTime() &&
       item.endDate.getTime() === selectedTimeWindow.endDate.getTime()
   );
 
+  const dateFnsLocale = getDateFnsLocale(locale);
+
+  const formatSelectedTimeWindow = () => {
+    if (!selectedTimeWindow) return tCommon("no-data");
+
+    const { startDate, endDate } = selectedTimeWindow;
+    const sameYear = startDate.getFullYear() === endDate.getFullYear();
+
+    if (resolution === "hour") {
+      const startHour = format(startDate, "HH:mm");
+      const endHour = format(endDate, "HH:mm");
+      return `${format(startDate, "dd MMM y", { locale: dateFnsLocale })} | ${startHour} - ${endHour}`;
+    } else if (resolution === "day") {
+      return format(startDate, "dd MMM y", { locale: dateFnsLocale });
+    } else if (resolution === "week") {
+      return `${format(startDate, "dd MMM", { locale: dateFnsLocale })} - ${format(endDate, sameYear ? "dd MMM y" : "dd MMM y", { locale: dateFnsLocale })}`;
+    } else if (resolution === "month") {
+      return format(startDate, "MMM y", { locale: dateFnsLocale });
+    } else {
+      return `${format(startDate, "dd MMM y", { locale: dateFnsLocale })} - ${format(endDate, "dd MMM y", { locale: dateFnsLocale })}`;
+    }
+  };
+
   return (
     <div className="flex w-full flex-col gap-4 p-4">
-      {/* Controls section */}
       <TimeResolutionSelect resolution={resolution} setResolution={setResolution} />
 
-      {/* Charts section */}
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-4 xl:flex-row">
-          <Card className="h-full xl:w-1/2">
+          <Card className="flex h-full flex-col xl:w-1/2">
             <CardHeader>
               <CardTitle className="text-2xl">
-                {(() => {
-                  const dateFnsLocale = getDateFnsLocale(locale);
-                  const sameYear =
-                    selectedTimeWindow.startDate.getFullYear() ===
-                    selectedTimeWindow.endDate.getFullYear();
-                  const sameDay =
-                    selectedTimeWindow.startDate.getDate() === selectedTimeWindow.endDate.getDate();
-                  const sameHour =
-                    selectedTimeWindow.startDate.getHours() ===
-                    selectedTimeWindow.endDate.getHours();
-
-                  return sameHour
-                    ? `${format(selectedTimeWindow.startDate, "dd MMM y", { locale: dateFnsLocale })} | ${format(selectedTimeWindow.startDate, "HH:mm")} - ${format(selectedTimeWindow.endDate, "HH:mm", { locale: dateFnsLocale })}`
-                    : sameDay
-                      ? `${format(selectedTimeWindow.startDate, "dd MMM y", { locale: dateFnsLocale })}`
-                      : sameYear
-                        ? `${format(selectedTimeWindow.startDate, "dd MMM", { locale: dateFnsLocale })} - ${format(selectedTimeWindow.endDate, "dd MMM y", { locale: dateFnsLocale })}`
-                        : `${format(selectedTimeWindow.startDate, "dd MMM y", { locale: dateFnsLocale })} - ${format(selectedTimeWindow.endDate, "dd MMM y", { locale: dateFnsLocale })}`;
-                })()}
+                {isLoadingConsumption ? (
+                  <Skeleton className="h-8 w-48" />
+                ) : (
+                  formatSelectedTimeWindow()
+                )}
               </CardTitle>
               <CardDescription>
                 {t("description", { resolution: tCommon(resolution) })}
               </CardDescription>
             </CardHeader>
-            <CardContent className="px-2">
+            <CardContent className="flex flex-grow flex-col items-center justify-center px-2">
               <ConsumptionPerTimeChart
                 selectedTimeWindow={selectedTimeWindow}
                 setSelectedTimeWindow={setSelectedTimeWindow}
@@ -84,36 +97,57 @@ export default function ConsumptionPage() {
                 consumption={consumption}
                 moveTimeWindow={moveTimeWindow}
                 canMoveTimeWindowForward={canMoveTimeWindowForward}
+                isLoading={isLoadingConsumption}
+                error={errorConsumption}
               />
             </CardContent>
           </Card>
 
-          <Card className="h-full xl:w-1/2">
+          <Card className="flex h-full flex-col xl:w-1/2">
             <CardHeader>
               <CardTitle className="space-x-4">
-                <span className="text-2xl">{currentConsumption?.consumptionInLiters} L</span>
-                <span
-                  className={cn(
-                    "text-sm",
-                    (currentConsumption?.consumptionPercentDeviationFromBaseline ?? 0) > 0
-                      ? "text-red-500"
-                      : "text-green-500"
-                  )}
-                >
-                  {currentConsumption?.consumptionPercentDeviationFromBaseline}%
-                  {currentConsumption?.consumptionPercentDeviationFromBaseline !== undefined &&
-                    (currentConsumption.consumptionPercentDeviationFromBaseline > 0 ? " ↑" : " ↓")}
-                </span>
+                {isLoadingConsumption ? (
+                  <Skeleton className="h-8 w-32" />
+                ) : (
+                  <>
+                    <span className="text-2xl">
+                      {currentConsumption?.consumptionInLiters ?? "--"} L
+                    </span>
+                    {currentConsumption?.consumptionPercentDeviationFromBaseline !== undefined && (
+                      <span
+                        className={cn(
+                          "text-sm",
+                          currentConsumption.consumptionPercentDeviationFromBaseline > 0
+                            ? "text-red-500"
+                            : "text-green-500"
+                        )}
+                      >
+                        {currentConsumption.consumptionPercentDeviationFromBaseline}%
+                        {currentConsumption.consumptionPercentDeviationFromBaseline > 0
+                          ? " ↑"
+                          : " ↓"}
+                      </span>
+                    )}
+                  </>
+                )}
               </CardTitle>
               <CardDescription>
-                {currentConsumption?.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
-                {tCommon("day")}
+                {isLoadingConsumption ? (
+                  <Skeleton className="h-5 w-40" />
+                ) : (
+                  <>
+                    {currentConsumption?.consumptionInLitersPerDayPerPerson ?? "--"} L /{" "}
+                    {tCommon("person")} {tCommon("day")}
+                  </>
+                )}
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-grow flex-col items-center justify-center">
               <ConsumptionPerCategoryChart
                 categoryBreakdown={currentConsumption?.categoryBreakdown || []}
                 setSelectedCategories={setSelectedCategories}
+                isLoading={isLoadingConsumption}
+                error={errorConsumption}
               />
             </CardContent>
           </Card>
@@ -121,7 +155,10 @@ export default function ConsumptionPage() {
 
         <Card className="w-full">
           <CardContent className="p-6">
-            <ConsumptionPerEventChart selectedCategories={selectedCategories} events={events} />
+            <ConsumptionPerEventChart
+              selectedCategories={selectedCategories}
+              selectedTimeWindow={selectedTimeWindow}
+            />
           </CardContent>
         </Card>
       </div>

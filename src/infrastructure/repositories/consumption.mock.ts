@@ -269,7 +269,11 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       );
 
       const categoryBreakdown = await this.generateCategoryBreakdown(weeklyConsumption);
-      const metrics = this.calculateConsumptionMetrics(weeklyConsumption, weekStart, weekEnd);
+      const metrics = this.calculateConsumptionMetrics(
+        weeklyConsumption,
+        effectiveStart,
+        effectiveEnd
+      );
 
       result.push({
         startDate: weekStart,
@@ -318,7 +322,11 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       );
 
       const categoryBreakdown = await this.generateCategoryBreakdown(monthlyConsumption);
-      const metrics = this.calculateConsumptionMetrics(monthlyConsumption, monthStart, monthEnd);
+      const metrics = this.calculateConsumptionMetrics(
+        monthlyConsumption,
+        effectiveStart,
+        effectiveEnd
+      );
 
       result.push({
         startDate: monthStart,
