@@ -25,7 +25,7 @@ export function EventsList() {
   const locale = useLocale();
   const dateFnsLocale = getDateFnsLocale(locale);
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("errors");
+  const tErrors = useTranslations("common.errors");
 
   useEffect(() => {
     const fetchEvents = async () => {

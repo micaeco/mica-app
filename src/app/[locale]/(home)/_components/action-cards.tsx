@@ -20,7 +20,7 @@ export function ActionCards({ className }: { className?: string }) {
 
   const router = useRouter();
   const tActionCards = useTranslations("action-cards");
-  const tErrors = useTranslations("errors");
+  const tErrors = useTranslations("common.errors");
 
   useEffect(() => {
     async function fetchEvents() {

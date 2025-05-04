@@ -13,7 +13,7 @@ import { useHouseholdStore } from "@presentation/stores/household";
 
 export function ConsumptionTabs() {
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("errors");
+  const tErrors = useTranslations("common.errors");
 
   const [consumption, setConsumption] = useState<Consumption | null>(null);
   const [resolution, setResolution] = useState<"month" | "today">("month");

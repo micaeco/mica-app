@@ -41,7 +41,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const { selectedHouseholdId } = useHouseholdStore();
 
   const tCategories = useTranslations("common.categories");
-  const tErrors = useTranslations("errors");
+  const tErrors = useTranslations("common.errors");
   const tCommon = useTranslations("common");
   const tNewEventSheet = useTranslations("new-event-sheet");
 
