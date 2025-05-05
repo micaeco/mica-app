@@ -25,7 +25,6 @@ async function getMonthlyConsumption(
   endDate: Date
 ): Promise<{ success: true; data: Consumption[] } | { success: false; error: ErrorKey }> {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     const consumptionRepo = new MockConsumptionRepository();
     const data = await consumptionRepo.getMonthlyConsumption(sensorId, startDate, endDate);
     return { success: true, data };
@@ -41,8 +40,6 @@ async function getWeeklyConsumption(
   endDate: Date
 ): Promise<{ success: true; data: Consumption[] } | { success: false; error: ErrorKey }> {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     const consumptionRepo = new MockConsumptionRepository();
     const data = await consumptionRepo.getWeeklyConsumption(sensorId, startDate, endDate);
     return { success: true, data };
@@ -58,8 +55,6 @@ async function getDailyConsumption(
   endDate: Date
 ): Promise<{ success: true; data: Consumption[] } | { success: false; error: ErrorKey }> {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     const consumptionRepo = new MockConsumptionRepository();
     const data = await consumptionRepo.getDailyConsumption(sensorId, startDate, endDate);
     return { success: true, data };
@@ -75,8 +70,6 @@ async function getHourlyConsumption(
   endDate: Date
 ): Promise<{ success: true; data: Consumption[] } | { success: false; error: ErrorKey }> {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     const consumptionRepo = new MockConsumptionRepository();
     const data = await consumptionRepo.getHourlyConsumption(sensorId, startDate, endDate);
     return { success: true, data };

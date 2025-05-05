@@ -7,7 +7,6 @@ import { MockEventRepository } from "@infrastructure/repositories/event.mock";
 async function getLeakEvents(
   sensorId: string
 ): Promise<{ success: true; data: Event[] } | { success: false; error: ErrorKey }> {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
   const eventRepo = new MockEventRepository();
 
   try {
@@ -22,7 +21,6 @@ async function getLeakEvents(
 async function getUnknownEvents(
   sensorId: string
 ): Promise<{ success: true; data: Event[] } | { success: false; error: ErrorKey }> {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
   const eventRepo = new MockEventRepository();
 
   try {
