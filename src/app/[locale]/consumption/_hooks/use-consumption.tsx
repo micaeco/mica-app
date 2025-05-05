@@ -43,8 +43,8 @@ const resolutionConfig = {
     fetchFn: getWeeklyConsumption,
     add: addWeeks,
     sub: subWeeks,
-    startOf: startOfWeek,
-    endOf: endOfWeek,
+    startOf: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }),
+    endOf: (date: Date) => endOfWeek(date, { weekStartsOn: 1 }),
   },
   day: {
     fetchFn: getDailyConsumption,
