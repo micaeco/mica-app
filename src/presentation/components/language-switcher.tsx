@@ -12,10 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@presentation/components/ui/select";
-import { useRouter, usePathname } from "@presentation/i18n/routing";
-
-
-type Locale = "en" | "es" | "ca";
+import { useRouter, usePathname, Locale } from "@presentation/i18n/routing";
 
 const languages: { code: Locale; name: string }[] = [
   { code: "en", name: "English" },

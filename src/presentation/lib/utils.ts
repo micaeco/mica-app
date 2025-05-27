@@ -1,67 +1,16 @@
+import { NextRequest } from "next/server";
+
+import { match as matchLocale } from "@formatjs/intl-localematcher";
 import { type ClassValue, clsx } from "clsx";
-import { format, LocalizeFn, Month } from "date-fns";
-import { ca, enUS, es, Locale } from "date-fns/locale";
+import { format } from "date-fns";
+import Negotiator from "negotiator";
 import { twMerge } from "tailwind-merge";
 
 import { ConsumptionGranularity } from "@domain/entities/consumption";
+import { getDateFnsLocale, Locale } from "@presentation/i18n/routing";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-export function getDateFnsLocale(locale: string): Locale {
-  const customCatalan: Locale = {
-    ...ca,
-    localize: {
-      ...ca.localize,
-      month: ((monthIndex: number, { width = "abbreviated" } = {}) => {
-        const months = {
-          narrow: ["G", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
-          abbreviated: [
-            "gen",
-            "feb",
-            "mar",
-            "abr",
-            "mai",
-            "jun",
-            "jul",
-            "ago",
-            "set",
-            "oct",
-            "nov",
-            "des",
-          ],
-          wide: [
-            "gener",
-            "febrer",
-            "març",
-            "abril",
-            "maig",
-            "juny",
-            "juliol",
-            "agost",
-            "setembre",
-            "octubre",
-            "novembre",
-            "desembre",
-          ],
-        };
-
-        return months[width as keyof typeof months][monthIndex];
-      }) as LocalizeFn<Month>,
-    },
-  };
-
-  switch (locale) {
-    case "en":
-      return enUS;
-    case "ca":
-      return customCatalan;
-    case "es":
-      return es;
-    default:
-      return enUS;
-  }
 }
 
 export function formatDate(date: Date, locale: string) {
@@ -90,4 +39,33 @@ export function formatDateRange(
     case "month":
       return format(start, "MMM", formatOptions);
   }
+}
+
+export function resolveLocale(
+  request: NextRequest,
+  locales: readonly Locale[],
+  defaultLocale: Locale
+): Locale {
+  const pathname = request.nextUrl.pathname;
+  for (const locale of locales) {
+    if (pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`) {
+      request.cookies.set("NEXT_LOCALE", locale);
+      return locale;
+    }
+  }
+
+  const nextLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  if (nextLocale && locales.includes(nextLocale as Locale)) {
+    return nextLocale as Locale;
+  }
+
+  const negotiator = new Negotiator({
+    headers: {
+      "accept-language": request.headers.get("accept-language") ?? undefined,
+    },
+  });
+
+  const languages = negotiator.languages();
+
+  return matchLocale(languages, locales, defaultLocale) as unknown as Locale;
 }

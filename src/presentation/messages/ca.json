@@ -1,5 +1,7 @@
 {
   "common": {
+    "no-more-events-to-load": "No hi ha més events a carregar",
+    "contact-us": "Contacta'ns",
     "no-data": "No hi ha dades",
     "untagged": "Sense etiqueta",
     "start": "Iniciar",
@@ -90,7 +92,8 @@
       "UNAUTHORIZED": "No estàs autoritzat per veure aquesta pàgina.",
       "FORBIDDEN": "No tens permís per veure aquesta pàgina.",
       "BAD_REQUEST": "La petició no és vàlida.",
-      "INTERNAL_SERVER_ERROR": "Error intern del servidor."
+      "INTERNAL_SERVER_ERROR": "Error intern del servidor.",
+      "VALIDATION_ERROR": "Error de validació."
     },
     "navigation": "Navegació",
     "now": "Ara",
@@ -138,7 +141,24 @@
     "title": "Esdeveniments"
   },
   "new-event-sheet": {
-    "no-Tags-for-category": "Aquesta categoria no té cap etiqueta creada"
+    "title": "Nou esdeveniment",
+    "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria.",
+    "event-timing-title": "Moment de l'esdeveniment",
+    "enable-timer": "Activar temporitzador",
+    "set-start-time": "Ara comença",
+    "set-end-time": "Ara acaba",
+    "event-created-successfully": "Esdeveniment creat correctament"
+  },
+  "edit-event-sheet": {
+    "title": "Edita l'esdeveniment",
+    "create-new-tag": "Crear nova etiqueta",
+    "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria.",
+    "event-edited-successfully": "Esdeveniment actualitzat correctament"
+  },
+  "new-tag-dialog": {
+    "title": "Crear nova etiqueta",
+    "description": "Introdueix un nom per a la nova etiqueta dins de la categoria {category}.",
+    "tag-created-successfully": "Etiqueta creada correctament"
   },
   "actions": {
     "no-leaks": "No hi ha fuites",

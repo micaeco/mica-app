@@ -19,7 +19,8 @@ import {
   CardTitle,
 } from "@presentation/components/ui/card";
 import { Skeleton } from "@presentation/components/ui/skeleton";
-import { cn, getDateFnsLocale } from "@presentation/lib/utils";
+import { getDateFnsLocale } from "@presentation/i18n/routing";
+import { cn } from "@presentation/lib/utils";
 
 export default function ConsumptionPage() {
   const locale = useLocale();

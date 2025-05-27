@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Category, categoryMap } from "@domain/entities/category";
-import { ErrorKey } from "@domain/entities/error";
+import { TimeWindow } from "@domain/entities/consumption";
+import { ErrorKey } from "@domain/entities/errors";
 import { Event } from "@domain/entities/event";
 import { ConsumptionBar } from "@presentation/components/consumption-bar";
 import { EventBar } from "@presentation/components/event-bar";
@@ -15,7 +16,6 @@ import {
 } from "@presentation/components/ui/accordion";
 import { Skeleton } from "@presentation/components/ui/skeleton";
 import { getEvents } from "@presentation/lib/actions";
-import { TimeWindow } from "@presentation/lib/types";
 import { useHouseholdStore } from "@presentation/stores/household";
 
 type Props = {

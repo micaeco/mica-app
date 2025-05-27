@@ -1,5 +1,7 @@
 {
   "common": {
+    "no-more-events-to-load": "No quedan eventos por cargar",
+    "contact-us": "Contáctanos",
     "no-data": "No hay datos",
     "untagged": "Sin etiqueta",
     "start": "Empezar",
@@ -90,7 +92,8 @@
       "UNAUTHORIZED": "No estás autorizado para ver esta página.",
       "FORBIDDEN": "No tienes permiso para ver esta página.",
       "BAD_REQUEST": "La petición no es válida.",
-      "INTERNAL_SERVER_ERROR": "Error interno del servidor."
+      "INTERNAL_SERVER_ERROR": "Error interno del servidor.",
+      "VALIDATION_ERROR": "Error de validación."
     },
     "navigation": "Navegación",
     "now": "Ahora",
@@ -138,7 +141,24 @@
     "title": "Eventos"
   },
   "new-event-sheet": {
-    "no-tags-for-category": "Esta categoria no tiene ninguna etiqueta creada"
+    "title": "Nuevo evento",
+    "no-tags-for-category": "No se encontraron etiquetas para esta categoría.",
+    "event-timing-title": "Momento del evento",
+    "enable-timer": "Activar temporizador",
+    "set-start-time": "Empieza ahora",
+    "set-end-time": "Acaba ahora",
+    "event-created-successfully": "Evento creado correctamente"
+  },
+  "edit-event-sheet": {
+    "title": "Edita el evento",
+    "create-new-tag": "Crear nueva etiqueta",
+    "no-tags-for-category": "No se encontraron etiquetas para esta categoría.",
+    "event-edited-successfully": "Evento actualizado correctamente"
+  },
+  "new-tag-dialog": {
+    "title": "Crear nueva etiqueta",
+    "description": "Introduce un nombre para la nueva etiqueta dentro de la categoría {category}.",
+    "tag-created-successfully": "Etiqueta creada correctamente"
   },
   "actions": {
     "no-leaks": "No hay fugas",

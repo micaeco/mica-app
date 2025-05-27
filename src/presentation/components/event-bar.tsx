@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 
 import { format } from "date-fns";
@@ -9,7 +11,9 @@ import { useTranslations, useLocale } from "next-intl";
 import { categoryMap } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 import { ConsumptionBar } from "@presentation/components/consumption-bar";
-import { getDateFnsLocale } from "@presentation/lib/utils";
+import { getDateFnsLocale } from "@presentation/i18n/routing";
+
+import { EditEventSheet } from "./edit-event-sheet";
 
 interface EventBarProps {
   event: Event;
@@ -22,38 +26,56 @@ export function EventBar({ event, totalConsumption }: EventBarProps) {
   const locale = useLocale();
   const dateLocale = getDateFnsLocale(locale);
 
+  const [isOpenEditEventSheet, setIsOpenEditEventSheet] = useState<boolean>(false);
+
   const consumptionPercentage = (event.consumptionInLiters / totalConsumption) * 100;
 
   if (event.endDate) {
     return (
-      <div className="flex flex-row items-center gap-2">
-        <Image src={categoryMap[event.category].icon} alt={event.category} width={32} height={32} />
+      <>
+        <div
+          className="flex flex-row items-center gap-2 transition-transform hover:scale-95 hover:cursor-pointer"
+          onClick={() => setIsOpenEditEventSheet(true)}
+        >
+          <Image
+            src={categoryMap[event.category].icon!}
+            alt={event.category}
+            width={32}
+            height={32}
+          />
 
-        <div className="flex w-full flex-col">
-          <div className="flex flex-row justify-between gap-2">
-            <div className="flex flex-row space-x-2">
-              <span className="max-w-[6ch] truncate font-medium sm:max-w-none">
-                {tCategories(event.category)}
+          <div className="flex w-full flex-col">
+            <div className="flex flex-row justify-between gap-2">
+              <div className="flex flex-row space-x-2">
+                <span className="max-w-[6ch] truncate font-medium sm:max-w-none">
+                  {tCategories(event.category)}
+                </span>
+                {event.tag && (
+                  <div className="bg-brand-secondary flex items-center justify-center rounded-full px-3 py-0.5 text-xs">
+                    <span className="xs:max-w-none max-w-[6ch] truncate">{event.tag}</span>
+                  </div>
+                )}
+              </div>
+              <span className="line-clamp-1">
+                {format(event.startDate, "HH:mm", { locale: dateLocale })} –{" "}
+                {format(event.endDate, "HH:mm", { locale: dateLocale })}
               </span>
-              {event.tag && (
-                <div className="bg-brand-secondary flex items-center justify-center rounded-full px-3 py-0.5 text-xs">
-                  <span className="xs:max-w-none max-w-[6ch] truncate">{event.tag}</span>
-                </div>
-              )}
             </div>
-            <span className="line-clamp-1">
-              {format(event.startDate, "HH:mm", { locale: dateLocale })} –{" "}
-              {format(event.endDate, "HH:mm", { locale: dateLocale })}
-            </span>
-          </div>
-          <div className="flex flex-row items-center gap-2">
-            <ConsumptionBar consumptionPercentage={consumptionPercentage} />
-            <span className="text-brand-secondary font-bold">
-              {event.consumptionInLiters}&nbsp;L
-            </span>
+            <div className="flex flex-row items-center gap-2">
+              <ConsumptionBar consumptionPercentage={consumptionPercentage} />
+              <span className="text-brand-secondary font-bold">
+                {event.consumptionInLiters}&nbsp;L
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+
+        <EditEventSheet
+          event={event}
+          open={isOpenEditEventSheet}
+          onOpenChange={setIsOpenEditEventSheet}
+        />
+      </>
     );
   }
 

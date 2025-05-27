@@ -26,9 +26,8 @@ import {
   getMonthlyConsumption,
   getWeeklyConsumption,
 } from "@app/[locale]/consumption/actions";
-import { Consumption, ConsumptionGranularity } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/error";
-import { TimeWindow } from "@presentation/lib/types";
+import { Consumption, ConsumptionGranularity, TimeWindow } from "@domain/entities/consumption";
+import { ErrorKey } from "@domain/entities/errors";
 import { useHouseholdStore } from "@presentation/stores/household";
 
 const resolutionConfig = {

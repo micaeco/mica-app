@@ -2,8 +2,7 @@ import { z } from "zod";
 
 export const Sensor = z.object({
   id: z.string(),
-  battery: z.number().min(0).max(100),
-  state: z.enum(["active", "inactive"]),
+  mac: z.string().regex(/^[0-9a-fA-F]{12}$/),
 });
 
 export type Sensor = z.infer<typeof Sensor>;

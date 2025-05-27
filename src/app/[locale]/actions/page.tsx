@@ -27,7 +27,7 @@ import {
   CarouselPrevious,
 } from "@presentation/components/ui/carousel";
 import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
-import { getDateFnsLocale } from "@presentation/lib/utils";
+import { getDateFnsLocale } from "@presentation/i18n/routing";
 import { useHouseholdStore } from "@presentation/stores/household";
 
 export default function Actions() {
@@ -104,7 +104,7 @@ export default function Actions() {
                       <Card>
                         <CardContent className="flex flex-col gap-2 p-6">
                           <Image
-                            src={categoryMap[event.category].icon}
+                            src={categoryMap[event.category].icon!}
                             alt={event.category}
                             height={48}
                             width={48}
@@ -161,7 +161,7 @@ export default function Actions() {
                       <Card>
                         <CardContent className="flex flex-col gap-2 p-6">
                           <Image
-                            src={categoryMap[event.category].icon}
+                            src={categoryMap[event.category].icon!}
                             alt={event.category}
                             height={48}
                             width={48}
@@ -195,7 +195,7 @@ export default function Actions() {
                                 >
                                   <Image
                                     className="object-contain"
-                                    src={categoryMap[category].icon}
+                                    src={categoryMap[category].icon!}
                                     alt={category}
                                     width={24}
                                     height={24}

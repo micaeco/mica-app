@@ -23,3 +23,11 @@ export type Consumption = z.infer<typeof Consumption>;
 export const ConsumptionGranularity = z.enum(["day", "week", "month", "hour"]);
 
 export type ConsumptionGranularity = z.infer<typeof ConsumptionGranularity>;
+
+export const TimeWindow = z.object({
+  startDate: z.date(),
+  endDate: z.date(),
+  consumption: z.number().positive().optional(),
+});
+
+export type TimeWindow = z.infer<typeof TimeWindow>;

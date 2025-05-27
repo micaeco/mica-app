@@ -1,3 +1,5 @@
+import { endOfDay, startOfDay } from "date-fns";
+
 import { categories } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 import { EventRepository } from "@domain/repositories/event";
@@ -73,6 +75,10 @@ export class MockEventRepository implements EventRepository {
 
   async getEvents(householdId: string, startDate: Date, endDate: Date): Promise<Event[]> {
     return this.generateEvents(householdId, startDate, endDate);
+  }
+
+  async getEventsForDay(householdId: string, date: Date): Promise<Event[]> {
+    return this.generateEvents(householdId, startOfDay(date), endOfDay(date));
   }
 
   async getPaginatedEvents(

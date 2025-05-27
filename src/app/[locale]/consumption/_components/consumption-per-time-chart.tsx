@@ -4,10 +4,9 @@ import { ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, LabelProps } from "recharts";
 
-import { Consumption, ConsumptionGranularity } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/error";
+import { Consumption, ConsumptionGranularity, TimeWindow } from "@domain/entities/consumption";
+import { ErrorKey } from "@domain/entities/errors";
 import { ChartConfig, ChartContainer } from "@presentation/components/ui/chart";
-import { TimeWindow } from "@presentation/lib/types";
 import { cn, formatDateRange } from "@presentation/lib/utils";
 
 const chartConfig = {

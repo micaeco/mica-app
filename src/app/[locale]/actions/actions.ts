@@ -1,6 +1,6 @@
 "use server";
 
-import { ErrorKey } from "@domain/entities/error";
+import { ErrorKey } from "@domain/entities/errors";
 import { Event } from "@domain/entities/event";
 import { MockEventRepository } from "@infrastructure/repositories/event.mock";
 

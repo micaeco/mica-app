@@ -9,7 +9,7 @@ export const Event = z.object({
 
   startDate: z.date(),
   endDate: z.date(),
-  consumptionInLiters: z.number().positive(),
+  consumptionInLiters: z.number().min(0),
   notes: z.array(z.string()),
   tag: z.string().optional(),
 });

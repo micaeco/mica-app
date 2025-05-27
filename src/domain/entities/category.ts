@@ -19,7 +19,7 @@ export const Category = z.enum(categories);
 export type Category = z.infer<typeof Category>;
 
 export const CategoryMetadata = z.object({
-  icon: z.string(),
+  icon: z.string().optional(),
   color: z.string(),
 });
 
@@ -67,7 +67,6 @@ export const categoryMap: Record<Category, CategoryMetadata> = {
     color: "chart-5",
   },
   rest: {
-    icon: "/icons/rest.webp",
     color: "muted-foreground",
   },
 };

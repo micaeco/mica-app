@@ -1,5 +1,7 @@
 {
   "common": {
+    "no-more-events-to-load": "No more events to load",
+    "contact-us": "Contact us",
     "no-data": "No data",
     "untagged": "No tag",
     "start": "Start",
@@ -90,7 +92,8 @@
       "UNAUTHORIZED": "You are not authorized to view this page.",
       "FORBIDDEN": "You do not have permission to view this page.",
       "BAD_REQUEST": "The request is not valid.",
-      "INTERNAL_SERVER_ERROR": "Internal server error."
+      "INTERNAL_SERVER_ERROR": "Internal server error.",
+      "VALIDATION_ERROR": "Validation error."
     },
     "navigation": "Navigation",
     "now": "Now",
@@ -138,7 +141,24 @@
     "title": "Events"
   },
   "new-event-sheet": {
-    "no-tags-for-category": "This category has no tags created"
+    "title": "New event",
+    "no-tags-for-category": "No tags found for this category.",
+    "event-timing-title": "Event Timing",
+    "enable-timer": "Enable Timer",
+    "set-start-time": "Starts now",
+    "set-end-time": "Ends now",
+    "event-created-successfully": "Event created successfully"
+  },
+  "edit-event-sheet": {
+    "title": "Edit event",
+    "create-new-tag": "Create new tag",
+    "no-tags-for-category": "No tags found for this category.",
+    "event-edited-successfully": "Event edited successfully"
+  },
+  "new-tag-dialog": {
+    "title": "Create new tag",
+    "description": "Enter a name for the new tag under the {category} category.",
+    "tag-created-successfully": "Tag created successfully"
   },
   "actions": {
     "no-leaks": "No leaks",

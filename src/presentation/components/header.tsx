@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 
+import { useUser } from "@auth0/nextjs-auth0";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -13,8 +14,11 @@ import { cn } from "@presentation/lib/utils";
 
 export function Header({ className }: { className?: string }) {
   const pathname = usePathname();
-  const tNavPages = useTranslations("common.nav-pages");
   const { toggleSidebar, state } = useSidebar();
+
+  const tNavPages = useTranslations("common.nav-pages");
+
+  const { user } = useUser();
 
   return (
     <header
@@ -50,7 +54,11 @@ export function Header({ className }: { className?: string }) {
         <div className="fixed top-2 right-3">
           <EditProfilePanel>
             <Avatar className="border-brand-primary h-9 w-9 border-2 transition-transform hover:scale-105">
-              <AvatarImage className="object-contain" src="/logos/logo.webp" alt="avatar" />
+              <AvatarImage
+                className="object-contain"
+                src={user?.picture ? user?.picture : "/logos/logo.webp"}
+                alt="avatar"
+              />
               <AvatarFallback>U</AvatarFallback>
             </Avatar>
           </EditProfilePanel>

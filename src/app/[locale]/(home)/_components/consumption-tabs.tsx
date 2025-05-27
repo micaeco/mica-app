@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { getCurrentDayConsumption, getCurrentMonthConsumption } from "@app/[locale]/(home)/actions";
-import { Consumption } from "@domain/entities/consumption";
+import { Skeleton } from "@presentation/components/ui/skeleton";
 import { Tabs, TabsContent, TabsTrigger, TabsList } from "@presentation/components/ui/tabs";
+import { trpc } from "@presentation/lib/trpc";
 import { cn } from "@presentation/lib/utils";
 import { useHouseholdStore } from "@presentation/stores/household";
 
@@ -15,37 +15,49 @@ export function ConsumptionTabs() {
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("common.errors");
 
-  const [consumption, setConsumption] = useState<Consumption | null>(null);
   const [resolution, setResolution] = useState<"month" | "today">("month");
 
   const { selectedHouseholdId } = useHouseholdStore();
 
-  useEffect(() => {
-    async function fetchConsumption() {
-      if (resolution === "month") {
-        const result = await getCurrentMonthConsumption(selectedHouseholdId);
+  const queryOptions = {
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: 1,
+  };
 
-        if (!result.success) {
-          toast.error(tErrors(result.error));
-          return;
-        }
-
-        setConsumption(result.data);
-      }
-      if (resolution === "today") {
-        const result = await getCurrentDayConsumption(selectedHouseholdId);
-
-        if (!result.success) {
-          toast.error(tErrors(result.error));
-          return;
-        }
-
-        setConsumption(result.data);
-      }
+  const {
+    data: consumptionMonth,
+    isLoading: isLoadingMonth,
+    error: errorMonth,
+  } = trpc.home.getCurrentMonthConsumption.useQuery(
+    { householdId: selectedHouseholdId },
+    {
+      ...queryOptions,
+      enabled: resolution == "month",
     }
+  );
 
-    fetchConsumption();
-  }, [resolution, selectedHouseholdId, tErrors]);
+  const {
+    data: consumptionToday,
+    isLoading: isLoadingToday,
+    error: errorToday,
+  } = trpc.home.getCurrentDayConsumption.useQuery(
+    { householdId: selectedHouseholdId },
+    {
+      ...queryOptions,
+      enabled: resolution == "today",
+    }
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const isLoading = isLoadingMonth || isLoadingToday;
+  const error = errorMonth ?? errorToday;
+
+  if (error) {
+    toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
+  }
 
   return (
     <Tabs defaultValue="month">
@@ -59,45 +71,55 @@ export function ConsumptionTabs() {
       </TabsList>
 
       <TabsContent value="month">
-        {consumption && (
+        {consumptionMonth && (
           <div className="flex flex-col text-right">
             <p
               className={cn(
-                consumption.consumptionPercentDeviationFromBaseline > 0
+                consumptionMonth.consumptionPercentDeviationFromBaseline > 0
                   ? "text-red-500"
                   : "text-green-500"
               )}
             >
-              {consumption.consumptionPercentDeviationFromBaseline}%
+              {consumptionMonth.consumptionPercentDeviationFromBaseline}%
             </p>
-            <h2>{consumption.consumptionInLiters} L</h2>
+            <h2>{consumptionMonth.consumptionInLiters} L</h2>
             <p>
-              {consumption.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
+              {consumptionMonth.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
               {tCommon("day")}
             </p>
           </div>
         )}
       </TabsContent>
       <TabsContent value="today">
-        {consumption && (
+        {consumptionToday && (
           <div className="flex flex-col text-right">
             <p
               className={cn(
-                consumption.consumptionPercentDeviationFromBaseline > 0
+                consumptionToday.consumptionPercentDeviationFromBaseline > 0
                   ? "text-red-500"
                   : "text-green-500"
               )}
             >
-              {consumption.consumptionPercentDeviationFromBaseline}%
+              {consumptionToday.consumptionPercentDeviationFromBaseline}%
             </p>
-            <h2>{consumption.consumptionInLiters} L</h2>
+            <h2>{consumptionToday.consumptionInLiters} L</h2>
             <p>
-              {consumption.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
+              {consumptionToday.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
               {tCommon("day")}
             </p>
           </div>
         )}
       </TabsContent>
     </Tabs>
+  );
+}
+
+export function ConsumptionBlockSkeleton() {
+  return (
+    <div className="mt-2 flex flex-col items-end space-y-2">
+      <Skeleton className="h-5 w-16" />
+      <Skeleton className="h-7 w-24" />
+      <Skeleton className="h-4 w-32" />
+    </div>
   );
 }

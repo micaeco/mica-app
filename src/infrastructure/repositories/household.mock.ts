@@ -16,34 +16,6 @@ export const mockHouseholds: Household[] = [
 
     sensorId: "1",
   },
-  {
-    id: "2",
-    name: "Household 2",
-
-    surface: 150,
-    residents: 3,
-    street1: "456 Elm St",
-    street2: "",
-    city: "Shelbyville",
-    zip: "54321",
-    country: "USA",
-
-    sensorId: "2",
-  },
-  {
-    id: "3",
-    name: "Household 3",
-
-    surface: 200,
-    residents: 4,
-    street1: "789 Oak St",
-    street2: "",
-    city: "Capital City",
-    zip: "67890",
-    country: "USA",
-
-    sensorId: "3",
-  },
 ];
 
 export class MockHouseholdRepository implements HouseholdRepository {

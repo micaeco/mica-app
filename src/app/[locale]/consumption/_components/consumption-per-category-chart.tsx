@@ -7,7 +7,7 @@ import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
 import { categories, Category, categoryMap } from "@domain/entities/category";
 import { CategoryBreakdown } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/error";
+import { ErrorKey } from "@domain/entities/errors";
 import { ChartConfig, ChartContainer } from "@presentation/components/ui/chart";
 
 type Props = {
@@ -160,15 +160,17 @@ const renderCustomizedLabel = ({
 
   return (
     <g>
-      <image
-        href={categoryInfo.icon}
-        x={x - 20}
-        y={y - 20}
-        width={40}
-        height={40}
-        onClick={() => handlePieSectionClick(payload.category)}
-        style={{ cursor: "pointer" }}
-      />
+      {categoryInfo.icon && (
+        <image
+          href={categoryInfo.icon}
+          x={x - 20}
+          y={y - 20}
+          width={40}
+          height={40}
+          onClick={() => handlePieSectionClick(payload.category)}
+          style={{ cursor: "pointer" }}
+        />
+      )}
       {isActive && (
         <>
           <text

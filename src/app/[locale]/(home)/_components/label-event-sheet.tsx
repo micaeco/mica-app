@@ -1,18 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Image from "next/image";
 
-import { CircleCheck, Plus } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CircleCheck, LoaderCircle, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
-import { EventStopwatch } from "@app/[locale]/(home)/_components/event-stopwatch";
-import { getHouseholdTags, createHouseholdTag } from "@app/[locale]/(home)/actions";
 import { categoryMap, Category, categories } from "@domain/entities/category";
 import { Tag } from "@domain/entities/tag";
+import { CreateTagDialog } from "@presentation/components/create-new-tag-dialog";
 import { Button } from "@presentation/components/ui/button";
+import { Form, FormControl } from "@presentation/components/ui/form";
 import {
   Sheet,
   SheetContent,
@@ -20,23 +23,26 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@presentation/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@presentation/components/ui/tabs";
+import { Switch } from "@presentation/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
+import { trpc } from "@presentation/lib/trpc";
 import { cn } from "@presentation/lib/utils";
 import { useHouseholdStore } from "@presentation/stores/household";
+
+const eventFormSchema = z.object({});
+
+type EventFormValues = z.infer<typeof eventFormSchema>;
 
 export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const filteredCategories = categories.filter(
     (category) => category !== "rest" && category !== "unknown"
   );
 
-  const [, setStartTime] = useState<Date | null>(null);
-  const [, setEndTime] = useState<Date | null>(null);
-
-  const [selectedCategory, setSelectedCategory] = useState<Category>(filteredCategories[0]);
-
-  const [selectedTag, setSelectedTag] = useState<string>("");
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
+  const [selectedTag, setSelectedTag] = useState<string | undefined>();
+  const [isCreateTagDialogOpen, setIsCreateTagDialogOpen] = useState(false);
+  const [startTimeSelected, setStartTimeSelected] = useState(false);
+  const [endTimeSelected, setEndTimeSelected] = useState(false);
 
   const { selectedHouseholdId } = useHouseholdStore();
 
@@ -44,186 +50,225 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const tErrors = useTranslations("common.errors");
   const tCommon = useTranslations("common");
   const tNewEventSheet = useTranslations("new-event-sheet");
+  const tNewTagDialog = useTranslations("new-tag-dialog");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getHouseholdTags(selectedHouseholdId);
+  const eventForm = useForm<EventFormValues>({
+    resolver: zodResolver(eventFormSchema),
+    defaultValues: {},
+  });
 
-      if (!response.success) {
-        toast.error(tErrors(response.error));
-        return;
-      }
-
-      setTags(response.data);
-    };
-
-    fetchData();
-  }, [selectedHouseholdId, selectedCategory, selectedTag, tErrors]);
-
-  const filteredTags = tags.filter((tag) => tag.category === selectedCategory);
-
-  const handleCreateLabel = async () => {
-    const response = await createHouseholdTag({
+  const {
+    data: tags,
+    isLoading,
+    error,
+  } = trpc.home.getHouseholdCategoryTags.useQuery(
+    {
       householdId: selectedHouseholdId,
-      category: selectedCategory,
-      name: "new",
-    });
+      category: selectedCategory!,
+    },
+    {
+      enabled: !!selectedCategory,
+    }
+  );
 
-    if (!response.success) {
-      toast.error(tErrors(response.error));
+  if (error) {
+    toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+  }
+
+  const onSubmitEvent = () => {
+    if (!startTimeSelected && !endTimeSelected) {
+      toast.error(tErrors("VALIDATION_ERROR"));
       return;
     }
 
-    const labelsResponse = await getHouseholdTags(selectedHouseholdId);
-    if (labelsResponse.success) {
-      setTags(labelsResponse.data);
-      const newLabel = labelsResponse.data.find(
-        (tag) =>
-          tag.category === selectedCategory && tag.name === `New ${tCategories(selectedCategory)}`
-      );
-      if (newLabel) {
-        setSelectedTag(newLabel.name);
-      }
-    }
+    toast.success("Event created successfully", {
+      description:
+        `${startTimeSelected ? "Start time: " + new Date() + "\n" : ""}` +
+        `${endTimeSelected ? "End time: " + new Date() + "\n" : ""}` +
+        `Category: ${selectedCategory}\n` +
+        `Tag: ${selectedTag}\n`,
+    });
+  };
 
-    toast.success("Tag created successfully");
+  const handleTagCreated = (tagName: string) => {
+    setSelectedTag(tagName);
   };
 
   return (
-    <Sheet>
-      <SheetTrigger>{children}</SheetTrigger>
-      <SheetContent className="w-full overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>
-            {tCommon("new")} <span className="lowercase">{tCommon("event")}</span>
-          </SheetTitle>
-        </SheetHeader>
+    <>
+      <Sheet>
+        <SheetTrigger>{children}</SheetTrigger>
+        <SheetContent className="w-full overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>
+              {tCommon("new")} <span className="lowercase">{tCommon("event")}</span>
+            </SheetTitle>
+          </SheetHeader>
 
-        <div className="flex flex-col space-y-8 py-4">
-          <div className="flex flex-col gap-2">
-            <span className="font-medium">{tCommon("consumption-point")}</span>
-            <ToggleGroup
-              type="single"
-              value={selectedCategory}
-              onValueChange={(value) => {
-                if (value) {
-                  setSelectedCategory(value as Category);
-                  setSelectedTag("");
-                }
-              }}
-              className="flex flex-wrap gap-2"
+          <Form {...eventForm}>
+            <form
+              onSubmit={eventForm.handleSubmit(onSubmitEvent)}
+              className="flex flex-col space-y-6 py-4"
             >
-              {filteredCategories.map((category: Category) => (
-                <ToggleGroupItem
-                  className={cn(
-                    "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                    category === selectedCategory ? "!bg-brand-secondary" : "bg-gray-100"
-                  )}
-                  value={category}
-                  key={category}
-                >
-                  <Image
-                    className="object-contain"
-                    src={categoryMap[category].icon}
-                    alt={category}
-                    width={24}
-                    height={24}
-                  />
-                  <span className="ml-1 text-sm">{tCategories(category)}</span>
-                  {selectedCategory === category && <CircleCheck className="h-4 w-4" />}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div>
+              <div className="flex flex-col gap-4">
+                <span className="font-medium">{tNewEventSheet("event-timing-title")}</span>
+                <div className="flex flex-col gap-2">
+                  <FormControl>
+                    <ToggleGroup
+                      type="single"
+                      className="flex flex-wrap gap-2"
+                      value={startTimeSelected ? "start" : endTimeSelected ? "end" : undefined}
+                      onValueChange={(value) => {
+                        if (value === "start") {
+                          console.log("Start time selected");
+                          setStartTimeSelected(!startTimeSelected);
+                          if (!startTimeSelected) setEndTimeSelected(false);
+                        } else if (value === "end") {
+                          setEndTimeSelected(!endTimeSelected);
+                          if (!endTimeSelected) setStartTimeSelected(false);
+                        }
+                      }}
+                    >
+                      <ToggleGroupItem
+                        value="start"
+                        className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary group rounded-lg bg-gray-100 transition-colors"
+                      >
+                        {tNewEventSheet("set-start-time")}
+                        {startTimeSelected && <CircleCheck className="ml-1 h-4 w-4" />}
+                      </ToggleGroupItem>
+                      <ToggleGroupItem
+                        value="end"
+                        className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary group rounded-lg bg-gray-100 transition-colors"
+                      >
+                        {tNewEventSheet("set-end-time")}
+                        {endTimeSelected && <CircleCheck className="ml-1 h-4 w-4" />}
+                      </ToggleGroupItem>
+                    </ToggleGroup>
+                  </FormControl>
+                  <div className="flex flex-row items-center gap-2">
+                    <Switch />
+                    <p className="text-muted-foreground text-xs"> Timer</p>
+                  </div>
+                </div>
+              </div>
 
-          <div className="flex flex-col gap-2">
-            <span className="mt-2 font-medium">{tCommon("tag")}</span>
-            {filteredTags.length > 0 ? (
-              <ToggleGroup
-                type="single"
-                value={selectedTag}
-                onValueChange={(value) => {
-                  if (value === selectedTag) {
-                    setSelectedTag("");
-                  } else {
-                    setSelectedTag(value);
-                  }
-                }}
-                className="flex flex-wrap gap-2"
-              >
-                {filteredTags.map((tag: Tag) => (
-                  <ToggleGroupItem
-                    className={cn(
-                      "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                      tag.name === selectedTag ? "!bg-brand-secondary" : "bg-gray-100"
-                    )}
-                    value={tag.name}
-                    key={tag.name}
+              <div className="flex flex-col gap-2">
+                <span className="font-medium">{tCommon("consumption-point")}</span>
+                <ToggleGroup
+                  type="single"
+                  value={selectedCategory}
+                  onValueChange={(value) => {
+                    if (value === selectedCategory) {
+                      setSelectedCategory(undefined);
+                    } else {
+                      setSelectedCategory(value as Category);
+                    }
+                    setSelectedTag(undefined);
+                  }}
+                  className="flex flex-wrap gap-2"
+                >
+                  {filteredCategories.map((category: Category) => (
+                    <ToggleGroupItem
+                      className={cn(
+                        "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
+                        category === selectedCategory ? "!bg-brand-secondary" : "bg-gray-100"
+                      )}
+                      value={category}
+                      key={category}
+                      aria-label={tCategories(category)}
+                    >
+                      <Image
+                        className="object-contain"
+                        src={categoryMap[category].icon!}
+                        alt={tCategories(category)}
+                        width={24}
+                        height={24}
+                      />
+                      <span className="ml-1 text-sm">{tCategories(category)}</span>
+                      {selectedCategory === category && <CircleCheck className="h-4 w-4" />}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="mt-2 font-medium">{tCommon("tag")}</span>
+                {isLoading ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : !tags || tags.length == 0 ? (
+                  <div className="flex flex-col gap-2">
+                    <span className="text-muted-foreground text-sm">
+                      {tNewEventSheet("no-tags-for-category")}
+                    </span>
+                  </div>
+                ) : (
+                  <ToggleGroup
+                    type="single"
+                    value={selectedTag}
+                    onValueChange={(value) => {
+                      if (value === selectedTag) {
+                        setSelectedTag(undefined);
+                      } else {
+                        setSelectedTag(value);
+                      }
+                    }}
+                    className="flex flex-wrap gap-2"
                   >
-                    <span className="text-sm">{tag.name}</span>
-                    {selectedTag === tag.name && <CircleCheck className="h-4 w-4" />}
-                  </ToggleGroupItem>
-                ))}
+                    {tags.map((tag: Tag) => (
+                      <ToggleGroupItem
+                        className={cn(
+                          "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
+                          tag.name === selectedTag ? "!bg-brand-secondary" : "bg-gray-100"
+                        )}
+                        value={tag.name}
+                        key={tag.name + tag.category + tag.householdId}
+                        aria-label={tag.name}
+                      >
+                        <span className="text-sm">{tag.name}</span>
+                        {selectedTag === tag.name && <CircleCheck className="h-4 w-4" />}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
+                )}
                 <Button
-                  onClick={handleCreateLabel}
                   size="sm"
+                  type="button"
                   variant="secondary"
-                  className="flex items-center gap-1"
+                  className="flex w-fit items-center gap-1"
                   disabled={!selectedCategory}
+                  onClick={() => {
+                    setIsCreateTagDialogOpen(true);
+                  }}
                 >
                   <Plus className="h-4 w-4" />
+                  {tNewTagDialog("title")}
                 </Button>
-              </ToggleGroup>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <span className="text-muted-foreground text-sm">
-                  {tNewEventSheet("no-tags-for-category")}
-                </span>
               </div>
-            )}
-          </div>
 
-          <Tabs defaultValue="default" className="w-full space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="default">Default</TabsTrigger>
-              <TabsTrigger value="timer">Timer</TabsTrigger>
-            </TabsList>
-            <TabsContent value="default" className="flex w-full flex-row gap-2">
-              <ToggleGroup
-                type="single"
-                className="flex flex-wrap gap-2"
-                onValueChange={(value) => {
-                  if (value === "start") {
-                    setStartTime(new Date());
-                  } else if (value === "end") {
-                    setEndTime(new Date());
-                  }
-                }}
+              <Button
+                disabled={
+                  eventForm.formState.isSubmitting ||
+                  !selectedCategory ||
+                  (!startTimeSelected && !endTimeSelected)
+                }
+                type="submit"
+                className="ml-auto w-fit"
               >
-                <ToggleGroupItem
-                  value="start"
-                  className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary group rounded-lg bg-gray-100 transition-colors"
-                >
-                  Ara comença
-                  <CircleCheck className="hidden h-4 w-4 group-data-[state=on]:block" />
-                </ToggleGroupItem>
-                <ToggleGroupItem
-                  value="end"
-                  className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary group rounded-lg bg-gray-100 transition-colors"
-                >
-                  Ara acaba
-                  <CircleCheck className="hidden h-4 w-4 group-data-[state=on]:block" />
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </TabsContent>
-            <TabsContent value="timer">
-              <EventStopwatch setStartTime={setStartTime} setEndTime={setEndTime} />
-            </TabsContent>
-          </Tabs>
+                {tCommon("save")}
+              </Button>
+            </form>
+          </Form>
+        </SheetContent>
+      </Sheet>
 
-          <Button className="ml-auto w-fit">{tCommon("save")}</Button>
-        </div>
-      </SheetContent>
-    </Sheet>
+      {selectedCategory && (
+        <CreateTagDialog
+          isOpen={isCreateTagDialogOpen}
+          onOpenChange={setIsCreateTagDialogOpen}
+          selectedCategory={selectedCategory}
+          onTagCreated={handleTagCreated}
+        />
+      )}
+    </>
   );
 }

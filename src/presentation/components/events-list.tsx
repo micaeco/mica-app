@@ -1,74 +1,54 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { format, isToday, isYesterday } from "date-fns";
+import { LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useInView } from "react-intersection-observer";
-import { toast } from "sonner";
 
-import { EventsForDay } from "@domain/entities/event";
 import { EventBar } from "@presentation/components/event-bar";
-import { getPaginatedEventsGroupedByDay } from "@presentation/lib/actions";
-import { getDateFnsLocale } from "@presentation/lib/utils";
+import { getDateFnsLocale } from "@presentation/i18n/routing";
+import { trpc } from "@presentation/lib/trpc";
 import { useHouseholdStore } from "@presentation/stores/household";
 
-const NUMBER_OF_EVENTS = 20;
+const NUMBER_OF_DAYS = 2;
 
 export function EventsList() {
-  const [eventsGroupedByDays, setEventsGroupedByDays] = useState<EventsForDay[]>([]);
-  const [offset, setOffset] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const { ref, inView } = useInView();
-
   const { selectedHouseholdId } = useHouseholdStore();
 
   const locale = useLocale();
   const dateFnsLocale = getDateFnsLocale(locale);
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("common.errors");
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
+  const { ref, inView } = useInView({
+    threshold: 1,
+  });
 
-      try {
-        const result = await getPaginatedEventsGroupedByDay(
-          selectedHouseholdId,
-          offset,
-          NUMBER_OF_EVENTS
-        );
-
-        if (!result.success) {
-          toast.error(tErrors(result.error));
-          return;
-        }
-
-        if (
-          result.data.length === 0 ||
-          result.data.reduce((sum, day) => sum + day.events.length, 0) < NUMBER_OF_EVENTS
-        ) {
-          setHasMore(false);
-        }
-
-        setEventsGroupedByDays((prevGroups) => [...prevGroups, ...result.data]);
-        setOffset((currentOffset) => currentOffset + NUMBER_OF_EVENTS);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-        toast.error(tErrors("INTERNAL_SERVER_ERROR"));
-      } finally {
-        setIsLoading(false);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } =
+    trpc.event.getPaginatedEventsGroupedByDay.useInfiniteQuery(
+      {
+        sensorId: selectedHouseholdId,
+        numberOfDays: NUMBER_OF_DAYS,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        initialCursor: new Date().toISOString(),
+        enabled: !!selectedHouseholdId,
       }
-    };
-
-    fetchEvents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedHouseholdId, inView, tErrors]);
+    );
 
   useEffect(() => {
-    setEventsGroupedByDays([]);
-    setOffset(0);
-    setHasMore(true);
-  }, [selectedHouseholdId]);
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  if (isLoading) {
+    <LoaderCircle className="animate-spin" />;
+  }
+
+  if (error) {
+    return <div> Hey theres an error {error.message} </div>;
+  }
 
   const getDisplayDateKey = (date: Date): string => {
     if (isToday(date)) {
@@ -80,10 +60,13 @@ export function EventsList() {
     }
   };
 
+  // Flatten the data from pages for rendering
+  const eventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
+
   return (
     <div className="space-y-6">
       {eventsGroupedByDays.map((day) => (
-        <div key={day.date.toISOString()} className="space-y-4">
+        <div key={day.date.toISOString() + day.totalConsumption.toString()} className="space-y-4">
           <div className="text-muted-foreground flex items-center justify-between text-sm font-light">
             <p>{getDisplayDateKey(day.date)}:</p>
             <p>{day.totalConsumption.toFixed(1)} L</p>
@@ -95,13 +78,15 @@ export function EventsList() {
           </div>
         </div>
       ))}
-      {(hasMore || isLoading) && (
+      {(hasNextPage || isLoading || isFetchingNextPage) && (
         <div ref={ref} className="py-4 text-center">
-          {tCommon("loading")}...
+          {isLoading || isFetchingNextPage ? tCommon("loading") : tCommon("loading")}...
         </div>
       )}
-      {!hasMore && eventsGroupedByDays.length > 0 && (
-        <div className="text-muted-foreground py-4 text-center text-sm">No more events to load</div>
+      {!hasNextPage && eventsGroupedByDays.length > 0 && (
+        <div className="text-muted-foreground py-4 text-center text-sm">
+          {tCommon("no-more-events-to-load")}
+        </div>
       )}
     </div>
   );

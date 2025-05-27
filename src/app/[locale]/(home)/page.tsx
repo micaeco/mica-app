@@ -24,7 +24,6 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Event list */}
       <Card className="w-full xl:overflow-y-auto">
         <CardHeader>
           <CardTitle className="flex flex-row items-center gap-2">

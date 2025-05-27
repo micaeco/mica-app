@@ -1,50 +1,49 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { ArrowRight, Bell, CircleHelp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { getNumberOfLeakEvents, getNumberOfUnknownEvents } from "@app/[locale]/(home)/actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@presentation/components/ui/card";
 import { useRouter } from "@presentation/i18n/routing";
+import { trpc } from "@presentation/lib/trpc";
 import { cn } from "@presentation/lib/utils";
 import { useHouseholdStore } from "@presentation/stores/household";
 
 export function ActionCards({ className }: { className?: string }) {
-  const [leakEvents, setLeakEvents] = useState<number | null>(null);
-  const [unknownEvents, setUnknownEvents] = useState<number | null>(null);
-
   const { selectedHouseholdId } = useHouseholdStore();
 
   const router = useRouter();
   const tActionCards = useTranslations("action-cards");
   const tErrors = useTranslations("common.errors");
 
-  useEffect(() => {
-    async function fetchEvents() {
-      const resultLeakEvents = await getNumberOfLeakEvents(selectedHouseholdId);
+  const {
+    data: leakEvents,
+    isLoading: isLoadingLeakEvents,
+    error: errorLeakEvents,
+  } = trpc.home.getNumberOfLeakEvents.useQuery({
+    householdId: selectedHouseholdId,
+  });
 
-      if (!resultLeakEvents.success) {
-        toast.error(tErrors(resultLeakEvents.error));
-        return;
-      }
+  const {
+    data: unknownEvents,
+    isLoading: isLoadingUnknownEvents,
+    error: errorUnknownEvents,
+  } = trpc.home.getNumberOfUnknownEvents.useQuery({
+    householdId: selectedHouseholdId,
+  });
 
-      setLeakEvents(resultLeakEvents.data);
+  const isLoading = isLoadingLeakEvents || isLoadingUnknownEvents;
+  const error = errorLeakEvents ?? errorUnknownEvents;
 
-      const resultUnknownEvents = await getNumberOfUnknownEvents(selectedHouseholdId);
+  if (isLoading) {
+    return <div> Loading...</div>;
+  }
 
-      if (!resultUnknownEvents.success) {
-        toast.error(tErrors(resultUnknownEvents.error));
-        return;
-      }
-
-      setUnknownEvents(resultUnknownEvents.data);
-    }
-
-    fetchEvents();
-  }, [selectedHouseholdId, tErrors]);
+  if (error) {
+    toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
+    return <div></div>;
+  }
 
   return (
     <div className={cn("flex gap-2", className)}>

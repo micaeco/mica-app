@@ -1,7 +1,7 @@
 "use server";
 
 import { Consumption } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/error";
+import { ErrorKey } from "@domain/entities/errors";
 import { Tag } from "@domain/entities/tag";
 import { MockConsumptionRepository } from "@infrastructure/repositories/consumption.mock";
 import { MockEventRepository } from "@infrastructure/repositories/event.mock";
