@@ -1,5 +1,6 @@
 {
   "common": {
+    "in-progress": "En curs",
     "no-more-events-to-load": "No hi ha més events a carregar",
     "contact-us": "Contacta'ns",
     "no-data": "No hi ha dades",

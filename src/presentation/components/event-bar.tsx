@@ -11,9 +11,8 @@ import { useTranslations, useLocale } from "next-intl";
 import { categoryMap } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 import { ConsumptionBar } from "@presentation/components/consumption-bar";
+import { EditEventSheet } from "@presentation/components/edit-event-sheet";
 import { getDateFnsLocale } from "@presentation/i18n/routing";
-
-import { EditEventSheet } from "./edit-event-sheet";
 
 interface EventBarProps {
   event: Event;

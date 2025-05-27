@@ -60,7 +60,6 @@ export function EventsList() {
     }
   };
 
-  // Flatten the data from pages for rendering
   const eventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
 
   return (
