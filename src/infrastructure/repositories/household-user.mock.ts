@@ -1,40 +1,7 @@
 import { HouseholdUser } from "@domain/entities/household-user";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
-import { mockHouseholds } from "@infrastructure/repositories/household.mock";
-import { mockUsers } from "@infrastructure/repositories/user.mock";
 
-const mockHouseholdUsers: HouseholdUser[] = [
-  {
-    householdId: mockHouseholds[0].id,
-    userId: mockUsers[0].id,
-    role: "admin",
-  },
-  {
-    householdId: mockHouseholds[0].id,
-    userId: mockUsers[1].id,
-    role: "member",
-  },
-  {
-    householdId: mockHouseholds[1].id,
-    userId: mockUsers[0].id,
-    role: "admin",
-  },
-  {
-    householdId: mockHouseholds[1].id,
-    userId: mockUsers[2].id,
-    role: "member",
-  },
-  {
-    householdId: mockHouseholds[2].id,
-    userId: mockUsers[1].id,
-    role: "admin",
-  },
-  {
-    householdId: mockHouseholds[2].id,
-    userId: mockUsers[2].id,
-    role: "member",
-  },
-];
+const mockHouseholdUsers: HouseholdUser[] = [];
 
 export class HouseholdUserMockRepository implements HouseholdUserRepository {
   async create(householdUser: HouseholdUser) {
