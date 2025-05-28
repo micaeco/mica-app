@@ -68,7 +68,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
     data: tags,
     isLoading: isLoadingTags,
     error: tagsError,
-  } = trpc.home.getHouseholdCategoryTags.useQuery(
+  } = trpc.tag.getHouseholdCategoryTags.useQuery(
     {
       householdId: selectedHouseholdId,
       category: watchedCategory!,

@@ -5,6 +5,22 @@ import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { EventsForDay } from "@domain/entities/event";
 
 export const eventRouter = createTRPCRouter({
+  getNumberOfLeakEvents: protectedProcedure
+    .input(z.object({ householdId: z.string() }))
+    .output(z.number())
+    .query(async ({ input, ctx }) => {
+      const leaks = await ctx.eventRepo.getNumberOfLeakEvents(input.householdId);
+      return leaks;
+    }),
+
+  getNumberOfUnknownEvents: protectedProcedure
+    .input(z.object({ householdId: z.string() }))
+    .output(z.number())
+    .query(async ({ input, ctx }) => {
+      const unknowns = await ctx.eventRepo.getNumberOfUnknownEvents(input.householdId);
+      return unknowns;
+    }),
+
   getPaginatedEventsGroupedByDay: protectedProcedure
     .input(
       z.object({

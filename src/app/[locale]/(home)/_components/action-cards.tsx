@@ -21,7 +21,7 @@ export function ActionCards({ className }: { className?: string }) {
     data: leakEvents,
     isLoading: isLoadingLeakEvents,
     error: errorLeakEvents,
-  } = trpc.home.getNumberOfLeakEvents.useQuery({
+  } = trpc.event.getNumberOfLeakEvents.useQuery({
     householdId: selectedHouseholdId,
   });
 
@@ -29,7 +29,7 @@ export function ActionCards({ className }: { className?: string }) {
     data: unknownEvents,
     isLoading: isLoadingUnknownEvents,
     error: errorUnknownEvents,
-  } = trpc.home.getNumberOfUnknownEvents.useQuery({
+  } = trpc.event.getNumberOfUnknownEvents.useQuery({
     householdId: selectedHouseholdId,
   });
 

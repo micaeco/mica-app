@@ -31,7 +31,7 @@ export function ConsumptionTabs() {
     data: consumptionMonth,
     isLoading: isLoadingMonth,
     error: errorMonth,
-  } = trpc.home.getCurrentMonthConsumption.useQuery(
+  } = trpc.consumption.getCurrentMonthConsumption.useQuery(
     { householdId: selectedHouseholdId },
     {
       ...queryOptions,
@@ -43,7 +43,7 @@ export function ConsumptionTabs() {
     data: consumptionToday,
     isLoading: isLoadingToday,
     error: errorToday,
-  } = trpc.home.getCurrentDayConsumption.useQuery(
+  } = trpc.consumption.getCurrentDayConsumption.useQuery(
     { householdId: selectedHouseholdId },
     {
       ...queryOptions,
