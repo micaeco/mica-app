@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Image from "next/image";
 
 import { format, isToday, isYesterday } from "date-fns";
 import { Bell, ChevronDown, CircleCheck, HelpCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { toast } from "sonner";
 
-import { getLeakEvents, getUnknownEvents } from "@app/[locale]/actions/actions";
 import { categories, Category, categoryMap } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 import {
@@ -28,11 +26,10 @@ import {
 } from "@presentation/components/ui/carousel";
 import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
 import { getDateFnsLocale } from "@presentation/i18n/routing";
+import { trpc } from "@presentation/lib/trpc";
 import { useHouseholdStore } from "@presentation/stores/household";
 
 export default function Actions() {
-  const [leakEvents, setLeakEvents] = useState<Event[]>([]);
-  const [unknownEvents, setUnknownEvents] = useState<Event[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>();
 
   const { selectedHouseholdId } = useHouseholdStore();
@@ -40,7 +37,6 @@ export default function Actions() {
   const tActions = useTranslations("actions");
   const tCategories = useTranslations("common.categories");
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("common.errors");
   const locale = useLocale();
   const dateFnsLocale = getDateFnsLocale(locale);
 
@@ -48,31 +44,26 @@ export default function Actions() {
     (category) => category !== "rest" && category !== "unknown"
   );
 
-  useEffect(() => {
-    async function fetchEvents() {
-      const resultLeak = await getLeakEvents(selectedHouseholdId);
-
-      if (!resultLeak.success) {
-        toast.error(tErrors(resultLeak.error));
-        return;
+  const { data: leakEventsData, isLoading: isLoadingLeakEvents } =
+    trpc.event.getLeakEvents.useQuery(
+      { householdId: selectedHouseholdId! },
+      {
+        enabled: !!selectedHouseholdId,
       }
+    );
+  const leakEvents = leakEventsData ?? [];
 
-      setLeakEvents(resultLeak.data);
-
-      const resultUnknown = await getUnknownEvents(selectedHouseholdId);
-
-      if (!resultUnknown.success) {
-        toast.error(tErrors(resultUnknown.error));
-        return;
+  const { data: unknownEventsData, isLoading: isLoadingUnknownEvents } =
+    trpc.event.getUnknownEvents.useQuery(
+      { householdId: selectedHouseholdId! },
+      {
+        enabled: !!selectedHouseholdId,
       }
+    );
+  const unknownEvents = unknownEventsData ?? [];
 
-      setUnknownEvents(resultUnknown.data);
-    }
-
-    fetchEvents();
-  }, [selectedHouseholdId, tErrors]);
-
-  function formatDate(date: Date) {
+  function formatDate(dateInput: Date | string | number) {
+    const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
     if (isToday(date)) {
       return tCommon("today");
     } else if (isYesterday(date)) {
@@ -95,11 +86,12 @@ export default function Actions() {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            {leakEvents.length > 0 ? (
+            {isLoadingLeakEvents && <div>{tCommon("loading")}</div>}
+            {!isLoadingLeakEvents && leakEvents.length > 0 ? (
               <Carousel className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md">
                 <CarouselPrevious className="h-full rounded-lg" />
                 <CarouselContent>
-                  {leakEvents.map((event, index) => (
+                  {leakEvents.map((event: Event, index: number) => (
                     <CarouselItem key={index}>
                       <Card>
                         <CardContent className="flex flex-col gap-2 p-6">
@@ -113,8 +105,11 @@ export default function Actions() {
                           <div className="flex flex-col">
                             <span>{formatDate(event.startDate)}</span>
                             <span>
-                              {format(event.startDate, "HH:mm", { locale: dateFnsLocale })} -{" "}
-                              {format(event.endDate, "HH:mm", { locale: dateFnsLocale })}
+                              {format(new Date(event.startDate), "HH:mm", {
+                                locale: dateFnsLocale,
+                              })}{" "}
+                              -{" "}
+                              {format(new Date(event.endDate), "HH:mm", { locale: dateFnsLocale })}
                             </span>
                           </div>
                           <span className="font-bold">{event.consumptionInLiters} L</span>
@@ -136,7 +131,7 @@ export default function Actions() {
                 <CarouselNext className="h-full rounded-lg" />
               </Carousel>
             ) : (
-              <div>{tActions("no-leaks")}</div>
+              !isLoadingLeakEvents && <div>{tActions("no-leaks")}</div>
             )}
           </AccordionContent>
         </AccordionItem>
@@ -152,11 +147,12 @@ export default function Actions() {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            {unknownEvents.length > 0 ? (
+            {isLoadingUnknownEvents && <div>{tCommon("loading")}</div>}
+            {!isLoadingUnknownEvents && unknownEvents.length > 0 ? (
               <Carousel className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md">
                 <CarouselPrevious className="h-full rounded-lg" />
                 <CarouselContent>
-                  {unknownEvents.map((event, index) => (
+                  {unknownEvents.map((event: Event, index: number) => (
                     <CarouselItem key={index}>
                       <Card>
                         <CardContent className="flex flex-col gap-2 p-6">
@@ -170,8 +166,11 @@ export default function Actions() {
                           <div className="flex flex-col">
                             <span>{formatDate(event.startDate)}</span>
                             <span>
-                              {format(event.startDate, "HH:mm", { locale: dateFnsLocale })} -{" "}
-                              {format(event.endDate, "HH:mm", { locale: dateFnsLocale })}
+                              {format(new Date(event.startDate), "HH:mm", {
+                                locale: dateFnsLocale,
+                              })}{" "}
+                              -{" "}
+                              {format(new Date(event.endDate), "HH:mm", { locale: dateFnsLocale })}
                             </span>
                           </div>
                           <span className="text-brand-secondary font-bold">
@@ -216,7 +215,7 @@ export default function Actions() {
                 <CarouselNext className="h-full rounded-lg" />
               </Carousel>
             ) : (
-              <div> {tActions("no-unknowns")}</div>
+              !isLoadingUnknownEvents && <div> {tActions("no-unknowns")}</div>
             )}
           </AccordionContent>
         </AccordionItem>

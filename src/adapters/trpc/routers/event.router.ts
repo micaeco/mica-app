@@ -2,9 +2,25 @@ import { startOfDay, subDays } from "date-fns";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
-import { EventsForDay } from "@domain/entities/event";
+import { Event, EventsForDay } from "@domain/entities/event";
 
 export const eventRouter = createTRPCRouter({
+  getLeakEvents: protectedProcedure
+    .input(z.object({ householdId: z.string() }))
+    .output(z.array(Event))
+    .query(async ({ input, ctx }) => {
+      const events = await ctx.eventRepo.getLeakEvents(input.householdId);
+      return events;
+    }),
+
+  getUnknownEvents: protectedProcedure
+    .input(z.object({ householdId: z.string() }))
+    .output(z.array(Event))
+    .query(async ({ input, ctx }) => {
+      const events = await ctx.eventRepo.getUnknownEvents(input.householdId);
+      return events;
+    }),
+
   getNumberOfLeakEvents: protectedProcedure
     .input(z.object({ householdId: z.string() }))
     .output(z.number())
