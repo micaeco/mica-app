@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 
+import { skipToken } from "@tanstack/react-query";
 import {
   addDays,
   addHours,
@@ -20,40 +21,35 @@ import {
   min,
 } from "date-fns";
 
-import {
-  getDailyConsumption,
-  getHourlyConsumption,
-  getMonthlyConsumption,
-  getWeeklyConsumption,
-} from "@app/[locale]/consumption/actions";
-import { Consumption, ConsumptionGranularity, TimeWindow } from "@domain/entities/consumption";
+import { ConsumptionGranularity, TimeWindow } from "@domain/entities/consumption";
 import { ErrorKey } from "@domain/entities/errors";
+import { trpc } from "@presentation/lib/trpc";
 import { useHouseholdStore } from "@presentation/stores/household";
 
 const resolutionConfig = {
   month: {
-    fetchFn: getMonthlyConsumption,
+    query: trpc.consumption.getMonthlyConsumption,
     add: addMonths,
     sub: subMonths,
     startOf: startOfMonth,
     endOf: endOfMonth,
   },
   week: {
-    fetchFn: getWeeklyConsumption,
+    query: trpc.consumption.getWeeklyConsumption,
     add: addWeeks,
     sub: subWeeks,
     startOf: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }),
     endOf: (date: Date) => endOfWeek(date, { weekStartsOn: 1 }),
   },
   day: {
-    fetchFn: getDailyConsumption,
+    query: trpc.consumption.getDailyConsumption,
     add: addDays,
     sub: subDays,
     startOf: startOfDay,
     endOf: endOfDay,
   },
   hour: {
-    fetchFn: getHourlyConsumption,
+    query: trpc.consumption.getHourlyConsumption,
     add: addHours,
     sub: subHours,
     startOf: startOfHour,
@@ -64,105 +60,106 @@ const resolutionConfig = {
 export function useConsumption() {
   const { selectedHouseholdId } = useHouseholdStore();
   const [resolution, setResolution] = useState<ConsumptionGranularity>("month");
-  const [fetchTimeWindow, setFetchTimeWindow] = useState<TimeWindow>({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
+  const [fetchTimeWindow, setFetchTimeWindow] = useState<TimeWindow | undefined>(undefined);
   const [selectedTimeWindow, setSelectedTimeWindow] = useState<TimeWindow | undefined>(undefined);
-  const [consumption, setConsumption] = useState<Consumption[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<ErrorKey | undefined>(undefined);
-  const latestFetchId = useRef(0);
 
   const intervals = 4;
-  const config = resolutionConfig[resolution];
+  const currentResolutionConfig = resolutionConfig[resolution];
 
-  const fetchData = useCallback(async () => {
-    if (!selectedHouseholdId) {
-      setConsumption([]);
-      setSelectedTimeWindow(undefined);
-      setError(undefined);
-      setIsLoading(false);
-      return;
-    }
+  useEffect(() => {
+    const now = new Date();
+    const start = currentResolutionConfig.sub(now, intervals - 1);
+    const alignedStart =
+      resolution === "hour"
+        ? currentResolutionConfig.startOf(start)
+        : startOfDay(currentResolutionConfig.startOf(start));
+    setFetchTimeWindow({ startDate: alignedStart, endDate: now });
+    setSelectedTimeWindow(undefined);
+  }, [resolution, currentResolutionConfig, intervals]);
 
-    const fetchId = ++latestFetchId.current;
+  const inputsReady =
+    !!selectedHouseholdId &&
+    !!fetchTimeWindow &&
+    !!fetchTimeWindow.startDate &&
+    !!fetchTimeWindow.endDate;
 
-    setIsLoading(true);
-    setError(undefined);
+  const queryInput = inputsReady
+    ? {
+        householdId: selectedHouseholdId,
+        startDate: fetchTimeWindow.startDate,
+        endDate: fetchTimeWindow.endDate,
+      }
+    : skipToken;
 
-    const result = await config.fetchFn(
-      selectedHouseholdId,
-      fetchTimeWindow.startDate,
-      fetchTimeWindow.endDate
-    );
+  const {
+    data: consumptionData,
+    isLoading,
+    error,
+    isError,
+  } = currentResolutionConfig.query.useQuery(queryInput, {
+    enabled: inputsReady,
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  });
 
-    if (fetchId !== latestFetchId.current) return;
-
-    if (!result.success) {
-      setError(result.error);
-      setConsumption([]);
-      setSelectedTimeWindow(undefined);
-    } else {
-      setConsumption(result.data);
-      if (result.data.length > 0) {
-        const last = result.data[result.data.length - 1];
+  useEffect(() => {
+    if (consumptionData && consumptionData.length > 0) {
+      const lastEntry = consumptionData[consumptionData.length - 1];
+      if (lastEntry && lastEntry.startDate && lastEntry.endDate) {
         setSelectedTimeWindow({
-          startDate: new Date(last.startDate),
-          endDate: new Date(last.endDate),
+          startDate: new Date(lastEntry.startDate),
+          endDate: new Date(lastEntry.endDate),
         });
       } else {
         setSelectedTimeWindow(undefined);
       }
+    } else {
+      setSelectedTimeWindow(undefined);
     }
-
-    setIsLoading(false);
-  }, [selectedHouseholdId, fetchTimeWindow, config]);
-
-  useEffect(() => {
-    const now = new Date();
-    const start = config.sub(now, intervals - 1);
-    const alignedStart =
-      resolution === "hour" ? config.startOf(start) : startOfDay(config.startOf(start));
-
-    setFetchTimeWindow({ startDate: alignedStart, endDate: now });
-    setSelectedTimeWindow(undefined);
-  }, [resolution, config]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  }, [consumptionData]);
 
   const canMoveTimeWindowForward = useCallback(() => {
-    return fetchTimeWindow.endDate < config.sub(new Date(), 1);
-  }, [fetchTimeWindow, config]);
+    if (!fetchTimeWindow?.endDate) return false;
+    return fetchTimeWindow.endDate < currentResolutionConfig.sub(new Date(), 1);
+  }, [fetchTimeWindow?.endDate, currentResolutionConfig]);
 
   const moveTimeWindow = useCallback(
     (direction: "back" | "forward") => {
+      if (!fetchTimeWindow?.startDate || !fetchTimeWindow?.endDate) return;
       if (direction === "forward" && !canMoveTimeWindowForward()) return;
 
       const shift = direction === "back" ? -intervals : intervals;
-      const rawStart = config.add(fetchTimeWindow.startDate, shift);
-      const rawEnd = config.add(fetchTimeWindow.endDate, shift);
-
-      const newEnd = direction === "forward" ? min([rawEnd, new Date()]) : config.endOf(rawEnd);
-
+      const rawStart = currentResolutionConfig.add(fetchTimeWindow.startDate, shift);
+      const rawEnd = currentResolutionConfig.add(fetchTimeWindow.endDate, shift);
+      const newEnd =
+        direction === "forward" ? min([rawEnd, new Date()]) : currentResolutionConfig.endOf(rawEnd);
       const newStart =
-        resolution === "hour" ? config.startOf(rawStart) : startOfDay(config.startOf(rawStart));
-
+        resolution === "hour"
+          ? currentResolutionConfig.startOf(rawStart)
+          : startOfDay(currentResolutionConfig.startOf(rawStart));
       setFetchTimeWindow({ startDate: newStart, endDate: newEnd });
     },
-    [fetchTimeWindow, config, canMoveTimeWindowForward, resolution]
+    [fetchTimeWindow, currentResolutionConfig, canMoveTimeWindowForward, resolution, intervals]
   );
+
+  let finalError: ErrorKey | undefined = undefined;
+  if (isError && error) {
+    const message = error.message;
+    if (typeof message === "string") {
+      finalError = message as ErrorKey;
+    } else {
+      finalError = "UNKNOWN_ERROR" as ErrorKey;
+    }
+  }
 
   return {
     resolution,
     setResolution,
     selectedTimeWindow,
     setSelectedTimeWindow,
-    consumption,
+    consumption: consumptionData || [],
     isLoading,
-    error,
+    error: finalError,
     moveTimeWindow,
     canMoveTimeWindowForward,
   } as const;
