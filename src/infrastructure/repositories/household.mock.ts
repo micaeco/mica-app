@@ -29,6 +29,10 @@ export class MockHouseholdRepository implements HouseholdRepository {
     return this.households.find((household) => household.id === householdId) || null;
   }
 
+  findBySensorId(sensorId: string): Household | null {
+    return this.households.find((household) => household.sensorId === sensorId) || null;
+  }
+
   update(id: string, household: Partial<Household>): Household | null {
     const index = this.households.findIndex((h) => h.id === id);
     if (index !== -1) {

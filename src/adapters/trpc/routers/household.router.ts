@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
+import { BadRequestError } from "@domain/entities/errors";
 import { createHousehold, Household } from "@domain/entities/household";
 import { HouseholdUser } from "@domain/entities/household-user";
 
@@ -18,6 +19,10 @@ export const householdRouter = createTRPCRouter({
   }),
 
   createHousehold: protectedProcedure.input(createHousehold).mutation(async ({ input, ctx }) => {
+    if (ctx.householdRepo.findBySensorId(input.sensorId)) {
+      throw new BadRequestError();
+    }
+
     const household = await ctx.householdRepo.create(input);
 
     const householdUser: HouseholdUser = {

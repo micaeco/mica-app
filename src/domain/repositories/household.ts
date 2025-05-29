@@ -7,6 +7,8 @@ export interface HouseholdRepository {
 
   findById(householdId: string): Household | null;
 
+  findBySensorId(sensorId: string): Household | null;
+
   update(householdId: string, household: Partial<Household>): Household | null;
 
   delete(householdId: string): Household | null;

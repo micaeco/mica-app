@@ -5,6 +5,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@app/_components/ui/button";
@@ -48,6 +49,7 @@ export function CreateHouseholdPanel({
   const t = useTranslations("create-household");
   const tForm = useTranslations("create-household.form");
   const tCommon = useTranslations("common");
+  const tErrors = useTranslations("common.errors");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,6 +85,10 @@ export function CreateHouseholdPanel({
     form.reset();
     setOpen(false);
   };
+
+  if (mutation.error) {
+    toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+  }
 
   return (
     <Panel open={open} onOpenChange={setOpen}>
