@@ -10,6 +10,8 @@ import { AppSidebar } from "@app/_components/sidebar";
 import { SidebarProvider } from "@app/_components/ui/sidebar";
 import { Toaster } from "@app/_components/ui/sonner";
 
+import { HouseholdsInitializer } from "./households-initializer";
+
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export async function BaseLayout({
@@ -26,16 +28,18 @@ export async function BaseLayout({
     <html lang={locale}>
       <body className={montserrat.className}>
         <ClientProviders session={session} locale={locale} messages={messages}>
-          <SidebarProvider>
-            <AppSidebar className="!h-[calc(100svh-var(--navbar-height))]" />
-            <main className="w-full overflow-hidden pb-(--navbar-height)">
-              <Header />
-              <div className="pt-(--header-height)">{children}</div>
-            </main>
-            <Navbar />
-            <Toaster richColors />
-          </SidebarProvider>
+          <HouseholdsInitializer>
+            <SidebarProvider>
+              <AppSidebar className="!h-[calc(100svh-var(--navbar-height))]" />
+              <main className="w-full overflow-hidden pb-(--navbar-height)">
+                <Header />
+                <div className="pt-(--header-height)">{children}</div>
+              </main>
+              <Navbar />
+            </SidebarProvider>
+          </HouseholdsInitializer>
         </ClientProviders>
+        <Toaster richColors />
       </body>
     </html>
   );

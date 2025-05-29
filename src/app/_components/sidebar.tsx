@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
 import Image from "next/image";
 
 import { Plus, SquarePen, Bell, CircleHelp, ChevronRight } from "lucide-react";
@@ -32,13 +30,8 @@ export function AppSidebar({ className }: { className?: string }) {
   const households = useHouseholdStore((state) => state.households);
   const selectedHouseholdId = useHouseholdStore((state) => state.selectedHouseholdId);
   const selectHousehold = useHouseholdStore((state) => state.selectHousehold);
-  const fetchHouseholds = useHouseholdStore((state) => state.fetchHouseholds);
 
   const common = useTranslations("common");
-
-  useEffect(() => {
-    fetchHouseholds();
-  }, [fetchHouseholds]);
 
   return (
     <Sidebar className={cn(className)}>
