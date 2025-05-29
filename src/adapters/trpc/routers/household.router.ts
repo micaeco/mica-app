@@ -19,6 +19,10 @@ export const householdRouter = createTRPCRouter({
   }),
 
   createHousehold: protectedProcedure.input(createHousehold).mutation(async ({ input, ctx }) => {
+    if (ctx.sensorRepo.findById(input.sensorId) == null) {
+      throw new BadRequestError();
+    }
+
     if (ctx.householdRepo.findBySensorId(input.sensorId)) {
       throw new BadRequestError();
     }
