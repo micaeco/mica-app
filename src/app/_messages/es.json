@@ -127,7 +127,17 @@
   },
   "create-household": {
     "title": "Crea una nueva vivienda.",
-    "description": "Introduce la información de la vivienda."
+    "description": "Introduce la información de la vivienda.",
+    "form": {
+      "name": "Nombre de la vivienda",
+      "sensor-id": "ID del sensor",
+      "residents": "Número de residentes",
+      "address": "Dirección de la vivienda",
+      "address2": "Dirección 2 (opcional)",
+      "city": "Ciudad",
+      "zip": "Código postal",
+      "country": "País"
+    }
   },
   "action-cards": {
     "leaks": {

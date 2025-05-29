@@ -127,7 +127,17 @@
   },
   "create-household": {
     "title": "Crea una nova vivenda.",
-    "description": "Introdueix la informació de la vivenda."
+    "description": "Introdueix la informació de la vivenda.",
+    "form": {
+      "name": "Nom de la vivenda",
+      "sensor-id": "ID del sensor",
+      "residents": "Nombre de residents",
+      "address": "Adreça de la vivenda",
+      "address2": "Adreça 2 (opcional)",
+      "city": "Ciutat",
+      "zip": "Codi postal",
+      "country": "País"
+    }
   },
   "action-cards": {
     "leaks": {

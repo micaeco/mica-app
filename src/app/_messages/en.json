@@ -127,7 +127,17 @@
   },
   "create-household": {
     "title": "Create household.",
-    "description": "Enter the household information."
+    "description": "Enter the household information.",
+    "form": {
+      "name": "Name of the household",
+      "sensor-id": "Sensor ID",
+      "residents": "Number of residents",
+      "address": "Household address",
+      "address2": "Address 2 (optional)",
+      "city": "City",
+      "zip": "ZIP code",
+      "country": "Country"
+    }
   },
   "action-cards": {
     "leaks": {

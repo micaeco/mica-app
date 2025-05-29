@@ -1,19 +1,22 @@
 import { z } from "zod";
 
+import { sensorIdSchema } from "@domain/entities/sensor";
+
 export const Household = z.object({
   id: z.string(),
-  name: z.string(),
+  sensorId: sensorIdSchema,
+
+  name: z.string().min(1),
   icon: z.string().optional(),
-  surface: z.number(),
-  residents: z.number().positive(),
+  residents: z.number().min(1),
 
-  street1: z.string(),
+  street1: z.string().min(1),
   street2: z.string().optional(),
-  city: z.string(),
-  zip: z.string(),
-  country: z.string(),
-
-  sensorId: z.string(),
+  city: z.string().min(1),
+  zip: z.string().regex(/^\d{5}$/),
+  country: z.string().min(1),
 });
+
+export const createHousehold = Household.omit({ id: true });
 
 export type Household = z.infer<typeof Household>;
