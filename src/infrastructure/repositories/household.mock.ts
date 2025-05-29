@@ -6,7 +6,6 @@ export const mockHouseholds: Household[] = [
     id: "1",
     name: "Household 1",
 
-    surface: 100,
     residents: 2,
     street1: "123 Maple St",
     street2: "",
