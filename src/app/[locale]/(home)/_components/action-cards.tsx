@@ -16,34 +16,48 @@ export function ActionCards({ className }: { className?: string }) {
   const router = useRouter();
   const tActionCards = useTranslations("action-cards");
   const tErrors = useTranslations("common.errors");
+  const tCommon = useTranslations("common");
 
   const {
     data: leakEvents,
     isLoading: isLoadingLeakEvents,
     error: errorLeakEvents,
-  } = trpc.event.getNumberOfLeakEvents.useQuery({
-    householdId: selectedHouseholdId,
-  });
+  } = trpc.event.getNumberOfLeakEvents.useQuery(
+    {
+      householdId: selectedHouseholdId,
+    },
+    {
+      enabled: !!selectedHouseholdId,
+    }
+  );
 
   const {
     data: unknownEvents,
     isLoading: isLoadingUnknownEvents,
     error: errorUnknownEvents,
-  } = trpc.event.getNumberOfUnknownEvents.useQuery({
-    householdId: selectedHouseholdId,
-  });
+  } = trpc.event.getNumberOfUnknownEvents.useQuery(
+    {
+      householdId: selectedHouseholdId,
+    },
+    {
+      enabled: !!selectedHouseholdId,
+    }
+  );
 
   const isLoading = isLoadingLeakEvents || isLoadingUnknownEvents;
   const error = errorLeakEvents ?? errorUnknownEvents;
 
   if (isLoading) {
-    return <div> Loading...</div>;
+    return <div> {tCommon("loading")}...</div>;
   }
 
   if (error) {
     toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
     return <div></div>;
   }
+
+  const hasLeakEvents = (leakEvents ?? 0) > 0;
+  const hasUnknownEvents = (unknownEvents ?? 0) > 0;
 
   return (
     <div className={cn("flex gap-2", className)}>
@@ -59,7 +73,9 @@ export function ActionCards({ className }: { className?: string }) {
         </CardHeader>
         <CardContent>
           <p className="line-clamp-2">
-            {tActionCards("leaks.description", { count: leakEvents })}{" "}
+            {hasLeakEvents
+              ? tActionCards("leaks.description", { count: leakEvents })
+              : tCommon("no-data")}
           </p>
           <ArrowRight className="absolute right-4 bottom-2 transition-transform group-hover:translate-x-2" />
         </CardContent>
@@ -76,7 +92,9 @@ export function ActionCards({ className }: { className?: string }) {
         </CardHeader>
         <CardContent>
           <p className="line-clamp-2">
-            {tActionCards("categorize.description", { count: unknownEvents })}{" "}
+            {hasUnknownEvents
+              ? tActionCards("categorize.description", { count: unknownEvents })
+              : tCommon("no-data")}
           </p>
           <ArrowRight className="absolute right-4 bottom-2 transition-transform group-hover:translate-x-2" />
         </CardContent>

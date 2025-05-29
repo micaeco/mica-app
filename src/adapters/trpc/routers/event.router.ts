@@ -15,9 +15,6 @@ export const eventRouter = createTRPCRouter({
     )
     .output(z.array(Event))
     .query(async ({ input, ctx }) => {
-      setTimeout(() => {
-        // Simulate a delay for testing purposes
-      }, 3000);
       const { householdId, startDate, endDate } = input;
       const events = await ctx.eventRepo.getEvents(householdId, startDate, endDate);
       return events;
@@ -58,14 +55,14 @@ export const eventRouter = createTRPCRouter({
   getPaginatedEventsGroupedByDay: protectedProcedure
     .input(
       z.object({
-        sensorId: z.string(),
+        householdId: z.string(),
         cursor: z.string().datetime().nullish(),
         numberOfDays: z.number().min(1).default(7),
       })
     )
     .output(z.object({ data: z.array(EventsForDay), nextCursor: z.string().datetime().optional() }))
     .query(async ({ input, ctx }) => {
-      const { sensorId, cursor, numberOfDays } = input;
+      const { householdId, cursor, numberOfDays } = input;
 
       let startDate: Date;
 
@@ -79,7 +76,7 @@ export const eventRouter = createTRPCRouter({
       let currentDay = new Date(startDate);
 
       for (let i = 0; i < numberOfDays; i++) {
-        const eventsForThisDay = await ctx.eventRepo.getEventsForDay(sensorId, currentDay);
+        const eventsForThisDay = await ctx.eventRepo.getEventsForDay(householdId, currentDay);
 
         if (eventsForThisDay.length > 0) {
           const dayData: EventsForDay = {

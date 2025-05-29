@@ -35,7 +35,7 @@ export function ConsumptionTabs() {
     { householdId: selectedHouseholdId },
     {
       ...queryOptions,
-      enabled: resolution == "month",
+      enabled: !!selectedHouseholdId && resolution == "month",
     }
   );
 
@@ -47,7 +47,7 @@ export function ConsumptionTabs() {
     { householdId: selectedHouseholdId },
     {
       ...queryOptions,
-      enabled: resolution == "today",
+      enabled: !!selectedHouseholdId && resolution == "today",
     }
   );
 
@@ -71,7 +71,7 @@ export function ConsumptionTabs() {
       </TabsList>
 
       <TabsContent value="month">
-        {consumptionMonth && (
+        {consumptionMonth ? (
           <div className="flex flex-col text-right">
             <p
               className={cn(
@@ -88,10 +88,14 @@ export function ConsumptionTabs() {
               {tCommon("day")}
             </p>
           </div>
+        ) : (
+          <div className="flex flex-col text-right">
+            <p>{tCommon("no-data")}</p>
+          </div>
         )}
       </TabsContent>
       <TabsContent value="today">
-        {consumptionToday && (
+        {consumptionToday ? (
           <div className="flex flex-col text-right">
             <p
               className={cn(
@@ -107,6 +111,10 @@ export function ConsumptionTabs() {
               {consumptionToday.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
               {tCommon("day")}
             </p>
+          </div>
+        ) : (
+          <div className="flex flex-col text-center">
+            <p>{tCommon("no-data")}</p>
           </div>
         )}
       </TabsContent>

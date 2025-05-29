@@ -3,7 +3,7 @@ import { HouseholdUserRepository } from "@domain/repositories/household-user";
 
 const mockHouseholdUsers: HouseholdUser[] = [];
 
-export class HouseholdUserMockRepository implements HouseholdUserRepository {
+export class MockHouseholdUserRepository implements HouseholdUserRepository {
   async create(householdUser: HouseholdUser) {
     mockHouseholdUsers.push(householdUser);
     return householdUser;

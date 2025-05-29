@@ -1,63 +1,49 @@
 import { Household } from "@domain/entities/household";
 import { HouseholdRepository } from "@domain/repositories/household";
 
-export const mockHouseholds: Household[] = [
-  {
-    id: "1",
-    name: "Household 1",
-
-    residents: 2,
-    street1: "123 Maple St",
-    street2: "",
-    city: "Springfield",
-    zip: "12345",
-    country: "USA",
-
-    sensorId: "1",
-  },
-];
+export const mockHouseholds: Household[] = [];
 
 export class MockHouseholdRepository implements HouseholdRepository {
-  private getHouseholds(): Household[] {
-    return mockHouseholds;
+  private households: Household[];
+
+  constructor() {
+    this.households = [...mockHouseholds];
   }
 
-  findAll() {
-    return this.getHouseholds();
+  findAll(): Household[] {
+    return [...this.households];
   }
 
   create(household: Omit<Household, "id">): Household {
-    const households = this.getHouseholds();
     const newHousehold: Household = {
       ...household,
-      id: String(households.length + 1),
+      id: String(
+        this.households.length > 0 ? Math.max(...this.households.map((h) => parseInt(h.id))) + 1 : 1
+      ),
     };
-    households.push(newHousehold);
+    this.households.push(newHousehold);
     return newHousehold;
   }
 
-  findById(householdId: string) {
-    const households = this.getHouseholds();
-    return households.find((household) => household.id === householdId) || null;
+  findById(householdId: string): Household | null {
+    return this.households.find((household) => household.id === householdId) || null;
   }
 
-  update(id: string, household: Partial<Household>) {
-    const households = this.getHouseholds();
-    const index = households.findIndex((household) => household.id === id);
+  update(id: string, household: Partial<Household>): Household | null {
+    const index = this.households.findIndex((h) => h.id === id);
     if (index !== -1) {
-      households[index] = { ...households[index], ...household };
-      return households[index];
+      this.households[index] = { ...this.households[index], ...household };
+      return this.households[index];
     }
     return null;
   }
 
-  delete(householdId: string) {
-    const households = this.getHouseholds();
-    const index = households.findIndex((household) => household.id === householdId);
+  delete(householdId: string): Household | null {
+    const index = this.households.findIndex((h) => h.id === householdId);
     if (index === -1) return null;
 
-    const household = households[index];
-    households.splice(index, 1);
+    const household = this.households[index];
+    this.households.splice(index, 1);
     return household;
   }
 }

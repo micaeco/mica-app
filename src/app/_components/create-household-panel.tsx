@@ -63,7 +63,12 @@ export function CreateHouseholdPanel({
     },
   });
 
-  const mutation = trpc.household.createHousehold.useMutation();
+  const utils = trpc.useUtils();
+  const mutation = trpc.household.createHousehold.useMutation({
+    onSuccess: () => {
+      utils.household.findAllHouseholds.invalidate();
+    },
+  });
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     mutation.mutate({
       name: values.name.trim(),

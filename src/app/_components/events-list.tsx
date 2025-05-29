@@ -4,6 +4,7 @@ import { format, isToday, isYesterday } from "date-fns";
 import { LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useInView } from "react-intersection-observer";
+import { toast } from "sonner";
 
 import { EventBar } from "@app/_components/event-bar";
 import { getDateFnsLocale } from "@app/_i18n/routing";
@@ -18,6 +19,7 @@ export function EventsList() {
   const locale = useLocale();
   const dateFnsLocale = getDateFnsLocale(locale);
   const tCommon = useTranslations("common");
+  const tErrors = useTranslations("common.errors");
 
   const { ref, inView } = useInView({
     threshold: 1,
@@ -26,7 +28,7 @@ export function EventsList() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } =
     trpc.event.getPaginatedEventsGroupedByDay.useInfiniteQuery(
       {
-        sensorId: selectedHouseholdId,
+        householdId: selectedHouseholdId,
         numberOfDays: NUMBER_OF_DAYS,
       },
       {
@@ -43,11 +45,11 @@ export function EventsList() {
   }, [inView, hasNextPage, fetchNextPage]);
 
   if (isLoading) {
-    <LoaderCircle className="animate-spin" />;
+    return <LoaderCircle className="animate-spin" />;
   }
 
   if (error) {
-    return <div> Hey theres an error {error.message} </div>;
+    toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
   }
 
   const getDisplayDateKey = (date: Date): string => {
@@ -61,6 +63,12 @@ export function EventsList() {
   };
 
   const eventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
+
+  if (eventsGroupedByDays.length === 0) {
+    return (
+      <div className="text-muted-foreground py-4 text-center text-sm">{tCommon("no-data")}</div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -82,7 +90,7 @@ export function EventsList() {
           {isLoading || isFetchingNextPage ? tCommon("loading") : tCommon("loading")}...
         </div>
       )}
-      {!hasNextPage && eventsGroupedByDays.length > 0 && (
+      {!hasNextPage && (
         <div className="text-muted-foreground py-4 text-center text-sm">
           {tCommon("no-more-events-to-load")}
         </div>
