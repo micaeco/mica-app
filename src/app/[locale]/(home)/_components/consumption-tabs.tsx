@@ -89,7 +89,7 @@ export function ConsumptionTabs() {
             </p>
           </div>
         ) : (
-          <div className="flex flex-col text-right">
+          <div className="flex flex-col text-center">
             <p>{tCommon("no-data")}</p>
           </div>
         )}
