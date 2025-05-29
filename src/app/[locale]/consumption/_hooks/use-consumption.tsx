@@ -68,7 +68,7 @@ export function useConsumption() {
     startDate: new Date(),
     endDate: new Date(),
   });
-  const [selectedTimeWindow, setSelectedTimeWindow] = useState<TimeWindow | null>(null);
+  const [selectedTimeWindow, setSelectedTimeWindow] = useState<TimeWindow | undefined>(undefined);
   const [consumption, setConsumption] = useState<Consumption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<ErrorKey | undefined>(undefined);
@@ -80,7 +80,7 @@ export function useConsumption() {
   const fetchData = useCallback(async () => {
     if (!selectedHouseholdId) {
       setConsumption([]);
-      setSelectedTimeWindow(null);
+      setSelectedTimeWindow(undefined);
       setError(undefined);
       setIsLoading(false);
       return;
@@ -102,7 +102,7 @@ export function useConsumption() {
     if (!result.success) {
       setError(result.error);
       setConsumption([]);
-      setSelectedTimeWindow(null);
+      setSelectedTimeWindow(undefined);
     } else {
       setConsumption(result.data);
       if (result.data.length > 0) {
@@ -112,7 +112,7 @@ export function useConsumption() {
           endDate: new Date(last.endDate),
         });
       } else {
-        setSelectedTimeWindow(null);
+        setSelectedTimeWindow(undefined);
       }
     }
 
@@ -126,7 +126,7 @@ export function useConsumption() {
       resolution === "hour" ? config.startOf(start) : startOfDay(config.startOf(start));
 
     setFetchTimeWindow({ startDate: alignedStart, endDate: now });
-    setSelectedTimeWindow(null);
+    setSelectedTimeWindow(undefined);
   }, [resolution, config]);
 
   useEffect(() => {

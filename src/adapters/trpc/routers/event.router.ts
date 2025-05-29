@@ -5,6 +5,24 @@ import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { Event, EventsForDay } from "@domain/entities/event";
 
 export const eventRouter = createTRPCRouter({
+  getEvents: protectedProcedure
+    .input(
+      z.object({
+        householdId: z.string(),
+        startDate: z.date(),
+        endDate: z.date(),
+      })
+    )
+    .output(z.array(Event))
+    .query(async ({ input, ctx }) => {
+      setTimeout(() => {
+        // Simulate a delay for testing purposes
+      }, 3000);
+      const { householdId, startDate, endDate } = input;
+      const events = await ctx.eventRepo.getEvents(householdId, startDate, endDate);
+      return events;
+    }),
+
   getLeakEvents: protectedProcedure
     .input(z.object({ householdId: z.string() }))
     .output(z.array(Event))

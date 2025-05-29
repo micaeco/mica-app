@@ -17,7 +17,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 type Props = {
-  selectedTimeWindow: TimeWindow | null;
+  selectedTimeWindow: TimeWindow | undefined;
   setSelectedTimeWindow: (timeWindow: TimeWindow) => void;
   resolution: ConsumptionGranularity;
   consumption: Consumption[];
@@ -58,7 +58,7 @@ export function ConsumptionPerTimeChart({
   };
 
   const isSelected = (entry: Consumption) =>
-    selectedTimeWindow !== null &&
+    selectedTimeWindow !== undefined &&
     entry.startDate.getTime() === selectedTimeWindow.startDate.getTime() &&
     entry.endDate.getTime() === selectedTimeWindow.endDate.getTime();
 

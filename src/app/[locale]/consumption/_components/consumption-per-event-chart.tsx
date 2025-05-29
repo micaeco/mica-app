@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import { useTranslations } from "next-intl";
 
 import { Category, categoryMap } from "@domain/entities/category";
@@ -15,12 +13,12 @@ import {
   AccordionTrigger,
 } from "@presentation/components/ui/accordion";
 import { Skeleton } from "@presentation/components/ui/skeleton";
-import { getEvents } from "@presentation/lib/actions";
+import { trpc } from "@presentation/lib/trpc";
 import { useHouseholdStore } from "@presentation/stores/household";
 
 type Props = {
   selectedCategories: Category[] | undefined;
-  selectedTimeWindow: TimeWindow | null;
+  selectedTimeWindow: TimeWindow | undefined;
 };
 
 export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindow }: Props) {
@@ -28,43 +26,25 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("common.errors");
 
-  const [events, setEvents] = useState<Event[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<ErrorKey | undefined>(undefined);
-
   const { selectedHouseholdId } = useHouseholdStore();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      if (!selectedTimeWindow || !selectedHouseholdId) {
-        setEvents([]);
-        if (!selectedTimeWindow || !selectedHouseholdId) {
-          setIsLoading(false);
-        }
-        return;
-      }
+  const {
+    data: fetchedEvents,
+    isLoading,
+    error: queryError,
+    isError,
+  } = trpc.event.getEvents.useQuery(
+    {
+      householdId: selectedHouseholdId,
+      startDate: selectedTimeWindow ? selectedTimeWindow.startDate : new Date(),
+      endDate: selectedTimeWindow ? selectedTimeWindow.endDate : new Date(),
+    },
+    {
+      enabled: !!selectedHouseholdId && !!selectedTimeWindow,
+    }
+  );
 
-      setIsLoading(true);
-      setError(undefined);
-
-      const result = await getEvents(
-        selectedHouseholdId,
-        selectedTimeWindow.startDate,
-        selectedTimeWindow.endDate
-      );
-
-      if (result.success) {
-        setEvents(result.data);
-      } else {
-        setError(result.error);
-        setEvents([]);
-      }
-      setIsLoading(false);
-    };
-
-    setIsLoading(true);
-    fetchEvents();
-  }, [selectedHouseholdId, selectedTimeWindow]);
+  const events: Event[] = fetchedEvents || [];
 
   if (isLoading) {
     return (
@@ -76,9 +56,12 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     );
   }
 
-  if (error) {
+  if (isError && queryError) {
+    const errorMessageKey = queryError.message as ErrorKey;
     return (
-      <div className="text-destructive flex items-center justify-center p-6">{tErrors(error)}</div>
+      <div className="text-destructive flex items-center justify-center p-6">
+        {tErrors(errorMessageKey) || tErrors("unknown-error" as ErrorKey)}
+      </div>
     );
   }
 
