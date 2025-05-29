@@ -1,16 +1,32 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
-import { createHousehold } from "@domain/entities/household";
+import { createHousehold, Household } from "@domain/entities/household";
+import { HouseholdUser } from "@domain/entities/household-user";
 
 export const householdRouter = createTRPCRouter({
-  findAllHouseholds: protectedProcedure.query(async ({ ctx }) => {
-    const households = await ctx.householdRepo.findAll();
+  findAllHouseholds: protectedProcedure.output(z.array(Household)).query(async ({ ctx }) => {
+    const householdIds = await ctx.householdUserRepo.findHouseholdsByUserId(ctx.user.id);
+
+    const households = [];
+    for (const householdId of householdIds) {
+      const household = await ctx.householdRepo.findById(householdId);
+      if (household) households.push(household);
+    }
+
     return households;
   }),
 
   createHousehold: protectedProcedure.input(createHousehold).mutation(async ({ input, ctx }) => {
     const household = await ctx.householdRepo.create(input);
+
+    const householdUser: HouseholdUser = {
+      householdId: household.id,
+      userId: ctx.user.id,
+      role: "admin",
+    };
+
+    await ctx.householdUserRepo.create(householdUser);
     return household;
   }),
 
