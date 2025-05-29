@@ -5,11 +5,11 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { Skeleton } from "@presentation/components/ui/skeleton";
-import { Tabs, TabsContent, TabsTrigger, TabsList } from "@presentation/components/ui/tabs";
-import { trpc } from "@presentation/lib/trpc";
-import { cn } from "@presentation/lib/utils";
-import { useHouseholdStore } from "@presentation/stores/household";
+import { Skeleton } from "@app/_components/ui/skeleton";
+import { Tabs, TabsContent, TabsTrigger, TabsList } from "@app/_components/ui/tabs";
+import { trpc } from "@app/_lib/trpc";
+import { cn } from "@app/_lib/utils";
+import { useHouseholdStore } from "@app/_stores/household";
 
 export function ConsumptionTabs() {
   const tCommon = useTranslations("common");

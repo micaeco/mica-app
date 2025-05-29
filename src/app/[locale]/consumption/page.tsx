@@ -10,17 +10,17 @@ import { ConsumptionPerEventChart } from "@app/[locale]/consumption/_components/
 import { ConsumptionPerTimeChart } from "@app/[locale]/consumption/_components/consumption-per-time-chart";
 import { TimeResolutionSelect } from "@app/[locale]/consumption/_components/time-resolution-select";
 import { useConsumption } from "@app/[locale]/consumption/_hooks/use-consumption";
-import { Category } from "@domain/entities/category";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@presentation/components/ui/card";
-import { Skeleton } from "@presentation/components/ui/skeleton";
-import { getDateFnsLocale } from "@presentation/i18n/routing";
-import { cn } from "@presentation/lib/utils";
+} from "@app/_components/ui/card";
+import { Skeleton } from "@app/_components/ui/skeleton";
+import { getDateFnsLocale } from "@app/_i18n/routing";
+import { cn } from "@app/_lib/utils";
+import { Category } from "@domain/entities/category";
 
 export default function ConsumptionPage() {
   const locale = useLocale();

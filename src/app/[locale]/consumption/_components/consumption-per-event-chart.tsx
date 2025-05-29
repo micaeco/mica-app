@@ -1,20 +1,20 @@
 import { useTranslations } from "next-intl";
 
-import { Category, categoryMap } from "@domain/entities/category";
-import { TimeWindow } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/errors";
-import { Event } from "@domain/entities/event";
-import { ConsumptionBar } from "@presentation/components/consumption-bar";
-import { EventBar } from "@presentation/components/event-bar";
+import { ConsumptionBar } from "@app/_components/consumption-bar";
+import { EventBar } from "@app/_components/event-bar";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@presentation/components/ui/accordion";
-import { Skeleton } from "@presentation/components/ui/skeleton";
-import { trpc } from "@presentation/lib/trpc";
-import { useHouseholdStore } from "@presentation/stores/household";
+} from "@app/_components/ui/accordion";
+import { Skeleton } from "@app/_components/ui/skeleton";
+import { trpc } from "@app/_lib/trpc";
+import { useHouseholdStore } from "@app/_stores/household";
+import { Category, categoryMap } from "@domain/entities/category";
+import { TimeWindow } from "@domain/entities/consumption";
+import { ErrorKey } from "@domain/entities/errors";
+import { Event } from "@domain/entities/event";
 
 type Props = {
   selectedCategories: Category[] | undefined;

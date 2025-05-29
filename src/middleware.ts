@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 
 import { auth } from "@adapters/auth";
-import { defaultLocale, getAuth0Locale, locales, routing } from "@presentation/i18n/routing";
-import { resolveLocale } from "@presentation/lib/utils";
+import { defaultLocale, getAuth0Locale, locales, routing } from "@app/_i18n/routing";
+import { resolveLocale } from "@app/_lib/utils";
 
 const intlMiddleware = createMiddleware(routing);
 

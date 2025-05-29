@@ -4,11 +4,11 @@ import { ArrowRight, Bell, CircleHelp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@presentation/components/ui/card";
-import { useRouter } from "@presentation/i18n/routing";
-import { trpc } from "@presentation/lib/trpc";
-import { cn } from "@presentation/lib/utils";
-import { useHouseholdStore } from "@presentation/stores/household";
+import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
+import { useRouter } from "@app/_i18n/routing";
+import { trpc } from "@app/_lib/trpc";
+import { cn } from "@app/_lib/utils";
+import { useHouseholdStore } from "@app/_stores/household";
 
 export function ActionCards({ className }: { className?: string }) {
   const { selectedHouseholdId } = useHouseholdStore();

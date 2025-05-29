@@ -8,26 +8,26 @@ import { format, isToday, isYesterday } from "date-fns";
 import { Bell, ChevronDown, CircleCheck, HelpCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
-import { categories, Category, categoryMap } from "@domain/entities/category";
-import { Event } from "@domain/entities/event";
 import {
   Accordion,
   AccordionItem,
   AccordionContent,
   AccordionTrigger,
-} from "@presentation/components/ui/accordion";
-import { Card, CardContent } from "@presentation/components/ui/card";
+} from "@app/_components/ui/accordion";
+import { Card, CardContent } from "@app/_components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@presentation/components/ui/carousel";
-import { ToggleGroup, ToggleGroupItem } from "@presentation/components/ui/toggle-group";
-import { getDateFnsLocale } from "@presentation/i18n/routing";
-import { trpc } from "@presentation/lib/trpc";
-import { useHouseholdStore } from "@presentation/stores/household";
+} from "@app/_components/ui/carousel";
+import { ToggleGroup, ToggleGroupItem } from "@app/_components/ui/toggle-group";
+import { getDateFnsLocale } from "@app/_i18n/routing";
+import { trpc } from "@app/_lib/trpc";
+import { useHouseholdStore } from "@app/_stores/household";
+import { categories, Category, categoryMap } from "@domain/entities/category";
+import { Event } from "@domain/entities/event";
 
 export default function Actions() {
   const [selectedCategory, setSelectedCategory] = useState<Category>();

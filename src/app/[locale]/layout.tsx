@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
-import { BaseLayout } from "@presentation/components/base-layout";
-import { Locale, routing } from "@presentation/i18n/routing";
+import { BaseLayout } from "@app/_components/base-layout";
+import { Locale, routing } from "@app/_i18n/routing";
 import { env } from "env";
 
 import type { Metadata } from "next";

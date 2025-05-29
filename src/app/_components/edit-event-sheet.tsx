@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import { CircleCheck, LoaderCircle, Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -17,31 +18,39 @@ import { Form } from "@app/_components/ui/form";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@app/_components/ui/sheet";
 import { ToggleGroup, ToggleGroupItem } from "@app/_components/ui/toggle-group";
+import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 import { categoryMap, Category, categories } from "@domain/entities/category";
+import { Event } from "@domain/entities/event";
 import { Tag } from "@domain/entities/tag";
 
-const eventFormSchema = z.object({
-  timingType: z.enum(["start", "end"]).optional(),
+const editEventFormSchema = z.object({
   category: z.custom<Category>().optional(),
   tag: z.string().optional(),
 });
 
-type EventFormValues = z.infer<typeof eventFormSchema>;
+type EditEventFormValues = z.infer<typeof editEventFormSchema>;
 
-export function LabelEventSheet({ children }: { children: React.ReactNode }) {
+export function EditEventSheet({
+  event,
+  open,
+  onOpenChange,
+}: {
+  event: Event;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const filteredCategories = categories.filter(
     (category) => category !== "rest" && category !== "unknown"
   );
 
-  const [isOpen, setIsOpen] = useState(false);
   const [isCreateTagDialogOpen, setIsCreateTagDialogOpen] = useState(false);
 
   const { selectedHouseholdId } = useHouseholdStore();
@@ -49,20 +58,25 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const tCategories = useTranslations("common.categories");
   const tErrors = useTranslations("common.errors");
   const tCommon = useTranslations("common");
-  const tNewEventSheet = useTranslations("new-event-sheet");
+  const tEditEventSheet = useTranslations("edit-event-sheet");
   const tNewTagDialog = useTranslations("new-tag-dialog");
+  const locale = useLocale();
+  const dateFnsLocale = getDateFnsLocale(locale);
 
-  const eventForm = useForm<EventFormValues>({
-    resolver: zodResolver(eventFormSchema),
-    defaultValues: {
-      timingType: undefined,
-      category: undefined,
-      tag: undefined,
-    },
+  const eventForm = useForm<EditEventFormValues>({
+    resolver: zodResolver(editEventFormSchema),
   });
 
+  useEffect(() => {
+    if (open && event) {
+      eventForm.reset({
+        category: event.category,
+        tag: event.tag,
+      });
+    }
+  }, [event, open, eventForm]);
+
   const watchedCategory = eventForm.watch("category");
-  const watchedTimingType = eventForm.watch("timingType");
 
   const {
     data: tags,
@@ -82,45 +96,50 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
     toast.error(tErrors("INTERNAL_SERVER_ERROR"));
   }
 
-  const onSubmitEvent = (data: EventFormValues) => {
-    if (!data.timingType) {
+  const onSubmitEvent = (data: EditEventFormValues) => {
+    if (!data.category) {
       toast.error(tErrors("VALIDATION_ERROR"));
       return;
     }
 
-    toast.success("Event created successfully", {
-      description:
-        `${data.timingType === "start" ? "Start time: " + new Date().toLocaleTimeString() + "\n" : ""}` +
-        `${data.timingType === "end" ? "End time: " + new Date().toLocaleTimeString() + "\n" : ""}` +
-        `Category: ${data.category}\n` +
-        `${data.tag ? "Tag: " + data.tag + "\n" : ""}`,
+    toast.success("Event edited successfully", {
+      description: `Category: ${data.category}\n` + `${data.tag ? "Tag: " + data.tag + "\n" : ""}`,
     });
-
-    eventForm.reset();
-    setIsOpen(false);
+    onOpenChange(false);
   };
 
   const handleTagCreated = (tagName: string) => {
     eventForm.setValue("tag", tagName, { shouldValidate: true });
   };
 
+  const handleSheetOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      eventForm.reset();
+    }
+    onOpenChange(isOpen);
+  };
+
   return (
     <>
-      <Sheet
-        open={isOpen}
-        onOpenChange={(open) => {
-          setIsOpen(open);
-          if (!open) {
-            eventForm.reset();
-          }
-        }}
-      >
-        <SheetTrigger>{children}</SheetTrigger>
+      <Sheet open={open} onOpenChange={handleSheetOpenChange}>
         <SheetContent className="w-full overflow-y-auto">
           <SheetHeader>
             <SheetTitle>
-              {tCommon("new")} <span className="lowercase">{tCommon("event")}</span>
+              {tCommon("edit")} <span className="lowercase">{tCommon("event")}</span>
             </SheetTitle>
+            {event && (
+              <SheetDescription>
+                {format(event.startDate, "cccc PPP", { locale: dateFnsLocale })}
+                <br />
+                {format(event.startDate, "HH:mm", { locale: dateFnsLocale })} -{" "}
+                {event.endDate
+                  ? format(event.endDate, "HH:mm", { locale: dateFnsLocale })
+                  : tCommon("in-progress")}
+                <br />
+                <br />
+                <p className="text-brand-secondary font-bold">{event.consumptionInLiters} L</p>
+              </SheetDescription>
+            )}
           </SheetHeader>
 
           <Form {...eventForm}>
@@ -128,49 +147,6 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
               onSubmit={eventForm.handleSubmit(onSubmitEvent)}
               className="flex flex-col space-y-6 py-4"
             >
-              {/* Event Timing */}
-              <div className="flex flex-col gap-4">
-                <span className="font-medium">{tNewEventSheet("event-timing-title")}</span>
-                <Controller
-                  control={eventForm.control}
-                  name="timingType"
-                  render={({ field }) => (
-                    <ToggleGroup
-                      type="single"
-                      value={field.value || ""}
-                      onValueChange={(valueFromGroup) => {
-                        field.onChange(
-                          valueFromGroup === "" ? undefined : (valueFromGroup as "start" | "end")
-                        );
-                      }}
-                      className="flex flex-wrap gap-2"
-                    >
-                      <ToggleGroupItem
-                        value="start"
-                        className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary group rounded-lg bg-gray-100 transition-colors"
-                        aria-label={tNewEventSheet("set-start-time")}
-                      >
-                        {tNewEventSheet("set-start-time")}
-                        {field.value === "start" && <CircleCheck className="ml-1 h-4 w-4" />}
-                      </ToggleGroupItem>
-                      <ToggleGroupItem
-                        value="end"
-                        className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary group rounded-lg bg-gray-100 transition-colors"
-                        aria-label={tNewEventSheet("set-end-time")}
-                      >
-                        {tNewEventSheet("set-end-time")}
-                        {field.value === "end" && <CircleCheck className="ml-1 h-4 w-4" />}
-                      </ToggleGroupItem>
-                    </ToggleGroup>
-                  )}
-                />
-                {eventForm.formState.errors.timingType && (
-                  <p className="text-sm text-red-500">
-                    {eventForm.formState.errors.timingType.message}
-                  </p>
-                )}
-              </div>
-
               {/* Category */}
               <div className="flex flex-col gap-2">
                 <span className="font-medium">{tCommon("consumption-point")}</span>
@@ -233,7 +209,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
                 ) : !tags || tags.length === 0 ? (
                   <div className="flex flex-col gap-2">
                     <span className="text-muted-foreground text-sm">
-                      {tNewEventSheet("no-tags-for-category")}
+                      {tEditEventSheet("no-tags-for-category")}
                     </span>
                   </div>
                 ) : (
@@ -283,9 +259,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
               </div>
 
               <Button
-                disabled={
-                  eventForm.formState.isSubmitting || !watchedCategory || !watchedTimingType
-                }
+                disabled={eventForm.formState.isSubmitting || !watchedCategory}
                 type="submit"
                 className="ml-auto w-fit"
               >

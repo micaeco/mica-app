@@ -4,7 +4,7 @@ import { PauseIcon, PlayIcon, RefreshCwIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useStopwatch } from "react-timer-hook";
 
-import { Button } from "@presentation/components/ui/button";
+import { Button } from "@app/_components/ui/button";
 
 export function EventStopwatch({
   setStartTime,

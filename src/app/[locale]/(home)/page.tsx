@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 import { ActionCards } from "@app/[locale]/(home)/_components/action-cards";
 import { ConsumptionTabs } from "@app/[locale]/(home)/_components/consumption-tabs";
 import { LabelEventSheet } from "@app/[locale]/(home)/_components/create-event-sheet";
-import { EventsList } from "@presentation/components/events-list";
-import { Card, CardContent, CardHeader, CardTitle } from "@presentation/components/ui/card";
+import { EventsList } from "@app/_components/events-list";
+import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
 
 export default function Home() {
   const tEventsList = useTranslations("events-list");

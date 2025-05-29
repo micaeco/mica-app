@@ -21,10 +21,10 @@ import {
   min,
 } from "date-fns";
 
+import { trpc } from "@app/_lib/trpc";
+import { useHouseholdStore } from "@app/_stores/household";
 import { ConsumptionGranularity, TimeWindow } from "@domain/entities/consumption";
 import { ErrorKey } from "@domain/entities/errors";
-import { trpc } from "@presentation/lib/trpc";
-import { useHouseholdStore } from "@presentation/stores/household";
 
 const resolutionConfig = {
   month: {

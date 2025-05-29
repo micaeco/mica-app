@@ -5,10 +5,10 @@ import { useTranslations } from "next-intl";
 import { Cell, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
+import { ChartConfig, ChartContainer } from "@app/_components/ui/chart";
 import { categories, Category, categoryMap } from "@domain/entities/category";
 import { CategoryBreakdown } from "@domain/entities/consumption";
 import { ErrorKey } from "@domain/entities/errors";
-import { ChartConfig, ChartContainer } from "@presentation/components/ui/chart";
 
 type Props = {
   setSelectedCategories: (category: Category[] | undefined) => void;

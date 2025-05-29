@@ -4,8 +4,8 @@ import React from "react";
 
 import { useTranslations } from "next-intl";
 
+import { Tabs, TabsList, TabsTrigger } from "@app/_components/ui/tabs";
 import { ConsumptionGranularity } from "@domain/entities/consumption";
-import { Tabs, TabsList, TabsTrigger } from "@presentation/components/ui/tabs";
 
 type Props = {
   resolution: ConsumptionGranularity;
