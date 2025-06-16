@@ -70,25 +70,24 @@ export function CreateHouseholdPanel({
     onSuccess: () => {
       utils.household.findAllHouseholds.invalidate();
     },
+    onError: () => {
+      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+    },
   });
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     mutation.mutate({
       name: values.name.trim(),
-      residents: values.residents,
-      street1: values.street1.trim(),
-      street2: (values.street2 ?? "").trim(),
-      city: values.city.trim(),
-      zip: values.zip.trim(),
-      country: values.country.trim(),
       sensorId: values.sensorId.trim(),
+      residents: values.residents,
+      street1: (values.street1 ?? "").trim(),
+      street2: (values.street2 ?? "").trim(),
+      city: (values.city ?? "").trim(),
+      zip: (values.zip ?? "").trim(),
+      country: (values.country ?? "").trim(),
     });
     form.reset();
     setOpen(false);
   };
-
-  if (mutation.error) {
-    toast.error(tErrors("INTERNAL_SERVER_ERROR"));
-  }
 
   return (
     <Panel open={open} onOpenChange={setOpen}>

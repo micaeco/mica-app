@@ -47,6 +47,15 @@ export const householdRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { id, ...data } = input;
+
+      if (
+        input.sensorId &&
+        (ctx.sensorRepo.findById(input.sensorId) === null ||
+          ctx.householdRepo.findBySensorId(input.sensorId))
+      ) {
+        throw new BadRequestError();
+      }
+
       const household = await ctx.householdRepo.update(id, data);
       return household;
     }),

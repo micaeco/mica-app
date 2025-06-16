@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@app/_components/ui/button";
@@ -48,6 +49,7 @@ export function EditHouseholdSheet({
   const t = useTranslations("edit-household");
   const tForm = useTranslations("create-household.form");
   const tCommon = useTranslations("common");
+  const tErrors = useTranslations("common.errors");
 
   const { households } = useHouseholdStore();
   const household = households.find((h) => h.id === householdId);
@@ -83,10 +85,16 @@ export function EditHouseholdSheet({
     onSuccess: () => {
       utils.household.findAllHouseholds.invalidate();
     },
+    onError: () => {
+      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+    },
   });
   const deleteMutation = trpc.household.deleteHousehold.useMutation({
     onSuccess: () => {
       utils.household.findAllHouseholds.invalidate();
+    },
+    onError: () => {
+      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
     },
   });
 

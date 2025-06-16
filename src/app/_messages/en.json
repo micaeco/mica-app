@@ -133,7 +133,7 @@
       "sensor-id": "Sensor ID",
       "residents": "Number of residents",
       "address": "Household address",
-      "address2": "Address 2 (optional)",
+      "address2": "Address 2",
       "city": "City",
       "zip": "ZIP code",
       "country": "Country"

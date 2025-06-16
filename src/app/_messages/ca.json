@@ -133,7 +133,7 @@
       "sensor-id": "ID del sensor",
       "residents": "Nombre de residents",
       "address": "Adreça de la vivenda",
-      "address2": "Adreça 2 (opcional)",
+      "address2": "Adreça 2",
       "city": "Ciutat",
       "zip": "Codi postal",
       "country": "País"

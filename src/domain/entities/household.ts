@@ -10,11 +10,14 @@ export const Household = z.object({
   icon: z.string().optional(),
   residents: z.number().min(1),
 
-  street1: z.string().min(1),
+  street1: z.string().min(1).optional(),
   street2: z.string().optional(),
-  city: z.string().min(1),
-  zip: z.string().regex(/^\d{5}$/),
-  country: z.string().min(1),
+  city: z.string().min(1).optional(),
+  zip: z
+    .string()
+    .regex(/^\d{5}$/)
+    .optional(),
+  country: z.string().min(1).optional(),
 });
 
 export const createHousehold = Household.omit({ id: true });

@@ -133,7 +133,7 @@
       "sensor-id": "ID del sensor",
       "residents": "Número de residentes",
       "address": "Dirección de la vivienda",
-      "address2": "Dirección 2 (opcional)",
+      "address2": "Dirección 2",
       "city": "Ciudad",
       "zip": "Código postal",
       "country": "País"
