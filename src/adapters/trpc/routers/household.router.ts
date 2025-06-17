@@ -19,11 +19,13 @@ export const householdRouter = createTRPCRouter({
   }),
 
   createHousehold: protectedProcedure.input(createHousehold).mutation(async ({ input, ctx }) => {
-    if (ctx.sensorRepo.findById(input.sensorId) == null) {
+    if ((await ctx.sensorRepo.findById(input.sensorId)) == null) {
+      console.error("Sensor not found for household creation", input.sensorId);
       throw new BadRequestError();
     }
 
-    if (ctx.householdRepo.findBySensorId(input.sensorId)) {
+    if (await ctx.householdRepo.findBySensorId(input.sensorId)) {
+      console.error("Household already exists for sensor", input.sensorId);
       throw new BadRequestError();
     }
 

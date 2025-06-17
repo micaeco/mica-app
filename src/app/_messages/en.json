@@ -126,18 +126,28 @@
     "description": "Modify the household information."
   },
   "create-household": {
-    "title": "Create household.",
-    "description": "Enter the household information.",
+    "step1": {
+      "title": "Basic information.",
+      "description": "Enter the basic household information."
+    },
+    "step2": {
+      "title": "Address information (optional).",
+      "description": "Enter the household address information. This information is optional, but it will help you to identify your household."
+    },
     "form": {
       "name": "Name of the household",
-      "sensor-id": "Sensor ID",
+      "sensor-id": {
+        "label": "Sensor ID",
+        "description": "Enter the 12-character ID from the back of your sensor. Just type the letters and numbers; the colons (:) will be added for you automatically."
+      },
       "residents": "Number of residents",
       "address": "Household address",
       "address2": "Address 2",
       "city": "City",
       "zip": "ZIP code",
       "country": "Country"
-    }
+    },
+    "success": "Household created successfully"
   },
   "action-cards": {
     "leaks": {

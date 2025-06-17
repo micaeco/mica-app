@@ -126,18 +126,28 @@
     "description": "Modifica la información de la vivienda."
   },
   "create-household": {
-    "title": "Crea una nueva vivienda.",
-    "description": "Introduce la información de la vivienda.",
+    "step1": {
+      "title": "Información básica.",
+      "description": "Introduce la información básica de la vivienda."
+    },
+    "step2": {
+      "title": "Información de dirección (opcional).",
+      "description": "Introduce la información de dirección de la vivienda. Esta información es opcional, pero te ayudará a identificar tu vivienda."
+    },
     "form": {
       "name": "Nombre de la vivienda",
-      "sensor-id": "ID del sensor",
+      "sensor-id": {
+        "label": "ID del sensor",
+        "description": "Introduce el código de 12 caracteres de tu sensor. Escribe solo las letras y números; los dos puntos (:) se añadirán automáticamente."
+      },
       "residents": "Número de residentes",
       "address": "Dirección de la vivienda",
       "address2": "Dirección 2",
       "city": "Ciudad",
       "zip": "Código postal",
       "country": "País"
-    }
+    },
+    "success": "Vivienda creada correctamente"
   },
   "action-cards": {
     "leaks": {
