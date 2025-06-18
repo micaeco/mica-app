@@ -15,7 +15,6 @@ export function HouseholdsInitializer({ children }: { children: React.ReactNode 
   const { data: households, isLoading, error } = trpc.household.findAllHouseholds.useQuery();
 
   useEffect(() => {
-    console.log("Households have been invalidated");
     if (households) {
       useHouseholdStore.setState({ households });
       if (households.length > 0)
