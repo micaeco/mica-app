@@ -31,13 +31,13 @@ export function AppSidebar({ className }: { className?: string }) {
   const selectedHouseholdId = useHouseholdStore((state) => state.selectedHouseholdId);
   const selectHousehold = useHouseholdStore((state) => state.selectHousehold);
 
-  const common = useTranslations("common");
+  const tCommon = useTranslations("common");
 
   return (
     <Sidebar className={cn(className)}>
       <SidebarContent>
         <SidebarGroup className="gap-2 pr-4">
-          <SidebarGroupLabel>{common("households")}</SidebarGroupLabel>
+          <SidebarGroupLabel>{tCommon("households")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-2">
               {households.map((household) => (
@@ -55,7 +55,7 @@ export function AppSidebar({ className }: { className?: string }) {
                 <CreateHouseholdPanel className="text-muted-foreground hover:text-primary hover:bg-muted flex w-fit gap-2 rounded-lg px-4 py-2 transition-colors">
                   <Plus className="h-5 w-5" />
                   <div>
-                    {common("add")} <span className="lowercase">{common("household")}</span>
+                    {tCommon("add")} <span className="lowercase">{tCommon("household")}</span>
                   </div>
                 </CreateHouseholdPanel>
               </SidebarMenuItem>
@@ -72,7 +72,7 @@ export function AppSidebar({ className }: { className?: string }) {
             <Link href="#">
               <SidebarMenuButton>
                 <Bell />
-                {common("notifications")}
+                {tCommon("notifications")}
                 <ChevronRight className="ml-auto" />
               </SidebarMenuButton>
             </Link>
@@ -81,7 +81,7 @@ export function AppSidebar({ className }: { className?: string }) {
             <Link href="#">
               <SidebarMenuButton>
                 <CircleHelp />
-                {common("help")}
+                {tCommon("help")}
                 <ChevronRight className="ml-auto" />
               </SidebarMenuButton>
             </Link>
