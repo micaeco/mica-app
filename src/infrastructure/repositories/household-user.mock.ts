@@ -5,6 +5,7 @@ const mockHouseholdUsers: HouseholdUser[] = [];
 
 export class MockHouseholdUserRepository implements HouseholdUserRepository {
   async create(householdUser: HouseholdUser) {
+    debugger;
     mockHouseholdUsers.push(householdUser);
     return householdUser;
   }
