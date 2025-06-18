@@ -17,8 +17,11 @@ export function HouseholdsInitializer({ children }: { children: React.ReactNode 
   useEffect(() => {
     if (households) {
       useHouseholdStore.setState({ households });
-      if (households.length > 0)
-        useHouseholdStore.setState({ selectedHouseholdId: households[0].id });
+
+      if (households.length > 0) {
+        const firstId = households[0].id;
+        useHouseholdStore.setState({ selectedHouseholdId: firstId });
+      }
     }
   }, [households]);
 

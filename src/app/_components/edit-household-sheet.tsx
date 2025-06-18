@@ -92,6 +92,7 @@ export function EditHouseholdSheet({
   const deleteMutation = trpc.household.deleteHousehold.useMutation({
     onSuccess: () => {
       utils.household.findAllHouseholds.invalidate();
+      setOpen(false);
     },
     onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
@@ -121,11 +122,7 @@ export function EditHouseholdSheet({
   };
 
   const handleRemove = () => {
-    deleteMutation.mutate(householdId, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
+    deleteMutation.mutate(householdId);
   };
 
   return (
