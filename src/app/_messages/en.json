@@ -186,6 +186,11 @@
     "no-leaks": "No leaks",
     "no-unknowns": "No events to categorize"
   },
+  "onboarding": {
+    "title": "Start by creating your first household",
+    "subtitle": "Track your water usage and discover where you can save the most. Let’s get started by setting up your home.",
+    "create-button": "Create your first household"
+  },
   "not-found": {
     "title": "Page not found.",
     "description": "The page you are looking for does not exist."

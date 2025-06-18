@@ -186,6 +186,11 @@
     "no-leaks": "No hay fugas",
     "no-unknowns": "No hay eventos para categorizar"
   },
+  "onboarding": {
+    "title": "Empieza creando tu primera vivienda",
+    "subtitle": "Haz un seguimiento de tu consumo de agua y descubre dónde puedes ahorrar más. Empecemos configurando tu vivienda.",
+    "create-button": "Crear tu primer vivienda"
+  },
   "not-found": {
     "title": "Página no encontrada.",
     "description": "La página que buscas no existe."

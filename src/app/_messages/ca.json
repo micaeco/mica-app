@@ -186,6 +186,11 @@
     "no-leaks": "No hi ha fuites",
     "no-unknowns": "No hi ha events per categoritzar"
   },
+  "onboarding": {
+    "title": "Comença creant la teva primera vivenda",
+    "subtitle": "Fes un seguiment del teu consum d’aigua i descobreix on pots estalviar més. Comencem configurant casa teva.",
+    "create-button": "Crear la teva primera vivenda"
+  },
   "not-found": {
     "title": "Pàgina no trobada.",
     "description": "La pàgina que busques no existeix."

@@ -102,14 +102,14 @@ export function EditHouseholdSheet({
     updateMutation.mutate(
       {
         id: householdId,
+        sensorId: values.sensorId.trim(),
         name: values.name.trim(),
         residents: values.residents,
-        street1: values.street1.trim(),
-        street2: (values.street2 ?? "").trim(),
-        city: values.city.trim(),
-        zip: values.zip.trim(),
-        country: values.country.trim(),
-        sensorId: values.sensorId.trim(),
+        street1: values.street1?.trim(),
+        street2: values.street2?.trim(),
+        city: values.city?.trim(),
+        zip: values.zip?.trim(),
+        country: values.country?.trim(),
       },
       {
         onSuccess: () => {
@@ -158,7 +158,7 @@ export function EditHouseholdSheet({
                   name="sensorId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{tForm("sensor-id")}</FormLabel>
+                      <FormLabel>{tForm("sensor-id.label")}</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>

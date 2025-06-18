@@ -4,13 +4,13 @@ import { getMessages } from "next-intl/server";
 
 import { auth } from "@adapters/auth";
 import { Header } from "@app/_components/header";
+import { HouseholdGate } from "@app/_components/household-gate";
+import { HouseholdsInitializer } from "@app/_components/households-initializer";
 import { Navbar } from "@app/_components/navbar";
 import { ClientProviders } from "@app/_components/providers";
 import { AppSidebar } from "@app/_components/sidebar";
 import { SidebarProvider } from "@app/_components/ui/sidebar";
 import { Toaster } from "@app/_components/ui/sonner";
-
-import { HouseholdsInitializer } from "./households-initializer";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -33,7 +33,9 @@ export async function BaseLayout({
               <AppSidebar className="!h-[calc(100svh-var(--navbar-height))]" />
               <main className="w-full overflow-hidden pb-(--navbar-height)">
                 <Header />
-                <div className="pt-(--header-height)">{children}</div>
+                <div className="pt-(--header-height)">
+                  <HouseholdGate>{children}</HouseholdGate>
+                </div>
               </main>
               <Navbar />
             </SidebarProvider>
