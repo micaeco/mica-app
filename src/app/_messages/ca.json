@@ -1,5 +1,6 @@
 {
   "common": {
+    "delete-confirm": "Eliminar",
     "error": "S'ha produït un error",
     "in-progress": "En curs",
     "no-more-events-to-load": "No hi ha més events a carregar",
@@ -123,7 +124,19 @@
   },
   "edit-household": {
     "title": "Edita la vivenda.",
-    "description": "Modifica la informació de la vivenda."
+    "description": "Modifica la informació de la vivenda.",
+    "update-success": "Vivenda actualitzada correctament!",
+    "delete-success": "Vivenda eliminada correctament!",
+    "delete-section": {
+      "title": "Eliminar vivenda",
+      "description": "Elimina permanentment la teva vivenda i tot el seu contingut. Aquesta acció no és reversible, així que procedeix amb precaució.",
+      "button-text": "Eliminar"
+    },
+    "alert-dialog": {
+      "confirm-title": "Estàs absolutament segur?",
+      "confirm-description-bold": "Això eliminarà la vivenda \"{householdName}\" i totes les seves dades associades.",
+      "confirm-description-text": "Aquesta acció no es pot desfer. Siusplau assegura't."
+    }
   },
   "create-household": {
     "step1": {

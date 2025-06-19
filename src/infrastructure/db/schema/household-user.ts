@@ -7,7 +7,7 @@ export const householdUserSchema = pgTable("household_users", {
   id: serial("id").primaryKey(),
   householdId: text("household_id")
     .notNull()
-    .references(() => householdSchema.id),
+    .references(() => householdSchema.id, { onDelete: "cascade" }),
   userId: text("user_id").notNull(),
   role: text("role").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),

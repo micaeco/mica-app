@@ -123,7 +123,19 @@
   },
   "edit-household": {
     "title": "Edita la vivienda.",
-    "description": "Modifica la información de la vivienda."
+    "description": "Modifica la información de la vivienda.",
+    "update-success": "¡Vivienda actualizada correctamente!",
+    "delete-success": "¡Vivienda eliminada correctamente!",
+    "delete-section": {
+      "title": "Eliminar Vivienda",
+      "description": "Elimina permanentemente tu vivienda y todo su contenido. Esta acción no es reversible, así que procede con precaución.",
+      "button-text": "Eliminar"
+    },
+    "alert-dialog": {
+      "confirm-title": "¿Estás absolutamente seguro?",
+      "confirm-description-bold": "Esto eliminará la vivienda \"{householdName}\" y todos sus datos asociados.",
+      "confirm-description-text": "Esta acción no se puede deshacer. Porfavor, asegúrate."
+    }
   },
   "create-household": {
     "step1": {

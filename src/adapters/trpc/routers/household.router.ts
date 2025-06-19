@@ -65,7 +65,6 @@ export const householdRouter = createTRPCRouter({
     }),
 
   deleteHousehold: protectedProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
-    await ctx.householdUserRepo.delete(input, ctx.user.sub);
     await ctx.householdRepo.delete(input);
     return { id: input };
   }),

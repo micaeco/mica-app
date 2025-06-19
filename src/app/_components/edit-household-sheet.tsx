@@ -9,6 +9,17 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@app/_components/ui/alert-dialog";
 import { Button } from "@app/_components/ui/button";
 import {
   Form,
@@ -45,6 +56,7 @@ export function EditHouseholdSheet({
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   const t = useTranslations("edit-household");
   const tForm = useTranslations("create-household.form");
@@ -57,25 +69,25 @@ export function EditHouseholdSheet({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      sensorId: undefined,
-      name: undefined,
+      sensorId: "",
+      name: "",
       residents: 1,
-      street1: undefined,
-      street2: undefined,
-      city: undefined,
-      zip: undefined,
-      country: undefined,
+      street1: "",
+      street2: "",
+      city: "",
+      zip: "",
+      country: "",
     },
     values: household
       ? {
-          sensorId: household.sensorId,
-          name: household.name,
+          sensorId: household.sensorId || "",
+          name: household.name || "",
           residents: household.residents,
-          street1: household.street1,
-          street2: household.street2,
-          city: household.city,
-          zip: household.zip,
-          country: household.country,
+          street1: household.street1 || "",
+          street2: household.street2 || "",
+          city: household.city || "",
+          zip: household.zip || "",
+          country: household.country || "",
         }
       : undefined,
   });
@@ -84,6 +96,8 @@ export function EditHouseholdSheet({
   const updateMutation = trpc.household.updateHousehold.useMutation({
     onSuccess: () => {
       utils.household.findAllHouseholds.invalidate();
+      toast.success(t("update-success"));
+      setOpen(false);
     },
     onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
@@ -92,7 +106,9 @@ export function EditHouseholdSheet({
   const deleteMutation = trpc.household.deleteHousehold.useMutation({
     onSuccess: () => {
       utils.household.findAllHouseholds.invalidate();
+      toast.success(t("delete-success"));
       setOpen(false);
+      setShowConfirmDelete(false);
     },
     onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
@@ -114,14 +130,13 @@ export function EditHouseholdSheet({
       },
       {
         onSuccess: () => {
-          form.reset();
-          setOpen(false);
+          form.reset(values);
         },
       }
     );
   };
 
-  const handleRemove = () => {
+  const handleDeleteHousehold = () => {
     deleteMutation.mutate(householdId);
   };
 
@@ -135,7 +150,7 @@ export function EditHouseholdSheet({
         </SheetHeader>
         <ScrollArea className="flex-1 overflow-y-auto">
           <Form {...form}>
-            <form className="space-y-4 p-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <form className="space-y-6 p-4" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -253,21 +268,57 @@ export function EditHouseholdSheet({
                 </div>
               </div>
 
-              <SheetFooter className="mt-4 flex flex-row justify-end gap-2">
-                <Button
-                  variant="destructive"
-                  onClick={handleRemove}
-                  type="button"
-                  disabled={deleteMutation.isPending}
-                >
-                  {tCommon("remove")} {tCommon("household")} <Trash2 className="ml-2 h-4 w-4" />
-                </Button>
+              <SheetFooter className="mt-4 flex flex-row justify-end">
                 <Button type="submit" disabled={updateMutation.isPending}>
                   {tCommon("save")}
                 </Button>
               </SheetFooter>
             </form>
           </Form>
+
+          <div className="p-4 pt-0">
+            <div className="border-destructive bg-destructive/10 text-destructive rounded-lg border p-4 text-sm">
+              <div className="font-semibold">{t("delete-section.title")}</div>
+              <div>{t("delete-section.description")}</div>
+              <AlertDialog open={showConfirmDelete} onOpenChange={setShowConfirmDelete}>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    className="mt-4"
+                    disabled={deleteMutation.isPending}
+                  >
+                    {t("delete-section.button-text", { householdName: household?.name })}{" "}
+                    <Trash2 className="ml-2 h-4 w-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("alert-dialog.confirm-title")}</AlertDialogTitle>
+                    <AlertDialogDescription className="space-y-2">
+                      <div>
+                        {t("alert-dialog.confirm-description-bold", {
+                          householdName: household?.name,
+                        })}
+                      </div>
+                      <div className="bg-destructive/10 text-destructive mt-6 rounded p-3 text-xs">
+                        {t("alert-dialog.confirm-description-text")}
+                      </div>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteHousehold}
+                      disabled={deleteMutation.isPending}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
+                    >
+                      {tCommon("delete-confirm")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </div>
         </ScrollArea>
       </SheetContent>
     </Sheet>

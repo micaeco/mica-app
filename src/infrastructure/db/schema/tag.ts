@@ -7,7 +7,7 @@ export const tagSchema = pgTable("tags", {
   id: serial("id").primaryKey(),
   householdId: text("household_id")
     .notNull()
-    .references(() => householdSchema.id),
+    .references(() => householdSchema.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   category: text("category").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),

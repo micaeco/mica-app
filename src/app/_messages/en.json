@@ -1,5 +1,6 @@
 {
   "common": {
+    "delete-confirm": "Delete",
     "error": "An error occurred",
     "in-progress": "In progress",
     "no-more-events-to-load": "No more events to load",
@@ -123,7 +124,19 @@
   },
   "edit-household": {
     "title": "Edit household.",
-    "description": "Modify the household information."
+    "description": "Modify the household information.",
+    "update-success": "Household updated successfully!",
+    "delete-success": "Household deleted successfully!",
+    "delete-section": {
+      "title": "Delete Household",
+      "description": "Permanently remove your household and all of its contents. This action is not reversible, so please continue with caution.",
+      "button-text": "Delete Household {householdName}"
+    },
+    "alert-dialog": {
+      "confirm-title": "Are you absolutely sure?",
+      "confirm-description-bold": "This will delete the household \"{householdName}\" and all of its associated data.",
+      "confirm-description-text": "This action cannot be undone. Please be certain."
+    }
   },
   "create-household": {
     "step1": {
