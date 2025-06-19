@@ -1,5 +1,11 @@
+import path from "path";
+
+import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
-import "dotenv/config";
+
+config({ path: path.resolve(__dirname, ".env.development.local") });
+
+console.log("Loaded DB URL:", process.env.DATABASE_URL);
 
 export default defineConfig({
   schema: "./src/infrastructure/db/schema",
