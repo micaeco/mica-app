@@ -141,7 +141,15 @@ export function EditHouseholdSheet({
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet
+      open={open}
+      onOpenChange={() => {
+        if (open) {
+          form.reset();
+          setOpen(false);
+        } else setOpen(true);
+      }}
+    >
       <SheetTrigger className={className}>{children}</SheetTrigger>
       <SheetContent className="flex w-full max-w-md flex-col">
         <SheetHeader>
@@ -165,24 +173,12 @@ export function EditHouseholdSheet({
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="sensorId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{tForm("sensor-id.label")}</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="residents"
                   render={({ field }) => (
-                    <FormItem className="xl:col-span-2">
+                    <FormItem>
                       <FormLabel>{tForm("residents")}</FormLabel>
                       <FormControl>
                         <Input
@@ -190,6 +186,42 @@ export function EditHouseholdSheet({
                           min={1}
                           {...field}
                           onChange={(event) => field.onChange(Number(event.target.value))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="sensorId"
+                  render={({ field }) => (
+                    <FormItem className="xl:col-span-2">
+                      <FormLabel>{tForm("sensor-id.label")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="A1:B2:C3:D4:E5:F6"
+                          className="font-mono"
+                          maxLength={17}
+                          value={(() => {
+                            const sanitizedValue = field.value
+                              .toUpperCase()
+                              .replace(/[^A-F0-9]/g, "");
+                            return (sanitizedValue.slice(0, 12).match(/.{1,2}/g) || []).join(":");
+                          })()}
+                          onChange={(e) => {
+                            const sanitizedValue = e.target.value
+                              .toUpperCase()
+                              .replace(/[^A-F0-9]/g, "");
+
+                            const formattedValue = (
+                              sanitizedValue.slice(0, 12).match(/.{1,2}/g) || []
+                            ).join(":");
+
+                            field.onChange(formattedValue);
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

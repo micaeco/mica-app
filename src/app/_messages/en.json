@@ -153,7 +153,7 @@
         "label": "Sensor ID",
         "description": "Enter the 12-character ID from the back of your sensor. Just type the letters and numbers; the colons (:) will be added for you automatically."
       },
-      "residents": "Number of residents",
+      "residents": "Residents",
       "address": "Household address",
       "address2": "Address 2",
       "city": "City",

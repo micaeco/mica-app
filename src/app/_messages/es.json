@@ -152,7 +152,7 @@
         "label": "ID del sensor",
         "description": "Introduce el código de 12 caracteres de tu sensor. Escribe solo las letras y números; los dos puntos (:) se añadirán automáticamente."
       },
-      "residents": "Número de residentes",
+      "residents": "Residentes",
       "address": "Dirección de la vivienda",
       "address2": "Dirección 2",
       "city": "Ciudad",

@@ -153,7 +153,7 @@
         "label": "ID del sensor",
         "description": "Introdueix el codi de 12 caràcters del teu sensor. Escriu només les lletres i els números; els dos punts (:) s'afegiran automàticament."
       },
-      "residents": "Nombre de residents",
+      "residents": "Residents",
       "address": "Adreça de la vivenda",
       "address2": "Adreça 2",
       "city": "Ciutat",
