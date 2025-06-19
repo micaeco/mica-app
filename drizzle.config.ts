@@ -5,8 +5,6 @@ import { defineConfig } from "drizzle-kit";
 
 config({ path: path.resolve(__dirname, ".env.development.local") });
 
-console.log("Loaded DB URL:", process.env.DATABASE_URL);
-
 export default defineConfig({
   schema: "./src/infrastructure/db/schema",
   out: "./drizzle",
