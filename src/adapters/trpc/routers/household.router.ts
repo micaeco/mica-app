@@ -20,12 +20,10 @@ export const householdRouter = createTRPCRouter({
 
   createHousehold: protectedProcedure.input(createHousehold).mutation(async ({ input, ctx }) => {
     if ((await ctx.sensorRepo.findById(input.sensorId)) == null) {
-      console.error("Sensor not found for household creation", input.sensorId);
       throw new BadRequestError();
     }
 
     if (await ctx.householdRepo.findBySensorId(input.sensorId)) {
-      console.error("Household already exists for sensor", input.sensorId);
       throw new BadRequestError();
     }
 
@@ -53,13 +51,11 @@ export const householdRouter = createTRPCRouter({
       if (input.sensorId) {
         const sensor = await ctx.sensorRepo.findById(input.sensorId);
         if (sensor === null) {
-          console.error("Sensor not found for household update", input.sensorId);
           throw new BadRequestError();
         }
 
         const existingHousehold = await ctx.householdRepo.findBySensorId(input.sensorId);
         if (existingHousehold && existingHousehold.id !== id) {
-          console.error("Sensor already associated with another household", input.sensorId);
           throw new BadRequestError();
         }
       }

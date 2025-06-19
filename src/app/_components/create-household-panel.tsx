@@ -80,8 +80,7 @@ export function CreateHouseholdPanel({
       utils.household.findAllHouseholds.invalidate();
       toast.success(t("success"));
     },
-    onError: (error) => {
-      console.error("Error creating household:", error);
+    onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
     },
   });
