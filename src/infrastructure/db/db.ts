@@ -8,7 +8,7 @@ import { env } from "env";
 export const db = drizzle({
   connection: {
     connectionString: env.DATABASE_URL,
-    ssl: true,
+    ssl: env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
   },
   schema: {
     household: householdSchema,

@@ -4,12 +4,13 @@ import { HouseholdRepository } from "@domain/repositories/household";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
 import { SensorRepository } from "@domain/repositories/sensor";
 import { TagRepository } from "@domain/repositories/tag";
+import { db } from "@infrastructure/db/db";
 import { MockConsumptionRepository } from "@infrastructure/repositories/consumption.mock";
 import { MockEventRepository } from "@infrastructure/repositories/event.mock";
-import { MockHouseholdUserRepository } from "@infrastructure/repositories/household-user.mock";
-import { MockHouseholdRepository } from "@infrastructure/repositories/household.mock";
+import { PostgresHouseholdUserRepository } from "@infrastructure/repositories/household-user.postgres";
+import { PostgresHouseholdRepository } from "@infrastructure/repositories/household.postgres";
 import { MockSensorRepository } from "@infrastructure/repositories/sensor.mock";
-import { MockTagRepository } from "@infrastructure/repositories/tag.mock";
+import { PostgresTagRepository } from "@infrastructure/repositories/tag.postgres";
 
 interface Container {
   eventRepo: EventRepository;
@@ -20,11 +21,12 @@ interface Container {
   sensorRepo: SensorRepository;
 }
 
-const householdRepo: HouseholdRepository = new MockHouseholdRepository();
+const householdRepo: HouseholdRepository = new PostgresHouseholdRepository(db);
+const householdUserRepo: HouseholdUserRepository = new PostgresHouseholdUserRepository(db);
+const tagRepo: TagRepository = new PostgresTagRepository(db);
+
 const eventRepo: EventRepository = new MockEventRepository();
-const tagRepo: TagRepository = new MockTagRepository();
 const consumptionRepo: ConsumptionRepository = new MockConsumptionRepository();
-const householdUserRepo: HouseholdUserRepository = new MockHouseholdUserRepository();
 const sensorRepo: SensorRepository = new MockSensorRepository();
 
 export function createContainer(): Container {

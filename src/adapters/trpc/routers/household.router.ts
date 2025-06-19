@@ -7,7 +7,7 @@ import { HouseholdUser } from "@domain/entities/household-user";
 
 export const householdRouter = createTRPCRouter({
   findAllHouseholds: protectedProcedure.output(z.array(Household)).query(async ({ ctx }) => {
-    const householdIds = await ctx.householdUserRepo.findHouseholdsByUserId(ctx.user.id);
+    const householdIds = await ctx.householdUserRepo.findHouseholdsByUserId(ctx.user.sub);
 
     const households = [];
     for (const householdId of householdIds) {
@@ -33,7 +33,7 @@ export const householdRouter = createTRPCRouter({
 
     const householdUser: HouseholdUser = {
       householdId: household.id,
-      userId: ctx.user.id,
+      userId: ctx.user.sub,
       role: "admin",
     };
 
@@ -50,12 +50,18 @@ export const householdRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { id, ...data } = input;
 
-      if (
-        input.sensorId &&
-        (ctx.sensorRepo.findById(input.sensorId) === null ||
-          ctx.householdRepo.findBySensorId(input.sensorId))
-      ) {
-        throw new BadRequestError();
+      if (input.sensorId) {
+        const sensor = await ctx.sensorRepo.findById(input.sensorId);
+        if (sensor === null) {
+          console.error("Sensor not found for household update", input.sensorId);
+          throw new BadRequestError();
+        }
+
+        const existingHousehold = await ctx.householdRepo.findBySensorId(input.sensorId);
+        if (existingHousehold && existingHousehold.id !== id) {
+          console.error("Sensor already associated with another household", input.sensorId);
+          throw new BadRequestError();
+        }
       }
 
       const household = await ctx.householdRepo.update(id, data);
@@ -63,7 +69,7 @@ export const householdRouter = createTRPCRouter({
     }),
 
   deleteHousehold: protectedProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
-    await ctx.householdUserRepo.delete(input, ctx.user.id);
+    await ctx.householdUserRepo.delete(input, ctx.user.sub);
     await ctx.householdRepo.delete(input);
     return { id: input };
   }),

@@ -10,11 +10,11 @@ export class MockHouseholdRepository implements HouseholdRepository {
     this.households = [...mockHouseholds];
   }
 
-  findAll(): Household[] {
+  async findAll(): Promise<Household[]> {
     return [...this.households];
   }
 
-  create(household: Omit<Household, "id">): Household {
+  async create(household: Omit<Household, "id">): Promise<Household> {
     const newHousehold: Household = {
       ...household,
       id: String(
@@ -25,15 +25,15 @@ export class MockHouseholdRepository implements HouseholdRepository {
     return newHousehold;
   }
 
-  findById(householdId: string): Household | null {
+  async findById(householdId: string): Promise<Household | null> {
     return this.households.find((household) => household.id === householdId) || null;
   }
 
-  findBySensorId(sensorId: string): Household | null {
+  async findBySensorId(sensorId: string): Promise<Household | null> {
     return this.households.find((household) => household.sensorId === sensorId) || null;
   }
 
-  update(id: string, household: Partial<Household>): Household | null {
+  async update(id: string, household: Partial<Household>): Promise<Household | null> {
     const index = this.households.findIndex((h) => h.id === id);
     if (index !== -1) {
       this.households[index] = { ...this.households[index], ...household };
@@ -42,7 +42,7 @@ export class MockHouseholdRepository implements HouseholdRepository {
     return null;
   }
 
-  delete(householdId: string): Household | null {
+  async delete(householdId: string): Promise<Household | null> {
     const index = this.households.findIndex((h) => h.id === householdId);
     if (index === -1) return null;
 

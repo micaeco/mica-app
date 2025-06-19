@@ -3,6 +3,8 @@ import { HouseholdUser } from "@domain/entities/household-user";
 export interface HouseholdUserRepository {
   create(householdUser: HouseholdUser): Promise<HouseholdUser>;
 
+  findAll(): Promise<HouseholdUser[]>;
+
   findById(householdId: string, userId: string): Promise<HouseholdUser | null>;
 
   findByHouseholdId(householdId: string): Promise<HouseholdUser[]>;

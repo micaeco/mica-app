@@ -1,15 +1,15 @@
 import { Household } from "@domain/entities/household";
 
 export interface HouseholdRepository {
-  create(household: Omit<Household, "id">): Household;
+  create(household: Omit<Household, "id">): Promise<Household>;
 
-  findAll(): Household[];
+  findAll(): Promise<Household[]>;
 
-  findById(householdId: string): Household | null;
+  findById(householdId: string): Promise<Household | null>;
 
-  findBySensorId(sensorId: string): Household | null;
+  findBySensorId(sensorId: string): Promise<Household | null>;
 
-  update(householdId: string, household: Partial<Household>): Household | null;
+  update(householdId: string, household: Partial<Household>): Promise<Household | null>;
 
-  delete(householdId: string): Household | null;
+  delete(householdId: string): Promise<Household | null>;
 }
