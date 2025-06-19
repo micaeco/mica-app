@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import { Plus, SquarePen, Bell, CircleHelp, ChevronRight } from "lucide-react";
+import { Plus, SquarePen } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { CreateHouseholdPanel } from "@app/_components/create-household-panel";
@@ -22,7 +22,6 @@ import {
   SidebarMenuButton,
   SidebarRail,
 } from "@app/_components/ui/sidebar";
-import { Link } from "@app/_i18n/routing";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 
@@ -67,24 +66,6 @@ export function AppSidebar({ className }: { className?: string }) {
         <SidebarMenu>
           <SidebarMenuItem className="px-2">
             <LanguageSwitcher />
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <Link href="#">
-              <SidebarMenuButton>
-                <Bell />
-                {tCommon("notifications")}
-                <ChevronRight className="ml-auto" />
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <Link href="#">
-              <SidebarMenuButton>
-                <CircleHelp />
-                {tCommon("help")}
-                <ChevronRight className="ml-auto" />
-              </SidebarMenuButton>
-            </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
