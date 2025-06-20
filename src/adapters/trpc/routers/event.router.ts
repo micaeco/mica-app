@@ -2,8 +2,8 @@ import { format, startOfDay } from "date-fns";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
-import { Event, EventsForDay } from "@domain/entities/event";
 import { Category } from "@domain/entities/category";
+import { Event, EventsForDay } from "@domain/entities/event";
 
 export const eventRouter = createTRPCRouter({
   getEvents: protectedProcedure
