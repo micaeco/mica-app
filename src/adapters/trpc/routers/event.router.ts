@@ -1,8 +1,9 @@
-import { startOfDay, subDays } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { Event, EventsForDay } from "@domain/entities/event";
+import { Category } from "@domain/entities/category";
 
 export const eventRouter = createTRPCRouter({
   getEvents: protectedProcedure
@@ -18,6 +19,92 @@ export const eventRouter = createTRPCRouter({
       const { householdId, startDate, endDate } = input;
       const events = await ctx.eventRepo.getEvents(householdId, startDate, endDate);
       return events;
+    }),
+
+  getEventsSortedByTimestamp: protectedProcedure
+    .input(
+      z.object({
+        householdId: z.string(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        order: z.enum(["asc", "desc"]).default("desc"),
+        cursor: z.object({ date: z.date(), id: z.string() }).nullish(),
+        limit: z.number().min(1).max(100).default(50),
+      })
+    )
+    .output(
+      z.object({
+        data: z.array(Event),
+        nextCursor: z.object({ date: z.date(), id: z.string() }).nullish(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { householdId, startDate, endDate, order, cursor, limit } = input;
+      const events = await ctx.eventRepo.getEventsSortedByTimestamp(
+        householdId,
+        startDate || new Date(0),
+        endDate || new Date(),
+        order,
+        cursor ? { date: new Date(cursor.date), id: cursor.id } : undefined,
+        limit
+      );
+
+      const nextCursor =
+        events.length === limit
+          ? {
+              date: events[events.length - 1].startDate,
+              id: events[events.length - 1].id,
+            }
+          : undefined;
+
+      return {
+        data: events,
+        nextCursor,
+      };
+    }),
+
+  getEventsSortedByConsumption: protectedProcedure
+    .input(
+      z.object({
+        householdId: z.string(),
+        startDate: z.date(),
+        endDate: z.date(),
+        categories: z.array(Category).optional(),
+        order: z.enum(["asc", "desc"]).default("desc"),
+        cursor: z.object({ consumption: z.number(), id: z.string() }).nullish(),
+        limit: z.number().min(1).max(100).default(50),
+      })
+    )
+    .output(
+      z.object({
+        data: z.array(Event),
+        nextCursor: z.object({ consumption: z.number(), id: z.string() }).nullish(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { householdId, startDate, endDate, categories, limit, order, cursor } = input;
+      const events = await ctx.eventRepo.getEventsSortedByConsumption(
+        householdId,
+        startDate,
+        endDate,
+        categories || undefined,
+        order,
+        cursor ? { consumption: cursor.consumption, id: cursor.id } : undefined,
+        limit
+      );
+
+      const nextCursor =
+        events.length === limit
+          ? {
+              consumption: events[events.length - 1].consumptionInLiters,
+              id: events[events.length - 1].id,
+            }
+          : undefined;
+
+      return {
+        data: events,
+        nextCursor,
+      };
     }),
 
   getLeakEvents: protectedProcedure
@@ -52,53 +139,59 @@ export const eventRouter = createTRPCRouter({
       return unknowns;
     }),
 
-  getPaginatedEventsGroupedByDay: protectedProcedure
+  getEventsGroupedByDay: protectedProcedure
     .input(
       z.object({
         householdId: z.string(),
-        cursor: z.string().datetime().nullish(),
-        numberOfDays: z.number().min(1).default(7),
+        cursor: z.object({ date: z.date(), id: z.string() }).nullish().nullish(),
+        limit: z.number().min(1).max(100).default(50),
       })
     )
-    .output(z.object({ data: z.array(EventsForDay), nextCursor: z.string().datetime().optional() }))
+    .output(
+      z.object({
+        data: z.array(EventsForDay),
+        nextCursor: z.object({ date: z.date(), id: z.string() }).nullish(),
+      })
+    )
     .query(async ({ input, ctx }) => {
-      const { householdId, cursor, numberOfDays } = input;
+      const { householdId, cursor, limit } = input;
 
-      let startDate: Date;
+      const events = await ctx.eventRepo.getEventsSortedByTimestamp(
+        householdId,
+        undefined,
+        undefined,
+        "desc",
+        cursor ? { date: new Date(cursor.date), id: cursor.id } : undefined,
+        limit
+      );
 
-      if (cursor) {
-        startDate = startOfDay(new Date(cursor));
-      } else {
-        startDate = startOfDay(new Date());
-      }
+      const groupedEventsMap: { [key: string]: EventsForDay } = {};
 
-      const groupedData: EventsForDay[] = [];
-      let currentDay = new Date(startDate);
+      for (const event of events) {
+        const dayKey = format(startOfDay(event.startDate), "yyyy-MM-dd");
 
-      for (let i = 0; i < numberOfDays; i++) {
-        const eventsForThisDay = await ctx.eventRepo.getEventsForDay(householdId, currentDay);
-
-        if (eventsForThisDay.length > 0) {
-          const dayData: EventsForDay = {
-            date: startOfDay(currentDay),
-            events: eventsForThisDay,
-            totalConsumption: eventsForThisDay.reduce(
-              (sum, event) => sum + (event.consumptionInLiters || 0),
-              0
-            ),
+        if (!groupedEventsMap[dayKey]) {
+          groupedEventsMap[dayKey] = {
+            date: startOfDay(event.startDate),
+            events: [],
+            totalConsumption: 0,
           };
-          groupedData.push(dayData);
         }
-
-        currentDay = subDays(currentDay, 1);
+        groupedEventsMap[dayKey].events.push(event);
+        groupedEventsMap[dayKey].totalConsumption += event.consumptionInLiters;
       }
+
+      const groupedData = Object.values(groupedEventsMap).sort(
+        (a, b) => b.date.getTime() - a.date.getTime()
+      );
 
       const nextCursor =
-        groupedData.length < numberOfDays && cursor !== null
-          ? undefined
-          : groupedData.length > 0
-            ? startOfDay(subDays(groupedData[groupedData.length - 1].date, 1)).toISOString()
-            : undefined;
+        events.length === limit
+          ? {
+              date: events[events.length - 1].startDate,
+              id: events[events.length - 1].id,
+            }
+          : undefined;
 
       return {
         data: groupedData,

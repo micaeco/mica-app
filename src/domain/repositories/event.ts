@@ -3,9 +3,24 @@ import { Event } from "@domain/entities/event";
 export interface EventRepository {
   getEvents(householdId: string, startDate: Date, endDate: Date): Promise<Event[]>;
 
-  getEventsForDay(householdId: string, date: Date): Promise<Event[]>;
+  getEventsSortedByTimestamp(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    order?: "asc" | "desc",
+    cursor?: { date: Date; id: string },
+    limit?: number
+  ): Promise<Event[]>;
 
-  getPaginatedEvents(householdId: string, offset: number, numberOfEvents: number): Promise<Event[]>;
+  getEventsSortedByConsumption(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    categories?: string[],
+    order?: "asc" | "desc",
+    cursor?: { consumption: number; id: string },
+    limit?: number
+  ): Promise<Event[]>;
 
   getLeakEvents(householdId: string): Promise<Event[]>;
 

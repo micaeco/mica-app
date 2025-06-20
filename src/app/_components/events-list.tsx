@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { format, isToday, isYesterday } from "date-fns";
+import { format, isToday, isYesterday, startOfDay } from "date-fns";
 import { LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useInView } from "react-intersection-observer";
@@ -10,8 +10,7 @@ import { EventBar } from "@app/_components/event-bar";
 import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
-
-const NUMBER_OF_DAYS = 2;
+import { EventsForDay } from "@domain/entities/event";
 
 export function EventsList() {
   const { selectedHouseholdId } = useHouseholdStore();
@@ -26,14 +25,14 @@ export function EventsList() {
   });
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } =
-    trpc.event.getPaginatedEventsGroupedByDay.useInfiniteQuery(
+    trpc.event.getEventsGroupedByDay.useInfiniteQuery(
       {
         householdId: selectedHouseholdId,
-        numberOfDays: NUMBER_OF_DAYS,
+        limit: 20,
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-        initialCursor: new Date().toISOString(),
+        initialCursor: undefined,
         enabled: !!selectedHouseholdId,
       }
     );
@@ -62,7 +61,28 @@ export function EventsList() {
     }
   };
 
-  const eventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
+  const rawEventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
+
+  const mergedGroupedEventsMap: { [key: string]: EventsForDay } = {};
+
+  for (const dayGroup of rawEventsGroupedByDays) {
+    const dayKey = format(startOfDay(dayGroup.date), "yyyy-MM-dd");
+
+    if (!mergedGroupedEventsMap[dayKey]) {
+      mergedGroupedEventsMap[dayKey] = {
+        date: startOfDay(dayGroup.date),
+        events: [],
+        totalConsumption: 0,
+      };
+    }
+
+    mergedGroupedEventsMap[dayKey].events.push(...dayGroup.events);
+    mergedGroupedEventsMap[dayKey].totalConsumption += dayGroup.totalConsumption;
+  }
+
+  const eventsGroupedByDays = Object.values(mergedGroupedEventsMap).sort(
+    (a, b) => b.date.getTime() - a.date.getTime()
+  );
 
   if (eventsGroupedByDays.length === 0) {
     return (

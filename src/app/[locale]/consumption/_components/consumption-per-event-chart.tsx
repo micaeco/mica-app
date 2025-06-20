@@ -1,4 +1,7 @@
+import { useEffect } from "react";
+
 import { useTranslations } from "next-intl";
+import { useInView } from "react-intersection-observer";
 
 import { ConsumptionBar } from "@app/_components/consumption-bar";
 import { EventBar } from "@app/_components/event-bar";
@@ -11,7 +14,7 @@ import {
 import { Skeleton } from "@app/_components/ui/skeleton";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
-import { Category, categoryMap } from "@domain/entities/category";
+import { Category, categories, categoryMap } from "@domain/entities/category";
 import { TimeWindow } from "@domain/entities/consumption";
 import { ErrorKey } from "@domain/entities/errors";
 import { Event } from "@domain/entities/event";
@@ -28,23 +31,40 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
 
   const { selectedHouseholdId } = useHouseholdStore();
 
+  const { ref, inView } = useInView({
+    threshold: 1,
+  });
+
   const {
-    data: fetchedEvents,
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
     isLoading,
     error: queryError,
     isError,
-  } = trpc.event.getEvents.useQuery(
+  } = trpc.event.getEventsSortedByConsumption.useInfiniteQuery(
     {
       householdId: selectedHouseholdId,
       startDate: selectedTimeWindow ? selectedTimeWindow.startDate : new Date(),
       endDate: selectedTimeWindow ? selectedTimeWindow.endDate : new Date(),
+      categories: selectedCategories || undefined,
+      limit: 10,
     },
     {
       enabled: !!selectedHouseholdId && !!selectedTimeWindow,
+      initialCursor: undefined,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
   );
 
-  const events: Event[] = fetchedEvents || [];
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  const events = data?.pages.flatMap((page) => page.data) || [];
 
   if (isLoading) {
     return (
@@ -65,12 +85,7 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     );
   }
 
-  const hasCategories = selectedCategories && selectedCategories.length > 0;
-  const filteredEvents = hasCategories
-    ? events.filter((event) => selectedCategories.some((category) => category === event.category))
-    : events;
-
-  if (filteredEvents.length === 0) {
+  if (events.length === 0) {
     return (
       <div className="flex items-center justify-center p-6">
         <p className="text-muted-foreground max-w-md text-center text-sm">{t("no-events-found")}</p>
@@ -78,28 +93,30 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     );
   }
 
-  const sortedEvents = [...filteredEvents].sort(
-    (a, b) => b.consumptionInLiters - a.consumptionInLiters
-  );
-
   const displayMode = selectedCategories?.length === 1 ? "accordion" : "list";
   const singleSelectedCategory = selectedCategories?.[0];
 
-  if (
-    displayMode === "list" ||
-    !singleSelectedCategory ||
-    !(singleSelectedCategory in categoryMap)
-  ) {
-    const maxConsumption = sortedEvents[0]?.consumptionInLiters || 1;
+  if (displayMode === "list" || !singleSelectedCategory || singleSelectedCategory in categories) {
+    const maxConsumption = events[0]?.consumptionInLiters || 1;
     return (
       <div className="space-y-4">
-        {sortedEvents.map((event) => (
+        {events.map((event) => (
           <EventBar key={event.id} event={event} totalConsumption={maxConsumption} />
         ))}
+        {(hasNextPage || isLoading || isFetchingNextPage) && (
+          <div ref={ref} className="py-4 text-center">
+            {isLoading || isFetchingNextPage ? tCommon("loading") : tCommon("loading")}...
+          </div>
+        )}
+        {!hasNextPage && (
+          <div className="text-muted-foreground py-4 text-center text-sm">
+            {tCommon("no-more-events-to-load")}
+          </div>
+        )}
       </div>
     );
   } else {
-    const eventsByTag = sortedEvents.reduce(
+    const eventsByTag = events.reduce(
       (acc, event) => {
         const tagName = event.tag || tCommon("untagged");
         if (!acc[tagName]) acc[tagName] = { events: [], consumption: 0 };
@@ -111,10 +128,10 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     );
 
     if (Object.keys(eventsByTag).length <= 1) {
-      const maxConsumption = sortedEvents[0]?.consumptionInLiters || 1;
+      const maxConsumption = events[0]?.consumptionInLiters || 1;
       return (
         <div className="space-y-4">
-          {sortedEvents.map((event) => (
+          {events.map((event) => (
             <EventBar key={event.id} event={event} totalConsumption={maxConsumption} />
           ))}
         </div>
