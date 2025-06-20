@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { format } from "date-fns";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { ConsumptionPerCategoryChart } from "@app/[locale]/consumption/_components/consumption-per-category-chart";
@@ -19,7 +20,6 @@ import {
 } from "@app/_components/ui/card";
 import { Skeleton } from "@app/_components/ui/skeleton";
 import { getDateFnsLocale } from "@app/_i18n/routing";
-import { cn } from "@app/_lib/utils";
 import { Category } from "@domain/entities/category";
 
 export default function ConsumptionPage() {
@@ -110,26 +110,22 @@ export default function ConsumptionPage() {
                 {isLoadingConsumption ? (
                   <Skeleton className="h-8 w-32" />
                 ) : (
-                  <>
+                  <div className="flex items-end gap-4">
                     <span className="text-2xl">
                       {currentConsumption?.consumptionInLiters ?? "--"} L
                     </span>
-                    {currentConsumption?.consumptionPercentDeviationFromBaseline !== undefined && (
-                      <span
-                        className={cn(
-                          "text-sm",
-                          currentConsumption.consumptionPercentDeviationFromBaseline > 0
-                            ? "text-red-500"
-                            : "text-green-500"
-                        )}
-                      >
-                        {currentConsumption.consumptionPercentDeviationFromBaseline}%
-                        {currentConsumption.consumptionPercentDeviationFromBaseline > 0
-                          ? " ↑"
-                          : " ↓"}
-                      </span>
-                    )}
-                  </>
+                    <p className="flex items-center">
+                      {currentConsumption &&
+                      currentConsumption.consumptionPercentDeviationFromBaseline > 0 ? (
+                        <ChevronUp />
+                      ) : (
+                        <ChevronDown />
+                      )}
+                      {currentConsumption &&
+                        Math.abs(currentConsumption?.consumptionPercentDeviationFromBaseline)}
+                      %
+                    </p>
+                  </div>
                 )}
               </CardTitle>
               <CardDescription>
