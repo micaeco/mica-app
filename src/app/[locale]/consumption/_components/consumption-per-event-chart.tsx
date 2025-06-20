@@ -154,8 +154,8 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
                   <div className="flex w-full items-center justify-between">
                     <span className="font-medium">{tag}</span>
                     <span>
-                      {consumption.toFixed(1)} L / {tagEvents.length}{" "}
-                      {tagEvents.length === 1 ? tCommon("use") : tCommon("uses")}
+                      <span className="font-semibold">{consumption.toFixed(1)} L</span> /{" "}
+                      {tagEvents.length} {tagEvents.length === 1 ? tCommon("use") : tCommon("uses")}
                     </span>
                   </div>
                   <ConsumptionBar
