@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 
+import { ChevronUp, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Skeleton } from "@app/_components/ui/skeleton";
 import { Tabs, TabsContent, TabsTrigger, TabsList } from "@app/_components/ui/tabs";
 import { trpc } from "@app/_lib/trpc";
-import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 
 export function ConsumptionTabs() {
@@ -73,14 +73,13 @@ export function ConsumptionTabs() {
       <TabsContent value="month">
         {consumptionMonth ? (
           <div className="flex flex-col text-right">
-            <p
-              className={cn(
-                consumptionMonth.consumptionPercentDeviationFromBaseline > 0
-                  ? "text-red-500"
-                  : "text-green-500"
+            <p className="flex items-center justify-end">
+              {consumptionMonth.consumptionPercentDeviationFromBaseline > 0 ? (
+                <ChevronUp />
+              ) : (
+                <ChevronDown />
               )}
-            >
-              {consumptionMonth.consumptionPercentDeviationFromBaseline}%
+              {Math.abs(consumptionMonth.consumptionPercentDeviationFromBaseline)}%
             </p>
             <h2>{consumptionMonth.consumptionInLiters} L</h2>
             <p>
@@ -97,14 +96,13 @@ export function ConsumptionTabs() {
       <TabsContent value="today">
         {consumptionToday ? (
           <div className="flex flex-col text-right">
-            <p
-              className={cn(
-                consumptionToday.consumptionPercentDeviationFromBaseline > 0
-                  ? "text-red-500"
-                  : "text-green-500"
+            <p className="flex items-center justify-end">
+              {consumptionToday.consumptionPercentDeviationFromBaseline > 0 ? (
+                <ChevronUp />
+              ) : (
+                <ChevronDown />
               )}
-            >
-              {consumptionToday.consumptionPercentDeviationFromBaseline}%
+              {Math.abs(consumptionToday.consumptionPercentDeviationFromBaseline)}%
             </p>
             <h2>{consumptionToday.consumptionInLiters} L</h2>
             <p>
