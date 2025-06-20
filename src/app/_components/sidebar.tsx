@@ -47,7 +47,7 @@ export function AppSidebar({ className }: { className?: string }) {
                   householdId={household.id}
                   householdIcon={household.icon}
                 >
-                  {household.name}
+                  <span className="truncate">{household.name}</span>
                 </HouseholdMenuItem>
               ))}
               <SidebarMenuItem>
