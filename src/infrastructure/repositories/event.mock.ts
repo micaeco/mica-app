@@ -201,6 +201,7 @@ export class MockEventRepository implements EventRepository {
         category: randomCategory,
         startTimestamp: eventStartDate,
         endTimestamp: eventEndDate,
+        durationInMs: eventEndDate.getTime() - eventStartDate.getTime(),
         consumptionInLiters: randomConsumption,
         notes: [],
         tag: randomTag?.name,

@@ -5,12 +5,12 @@ import { Category } from "@domain/entities/category";
 export const Event = z.object({
   id: z.string(),
   category: Category,
-
   startTimestamp: z.date(),
   endTimestamp: z.date(),
+  durationInMs: z.number().min(0),
   consumptionInLiters: z.number().min(0),
-  notes: z.array(z.string()),
   tag: z.string().optional(),
+  notes: z.array(z.string()),
 });
 
 export type Event = z.infer<typeof Event>;
