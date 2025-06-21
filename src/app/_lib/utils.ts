@@ -7,7 +7,7 @@ import Negotiator from "negotiator";
 import { twMerge } from "tailwind-merge";
 
 import { getDateFnsLocale, Locale } from "@app/_i18n/routing";
-import { ConsumptionGranularity } from "@domain/entities/consumption";
+import { Granularity } from "@domain/entities/consumption";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -20,12 +20,7 @@ export function formatDate(date: Date, locale: string) {
   return format(date, "d MMM yyyy HH:mm:ss", { locale: getDateFnsLocale(locale) });
 }
 
-export function formatDateRange(
-  start: Date,
-  end: Date,
-  resolution: ConsumptionGranularity,
-  locale: string
-) {
+export function formatDateRange(start: Date, end: Date, resolution: Granularity, locale: string) {
   const dateFnsLocale = getDateFnsLocale(locale);
   const formatOptions = { locale: dateFnsLocale };
 

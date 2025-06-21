@@ -6,7 +6,7 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, LabelProps } from
 
 import { ChartConfig, ChartContainer } from "@app/_components/ui/chart";
 import { cn, formatDateRange } from "@app/_lib/utils";
-import { Consumption, ConsumptionGranularity, TimeWindow } from "@domain/entities/consumption";
+import { Consumption, Granularity, TimeWindow } from "@domain/entities/consumption";
 import { ErrorKey } from "@domain/entities/errors";
 
 const chartConfig = {
@@ -19,7 +19,7 @@ const chartConfig = {
 type Props = {
   selectedTimeWindow: TimeWindow | undefined;
   setSelectedTimeWindow: (timeWindow: TimeWindow) => void;
-  resolution: ConsumptionGranularity;
+  resolution: Granularity;
   consumption: Consumption[];
   moveTimeWindow: (direction: "forward" | "back") => void;
   canMoveTimeWindowForward: () => boolean;

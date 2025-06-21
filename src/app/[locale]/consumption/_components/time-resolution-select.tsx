@@ -5,11 +5,11 @@ import React from "react";
 import { useTranslations } from "next-intl";
 
 import { Tabs, TabsList, TabsTrigger } from "@app/_components/ui/tabs";
-import { ConsumptionGranularity } from "@domain/entities/consumption";
+import { Granularity } from "@domain/entities/consumption";
 
 type Props = {
-  resolution: ConsumptionGranularity;
-  setResolution: (resolution: ConsumptionGranularity) => void;
+  resolution: Granularity;
+  setResolution: (resolution: Granularity) => void;
 };
 
 export function TimeResolutionSelect({ resolution, setResolution }: Props) {
@@ -19,7 +19,7 @@ export function TimeResolutionSelect({ resolution, setResolution }: Props) {
     <Tabs
       value={resolution}
       onValueChange={(value) => {
-        setResolution(value as ConsumptionGranularity);
+        setResolution(value as Granularity);
       }}
     >
       <TabsList className="space-x-2">

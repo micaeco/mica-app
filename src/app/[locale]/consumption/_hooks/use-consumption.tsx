@@ -23,7 +23,7 @@ import {
 
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
-import { ConsumptionGranularity, TimeWindow } from "@domain/entities/consumption";
+import { Granularity, TimeWindow } from "@domain/entities/consumption";
 import { ErrorKey } from "@domain/entities/errors";
 
 const resolutionConfig = {
@@ -59,7 +59,7 @@ const resolutionConfig = {
 
 export function useConsumption() {
   const { selectedHouseholdId } = useHouseholdStore();
-  const [resolution, setResolution] = useState<ConsumptionGranularity>("month");
+  const [resolution, setResolution] = useState<Granularity>("month");
   const [fetchTimeWindow, setFetchTimeWindow] = useState<TimeWindow | undefined>(undefined);
   const [selectedTimeWindow, setSelectedTimeWindow] = useState<TimeWindow | undefined>(undefined);
 
