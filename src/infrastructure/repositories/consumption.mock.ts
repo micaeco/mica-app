@@ -1,5 +1,5 @@
 import { categories } from "@domain/entities/category";
-import { CategoryBreakdown, Consumption } from "@domain/entities/consumption";
+import { CategoryBreakdown, Consumption, Granularity } from "@domain/entities/consumption";
 import { ConsumptionRepository } from "@domain/repositories/consumption";
 
 export class MockConsumptionRepository implements ConsumptionRepository {
@@ -149,7 +149,25 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     };
   }
 
-  async getHourlyConsumption(
+  async getConsumptionByGranularity(
+    householdId: string,
+    startDate: Date,
+    endDate: Date,
+    granularity: Granularity
+  ): Promise<Consumption[]> {
+    switch (granularity) {
+      case "hour":
+        return this.getHourlyConsumption(householdId, startDate, endDate);
+      case "day":
+        return this.getDailyConsumption(householdId, startDate, endDate);
+      case "week":
+        return this.getWeeklyConsumption(householdId, startDate, endDate);
+      case "month":
+        return this.getMonthlyConsumption(householdId, startDate, endDate);
+    }
+  }
+
+  private async getHourlyConsumption(
     householdId: string,
     startDate: Date,
     endDate: Date
@@ -191,7 +209,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     return result;
   }
 
-  async getDailyConsumption(
+  private async getDailyConsumption(
     householdId: string,
     startDate: Date,
     endDate: Date
@@ -231,7 +249,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     return result;
   }
 
-  async getWeeklyConsumption(
+  private async getWeeklyConsumption(
     householdId: string,
     startDate: Date,
     endDate: Date
@@ -289,7 +307,7 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     return result;
   }
 
-  async getMonthlyConsumption(
+  private async getMonthlyConsumption(
     householdId: string,
     startDate: Date,
     endDate: Date

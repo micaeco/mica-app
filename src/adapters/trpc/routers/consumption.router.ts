@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
-import { Consumption } from "@domain/entities/consumption";
+import { Consumption, Granularity } from "@domain/entities/consumption";
 
 export const consumptionRouter = createTRPCRouter({
   getConsumption: protectedProcedure
@@ -19,78 +19,23 @@ export const consumptionRouter = createTRPCRouter({
       return consumption;
     }),
 
-  getMonthlyConsumption: protectedProcedure
+  getConsumptionByGranularity: protectedProcedure
     .input(
       z.object({
         householdId: z.string(),
         startDate: z.date(),
         endDate: z.date(),
+        granularity: Granularity,
       })
     )
     .output(z.array(Consumption))
     .query(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate } = input;
-      const consumption = await ctx.consumptionRepo.getMonthlyConsumption(
+      const { householdId, startDate, endDate, granularity } = input;
+      const consumption = await ctx.consumptionRepo.getConsumptionByGranularity(
         householdId,
         startDate,
-        endDate
-      );
-      return consumption;
-    }),
-
-  getWeeklyConsumption: protectedProcedure
-    .input(
-      z.object({
-        householdId: z.string(),
-        startDate: z.date(),
-        endDate: z.date(),
-      })
-    )
-    .output(z.array(Consumption))
-    .query(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate } = input;
-      const consumption = await ctx.consumptionRepo.getWeeklyConsumption(
-        householdId,
-        startDate,
-        endDate
-      );
-      return consumption;
-    }),
-
-  getDailyConsumption: protectedProcedure
-    .input(
-      z.object({
-        householdId: z.string(),
-        startDate: z.date(),
-        endDate: z.date(),
-      })
-    )
-    .output(z.array(Consumption))
-    .query(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate } = input;
-      const consumption = await ctx.consumptionRepo.getDailyConsumption(
-        householdId,
-        startDate,
-        endDate
-      );
-      return consumption;
-    }),
-
-  getHourlyConsumption: protectedProcedure
-    .input(
-      z.object({
-        householdId: z.string(),
-        startDate: z.date(),
-        endDate: z.date(),
-      })
-    )
-    .output(z.array(Consumption))
-    .query(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate } = input;
-      const consumption = await ctx.consumptionRepo.getHourlyConsumption(
-        householdId,
-        startDate,
-        endDate
+        endDate,
+        granularity
       );
       return consumption;
     }),

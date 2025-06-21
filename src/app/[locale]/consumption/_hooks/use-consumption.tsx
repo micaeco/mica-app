@@ -28,28 +28,24 @@ import { ErrorKey } from "@domain/entities/errors";
 
 const granularityConfig = {
   month: {
-    query: trpc.consumption.getMonthlyConsumption,
     add: addMonths,
     sub: subMonths,
     startOf: startOfMonth,
     endOf: endOfMonth,
   },
   week: {
-    query: trpc.consumption.getWeeklyConsumption,
     add: addWeeks,
     sub: subWeeks,
     startOf: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }),
     endOf: (date: Date) => endOfWeek(date, { weekStartsOn: 1 }),
   },
   day: {
-    query: trpc.consumption.getDailyConsumption,
     add: addDays,
     sub: subDays,
     startOf: startOfDay,
     endOf: endOfDay,
   },
   hour: {
-    query: trpc.consumption.getHourlyConsumption,
     add: addHours,
     sub: subHours,
     startOf: startOfHour,
@@ -88,6 +84,7 @@ export function useConsumption() {
         householdId: selectedHouseholdId,
         startDate: fetchTimeWindow.startDate,
         endDate: fetchTimeWindow.endDate,
+        granularity,
       }
     : skipToken;
 
@@ -96,7 +93,7 @@ export function useConsumption() {
     isLoading,
     error,
     isError,
-  } = currentGranularityConfig.query.useQuery(queryInput, {
+  } = trpc.consumption.getConsumptionByGranularity.useQuery(queryInput, {
     enabled: inputsReady,
     staleTime: 5 * 60 * 1000,
     retry: 1,

@@ -1,19 +1,14 @@
-import { Consumption } from "@domain/entities/consumption";
+import { Consumption, Granularity } from "@domain/entities/consumption";
 
 export interface ConsumptionRepository {
   getConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption>;
 
-  getMonthlyConsumption(
+  getConsumptionByGranularity(
     householdId: string,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    granularity: Granularity
   ): Promise<Consumption[]>;
-
-  getWeeklyConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption[]>;
-
-  getDailyConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption[]>;
-
-  getHourlyConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption[]>;
 
   getCurrentMonthConsumption(householdId: string): Promise<Consumption>;
 
