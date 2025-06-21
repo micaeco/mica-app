@@ -6,8 +6,8 @@ export const Event = z.object({
   id: z.string(),
   category: Category,
 
-  startDate: z.date(),
-  endDate: z.date(),
+  startTimestamp: z.date(),
+  endTimestamp: z.date(),
   consumptionInLiters: z.number().min(0),
   notes: z.array(z.string()),
   tag: z.string().optional(),

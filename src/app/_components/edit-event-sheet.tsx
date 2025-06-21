@@ -129,11 +129,11 @@ export function EditEventSheet({
             </SheetTitle>
             {event && (
               <SheetDescription>
-                {format(event.startDate, "cccc PPP", { locale: dateFnsLocale })}
+                {format(event.startTimestamp, "cccc PPP", { locale: dateFnsLocale })}
                 <br />
-                {format(event.startDate, "HH:mm", { locale: dateFnsLocale })} -{" "}
-                {event.endDate
-                  ? format(event.endDate, "HH:mm", { locale: dateFnsLocale })
+                {format(event.startTimestamp, "HH:mm", { locale: dateFnsLocale })} -{" "}
+                {event.endTimestamp
+                  ? format(event.endTimestamp, "HH:mm", { locale: dateFnsLocale })
                   : tCommon("in-progress")}
                 <br />
                 <br />

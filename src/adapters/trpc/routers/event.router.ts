@@ -52,7 +52,7 @@ export const eventRouter = createTRPCRouter({
       const nextCursor =
         events.length === limit
           ? {
-              date: events[events.length - 1].startDate,
+              date: events[events.length - 1].startTimestamp,
               id: events[events.length - 1].id,
             }
           : undefined;
@@ -168,11 +168,11 @@ export const eventRouter = createTRPCRouter({
       const groupedEventsMap: { [key: string]: EventsForDay } = {};
 
       for (const event of events) {
-        const dayKey = format(startOfDay(event.startDate), "yyyy-MM-dd");
+        const dayKey = format(startOfDay(event.startTimestamp), "yyyy-MM-dd");
 
         if (!groupedEventsMap[dayKey]) {
           groupedEventsMap[dayKey] = {
-            date: startOfDay(event.startDate),
+            date: startOfDay(event.startTimestamp),
             events: [],
             totalConsumption: 0,
           };
@@ -188,7 +188,7 @@ export const eventRouter = createTRPCRouter({
       const nextCursor =
         events.length === limit
           ? {
-              date: events[events.length - 1].startDate,
+              date: events[events.length - 1].startTimestamp,
               id: events[events.length - 1].id,
             }
           : undefined;

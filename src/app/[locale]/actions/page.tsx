@@ -103,13 +103,15 @@ export default function Actions() {
                           />
                           <span className="font-semibold">{tCategories(event.category)}</span>
                           <div className="flex flex-col">
-                            <span>{formatDate(event.startDate)}</span>
+                            <span>{formatDate(event.startTimestamp)}</span>
                             <span>
-                              {format(new Date(event.startDate), "HH:mm", {
+                              {format(new Date(event.startTimestamp), "HH:mm", {
                                 locale: dateFnsLocale,
                               })}{" "}
                               -{" "}
-                              {format(new Date(event.endDate), "HH:mm", { locale: dateFnsLocale })}
+                              {format(new Date(event.endTimestamp), "HH:mm", {
+                                locale: dateFnsLocale,
+                              })}
                             </span>
                           </div>
                           <span className="font-bold">{event.consumptionInLiters} L</span>
@@ -164,13 +166,15 @@ export default function Actions() {
                           />
                           <span className="font-semibold">{tCategories(event.category)}</span>
                           <div className="flex flex-col">
-                            <span>{formatDate(event.startDate)}</span>
+                            <span>{formatDate(event.startTimestamp)}</span>
                             <span>
-                              {format(new Date(event.startDate), "HH:mm", {
+                              {format(new Date(event.startTimestamp), "HH:mm", {
                                 locale: dateFnsLocale,
                               })}{" "}
                               -{" "}
-                              {format(new Date(event.endDate), "HH:mm", { locale: dateFnsLocale })}
+                              {format(new Date(event.endTimestamp), "HH:mm", {
+                                locale: dateFnsLocale,
+                              })}
                             </span>
                           </div>
                           <span className="text-brand-secondary font-bold">

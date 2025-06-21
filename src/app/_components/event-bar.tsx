@@ -29,7 +29,7 @@ export function EventBar({ event, totalConsumption }: EventBarProps) {
 
   const consumptionPercentage = (event.consumptionInLiters / totalConsumption) * 100;
 
-  if (event.endDate) {
+  if (event.endTimestamp) {
     return (
       <>
         <div
@@ -56,8 +56,8 @@ export function EventBar({ event, totalConsumption }: EventBarProps) {
                 )}
               </div>
               <span className="line-clamp-1">
-                {format(event.startDate, "HH:mm", { locale: dateLocale })} –{" "}
-                {format(event.endDate, "HH:mm", { locale: dateLocale })}
+                {format(event.startTimestamp, "HH:mm", { locale: dateLocale })} –{" "}
+                {format(event.endTimestamp, "HH:mm", { locale: dateLocale })}
               </span>
             </div>
             <div className="flex flex-row items-center gap-2">

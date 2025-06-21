@@ -30,7 +30,7 @@ export class MockEventRepository implements EventRepository {
     const filteredEvents = this.filterEventsByDateRange(effectiveStartDate, effectiveEndDate);
 
     const sortedEvents = [...filteredEvents].sort((a, b) => {
-      const dateComparison = a.startDate.getTime() - b.startDate.getTime();
+      const dateComparison = a.startTimestamp.getTime() - b.startTimestamp.getTime();
       if (dateComparison === 0) {
         return a.id.localeCompare(b.id);
       }
@@ -41,7 +41,7 @@ export class MockEventRepository implements EventRepository {
 
     if (cursor) {
       const cursorComparisonFunction = (event: Event) => {
-        const dateDiff = event.startDate.getTime() - cursor.date.getTime();
+        const dateDiff = event.startTimestamp.getTime() - cursor.date.getTime();
 
         if (dateDiff === 0) {
           return event.id.localeCompare(cursor.id);
@@ -152,7 +152,7 @@ export class MockEventRepository implements EventRepository {
 
   private filterEventsByDateRange(startDate: Date, endDate: Date): Event[] {
     return this.events.filter(
-      (event) => event.startDate >= startDate && event.startDate <= endDate
+      (event) => event.startTimestamp >= startDate && event.startTimestamp <= endDate
     );
   }
 
@@ -199,8 +199,8 @@ export class MockEventRepository implements EventRepository {
       this.events.push({
         id: i.toString(),
         category: randomCategory,
-        startDate: eventStartDate,
-        endDate: eventEndDate,
+        startTimestamp: eventStartDate,
+        endTimestamp: eventEndDate,
         consumptionInLiters: randomConsumption,
         notes: [],
         tag: randomTag?.name,
