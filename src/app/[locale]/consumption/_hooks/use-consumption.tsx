@@ -26,7 +26,7 @@ import { useHouseholdStore } from "@app/_stores/household";
 import { Granularity, TimeWindow } from "@domain/entities/consumption";
 import { ErrorKey } from "@domain/entities/errors";
 
-const resolutionConfig = {
+const granularityConfig = {
   month: {
     query: trpc.consumption.getMonthlyConsumption,
     add: addMonths,
@@ -59,23 +59,23 @@ const resolutionConfig = {
 
 export function useConsumption() {
   const { selectedHouseholdId } = useHouseholdStore();
-  const [resolution, setResolution] = useState<Granularity>("month");
+  const [granularity, setGranularity] = useState<Granularity>("month");
   const [fetchTimeWindow, setFetchTimeWindow] = useState<TimeWindow | undefined>(undefined);
   const [selectedTimeWindow, setSelectedTimeWindow] = useState<TimeWindow | undefined>(undefined);
 
   const intervals = 4;
-  const currentResolutionConfig = resolutionConfig[resolution];
+  const currentGranularityConfig = granularityConfig[granularity];
 
   useEffect(() => {
     const now = new Date();
-    const start = currentResolutionConfig.sub(now, intervals - 1);
+    const start = currentGranularityConfig.sub(now, intervals - 1);
     const alignedStart =
-      resolution === "hour"
-        ? currentResolutionConfig.startOf(start)
-        : startOfDay(currentResolutionConfig.startOf(start));
+      granularity === "hour"
+        ? currentGranularityConfig.startOf(start)
+        : startOfDay(currentGranularityConfig.startOf(start));
     setFetchTimeWindow({ startDate: alignedStart, endDate: now });
     setSelectedTimeWindow(undefined);
-  }, [resolution, currentResolutionConfig, intervals]);
+  }, [granularity, currentGranularityConfig, intervals]);
 
   const inputsReady =
     !!selectedHouseholdId &&
@@ -96,7 +96,7 @@ export function useConsumption() {
     isLoading,
     error,
     isError,
-  } = currentResolutionConfig.query.useQuery(queryInput, {
+  } = currentGranularityConfig.query.useQuery(queryInput, {
     enabled: inputsReady,
     staleTime: 5 * 60 * 1000,
     retry: 1,
@@ -120,8 +120,8 @@ export function useConsumption() {
 
   const canMoveTimeWindowForward = useCallback(() => {
     if (!fetchTimeWindow?.endDate) return false;
-    return fetchTimeWindow.endDate < currentResolutionConfig.sub(new Date(), 1);
-  }, [fetchTimeWindow?.endDate, currentResolutionConfig]);
+    return fetchTimeWindow.endDate < currentGranularityConfig.sub(new Date(), 1);
+  }, [fetchTimeWindow?.endDate, currentGranularityConfig]);
 
   const moveTimeWindow = useCallback(
     (direction: "back" | "forward") => {
@@ -129,17 +129,19 @@ export function useConsumption() {
       if (direction === "forward" && !canMoveTimeWindowForward()) return;
 
       const shift = direction === "back" ? -intervals : intervals;
-      const rawStart = currentResolutionConfig.add(fetchTimeWindow.startDate, shift);
-      const rawEnd = currentResolutionConfig.add(fetchTimeWindow.endDate, shift);
+      const rawStart = currentGranularityConfig.add(fetchTimeWindow.startDate, shift);
+      const rawEnd = currentGranularityConfig.add(fetchTimeWindow.endDate, shift);
       const newEnd =
-        direction === "forward" ? min([rawEnd, new Date()]) : currentResolutionConfig.endOf(rawEnd);
+        direction === "forward"
+          ? min([rawEnd, new Date()])
+          : currentGranularityConfig.endOf(rawEnd);
       const newStart =
-        resolution === "hour"
-          ? currentResolutionConfig.startOf(rawStart)
-          : startOfDay(currentResolutionConfig.startOf(rawStart));
+        granularity === "hour"
+          ? currentGranularityConfig.startOf(rawStart)
+          : startOfDay(currentGranularityConfig.startOf(rawStart));
       setFetchTimeWindow({ startDate: newStart, endDate: newEnd });
     },
-    [fetchTimeWindow, currentResolutionConfig, canMoveTimeWindowForward, resolution, intervals]
+    [fetchTimeWindow, currentGranularityConfig, canMoveTimeWindowForward, granularity, intervals]
   );
 
   let finalError: ErrorKey | undefined = undefined;
@@ -153,8 +155,8 @@ export function useConsumption() {
   }
 
   return {
-    resolution,
-    setResolution,
+    granularity,
+    setGranularity,
     selectedTimeWindow,
     setSelectedTimeWindow,
     consumption: consumptionData || [],

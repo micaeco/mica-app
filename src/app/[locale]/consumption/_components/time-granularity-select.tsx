@@ -8,18 +8,18 @@ import { Tabs, TabsList, TabsTrigger } from "@app/_components/ui/tabs";
 import { Granularity } from "@domain/entities/consumption";
 
 type Props = {
-  resolution: Granularity;
-  setResolution: (resolution: Granularity) => void;
+  granularity: Granularity;
+  setGranularity: (granularity: Granularity) => void;
 };
 
-export function TimeResolutionSelect({ resolution, setResolution }: Props) {
+export function TimeGranularitySelect({ granularity, setGranularity }: Props) {
   const common = useTranslations("common");
 
   return (
     <Tabs
-      value={resolution}
+      value={granularity}
       onValueChange={(value) => {
-        setResolution(value as Granularity);
+        setGranularity(value as Granularity);
       }}
     >
       <TabsList className="space-x-2">

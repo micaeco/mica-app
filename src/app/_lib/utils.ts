@@ -20,11 +20,11 @@ export function formatDate(date: Date, locale: string) {
   return format(date, "d MMM yyyy HH:mm:ss", { locale: getDateFnsLocale(locale) });
 }
 
-export function formatDateRange(start: Date, end: Date, resolution: Granularity, locale: string) {
+export function formatDateRange(start: Date, end: Date, granularity: Granularity, locale: string) {
   const dateFnsLocale = getDateFnsLocale(locale);
   const formatOptions = { locale: dateFnsLocale };
 
-  switch (resolution) {
+  switch (granularity) {
     case "hour":
       return format(start, "HH:mm", formatOptions);
     case "day":

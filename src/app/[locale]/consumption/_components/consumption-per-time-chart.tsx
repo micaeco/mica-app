@@ -19,7 +19,7 @@ const chartConfig = {
 type Props = {
   selectedTimeWindow: TimeWindow | undefined;
   setSelectedTimeWindow: (timeWindow: TimeWindow) => void;
-  resolution: Granularity;
+  granularity: Granularity;
   consumption: Consumption[];
   moveTimeWindow: (direction: "forward" | "back") => void;
   canMoveTimeWindowForward: () => boolean;
@@ -30,7 +30,7 @@ type Props = {
 export function ConsumptionPerTimeChart({
   selectedTimeWindow,
   setSelectedTimeWindow,
-  resolution,
+  granularity,
   consumption,
   moveTimeWindow,
   canMoveTimeWindowForward,
@@ -50,7 +50,7 @@ export function ConsumptionPerTimeChart({
 
   const handleLabelClick = (tag: string) => {
     const clickedEntry = consumption.find(
-      (entry) => formatDateRange(entry.startDate, entry.endDate, resolution, locale) === tag
+      (entry) => formatDateRange(entry.startDate, entry.endDate, granularity, locale) === tag
     );
     if (clickedEntry) {
       handleClick(clickedEntry);
@@ -97,7 +97,9 @@ export function ConsumptionPerTimeChart({
         >
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey={(entry) => formatDateRange(entry.startDate, entry.endDate, resolution, locale)}
+            dataKey={(entry) =>
+              formatDateRange(entry.startDate, entry.endDate, granularity, locale)
+            }
             tickLine={false}
             tickMargin={10}
             axisLine={false}

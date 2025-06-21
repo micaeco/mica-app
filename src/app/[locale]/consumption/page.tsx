@@ -9,7 +9,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ConsumptionPerCategoryChart } from "@app/[locale]/consumption/_components/consumption-per-category-chart";
 import { ConsumptionPerEventChart } from "@app/[locale]/consumption/_components/consumption-per-event-chart";
 import { ConsumptionPerTimeChart } from "@app/[locale]/consumption/_components/consumption-per-time-chart";
-import { TimeResolutionSelect } from "@app/[locale]/consumption/_components/time-resolution-select";
+import { TimeGranularitySelect } from "@app/[locale]/consumption/_components/time-granularity-select";
 import { useConsumption } from "@app/[locale]/consumption/_hooks/use-consumption";
 import {
   Card,
@@ -28,8 +28,8 @@ export default function ConsumptionPage() {
   const tCommon = useTranslations("common");
 
   const {
-    resolution,
-    setResolution,
+    granularity,
+    setGranularity,
     selectedTimeWindow,
     setSelectedTimeWindow,
     consumption,
@@ -56,15 +56,15 @@ export default function ConsumptionPage() {
     const { startDate, endDate } = selectedTimeWindow;
     const sameYear = startDate.getFullYear() === endDate.getFullYear();
 
-    if (resolution === "hour") {
+    if (granularity === "hour") {
       const startHour = format(startDate, "HH:mm");
       const endHour = format(endDate, "HH:mm");
       return `${format(startDate, "dd MMM y", { locale: dateFnsLocale })} | ${startHour} - ${endHour}`;
-    } else if (resolution === "day") {
+    } else if (granularity === "day") {
       return format(startDate, "dd MMM y", { locale: dateFnsLocale });
-    } else if (resolution === "week") {
+    } else if (granularity === "week") {
       return `${format(startDate, "dd MMM", { locale: dateFnsLocale })} - ${format(endDate, sameYear ? "dd MMM y" : "dd MMM y", { locale: dateFnsLocale })}`;
-    } else if (resolution === "month") {
+    } else if (granularity === "month") {
       return format(startDate, "MMM y", { locale: dateFnsLocale });
     } else {
       return `${format(startDate, "dd MMM y", { locale: dateFnsLocale })} - ${format(endDate, "dd MMM y", { locale: dateFnsLocale })}`;
@@ -73,7 +73,7 @@ export default function ConsumptionPage() {
 
   return (
     <div className="flex w-full flex-col gap-4 p-4">
-      <TimeResolutionSelect resolution={resolution} setResolution={setResolution} />
+      <TimeGranularitySelect granularity={granularity} setGranularity={setGranularity} />
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-4 xl:flex-row">
@@ -87,14 +87,14 @@ export default function ConsumptionPage() {
                 )}
               </CardTitle>
               <CardDescription>
-                {t("description", { resolution: tCommon(resolution) })}
+                {t("description", { granularity: tCommon(granularity) })}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-grow flex-col items-center justify-center px-2">
               <ConsumptionPerTimeChart
                 selectedTimeWindow={selectedTimeWindow}
                 setSelectedTimeWindow={setSelectedTimeWindow}
-                resolution={resolution}
+                granularity={granularity}
                 consumption={consumption}
                 moveTimeWindow={moveTimeWindow}
                 canMoveTimeWindowForward={canMoveTimeWindowForward}

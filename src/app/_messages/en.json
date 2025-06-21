@@ -112,7 +112,7 @@
     "title": "Historic consumption."
   },
   "consumption-per-time-chart": {
-    "title": "Filter the consumption by {resolution}.",
+    "title": "Filter the consumption by {granularity}.",
     "description": "Select one of the bars to view consumption."
   },
   "consumption-per-category-chart": {

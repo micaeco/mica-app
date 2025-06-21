@@ -15,7 +15,7 @@ export function ConsumptionTabs() {
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("common.errors");
 
-  const [resolution, setResolution] = useState<"month" | "today">("month");
+  const [granularity, setGranularity] = useState<"month" | "today">("month");
 
   const { selectedHouseholdId } = useHouseholdStore();
 
@@ -35,7 +35,7 @@ export function ConsumptionTabs() {
     { householdId: selectedHouseholdId },
     {
       ...queryOptions,
-      enabled: !!selectedHouseholdId && resolution == "month",
+      enabled: !!selectedHouseholdId && granularity == "month",
     }
   );
 
@@ -47,7 +47,7 @@ export function ConsumptionTabs() {
     { householdId: selectedHouseholdId },
     {
       ...queryOptions,
-      enabled: !!selectedHouseholdId && resolution == "today",
+      enabled: !!selectedHouseholdId && granularity == "today",
     }
   );
 
@@ -62,10 +62,10 @@ export function ConsumptionTabs() {
   return (
     <Tabs defaultValue="month">
       <TabsList className="w-fit">
-        <TabsTrigger value="month" onClick={() => setResolution("month")}>
+        <TabsTrigger value="month" onClick={() => setGranularity("month")}>
           {tCommon("this") + " " + tCommon("month")}
         </TabsTrigger>
-        <TabsTrigger value="today" onClick={() => setResolution("today")}>
+        <TabsTrigger value="today" onClick={() => setGranularity("today")}>
           {tCommon("today")}
         </TabsTrigger>
       </TabsList>
