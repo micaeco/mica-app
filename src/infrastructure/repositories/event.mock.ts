@@ -199,7 +199,6 @@ export class MockEventRepository implements EventRepository {
       this.events.push({
         id: i.toString(),
         category: randomCategory,
-        householdId: "1",
         startDate: eventStartDate,
         endDate: eventEndDate,
         consumptionInLiters: randomConsumption,

@@ -5,7 +5,6 @@ import { Category } from "@domain/entities/category";
 export const Event = z.object({
   id: z.string(),
   category: Category,
-  householdId: z.string(),
 
   startDate: z.date(),
   endDate: z.date(),
