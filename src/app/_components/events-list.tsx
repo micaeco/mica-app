@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
 import { format, isToday, isYesterday } from "date-fns";
-import { LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useInView } from "react-intersection-observer";
 
 import { EventBar } from "@app/_components/event-bar";
+import { Skeleton } from "@app/_components/ui/skeleton";
 import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
@@ -42,8 +42,18 @@ export function EventsList() {
 
   if (isLoading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <LoaderCircle className="animate-spin" size={32} />
+      <div className="space-y-6">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-12" />
+          </div>
+          <div className="space-y-4 pl-2">
+            {Array.from({ length: 4 }).map((_, eventIndex) => (
+              <Skeleton key={eventIndex} className="h-12 w-full" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -81,9 +91,20 @@ export function EventsList() {
           </div>
         </div>
       ))}
-      {(hasNextPage || isLoading || isFetchingNextPage) && (
-        <div ref={ref} className="py-4 text-center">
-          {isLoading || isFetchingNextPage ? tCommon("loading") : tCommon("loading")}...
+      {(hasNextPage || isFetchingNextPage) && (
+        <div ref={ref} className="space-y-4 py-4">
+          {isFetchingNextPage ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-12" />
+              </div>
+              <div className="space-y-4 pl-2">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            </div>
+          ) : null}
         </div>
       )}
       {!hasNextPage && (

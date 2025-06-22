@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowRight, Bell, CircleHelp, LoaderCircle } from "lucide-react";
+import { ArrowRight, Bell, CircleHelp } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
+import { Skeleton } from "@app/_components/ui/skeleton";
 import { useRouter } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
@@ -56,7 +57,7 @@ export function ActionCards({ className }: { className?: string }) {
             {hasLeakEvents ? (
               tActionCards("leaks.description", { count: leakEvents })
             ) : isLoadingLeakEvents ? (
-              <LoaderCircle className="animate-spin" />
+              <Skeleton className="h-4 w-24" />
             ) : (
               tCommon("no-data")
             )}
@@ -79,7 +80,7 @@ export function ActionCards({ className }: { className?: string }) {
             {hasUnknownEvents ? (
               tActionCards("categorize.description", { count: unknownEvents })
             ) : isLoadingUnknownEvents ? (
-              <LoaderCircle className="animate-spin" />
+              <Skeleton className="h-4 w-32" />
             ) : (
               tCommon("no-data")
             )}
