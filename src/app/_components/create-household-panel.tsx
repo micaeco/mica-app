@@ -30,6 +30,7 @@ import {
 import { ScrollArea } from "@app/_components/ui/scroll-area";
 import { trpc } from "@app/_lib/trpc";
 import { createHousehold } from "@domain/entities/household";
+import { LoaderCircle } from "lucide-react";
 
 const formSchema = createHousehold;
 type FormValues = z.infer<typeof formSchema>;
@@ -296,6 +297,7 @@ export function CreateHouseholdPanel({
 
                 {currentStep === stepFields.length - 1 && (
                   <Button type="submit" disabled={mutation.isPending}>
+                    {mutation.isPending && <LoaderCircle className="animate-spin" />}
                     {tCommon("create")}
                   </Button>
                 )}
