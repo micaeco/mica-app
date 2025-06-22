@@ -77,6 +77,9 @@ export function CreateHouseholdPanel({
   const utils = trpc.useUtils();
   const mutation = trpc.household.createHousehold.useMutation({
     onSuccess: () => {
+      form.reset();
+      setCurrentStep(0);
+      setOpen(false);
       utils.household.findAllHouseholds.invalidate();
       toast.success(t("success"));
     },
@@ -96,9 +99,6 @@ export function CreateHouseholdPanel({
       zip: values.zip?.trim(),
       country: values.country?.trim(),
     });
-    form.reset();
-    setCurrentStep(0);
-    setOpen(false);
   };
 
   const handleNextStep = async () => {
