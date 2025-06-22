@@ -5,7 +5,6 @@ import { env } from "env";
 
 export const metadata: Metadata = {
   title: "MICA App",
-  description: "Aplicació de MICA",
   metadataBase: new URL(env.NEXT_PUBLIC_URL),
 };
 
