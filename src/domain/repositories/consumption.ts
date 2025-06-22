@@ -1,5 +1,4 @@
 import { Consumption, Granularity } from "@domain/entities/consumption";
-
 export interface ConsumptionRepository {
   getConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption>;
 

@@ -42,17 +42,17 @@ export const consumptionRouter = createTRPCRouter({
 
   getCurrentMonthConsumption: protectedProcedure
     .input(z.object({ householdId: z.string() }))
-    .output(Consumption)
+    .output(Consumption.nullable())
     .query(async ({ input, ctx }) => {
       const consumption = await ctx.consumptionRepo.getCurrentMonthConsumption(input.householdId);
-      return consumption;
+      return consumption || null;
     }),
 
   getCurrentDayConsumption: protectedProcedure
     .input(z.object({ householdId: z.string() }))
-    .output(Consumption)
+    .output(Consumption.nullable())
     .query(async ({ input, ctx }) => {
       const consumption = await ctx.consumptionRepo.getCurrentDayConsumption(input.householdId);
-      return consumption;
+      return consumption || null;
     }),
 });

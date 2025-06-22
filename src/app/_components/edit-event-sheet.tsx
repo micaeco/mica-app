@@ -137,7 +137,9 @@ export function EditEventSheet({
                   : tCommon("in-progress")}
                 <br />
                 <br />
-                <p className="text-brand-secondary font-bold">{event.consumptionInLiters} L</p>
+                <p className="text-brand-secondary font-bold">
+                  {event.consumptionInLiters.toFixed(1)} L
+                </p>
               </SheetDescription>
             )}
           </SheetHeader>

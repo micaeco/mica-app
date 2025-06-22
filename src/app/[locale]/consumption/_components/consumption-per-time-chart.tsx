@@ -39,7 +39,6 @@ export function ConsumptionPerTimeChart({
 }: Props) {
   const locale = useLocale();
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("common.errors");
 
   const handleClick = (clickedConsumptionItem: Consumption) => {
     setSelectedTimeWindow({
@@ -66,15 +65,7 @@ export function ConsumptionPerTimeChart({
     return <LoaderCircle className="animate-spin" />;
   }
 
-  if (error) {
-    return (
-      <div className="text-destructive flex h-[350px] w-full items-center justify-center">
-        {tErrors(error)}
-      </div>
-    );
-  }
-
-  if (consumption.length === 0) {
+  if (consumption.length === 0 || error) {
     return (
       <div className="text-muted-foreground flex h-[350px] w-full items-center justify-center">
         {tCommon("no-data")}

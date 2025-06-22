@@ -1,9 +1,13 @@
 import { and, eq } from "drizzle-orm";
+import { PgTransaction } from "drizzle-orm/pg-core";
 
 import { HouseholdUser } from "@domain/entities/household-user";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
 import { DbType } from "@infrastructure/db/db";
 import { HouseholdUserSchema, householdUserSchema } from "@infrastructure/db/schema/household-user";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DrizzleTx = PgTransaction<any, any, any>;
 
 export function mapHouseholdUserFromSchema(schema: HouseholdUserSchema): HouseholdUser {
   return {
@@ -14,7 +18,7 @@ export function mapHouseholdUserFromSchema(schema: HouseholdUserSchema): Househo
 }
 
 export class PostgresHouseholdUserRepository implements HouseholdUserRepository {
-  constructor(private db: DbType) {}
+  constructor(private db: DbType | DrizzleTx) {}
 
   async create(householdUser: HouseholdUser): Promise<HouseholdUser> {
     const [newHouseholdUser] = await this.db

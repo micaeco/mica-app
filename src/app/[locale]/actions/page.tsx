@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { format, isToday, isYesterday } from "date-fns";
-import { Bell, ChevronDown, CircleCheck, HelpCircle } from "lucide-react";
+import { Bell, ChevronDown, CircleCheck, HelpCircle, LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import {
@@ -86,7 +86,7 @@ export default function Actions() {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            {isLoadingLeakEvents && <div>{tCommon("loading")}</div>}
+            {isLoadingLeakEvents && <LoaderCircle className="animate-spin" />}
             {!isLoadingLeakEvents && leakEvents.length > 0 ? (
               <Carousel className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md">
                 <CarouselPrevious className="h-full rounded-lg" />
@@ -149,7 +149,7 @@ export default function Actions() {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            {isLoadingUnknownEvents && <div>{tCommon("loading")}</div>}
+            {isLoadingUnknownEvents && <LoaderCircle className="animate-spin" />}
             {!isLoadingUnknownEvents && unknownEvents.length > 0 ? (
               <Carousel className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md">
                 <CarouselPrevious className="h-full rounded-lg" />
@@ -178,7 +178,7 @@ export default function Actions() {
                             </span>
                           </div>
                           <span className="text-brand-secondary font-bold">
-                            {event.consumptionInLiters} L
+                            {event.consumptionInLiters.toFixed(2)} L
                           </span>
                           <div className="flex flex-col gap-2">
                             <span> Punt de consum </span>

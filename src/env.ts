@@ -9,6 +9,8 @@ export const env = createEnv({
     AUTH0_DOMAIN: z.string().url(),
     AUTH0_CLIENT_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
+    AWS_API_GATEWAY_URL: z.string().url(),
+    AWS_API_GATEWAY_TOKEN: z.string(),
   },
 
   client: {
@@ -24,6 +26,8 @@ export const env = createEnv({
     AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
     AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
     DATABASE_URL: process.env.DATABASE_URL,
+    AWS_API_GATEWAY_URL: process.env.AWS_API_GATEWAY_URL,
+    AWS_API_GATEWAY_TOKEN: process.env.AWS_API_GATEWAY_TOKEN,
   },
 
   emptyStringAsUndefined: true,

@@ -45,7 +45,7 @@ export const eventRouter = createTRPCRouter({
         startDate || new Date(0),
         endDate || new Date(),
         order,
-        cursor ? { date: new Date(cursor.date), id: cursor.id } : undefined,
+        cursor ? { timestamp: new Date(cursor.date), id: cursor.id } : undefined,
         limit
       );
 
@@ -161,7 +161,7 @@ export const eventRouter = createTRPCRouter({
         undefined,
         undefined,
         "desc",
-        cursor ? { date: new Date(cursor.date), id: cursor.id } : undefined,
+        cursor ? { timestamp: new Date(cursor.date), id: cursor.id } : undefined,
         limit
       );
 

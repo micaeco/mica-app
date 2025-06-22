@@ -33,7 +33,6 @@ export function ConsumptionPerCategoryChart({
 }: Props) {
   const [activeCategory, setActiveCategory] = useState<Category | undefined>(undefined);
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("common.errors");
 
   const handlePieSectionClick = (clickedCategory: Category) => {
     if (activeCategory && activeCategory === clickedCategory) {
@@ -58,15 +57,7 @@ export function ConsumptionPerCategoryChart({
     return <LoaderCircle className="animate-spin" />;
   }
 
-  if (error) {
-    return (
-      <div className="text-destructive flex aspect-13/9 min-h-[280px] w-full items-center justify-center">
-        {tErrors(error)}
-      </div>
-    );
-  }
-
-  if (categoryBreakdown.length === 0) {
+  if (categoryBreakdown.length === 0 || error) {
     return (
       <div className="text-muted-foreground flex aspect-13/9 min-h-[280px] w-full items-center justify-center">
         {tCommon("no-data")}

@@ -51,8 +51,6 @@ export function ConsumptionTabs() {
     }
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const isLoading = isLoadingMonth || isLoadingToday;
   const error = errorMonth ?? errorToday;
 
   if (error) {
@@ -79,14 +77,16 @@ export function ConsumptionTabs() {
               ) : (
                 <ChevronDown />
               )}
-              {Math.abs(consumptionMonth.consumptionPercentDeviationFromBaseline)}%
+              {Math.abs(consumptionMonth.consumptionPercentDeviationFromBaseline).toFixed(0)}%
             </p>
-            <h2>{consumptionMonth.consumptionInLiters} L</h2>
+            <h2>{consumptionMonth.consumptionInLiters.toFixed(0)} L</h2>
             <p>
-              {consumptionMonth.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
-              {tCommon("day")}
+              {consumptionMonth.consumptionInLitersPerDayPerPerson.toFixed(2)} L /{" "}
+              {tCommon("person")} {tCommon("day")}
             </p>
           </div>
+        ) : isLoadingMonth ? (
+          <ConsumptionBlockSkeleton />
         ) : (
           <div className="flex flex-col text-center">
             <p>{tCommon("no-data")}</p>
@@ -102,14 +102,16 @@ export function ConsumptionTabs() {
               ) : (
                 <ChevronDown />
               )}
-              {Math.abs(consumptionToday.consumptionPercentDeviationFromBaseline)}%
+              {Math.abs(consumptionToday.consumptionPercentDeviationFromBaseline).toFixed(0)}%
             </p>
-            <h2>{consumptionToday.consumptionInLiters} L</h2>
+            <h2>{consumptionToday.consumptionInLiters.toFixed(0)} L</h2>
             <p>
-              {consumptionToday.consumptionInLitersPerDayPerPerson} L / {tCommon("person")}{" "}
-              {tCommon("day")}
+              {consumptionToday.consumptionInLitersPerDayPerPerson.toFixed(2)} L /{" "}
+              {tCommon("person")} {tCommon("day")}
             </p>
           </div>
+        ) : isLoadingToday ? (
+          <ConsumptionBlockSkeleton />
         ) : (
           <div className="flex flex-col text-center">
             <p>{tCommon("no-data")}</p>

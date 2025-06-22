@@ -1,21 +1,21 @@
 import { Event } from "@domain/entities/event";
 
 export interface EventRepository {
-  getEvents(householdId: string, startDate: Date, endDate: Date): Promise<Event[]>;
+  getEvents(householdId: string, startTimestamp: Date, endTimestamp: Date): Promise<Event[]>;
 
   getEventsSortedByTimestamp(
     householdId: string,
-    startDate?: Date,
-    endDate?: Date,
+    startTimestamp?: Date,
+    endTimestamp?: Date,
     order?: "asc" | "desc",
-    cursor?: { date: Date; id: string },
+    cursor?: { timestamp: Date; id: string },
     limit?: number
   ): Promise<Event[]>;
 
   getEventsSortedByConsumption(
     householdId: string,
-    startDate?: Date,
-    endDate?: Date,
+    startTimestamp?: Date,
+    endTimestamp?: Date,
     categories?: string[],
     order?: "asc" | "desc",
     cursor?: { consumption: number; id: string },

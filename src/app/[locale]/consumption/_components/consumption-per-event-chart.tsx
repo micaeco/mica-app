@@ -16,7 +16,6 @@ import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 import { Category, categories, categoryMap } from "@domain/entities/category";
 import { TimeWindow } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/errors";
 import { Event } from "@domain/entities/event";
 
 type Props = {
@@ -27,7 +26,6 @@ type Props = {
 export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindow }: Props) {
   const t = useTranslations("consumption-per-event-chart");
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("common.errors");
 
   const { selectedHouseholdId } = useHouseholdStore();
 
@@ -35,28 +33,21 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     threshold: 1,
   });
 
-  const {
-    data,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    isLoading,
-    error: queryError,
-    isError,
-  } = trpc.event.getEventsSortedByConsumption.useInfiniteQuery(
-    {
-      householdId: selectedHouseholdId,
-      startDate: selectedTimeWindow ? selectedTimeWindow.startDate : new Date(),
-      endDate: selectedTimeWindow ? selectedTimeWindow.endDate : new Date(),
-      categories: selectedCategories || undefined,
-      limit: 10,
-    },
-    {
-      enabled: !!selectedHouseholdId && !!selectedTimeWindow,
-      initialCursor: undefined,
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
-  );
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, error, isError } =
+    trpc.event.getEventsSortedByConsumption.useInfiniteQuery(
+      {
+        householdId: selectedHouseholdId,
+        startDate: selectedTimeWindow ? selectedTimeWindow.startDate : new Date(),
+        endDate: selectedTimeWindow ? selectedTimeWindow.endDate : new Date(),
+        categories: selectedCategories || undefined,
+        limit: 10,
+      },
+      {
+        enabled: !!selectedHouseholdId && !!selectedTimeWindow,
+        initialCursor: undefined,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -76,13 +67,8 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     );
   }
 
-  if (isError && queryError) {
-    const errorMessageKey = queryError.message as ErrorKey;
-    return (
-      <div className="text-destructive flex items-center justify-center p-6">
-        {tErrors(errorMessageKey) || tErrors("unknown-error" as ErrorKey)}
-      </div>
-    );
+  if (isError && error) {
+    return <div className="flex items-center justify-center p-6">{tCommon("no-data")}</div>;
   }
 
   if (events.length === 0) {

@@ -112,7 +112,7 @@ export default function ConsumptionPage() {
                 ) : (
                   <div className="flex items-end gap-4">
                     <span className="text-2xl">
-                      {currentConsumption?.consumptionInLiters ?? "--"} L
+                      {currentConsumption?.consumptionInLiters.toFixed(2) ?? "--"} L
                     </span>
                     <p className="flex items-center">
                       {currentConsumption &&
@@ -122,7 +122,9 @@ export default function ConsumptionPage() {
                         <ChevronDown />
                       )}
                       {currentConsumption &&
-                        Math.abs(currentConsumption?.consumptionPercentDeviationFromBaseline)}
+                        Math.abs(
+                          currentConsumption?.consumptionPercentDeviationFromBaseline
+                        ).toFixed(0)}
                       %
                     </p>
                   </div>
@@ -133,7 +135,7 @@ export default function ConsumptionPage() {
                   <Skeleton className="h-5 w-40" />
                 ) : (
                   <>
-                    {currentConsumption?.consumptionInLitersPerDayPerPerson ?? "--"} L /{" "}
+                    {currentConsumption?.consumptionInLitersPerDayPerPerson.toFixed(2) ?? "--"} L /{" "}
                     {tCommon("person")} {tCommon("day")}
                   </>
                 )}

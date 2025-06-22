@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { format, isToday, isYesterday, startOfDay } from "date-fns";
+import { format, isToday, isYesterday } from "date-fns";
 import { LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useInView } from "react-intersection-observer";
@@ -10,7 +10,6 @@ import { EventBar } from "@app/_components/event-bar";
 import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
-import { EventsForDay } from "@domain/entities/event";
 
 export function EventsList() {
   const { selectedHouseholdId } = useHouseholdStore();
@@ -44,11 +43,11 @@ export function EventsList() {
   }, [inView, hasNextPage, fetchNextPage]);
 
   if (isLoading) {
-    return <LoaderCircle className="animate-spin" />;
-  }
-
-  if (error) {
-    toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoaderCircle className="animate-spin" size={32} />
+      </div>
+    );
   }
 
   const getDisplayDateKey = (date: Date): string => {
@@ -61,30 +60,12 @@ export function EventsList() {
     }
   };
 
-  const rawEventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
-
-  const mergedGroupedEventsMap: { [key: string]: EventsForDay } = {};
-
-  for (const dayGroup of rawEventsGroupedByDays) {
-    const dayKey = format(startOfDay(dayGroup.date), "yyyy-MM-dd");
-
-    if (!mergedGroupedEventsMap[dayKey]) {
-      mergedGroupedEventsMap[dayKey] = {
-        date: startOfDay(dayGroup.date),
-        events: [],
-        totalConsumption: 0,
-      };
-    }
-
-    mergedGroupedEventsMap[dayKey].events.push(...dayGroup.events);
-    mergedGroupedEventsMap[dayKey].totalConsumption += dayGroup.totalConsumption;
-  }
-
-  const eventsGroupedByDays = Object.values(mergedGroupedEventsMap).sort(
-    (a, b) => b.date.getTime() - a.date.getTime()
-  );
+  const eventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
 
   if (eventsGroupedByDays.length === 0) {
+    if (error) {
+      toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
+    }
     return (
       <div className="text-muted-foreground py-4 text-center text-sm">{tCommon("no-data")}</div>
     );

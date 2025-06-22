@@ -63,7 +63,7 @@ export function EventBar({ event, totalConsumption }: EventBarProps) {
             <div className="flex flex-row items-center gap-2">
               <ConsumptionBar consumptionPercentage={consumptionPercentage} />
               <span className="text-brand-secondary font-bold">
-                {event.consumptionInLiters}&nbsp;L
+                {event.consumptionInLiters.toFixed(1)}&nbsp;L
               </span>
             </div>
           </div>

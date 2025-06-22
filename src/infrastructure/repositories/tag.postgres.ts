@@ -1,10 +1,14 @@
 import { eq } from "drizzle-orm";
+import { PgTransaction } from "drizzle-orm/pg-core";
 
 import { Category } from "@domain/entities/category";
 import { Tag } from "@domain/entities/tag";
 import { TagRepository } from "@domain/repositories/tag";
 import { DbType } from "@infrastructure/db/db";
 import { TagSchema, tagSchema } from "@infrastructure/db/schema/tag";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DrizzleTx = PgTransaction<any, any, any>;
 
 export function mapTagFromSchema(schema: TagSchema): Tag {
   return {
@@ -15,7 +19,7 @@ export function mapTagFromSchema(schema: TagSchema): Tag {
 }
 
 export class PostgresTagRepository implements TagRepository {
-  constructor(private db: DbType) {}
+  constructor(private db: DbType | DrizzleTx) {}
 
   async create(tag: Tag): Promise<Tag> {
     const [newTag] = await this.db

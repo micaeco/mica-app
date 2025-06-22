@@ -18,16 +18,19 @@ export class MockEventRepository implements EventRepository {
 
   async getEventsSortedByTimestamp(
     householdId: string,
-    startDate?: Date,
-    endDate?: Date,
+    startTimestamp?: Date,
+    endTimestamp?: Date,
     order: "asc" | "desc" = "desc",
-    cursor?: { date: Date; id: string },
+    cursor?: { timestamp: Date; id: string },
     limit: number = 50
   ): Promise<Event[]> {
-    const effectiveStartDate = startDate || new Date(0);
-    const effectiveEndDate = endDate || new Date();
+    const effectiveStartTimestamp = startTimestamp || new Date(0);
+    const effectiveEndTimestamp = endTimestamp || new Date();
 
-    const filteredEvents = this.filterEventsByDateRange(effectiveStartDate, effectiveEndDate);
+    const filteredEvents = this.filterEventsByDateRange(
+      effectiveStartTimestamp,
+      effectiveEndTimestamp
+    );
 
     const sortedEvents = [...filteredEvents].sort((a, b) => {
       const dateComparison = a.startTimestamp.getTime() - b.startTimestamp.getTime();
@@ -41,7 +44,7 @@ export class MockEventRepository implements EventRepository {
 
     if (cursor) {
       const cursorComparisonFunction = (event: Event) => {
-        const dateDiff = event.startTimestamp.getTime() - cursor.date.getTime();
+        const dateDiff = event.startTimestamp.getTime() - cursor.timestamp.getTime();
 
         if (dateDiff === 0) {
           return event.id.localeCompare(cursor.id);
@@ -65,16 +68,16 @@ export class MockEventRepository implements EventRepository {
 
   async getEventsSortedByConsumption(
     householdId: string,
-    startDate?: Date,
-    endDate?: Date,
+    startTimestamp?: Date,
+    endTimestamp?: Date,
     categories?: Category[],
     order: "asc" | "desc" = "desc",
     cursor?: { consumption: number; id: string },
     limit: number = 50
   ): Promise<Event[]> {
     let filteredEvents = this.filterEventsByDateRange(
-      startDate || new Date(0),
-      endDate || new Date()
+      startTimestamp || new Date(0),
+      endTimestamp || new Date()
     );
 
     if (categories && categories.length > 0) {

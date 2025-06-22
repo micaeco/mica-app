@@ -9,6 +9,8 @@ export interface HouseholdRepository {
 
   findBySensorId(sensorId: string): Promise<Household | null>;
 
+  findNumberOfResidents(householdId: string): Promise<number>;
+
   update(householdId: string, household: Partial<Household>): Promise<Household | null>;
 
   delete(householdId: string): Promise<Household | null>;

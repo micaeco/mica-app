@@ -33,6 +33,11 @@ export class MockHouseholdRepository implements HouseholdRepository {
     return this.households.find((household) => household.sensorId === sensorId) || null;
   }
 
+  async findNumberOfResidents(householdId: string): Promise<number> {
+    const household = this.households.find((h) => h.id === householdId);
+    return household?.residents || 1;
+  }
+
   async update(id: string, household: Partial<Household>): Promise<Household | null> {
     const index = this.households.findIndex((h) => h.id === id);
     if (index !== -1) {

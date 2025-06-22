@@ -1,9 +1,13 @@
 import { eq } from "drizzle-orm";
+import { PgTransaction } from "drizzle-orm/pg-core";
 
 import { Household } from "@domain/entities/household";
 import { HouseholdRepository } from "@domain/repositories/household";
 import { DbType } from "@infrastructure/db/db";
 import { HouseholdSchema, householdSchema } from "@infrastructure/db/schema/household";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DrizzleTx = PgTransaction<any, any, any>;
 
 export function mapHouseholdFromSchema(schema: HouseholdSchema): Household {
   return {
@@ -21,7 +25,7 @@ export function mapHouseholdFromSchema(schema: HouseholdSchema): Household {
 }
 
 export class PostgresHouseholdRepository implements HouseholdRepository {
-  constructor(private db: DbType) {}
+  constructor(private db: DbType | DrizzleTx) {}
 
   async create(household: Omit<Household, "id">): Promise<Household> {
     const [newHousehold] = await this.db
@@ -62,6 +66,15 @@ export class PostgresHouseholdRepository implements HouseholdRepository {
     if (!household) return null;
 
     return mapHouseholdFromSchema(household);
+  }
+
+  async findNumberOfResidents(householdId: string): Promise<number> {
+    const [household] = await this.db
+      .select({ residents: householdSchema.residents })
+      .from(householdSchema)
+      .where(eq(householdSchema.id, householdId));
+
+    return household?.residents || 1;
   }
 
   async update(householdId: string, updates: Partial<Household>): Promise<Household | null> {
