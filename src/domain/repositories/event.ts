@@ -49,4 +49,6 @@ export interface EventRepository {
   getNumberOfLeakEvents(householdId: string): Promise<number>;
 
   getNumberOfUnknownEvents(householdId: string): Promise<number>;
+
+  updateEvent(userId: string, eventId: string, category?: Category, tag?: string): Promise<void>;
 }

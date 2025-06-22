@@ -78,11 +78,7 @@ export function EditEventSheet({
 
   const watchedCategory = eventForm.watch("category");
 
-  const {
-    data: tags,
-    isLoading: isLoadingTags,
-    error: tagsError,
-  } = trpc.tag.getHouseholdCategoryTags.useQuery(
+  const { data: tags, isLoading: isLoadingTags } = trpc.tag.getHouseholdCategoryTags.useQuery(
     {
       householdId: selectedHouseholdId,
       category: watchedCategory!,
@@ -92,20 +88,23 @@ export function EditEventSheet({
     }
   );
 
-  if (tagsError) {
-    toast.error(tErrors("INTERNAL_SERVER_ERROR"));
-  }
+  const { mutate: updateEvent } = trpc.event.updateEvent.useMutation({
+    onSuccess: () => {
+      eventForm.reset();
+      onOpenChange(false);
+      toast.success(tEditEventSheet("event-edited-successfully"));
+    },
+    onError: () => {
+      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+    },
+  });
 
   const onSubmitEvent = (data: EditEventFormValues) => {
-    if (!data.category) {
-      toast.error(tErrors("VALIDATION_ERROR"));
-      return;
-    }
-
-    toast.success("Event edited successfully", {
-      description: `Category: ${data.category}\n` + `${data.tag ? "Tag: " + data.tag + "\n" : ""}`,
+    updateEvent({
+      eventId: event.id,
+      category: data.category,
+      tag: data.tag,
     });
-    onOpenChange(false);
   };
 
   const handleTagCreated = (tagName: string) => {
@@ -118,6 +117,9 @@ export function EditEventSheet({
     }
     onOpenChange(isOpen);
   };
+
+  console.log("This is the watched category:", watchedCategory);
+  console.log("This is the event:", event.category);
 
   return (
     <>
@@ -261,7 +263,11 @@ export function EditEventSheet({
               </div>
 
               <Button
-                disabled={eventForm.formState.isSubmitting || !watchedCategory}
+                disabled={
+                  eventForm.formState.isSubmitting ||
+                  !watchedCategory ||
+                  watchedCategory === event.category
+                }
                 type="submit"
                 className="ml-auto w-fit"
               >

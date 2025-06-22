@@ -266,4 +266,17 @@ export const eventRouter = createTRPCRouter({
         nextCursor,
       };
     }),
+
+  updateEvent: protectedProcedure
+    .input(
+      z.object({
+        eventId: z.string(),
+        category: Category.optional(),
+        tag: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { eventId, category, tag } = input;
+      await ctx.eventRepo.updateEvent(ctx.user.sub, eventId, category, tag);
+    }),
 });

@@ -304,4 +304,26 @@ export class MockEventRepository implements EventRepository {
       });
     }
   }
+
+  async updateEvent(
+    userId: string,
+    sensorId: string,
+    category?: Category,
+    tag?: string
+  ): Promise<void> {
+    const eventIndex = this.events.findIndex((event) => event.id === sensorId);
+    if (eventIndex === -1) {
+      throw new Error(`Event with id ${sensorId} not found`);
+    }
+
+    const updatedEvent = { ...this.events[eventIndex] };
+    if (category) {
+      updatedEvent.category = category;
+    }
+    if (tag) {
+      updatedEvent.tag = tag;
+    }
+
+    this.events[eventIndex] = updatedEvent;
+  }
 }

@@ -168,6 +168,33 @@ export class ApiEventRepository implements EventRepository {
   async getNumberOfUnknownEvents(householdId: string): Promise<number> {
     return this.getUnknownEvents(householdId).then((events) => events.length);
   }
+
+  async updateEvent(
+    userId: string,
+    eventId: string,
+    category?: Category,
+    tag?: string,
+    notes?: string
+  ): Promise<void> {
+    try {
+      await axios.post<EventApiResponse>(
+        env.AWS_API_GATEWAY_URL + "/events/" + eventId + "/labels",
+        {
+          userId,
+          ...(category && { category: category }),
+          ...(tag && { tag: tag }),
+          ...(notes && { notes: notes }),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+          },
+        }
+      );
+    } catch {
+      throw new Error("Failed to update event");
+    }
+  }
 }
 
 interface EventApiResponse {
