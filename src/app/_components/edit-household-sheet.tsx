@@ -138,7 +138,6 @@ export function EditHouseholdSheet({
 
   const handleDeleteHousehold = () => {
     if (household) {
-      console.log("Deleting household:", household);
       deleteMutation.mutate({ sensorId: household.sensorId, householdId: household.id });
     }
   };
