@@ -12,8 +12,8 @@ export type CategoryBreakdown = z.infer<typeof CategoryBreakdown>;
 export const Consumption = z.object({
   startDate: z.date(),
   endDate: z.date(),
-  consumptionInLiters: z.number().positive(),
-  consumptionInLitersPerDayPerPerson: z.number().positive(),
+  consumptionInLiters: z.number().nonnegative(),
+  consumptionInLitersPerDayPerPerson: z.number().nonnegative(),
   consumptionPercentDeviationFromBaseline: z.number().min(-100),
   categoryBreakdown: z.array(CategoryBreakdown),
 });

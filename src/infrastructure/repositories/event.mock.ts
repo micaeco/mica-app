@@ -12,8 +12,19 @@ export class MockEventRepository implements EventRepository {
     this.initializeEvents();
   }
 
-  async getEvents(householdId: string, startDate: Date, endDate: Date): Promise<Event[]> {
-    return this.filterEventsByDateRange(startDate, endDate);
+  async getEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    categories?: Category[]
+  ): Promise<Event[]> {
+    return this.filterEventsByDateRange(
+      startDate || new Date("2024-01-01"),
+      endDate || new Date()
+    ).filter((event) => {
+      if (!categories || categories.length === 0) return true;
+      return categories.includes(event.category);
+    });
   }
 
   async getEventsSortedByTimestamp(
@@ -125,32 +136,114 @@ export class MockEventRepository implements EventRepository {
     return result;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getLeakEvents(householdId: string): Promise<Event[]> {
-    const now = new Date();
-    const tenDaysAgo = new Date(now.setDate(now.getDate() - 10));
+  async getLeakEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    order: "asc" | "desc" = "desc",
+    cursor?: { timestamp: Date; id: string },
+    limit: number = 50
+  ): Promise<Event[]> {
+    const effectiveStartDate = startDate || new Date(0);
+    const effectiveEndDate = endDate || new Date();
 
-    const recentEvents = this.filterEventsByDateRange(tenDaysAgo, new Date());
-    return recentEvents.filter((event) => event.category === "leak");
+    const filteredEvents = this.filterEventsByDateRange(
+      effectiveStartDate,
+      effectiveEndDate
+    ).filter((event) => event.category === "leak");
+
+    const sortedEvents = [...filteredEvents].sort((a, b) => {
+      const dateComparison = a.startTimestamp.getTime() - b.startTimestamp.getTime();
+      if (dateComparison === 0) {
+        return a.id.localeCompare(b.id);
+      }
+      return order === "asc" ? dateComparison : -dateComparison;
+    });
+
+    let startIndex = 0;
+
+    if (cursor) {
+      const cursorComparisonFunction = (event: Event) => {
+        const dateDiff = event.startTimestamp.getTime() - cursor.timestamp.getTime();
+
+        if (dateDiff === 0) {
+          return event.id.localeCompare(cursor.id);
+        }
+
+        return order === "asc" ? dateDiff : -dateDiff;
+      };
+
+      startIndex = sortedEvents.findIndex((event) => {
+        const comparisonResult = cursorComparisonFunction(event);
+        return comparisonResult > 0;
+      });
+
+      if (startIndex === -1) {
+        return [];
+      }
+    }
+
+    return sortedEvents.slice(startIndex, startIndex + limit);
+  }
+
+  async getUnknownEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    order: "asc" | "desc" = "desc",
+    cursor?: { timestamp: Date; id: string },
+    limit: number = 50
+  ): Promise<Event[]> {
+    const effectiveStartDate = startDate || new Date(0);
+    const effectiveEndDate = endDate || new Date();
+
+    const filteredEvents = this.filterEventsByDateRange(
+      effectiveStartDate,
+      effectiveEndDate
+    ).filter((event) => event.category === "unknown");
+
+    const sortedEvents = [...filteredEvents].sort((a, b) => {
+      const dateComparison = a.startTimestamp.getTime() - b.startTimestamp.getTime();
+      if (dateComparison === 0) {
+        return a.id.localeCompare(b.id);
+      }
+      return order === "asc" ? dateComparison : -dateComparison;
+    });
+
+    let startIndex = 0;
+
+    if (cursor) {
+      const cursorComparisonFunction = (event: Event) => {
+        const dateDiff = event.startTimestamp.getTime() - cursor.timestamp.getTime();
+
+        if (dateDiff === 0) {
+          return event.id.localeCompare(cursor.id);
+        }
+
+        return order === "asc" ? dateDiff : -dateDiff;
+      };
+
+      startIndex = sortedEvents.findIndex((event) => {
+        const comparisonResult = cursorComparisonFunction(event);
+        return comparisonResult > 0;
+      });
+
+      if (startIndex === -1) {
+        return [];
+      }
+    }
+
+    return sortedEvents.slice(startIndex, startIndex + limit);
   }
 
   async getNumberOfLeakEvents(householdId: string): Promise<number> {
-    const leakEvents = await this.getLeakEvents(householdId);
-    return leakEvents.length;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getUnknownEvents(householdId: string): Promise<Event[]> {
-    const now = new Date();
-    const tenDaysAgo = new Date(now.setDate(now.getDate() - 10));
-
-    const recentEvents = this.filterEventsByDateRange(tenDaysAgo, new Date());
-    return recentEvents.filter((event) => event.category === "unknown");
+    const leakEvents = await this.getEvents(householdId);
+    return leakEvents.filter((event) => event.category === "leak").length;
   }
 
   async getNumberOfUnknownEvents(householdId: string): Promise<number> {
-    const unknownEvents = await this.getUnknownEvents(householdId);
-    return unknownEvents.length;
+    const unknownEvents = await this.getEvents(householdId);
+    return unknownEvents.filter((event) => event.category === "unknown").length;
   }
 
   private filterEventsByDateRange(startDate: Date, endDate: Date): Event[] {
@@ -204,7 +297,7 @@ export class MockEventRepository implements EventRepository {
         category: randomCategory,
         startTimestamp: eventStartDate,
         endTimestamp: eventEndDate,
-        durationInMs: eventEndDate.getTime() - eventStartDate.getTime(),
+        durationInSeconds: Math.floor((eventEndDate.getTime() - eventStartDate.getTime()) / 1000),
         consumptionInLiters: randomConsumption,
         notes: [],
         tag: randomTag?.name,

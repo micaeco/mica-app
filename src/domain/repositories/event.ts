@@ -1,12 +1,18 @@
+import { Category } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 
 export interface EventRepository {
-  getEvents(householdId: string, startTimestamp: Date, endTimestamp: Date): Promise<Event[]>;
+  getEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    categories?: Category[]
+  ): Promise<Event[]>;
 
   getEventsSortedByTimestamp(
     householdId: string,
-    startTimestamp?: Date,
-    endTimestamp?: Date,
+    startDate?: Date,
+    endDate?: Date,
     order?: "asc" | "desc",
     cursor?: { timestamp: Date; id: string },
     limit?: number
@@ -14,19 +20,33 @@ export interface EventRepository {
 
   getEventsSortedByConsumption(
     householdId: string,
-    startTimestamp?: Date,
-    endTimestamp?: Date,
+    startDate?: Date,
+    endDate?: Date,
     categories?: string[],
     order?: "asc" | "desc",
     cursor?: { consumption: number; id: string },
     limit?: number
   ): Promise<Event[]>;
 
-  getLeakEvents(householdId: string): Promise<Event[]>;
+  getLeakEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    order?: "asc" | "desc",
+    cursor?: { timestamp: Date; id: string },
+    limit?: number
+  ): Promise<Event[]>;
+
+  getUnknownEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    order?: "asc" | "desc",
+    cursor?: { timestamp: Date; id: string },
+    limit?: number
+  ): Promise<Event[]>;
 
   getNumberOfLeakEvents(householdId: string): Promise<number>;
-
-  getUnknownEvents(householdId: string): Promise<Event[]>;
 
   getNumberOfUnknownEvents(householdId: string): Promise<number>;
 }

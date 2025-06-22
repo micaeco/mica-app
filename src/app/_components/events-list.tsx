@@ -4,7 +4,6 @@ import { format, isToday, isYesterday } from "date-fns";
 import { LoaderCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useInView } from "react-intersection-observer";
-import { toast } from "sonner";
 
 import { EventBar } from "@app/_components/event-bar";
 import { getDateFnsLocale } from "@app/_i18n/routing";
@@ -17,13 +16,12 @@ export function EventsList() {
   const locale = useLocale();
   const dateFnsLocale = getDateFnsLocale(locale);
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("common.errors");
 
   const { ref, inView } = useInView({
     threshold: 1,
   });
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     trpc.event.getEventsGroupedByDay.useInfiniteQuery(
       {
         householdId: selectedHouseholdId,
@@ -63,9 +61,6 @@ export function EventsList() {
   const eventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
 
   if (eventsGroupedByDays.length === 0) {
-    if (error) {
-      toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
-    }
     return (
       <div className="text-muted-foreground py-4 text-center text-sm">{tCommon("no-data")}</div>
     );

@@ -39,8 +39,7 @@ export class ApiSensorRepository implements SensorRepository {
         status: (response.data.status as "online" | "offline") || "offline",
         batteryLevel: response.data.batteryLevel,
       };
-    } catch (error) {
-      console.error("Error fetching sensor:", error);
+    } catch {
       throw new Error("Failed to fetch sensor");
     }
   }
@@ -60,8 +59,7 @@ export class ApiSensorRepository implements SensorRepository {
         }
       );
       return response.data;
-    } catch (error) {
-      console.error("Error assigning household to sensor:", error);
+    } catch {
       throw new Error("Failed to assign household to sensor");
     }
   }
@@ -81,8 +79,7 @@ export class ApiSensorRepository implements SensorRepository {
           },
         }
       );
-    } catch (error) {
-      console.error("Error unassigning household from sensor:", error);
+    } catch {
       throw new Error("Failed to unassign household from sensor");
     }
   }

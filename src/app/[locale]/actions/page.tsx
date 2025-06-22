@@ -14,6 +14,7 @@ import {
   AccordionContent,
   AccordionTrigger,
 } from "@app/_components/ui/accordion";
+import { Button } from "@app/_components/ui/button";
 import { Card, CardContent } from "@app/_components/ui/card";
 import {
   Carousel,
@@ -44,23 +45,39 @@ export default function Actions() {
     (category) => category !== "rest" && category !== "unknown"
   );
 
-  const { data: leakEventsData, isLoading: isLoadingLeakEvents } =
-    trpc.event.getLeakEvents.useQuery(
-      { householdId: selectedHouseholdId! },
-      {
-        enabled: !!selectedHouseholdId,
-      }
-    );
-  const leakEvents = leakEventsData ?? [];
+  const {
+    data: leakEventsData,
+    isLoading: isLoadingLeakEvents,
+    fetchNextPage: fetchNextLeakEvents,
+    hasNextPage: hasNextLeakEvents,
+  } = trpc.event.getLeakEvents.useInfiniteQuery(
+    {
+      householdId: selectedHouseholdId!,
+      limit: 10,
+    },
+    {
+      enabled: !!selectedHouseholdId,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+  const leakEvents = leakEventsData?.pages.flatMap((page) => page.data) ?? [];
 
-  const { data: unknownEventsData, isLoading: isLoadingUnknownEvents } =
-    trpc.event.getUnknownEvents.useQuery(
-      { householdId: selectedHouseholdId! },
-      {
-        enabled: !!selectedHouseholdId,
-      }
-    );
-  const unknownEvents = unknownEventsData ?? [];
+  const {
+    data: unknownEventsData,
+    isLoading: isLoadingUnknownEvents,
+    fetchNextPage: fetchNextUnknownEvents,
+    hasNextPage: hasNextUnknownEvents,
+  } = trpc.event.getUnknownEvents.useInfiniteQuery(
+    {
+      householdId: selectedHouseholdId!,
+      limit: 10,
+    },
+    {
+      enabled: !!selectedHouseholdId,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+  const unknownEvents = unknownEventsData?.pages.flatMap((page) => page.data) ?? [];
 
   function formatDate(dateInput: Date | string | number) {
     const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
@@ -88,50 +105,59 @@ export default function Actions() {
           <AccordionContent>
             {isLoadingLeakEvents && <LoaderCircle className="animate-spin" />}
             {!isLoadingLeakEvents && leakEvents.length > 0 ? (
-              <Carousel className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md">
-                <CarouselPrevious className="h-full rounded-lg" />
-                <CarouselContent>
-                  {leakEvents.map((event: Event, index: number) => (
-                    <CarouselItem key={index}>
-                      <Card>
-                        <CardContent className="flex flex-col gap-2 p-6">
-                          <Image
-                            src={categoryMap[event.category].icon!}
-                            alt={event.category}
-                            height={48}
-                            width={48}
-                          />
-                          <span className="font-semibold">{tCategories(event.category)}</span>
-                          <div className="flex flex-col">
-                            <span>{formatDate(event.startTimestamp)}</span>
-                            <span>
-                              {format(new Date(event.startTimestamp), "HH:mm", {
-                                locale: dateFnsLocale,
-                              })}{" "}
-                              -{" "}
-                              {format(new Date(event.endTimestamp), "HH:mm", {
-                                locale: dateFnsLocale,
-                              })}
-                            </span>
-                          </div>
-                          <span className="font-bold">{event.consumptionInLiters} L</span>
-                          {event.notes && event.notes.length > 0 && (
-                            <div className="mt-2 flex flex-col gap-1">
-                              <span className="font-semibold">Notes:</span>
-                              <ul className="list-disc pl-5">
-                                {event.notes.map((note, noteIndex) => (
-                                  <li key={noteIndex}>{note}</li>
-                                ))}
-                              </ul>
+              <div>
+                <Carousel className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md">
+                  <CarouselPrevious className="h-full rounded-lg" />
+                  <CarouselContent>
+                    {leakEvents.map((event: Event) => (
+                      <CarouselItem key={event.id}>
+                        <Card>
+                          <CardContent className="flex flex-col gap-2 p-6">
+                            <Image
+                              src={categoryMap[event.category].icon!}
+                              alt={event.category}
+                              height={48}
+                              width={48}
+                            />
+                            <span className="font-semibold">{tCategories(event.category)}</span>
+                            <div className="flex flex-col">
+                              <span>{formatDate(event.startTimestamp)}</span>
+                              <span>
+                                {format(new Date(event.startTimestamp), "HH:mm", {
+                                  locale: dateFnsLocale,
+                                })}{" "}
+                                -{" "}
+                                {format(new Date(event.endTimestamp), "HH:mm", {
+                                  locale: dateFnsLocale,
+                                })}
+                              </span>
                             </div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselNext className="h-full rounded-lg" />
-              </Carousel>
+                            <span className="font-bold">{event.consumptionInLiters} L</span>
+                            {event.notes && event.notes.length > 0 && (
+                              <div className="mt-2 flex flex-col gap-1">
+                                <span className="font-semibold">Notes:</span>
+                                <ul className="list-disc pl-5">
+                                  {event.notes.map((note, noteIndex) => (
+                                    <li key={noteIndex}>{note}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselNext className="h-full rounded-lg" />
+                </Carousel>
+                {hasNextLeakEvents && (
+                  <div className="mt-4 ml-10">
+                    <Button onClick={() => fetchNextLeakEvents()} variant="outline" size="sm">
+                      Load More
+                    </Button>
+                  </div>
+                )}
+              </div>
             ) : (
               !isLoadingLeakEvents && <div>{tActions("no-leaks")}</div>
             )}
@@ -151,73 +177,82 @@ export default function Actions() {
           <AccordionContent>
             {isLoadingUnknownEvents && <LoaderCircle className="animate-spin" />}
             {!isLoadingUnknownEvents && unknownEvents.length > 0 ? (
-              <Carousel className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md">
-                <CarouselPrevious className="h-full rounded-lg" />
-                <CarouselContent>
-                  {unknownEvents.map((event: Event, index: number) => (
-                    <CarouselItem key={index}>
-                      <Card>
-                        <CardContent className="flex flex-col gap-2 p-6">
-                          <Image
-                            src={categoryMap[event.category].icon!}
-                            alt={event.category}
-                            height={48}
-                            width={48}
-                          />
-                          <span className="font-semibold">{tCategories(event.category)}</span>
-                          <div className="flex flex-col">
-                            <span>{formatDate(event.startTimestamp)}</span>
-                            <span>
-                              {format(new Date(event.startTimestamp), "HH:mm", {
-                                locale: dateFnsLocale,
-                              })}{" "}
-                              -{" "}
-                              {format(new Date(event.endTimestamp), "HH:mm", {
-                                locale: dateFnsLocale,
-                              })}
+              <div>
+                <Carousel className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md">
+                  <CarouselPrevious className="h-full rounded-lg" />
+                  <CarouselContent>
+                    {unknownEvents.map((event: Event) => (
+                      <CarouselItem key={event.id}>
+                        <Card>
+                          <CardContent className="flex flex-col gap-2 p-6">
+                            <Image
+                              src={categoryMap[event.category].icon!}
+                              alt={event.category}
+                              height={48}
+                              width={48}
+                            />
+                            <span className="font-semibold">{tCategories(event.category)}</span>
+                            <div className="flex flex-col">
+                              <span>{formatDate(event.startTimestamp)}</span>
+                              <span>
+                                {format(new Date(event.startTimestamp), "HH:mm", {
+                                  locale: dateFnsLocale,
+                                })}{" "}
+                                -{" "}
+                                {format(new Date(event.endTimestamp), "HH:mm", {
+                                  locale: dateFnsLocale,
+                                })}
+                              </span>
+                            </div>
+                            <span className="text-brand-secondary font-bold">
+                              {event.consumptionInLiters.toFixed(2)} L
                             </span>
-                          </div>
-                          <span className="text-brand-secondary font-bold">
-                            {event.consumptionInLiters.toFixed(2)} L
-                          </span>
-                          <div className="flex flex-col gap-2">
-                            <span> Punt de consum </span>
-                            <ToggleGroup
-                              type="single"
-                              value={selectedCategory}
-                              onValueChange={(value) => {
-                                if (value) setSelectedCategory(value as Category);
-                              }}
-                              className="flex flex-wrap gap-2"
-                            >
-                              {filteredCategories.map((category: Category) => (
-                                <ToggleGroupItem
-                                  className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary rounded-lg bg-gray-200 transition-colors"
-                                  value={category}
-                                  key={category}
-                                >
-                                  <Image
-                                    className="object-contain"
-                                    src={categoryMap[category].icon!}
-                                    alt={category}
-                                    width={24}
-                                    height={24}
-                                  />
-                                  <span className="text-xs">{tCategories(category)}</span>
-                                  {selectedCategory === category && (
-                                    <CircleCheck className="ml-2 h-4 w-4" />
-                                  )}
-                                </ToggleGroupItem>
-                              ))}
-                            </ToggleGroup>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselNext className="h-full rounded-lg" />
-              </Carousel>
+                            <div className="flex flex-col gap-2">
+                              <span> Punt de consum </span>
+                              <ToggleGroup
+                                type="single"
+                                value={selectedCategory}
+                                onValueChange={(value) => {
+                                  if (value) setSelectedCategory(value as Category);
+                                }}
+                                className="flex flex-wrap gap-2"
+                              >
+                                {filteredCategories.map((category: Category) => (
+                                  <ToggleGroupItem
+                                    className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary rounded-lg bg-gray-200 transition-colors"
+                                    value={category}
+                                    key={category}
+                                  >
+                                    <Image
+                                      className="object-contain"
+                                      src={categoryMap[category].icon!}
+                                      alt={category}
+                                      width={24}
+                                      height={24}
+                                    />
+                                    <span className="text-xs">{tCategories(category)}</span>
+                                    {selectedCategory === category && (
+                                      <CircleCheck className="ml-2 h-4 w-4" />
+                                    )}
+                                  </ToggleGroupItem>
+                                ))}
+                              </ToggleGroup>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselNext className="h-full rounded-lg" />
+                </Carousel>
+                {hasNextUnknownEvents && (
+                  <div className="mt-4 ml-10">
+                    <Button onClick={() => fetchNextUnknownEvents()} variant="outline" size="sm">
+                      Load More
+                    </Button>
+                  </div>
+                )}
+              </div>
             ) : (
               !isLoadingUnknownEvents && <div> {tActions("no-unknowns")}</div>
             )}

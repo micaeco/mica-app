@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm, type FieldName } from "react-hook-form";
 import { toast } from "sonner";
@@ -30,7 +31,6 @@ import {
 import { ScrollArea } from "@app/_components/ui/scroll-area";
 import { trpc } from "@app/_lib/trpc";
 import { createHousehold } from "@domain/entities/household";
-import { LoaderCircle } from "lucide-react";
 
 const formSchema = createHousehold;
 type FormValues = z.infer<typeof formSchema>;

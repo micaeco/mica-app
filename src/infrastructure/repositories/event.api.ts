@@ -6,7 +6,12 @@ import { EventRepository } from "@domain/repositories/event";
 import { env } from "env";
 
 export class ApiEventRepository implements EventRepository {
-  async getEvents(householdId: string, startDate: Date, endDate: Date): Promise<Event[]> {
+  async getEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    categories?: Category[]
+  ): Promise<Event[]> {
     try {
       const response = await axios.get<EventApiDataResponse>(
         env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
@@ -15,14 +20,14 @@ export class ApiEventRepository implements EventRepository {
             Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
           },
           params: {
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
+            ...(startDate && { startDate: startDate.toISOString() }),
+            ...(endDate && { endDate: endDate.toISOString() }),
+            ...(categories && categories.length > 0 && { categories: categories.join(",") }),
           },
         }
       );
       return mapApiResponseToEventsArray(response.data.events);
-    } catch (error) {
-      console.error("Error fetching events:", error);
+    } catch {
       throw new Error("Failed to fetch events");
     }
   }
@@ -53,8 +58,7 @@ export class ApiEventRepository implements EventRepository {
         }
       );
       return mapApiResponseToEventsArray(response.data.events);
-    } catch (error) {
-      console.error("Error fetching sorted events:", error);
+    } catch {
       throw new Error("Failed to fetch sorted events");
     }
   }
@@ -78,7 +82,7 @@ export class ApiEventRepository implements EventRepository {
           params: {
             ...(startDate && { start: startDate.toISOString() }),
             ...(endDate && { end: endDate.toISOString() }),
-            ...(categories && { categories: categories.join(",") }),
+            ...(categories && categories.length > 0 && { categories: categories.join(",") }),
             sort: "consumption",
             ...(order && { order }),
             ...(cursor && { cursor: JSON.stringify(cursor) }),
@@ -86,15 +90,21 @@ export class ApiEventRepository implements EventRepository {
           },
         }
       );
+
       return mapApiResponseToEventsArray(response.data.events);
-    } catch (error) {
-      console.error("Error fetching sorted events:", error);
+    } catch {
       throw new Error("Failed to fetch sorted events");
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getLeakEvents(householdId: string): Promise<Event[]> {
+  async getLeakEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    order: "asc" | "desc" = "desc",
+    cursor?: { timestamp: Date; id: string },
+    limit: number = 50
+  ): Promise<Event[]> {
     try {
       const response = await axios.get<EventApiDataResponse>(
         env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
@@ -103,40 +113,56 @@ export class ApiEventRepository implements EventRepository {
             Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
           },
           params: {
+            ...(startDate && { start: startDate.toISOString() }),
+            ...(endDate && { end: endDate.toISOString() }),
             categories: "leak",
+            sort: "timestamp",
+            ...(order && { order }),
+            ...(cursor && { cursor: JSON.stringify(cursor) }),
+            ...(limit && { limit }),
           },
         }
       );
       return mapApiResponseToEventsArray(response.data.events);
-    } catch (error) {
-      console.error("Error fetching leak events:", error);
+    } catch {
       throw new Error("Failed to fetch leak events");
+    }
+  }
+
+  async getUnknownEvents(
+    householdId: string,
+    startDate?: Date,
+    endDate?: Date,
+    order: "asc" | "desc" = "desc",
+    cursor?: { timestamp: Date; id: string },
+    limit: number = 50
+  ): Promise<Event[]> {
+    try {
+      const response = await axios.get<EventApiDataResponse>(
+        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
+        {
+          headers: {
+            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+          },
+          params: {
+            ...(startDate && { start: startDate.toISOString() }),
+            ...(endDate && { end: endDate.toISOString() }),
+            categories: "unknown",
+            sort: "timestamp",
+            ...(order && { order }),
+            ...(cursor && { cursor: JSON.stringify(cursor) }),
+            ...(limit && { limit }),
+          },
+        }
+      );
+      return mapApiResponseToEventsArray(response.data.events);
+    } catch {
+      throw new Error("Failed to fetch unknown events");
     }
   }
 
   async getNumberOfLeakEvents(householdId: string): Promise<number> {
     return this.getLeakEvents(householdId).then((events) => events.length);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getUnknownEvents(householdId: string): Promise<Event[]> {
-    try {
-      const response = await axios.get<EventApiDataResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
-        {
-          headers: {
-            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-          },
-          params: {
-            categories: "unknown",
-          },
-        }
-      );
-      return mapApiResponseToEventsArray(response.data.events);
-    } catch (error) {
-      console.error("Error fetching unknown events:", error);
-      throw new Error("Failed to fetch unknown events");
-    }
   }
 
   async getNumberOfUnknownEvents(householdId: string): Promise<number> {
@@ -165,7 +191,7 @@ function mapApiResponseToEvent(apiResponse: EventApiResponse): Event {
     category: (apiResponse.category as Category) || "unknown",
     startTimestamp: new Date(apiResponse.start),
     endTimestamp: new Date(apiResponse.end),
-    durationInMs: apiResponse.duration,
+    durationInSeconds: apiResponse.duration || 0,
     consumptionInLiters: apiResponse.consumptionInLiters,
     tag: apiResponse.tag || undefined,
     notes: apiResponse.notes || [],

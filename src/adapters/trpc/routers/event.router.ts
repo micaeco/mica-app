@@ -108,19 +108,87 @@ export const eventRouter = createTRPCRouter({
     }),
 
   getLeakEvents: protectedProcedure
-    .input(z.object({ householdId: z.string() }))
-    .output(z.array(Event))
+    .input(
+      z.object({
+        householdId: z.string(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        order: z.enum(["asc", "desc"]).default("desc"),
+        cursor: z.object({ date: z.date(), id: z.string() }).nullish(),
+        limit: z.number().min(1).max(100).default(50),
+      })
+    )
+    .output(
+      z.object({
+        data: z.array(Event),
+        nextCursor: z.object({ date: z.date(), id: z.string() }).nullish(),
+      })
+    )
     .query(async ({ input, ctx }) => {
-      const events = await ctx.eventRepo.getLeakEvents(input.householdId);
-      return events;
+      const { householdId, startDate, endDate, order, cursor, limit } = input;
+      const events = await ctx.eventRepo.getLeakEvents(
+        householdId,
+        startDate,
+        endDate,
+        order,
+        cursor ? { timestamp: new Date(cursor.date), id: cursor.id } : undefined,
+        limit
+      );
+
+      const nextCursor =
+        events.length === limit
+          ? {
+              date: events[events.length - 1].startTimestamp,
+              id: events[events.length - 1].id,
+            }
+          : undefined;
+
+      return {
+        data: events,
+        nextCursor,
+      };
     }),
 
   getUnknownEvents: protectedProcedure
-    .input(z.object({ householdId: z.string() }))
-    .output(z.array(Event))
+    .input(
+      z.object({
+        householdId: z.string(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        order: z.enum(["asc", "desc"]).default("desc"),
+        cursor: z.object({ date: z.date(), id: z.string() }).nullish(),
+        limit: z.number().min(1).max(100).default(50),
+      })
+    )
+    .output(
+      z.object({
+        data: z.array(Event),
+        nextCursor: z.object({ date: z.date(), id: z.string() }).nullish(),
+      })
+    )
     .query(async ({ input, ctx }) => {
-      const events = await ctx.eventRepo.getUnknownEvents(input.householdId);
-      return events;
+      const { householdId, startDate, endDate, order, cursor, limit } = input;
+      const events = await ctx.eventRepo.getUnknownEvents(
+        householdId,
+        startDate,
+        endDate,
+        order,
+        cursor ? { timestamp: new Date(cursor.date), id: cursor.id } : undefined,
+        limit
+      );
+
+      const nextCursor =
+        events.length === limit
+          ? {
+              date: events[events.length - 1].startTimestamp,
+              id: events[events.length - 1].id,
+            }
+          : undefined;
+
+      return {
+        data: events,
+        nextCursor,
+      };
     }),
 
   getNumberOfLeakEvents: protectedProcedure

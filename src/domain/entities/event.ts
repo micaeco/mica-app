@@ -7,8 +7,8 @@ export const Event = z.object({
   category: Category,
   startTimestamp: z.date(),
   endTimestamp: z.date(),
-  durationInMs: z.number().min(0),
-  consumptionInLiters: z.number().min(0),
+  durationInSeconds: z.number().nonnegative(),
+  consumptionInLiters: z.number().nonnegative(),
   tag: z.string().optional(),
   notes: z.array(z.string()),
 });
@@ -18,7 +18,7 @@ export type Event = z.infer<typeof Event>;
 export const EventsForDay = z.object({
   date: z.date(),
   events: z.array(Event),
-  totalConsumption: z.number().positive(),
+  totalConsumption: z.number().nonnegative(),
 });
 
 export type EventsForDay = z.infer<typeof EventsForDay>;

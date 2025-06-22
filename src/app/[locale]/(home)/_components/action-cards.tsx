@@ -1,8 +1,7 @@
 "use client";
 
-import { ArrowRight, Bell, CircleHelp } from "lucide-react";
+import { ArrowRight, Bell, CircleHelp, LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
 import { useRouter } from "@app/_i18n/routing";
@@ -15,46 +14,27 @@ export function ActionCards({ className }: { className?: string }) {
 
   const router = useRouter();
   const tActionCards = useTranslations("action-cards");
-  const tErrors = useTranslations("common.errors");
   const tCommon = useTranslations("common");
 
-  const {
-    data: leakEvents,
-    isLoading: isLoadingLeakEvents,
-    error: errorLeakEvents,
-  } = trpc.event.getNumberOfLeakEvents.useQuery(
-    {
-      householdId: selectedHouseholdId,
-    },
-    {
-      enabled: !!selectedHouseholdId,
-    }
-  );
+  const { data: leakEvents, isLoading: isLoadingLeakEvents } =
+    trpc.event.getNumberOfLeakEvents.useQuery(
+      {
+        householdId: selectedHouseholdId,
+      },
+      {
+        enabled: !!selectedHouseholdId,
+      }
+    );
 
-  const {
-    data: unknownEvents,
-    isLoading: isLoadingUnknownEvents,
-    error: errorUnknownEvents,
-  } = trpc.event.getNumberOfUnknownEvents.useQuery(
-    {
-      householdId: selectedHouseholdId,
-    },
-    {
-      enabled: !!selectedHouseholdId,
-    }
-  );
-
-  const isLoading = isLoadingLeakEvents || isLoadingUnknownEvents;
-  const error = errorLeakEvents ?? errorUnknownEvents;
-
-  if (isLoading) {
-    return <div> {tCommon("loading")}...</div>;
-  }
-
-  if (error) {
-    toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
-    return <div></div>;
-  }
+  const { data: unknownEvents, isLoading: isLoadingUnknownEvents } =
+    trpc.event.getNumberOfUnknownEvents.useQuery(
+      {
+        householdId: selectedHouseholdId,
+      },
+      {
+        enabled: !!selectedHouseholdId,
+      }
+    );
 
   const hasLeakEvents = (leakEvents ?? 0) > 0;
   const hasUnknownEvents = (unknownEvents ?? 0) > 0;
@@ -73,9 +53,13 @@ export function ActionCards({ className }: { className?: string }) {
         </CardHeader>
         <CardContent>
           <p className="line-clamp-2">
-            {hasLeakEvents
-              ? tActionCards("leaks.description", { count: leakEvents })
-              : tCommon("no-data")}
+            {hasLeakEvents ? (
+              tActionCards("leaks.description", { count: leakEvents })
+            ) : isLoadingLeakEvents ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              tCommon("no-data")
+            )}
           </p>
           <ArrowRight className="absolute right-4 bottom-2 transition-transform group-hover:translate-x-2" />
         </CardContent>
@@ -92,9 +76,13 @@ export function ActionCards({ className }: { className?: string }) {
         </CardHeader>
         <CardContent>
           <p className="line-clamp-2">
-            {hasUnknownEvents
-              ? tActionCards("categorize.description", { count: unknownEvents })
-              : tCommon("no-data")}
+            {hasUnknownEvents ? (
+              tActionCards("categorize.description", { count: unknownEvents })
+            ) : isLoadingUnknownEvents ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              tCommon("no-data")
+            )}
           </p>
           <ArrowRight className="absolute right-4 bottom-2 transition-transform group-hover:translate-x-2" />
         </CardContent>
