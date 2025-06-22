@@ -43,6 +43,7 @@ import {
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 import { createHousehold } from "@domain/entities/household";
+import { ValueSetter } from "node_modules/date-fns/parse/_lib/Setter";
 
 const formSchema = createHousehold;
 
@@ -137,7 +138,10 @@ export function EditHouseholdSheet({
   };
 
   const handleDeleteHousehold = () => {
-    deleteMutation.mutate(householdId);
+    if (household) {
+      console.log("Deleting household:", household);
+      deleteMutation.mutate({ sensorId: household.sensorId, householdId: household.id });
+    }
   };
 
   return (

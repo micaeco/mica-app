@@ -66,17 +66,21 @@ export class ApiSensorRepository implements SensorRepository {
     }
   }
 
-  async unassignHouseholdFromSensor(sensorId: string): Promise<Sensor | null> {
+  async unassignHouseholdFromSensor(sensorId: string, householdId: string): Promise<void> {
     try {
-      const response = await axios.patch<Sensor>(env.AWS_API_GATEWAY_URL + "/sensors/" + sensorId, {
-        headers: {
-          Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-        },
-        params: {
-          unassignHousehold: null,
-        },
-      });
-      return response.data;
+      await axios.patch(
+        env.AWS_API_GATEWAY_URL + "/sensors/" + sensorId,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+          },
+          params: {
+            householdId: householdId,
+            unassignHousehold: true,
+          },
+        }
+      );
     } catch (error) {
       console.error("Error unassigning household from sensor:", error);
       throw new Error("Failed to unassign household from sensor");

@@ -70,8 +70,11 @@ export const householdRouter = createTRPCRouter({
       return household;
     }),
 
-  deleteHousehold: protectedProcedure.input(z.string()).mutation(async ({ input, ctx }) => {
-    await ctx.householdRepo.delete(input);
-    return { id: input };
-  }),
+  deleteHousehold: protectedProcedure
+    .input(z.object({ sensorId: z.string(), householdId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      await ctx.sensorRepo.unassignHouseholdFromSensor(input.sensorId, input.householdId);
+      await ctx.householdRepo.delete(input.householdId);
+      return { id: input.householdId };
+    }),
 });

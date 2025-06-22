@@ -1,5 +1,6 @@
 {
   "common": {
+    "delete-confirm": "Eliminar",
     "error": "Ha ocurrido un error",
     "in-progress": "En curso",
     "no-more-events-to-load": "No quedan eventos por cargar",
