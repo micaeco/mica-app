@@ -28,12 +28,12 @@ export class MockSensorRepository implements SensorRepository {
     return null;
   }
 
-  async unassignHouseholdFromSensor(sensorId: string): Promise<Sensor | null> {
+  async unassignHouseholdFromSensor(sensorId: string): Promise<void> {
     const sensor = await this.findById(sensorId);
     if (sensor) {
       sensor.householdId = undefined;
-      return sensor;
+    } else {
+      throw new Error(`Sensor with ID ${sensorId} not found`);
     }
-    return null;
   }
 }

@@ -43,7 +43,6 @@ import {
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 import { createHousehold } from "@domain/entities/household";
-import { ValueSetter } from "node_modules/date-fns/parse/_lib/Setter";
 
 const formSchema = createHousehold;
 
