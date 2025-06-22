@@ -2,15 +2,6 @@ import { notFound } from "next/navigation";
 
 import { BaseLayout } from "@app/_components/base-layout";
 import { Locale, routing } from "@app/_i18n/routing";
-import { env } from "env";
-
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "MICA App",
-  description: "Aplicació de MICA",
-  metadataBase: new URL(env.NEXT_PUBLIC_URL),
-};
 
 export default async function LocaleLayout({
   children,
