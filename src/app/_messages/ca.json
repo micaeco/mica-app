@@ -148,13 +148,13 @@
       "description": "Introdueix la informació de direcció de la vivenda. Aquesta informació és opcional, però t'ajudarà a identificar la teva vivenda."
     },
     "form": {
-      "name": "Nom de la vivenda",
+      "name": "Nom",
       "sensor-id": {
         "label": "ID del sensor",
         "description": "Introdueix el codi de 12 caràcters del teu sensor. Escriu només les lletres i els números; els dos punts (:) s'afegiran automàticament."
       },
       "residents": "Residents",
-      "address": "Adreça de la vivenda",
+      "address": "Adreça",
       "address2": "Adreça 2",
       "city": "Ciutat",
       "zip": "Codi postal",

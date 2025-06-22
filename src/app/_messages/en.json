@@ -148,13 +148,13 @@
       "description": "Enter the household address information. This information is optional, but it will help you to identify your household."
     },
     "form": {
-      "name": "Name of the household",
+      "name": "Name",
       "sensor-id": {
         "label": "Sensor ID",
         "description": "Enter the 12-character ID from the back of your sensor. Just type the letters and numbers; the colons (:) will be added for you automatically."
       },
       "residents": "Residents",
-      "address": "Household address",
+      "address": "Address",
       "address2": "Address 2",
       "city": "City",
       "zip": "ZIP code",
