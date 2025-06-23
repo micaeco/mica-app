@@ -33,7 +33,7 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     threshold: 1,
   });
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, error, isError } =
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
     trpc.event.getEventsSortedByConsumption.useInfiniteQuery(
       {
         householdId: selectedHouseholdId,
@@ -65,10 +65,6 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
         <Skeleton className="h-10 w-full" />
       </div>
     );
-  }
-
-  if (isError && error) {
-    return <div className="flex items-center justify-center p-6">{tCommon("no-data")}</div>;
   }
 
   if (events.length === 0) {
