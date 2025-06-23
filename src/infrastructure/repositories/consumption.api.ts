@@ -33,7 +33,7 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
   async getConsumption(householdId: string, startDate: Date, endDate: Date): Promise<Consumption> {
     return axios
       .get<ApiConsumptionResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/consumption",
+        `${env.AWS_API_GATEWAY_URL}/households/${householdId}/consumption`,
         {
           headers: {
             Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
@@ -47,6 +47,9 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
       .then(async (response) => {
         const consumption = await this.mapApiConsumptionToEntity(response.data);
         return consumption[0];
+      })
+      .catch((error) => {
+        throw new Error("Failed to fetch consumption data", { cause: error });
       });
   }
 
@@ -58,7 +61,7 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
   ): Promise<Consumption[]> {
     return axios
       .get<ApiConsumptionResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/consumption",
+        `${env.AWS_API_GATEWAY_URL}/households/${householdId}/consumption`,
         {
           headers: {
             Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
@@ -71,7 +74,11 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
         }
       )
       .then(async (response) => {
-        return await this.mapApiConsumptionToEntity(response.data);
+        return this.mapApiConsumptionToEntity(response.data);
+      })
+      .catch((error) => {
+        debugger;
+        throw new Error("Failed to fetch consumption data by granularity", { cause: error });
       });
   }
 
@@ -82,7 +89,7 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
 
     return axios
       .get<ApiConsumptionResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/consumption",
+        `${env.AWS_API_GATEWAY_URL}/households/${householdId}/consumption`,
         {
           headers: {
             Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
@@ -97,6 +104,9 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
       .then(async (response) => {
         const consumption = await this.mapApiConsumptionToEntity(response.data);
         return consumption[0];
+      })
+      .catch((error) => {
+        throw new Error("Failed to fetch current month consumption", { cause: error });
       });
   }
 
@@ -107,7 +117,7 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
 
     return axios
       .get<ApiConsumptionResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/consumption",
+        `${env.AWS_API_GATEWAY_URL}/households/${householdId}/consumption`,
         {
           headers: {
             Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
@@ -122,13 +132,20 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
       .then(async (response) => {
         const consumption = await this.mapApiConsumptionToEntity(response.data);
         return consumption[0];
+      })
+      .catch((error) => {
+        throw new Error("Failed to fetch current day consumption", { cause: error });
       });
   }
 
   private async mapApiConsumptionToEntity(
     apiResponse: ApiConsumptionResponse
   ): Promise<Consumption[]> {
-    if (apiResponse.consumption.length > 0) {
+    try {
+      if (apiResponse.consumption.length === 0) {
+        return [];
+      }
+
       const householdResidents = await this.householdRepository.findNumberOfResidents(
         apiResponse.householdId
       );
@@ -174,26 +191,28 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
         );
 
         const diffInMs = differenceInMilliseconds(endDate, startDate);
-        const daysInPeriod = diffInMs / (1000 * 60 * 60 * 24);
+        const daysInPeriod = diffInMs > 0 ? diffInMs / (1000 * 60 * 60 * 24) : 1;
         const consumptionInLitersPerDayPerPerson =
           householdResidents > 0
             ? dataPoint.consumptionInLiters / householdResidents / daysInPeriod
             : 0;
 
-        const consumption: Consumption = {
+        throw new Error(
+          "Household residents count is zero, cannot calculate per person consumption"
+        );
+
+        return {
           startDate,
           endDate,
           consumptionInLiters: dataPoint.consumptionInLiters,
-          consumptionInLitersPerDayPerPerson: consumptionInLitersPerDayPerPerson,
+          consumptionInLitersPerDayPerPerson,
           consumptionPercentDeviationFromBaseline:
             dataPoint.consumptionPercentDeviationFromBaseline * 100,
           categoryBreakdown,
         };
-
-        return consumption;
       });
-    } else {
-      return [];
+    } catch (error) {
+      throw new Error("Failed to process consumption data", { cause: error });
     }
   }
 }
