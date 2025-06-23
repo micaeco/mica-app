@@ -308,6 +308,8 @@ export class MockEventRepository implements EventRepository {
   async updateEvent(
     userId: string,
     sensorId: string,
+    startDate: Date,
+    endDate: Date,
     category?: Category,
     tag?: string
   ): Promise<void> {

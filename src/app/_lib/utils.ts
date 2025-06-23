@@ -13,13 +13,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: Date, locale: string) {
-  if (!(date instanceof Date)) {
-    return "Invalid date";
-  }
-  return format(date, "d MMM yyyy HH:mm:ss", { locale: getDateFnsLocale(locale) });
-}
-
 export function formatDateRange(start: Date, end: Date, granularity: Granularity, locale: string) {
   const dateFnsLocale = getDateFnsLocale(locale);
   const formatOptions = { locale: dateFnsLocale };

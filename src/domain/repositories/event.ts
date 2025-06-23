@@ -50,5 +50,12 @@ export interface EventRepository {
 
   getNumberOfUnknownEvents(householdId: string): Promise<number>;
 
-  updateEvent(userId: string, eventId: string, category?: Category, tag?: string): Promise<void>;
+  updateEvent(
+    userId: string,
+    eventId: string,
+    startDate: Date,
+    endDate: Date,
+    category?: Category,
+    tag?: string
+  ): Promise<void>;
 }

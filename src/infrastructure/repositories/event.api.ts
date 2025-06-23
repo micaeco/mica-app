@@ -172,6 +172,8 @@ export class ApiEventRepository implements EventRepository {
   async updateEvent(
     userId: string,
     eventId: string,
+    startDate: Date,
+    endDate: Date,
     category?: Category,
     tag?: string,
     notes?: string
@@ -181,6 +183,8 @@ export class ApiEventRepository implements EventRepository {
         env.AWS_API_GATEWAY_URL + "/events/" + eventId + "/labels",
         {
           userId,
+          start: startDate.toISOString(),
+          end: endDate.toISOString(),
           ...(category && { category: category }),
           ...(tag && { tag: tag }),
           ...(notes && { notes: notes }),

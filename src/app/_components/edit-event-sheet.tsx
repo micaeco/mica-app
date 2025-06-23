@@ -102,6 +102,8 @@ export function EditEventSheet({
   const onSubmitEvent = (data: EditEventFormValues) => {
     updateEvent({
       eventId: event.id,
+      startDate: event.startTimestamp,
+      endDate: event.endTimestamp,
       category: data.category,
       tag: data.tag,
     });
