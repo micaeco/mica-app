@@ -3,25 +3,19 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { format } from "date-fns";
-import { CircleCheck } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
+import { InfiniteCarouselNext } from "@app/[locale]/actions/_components/infinite-carousel-next";
+import { useInfiniteCarousel } from "@app/[locale]/actions/_hooks/use-infinite-carousel";
 import { Card, CardContent } from "@app/_components/ui/card";
-import {
-  Carousel,
-  CarouselApi,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-} from "@app/_components/ui/carousel";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@app/_components/ui/carousel";
 import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 import { categoryMap } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 
-import { InfiniteCarouselNext } from "./infinite-carousel-next";
-import { useInfiniteCarousel } from "../_hooks/use-infinite-carousel";
+import { InfiniteCarouselPrev } from "./infinite-carousel-prev";
 
 export function LeakEventsCarousel() {
   const { selectedHouseholdId } = useHouseholdStore();
@@ -66,12 +60,12 @@ export function LeakEventsCarousel() {
         <>
           <Carousel
             setApi={setLeakEventsApi}
-            className="ml-10 w-full max-w-3xs sm:max-w-xs md:max-w-sm lg:max-w-md"
+            className="flex w-full max-w-3xs flex-row gap-2 sm:max-w-xs md:max-w-sm lg:max-w-md"
             opts={{
               align: "start",
             }}
           >
-            <CarouselPrevious className="h-full rounded-lg" />
+            <InfiniteCarouselPrev className="rounded-lg" />
             <CarouselContent>
               {leakEvents.map((event: Event) => (
                 <CarouselItem key={event.id}>
@@ -115,17 +109,9 @@ export function LeakEventsCarousel() {
             <InfiniteCarouselNext
               isFetchingNextPage={isFetchingNextLeakEvents}
               hasNextPage={hasNextLeakEvents}
-              className="h-full rounded-lg"
+              className="grow rounded-lg"
             />
           </Carousel>
-          <div className="mt-4 ml-10 flex h-8 items-center justify-center">
-            {!hasNextLeakEvents && !isFetchingNextLeakEvents && (
-              <div className="text-muted-foreground flex items-center gap-2 text-sm">
-                <CircleCheck className="h-4 w-4" />
-                {tActions("no-leaks")}
-              </div>
-            )}
-          </div>
         </>
       ) : (
         !isLoadingLeakEvents && <div>{tActions("no-leaks")}</div>

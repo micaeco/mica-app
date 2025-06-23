@@ -27,7 +27,7 @@ export function useInfiniteCarousel({
         return;
       }
 
-      const isNearEnd = api.selectedScrollSnap() >= dataLength - 2;
+      const isNearEnd = api.selectedScrollSnap() >= dataLength - 3;
       if (isNearEnd) {
         fetchNextPage();
       }

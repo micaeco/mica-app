@@ -1,7 +1,7 @@
 import { ChevronRight, CircleCheck, LoaderCircle } from "lucide-react";
 
-import { Button } from "@app/_components/ui/button";
 import { useCarousel } from "@app/_components/ui/carousel";
+import { cn } from "@app/_lib/utils";
 
 export function InfiniteCarouselNext({
   isFetchingNextPage,
@@ -14,22 +14,26 @@ export function InfiniteCarouselNext({
 }) {
   const { scrollNext, canScrollNext } = useCarousel();
 
-  const isDisabled = isFetchingNextPage || !hasNextPage;
+  const showLoaderOnButton = isFetchingNextPage && !canScrollNext;
+
+  const isDisabled = !hasNextPage && !canScrollNext;
 
   return (
-    <Button
-      variant="outline"
+    <button
       onClick={scrollNext}
       disabled={isDisabled || !canScrollNext}
-      className={className}
+      className={cn(
+        className,
+        "rounded-md border p-2 transition-colors hover:bg-gray-100 disabled:opacity-50"
+      )}
     >
-      {isFetchingNextPage ? (
+      {showLoaderOnButton ? (
         <LoaderCircle className="h-4 w-4 animate-spin" />
       ) : !hasNextPage && !canScrollNext ? (
         <CircleCheck className="h-4 w-4" />
       ) : (
         <ChevronRight className="h-4 w-4" />
       )}
-    </Button>
+    </button>
   );
 }
