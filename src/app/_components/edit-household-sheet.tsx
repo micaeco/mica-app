@@ -152,7 +152,9 @@ export function EditHouseholdSheet({
         } else setOpen(true);
       }}
     >
-      <SheetTrigger className={className}>{children}</SheetTrigger>
+      <SheetTrigger asChild className={className}>
+        {children}
+      </SheetTrigger>
       <SheetContent className="flex w-full max-w-md flex-col">
         <SheetHeader>
           <SheetTitle>{t("title")}</SheetTitle>
