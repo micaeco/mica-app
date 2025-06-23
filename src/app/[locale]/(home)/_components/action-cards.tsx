@@ -53,15 +53,15 @@ export function ActionCards({ className }: { className?: string }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="line-clamp-2">
-            {hasLeakEvents ? (
-              tActionCards("leaks.description", { count: leakEvents })
-            ) : isLoadingLeakEvents ? (
-              <Skeleton className="h-4 w-24" />
-            ) : (
-              tCommon("no-data")
-            )}
-          </p>
+          {hasLeakEvents ? (
+            <p className="line-clamp-2">
+              {tActionCards("leaks.description", { count: leakEvents })}
+            </p>
+          ) : isLoadingLeakEvents ? (
+            <Skeleton className="h-4 w-24" />
+          ) : (
+            tCommon("no-data")
+          )}
           <ArrowRight className="absolute right-4 bottom-2 transition-transform group-hover:translate-x-2" />
         </CardContent>
       </Card>
@@ -76,15 +76,15 @@ export function ActionCards({ className }: { className?: string }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="line-clamp-2">
-            {hasUnknownEvents ? (
-              tActionCards("categorize.description", { count: unknownEvents })
-            ) : isLoadingUnknownEvents ? (
-              <Skeleton className="h-4 w-32" />
-            ) : (
-              tCommon("no-data")
-            )}
-          </p>
+          {hasUnknownEvents ? (
+            <p className="line-clamp-2">
+              {tActionCards("categorize.description", { count: unknownEvents })}
+            </p>
+          ) : isLoadingUnknownEvents ? (
+            <Skeleton className="h-4 w-32" />
+          ) : (
+            tCommon("no-data")
+          )}
           <ArrowRight className="absolute right-4 bottom-2 transition-transform group-hover:translate-x-2" />
         </CardContent>
       </Card>
