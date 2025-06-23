@@ -116,6 +116,16 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
           {events.map((event) => (
             <EventBar key={event.id} event={event} totalConsumption={maxConsumption} />
           ))}
+          {(hasNextPage || isLoading || isFetchingNextPage) && (
+            <div ref={ref} className="py-4 text-center">
+              {isLoading || isFetchingNextPage ? tCommon("loading") : tCommon("loading")}...
+            </div>
+          )}
+          {!hasNextPage && (
+            <div className="text-muted-foreground py-4 text-center text-sm">
+              {tCommon("no-more-events-to-load")}
+            </div>
+          )}
         </div>
       );
     }
@@ -158,6 +168,16 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
                       />
                     ))}
                 </div>
+                {(hasNextPage || isLoading || isFetchingNextPage) && (
+                  <div ref={ref} className="py-4 text-center">
+                    {isLoading || isFetchingNextPage ? tCommon("loading") : tCommon("loading")}...
+                  </div>
+                )}
+                {!hasNextPage && (
+                  <div className="text-muted-foreground py-4 text-center text-sm">
+                    {tCommon("no-more-events-to-load")}
+                  </div>
+                )}
               </AccordionContent>
             </AccordionItem>
           ))}
