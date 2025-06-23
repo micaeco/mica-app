@@ -197,10 +197,6 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
             ? dataPoint.consumptionInLiters / householdResidents / daysInPeriod
             : 0;
 
-        throw new Error(
-          "Household residents count is zero, cannot calculate per person consumption"
-        );
-
         return {
           startDate,
           endDate,
