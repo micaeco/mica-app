@@ -10,7 +10,11 @@ export class ApiEventRepository implements EventRepository {
     householdId: string,
     startDate?: Date,
     endDate?: Date,
-    categories?: Category[]
+    categories?: Category[],
+    sort: "timestamp" | "consumption" = "timestamp",
+    order: "asc" | "desc" = "desc",
+    cursor?: { timestamp: Date; id: string },
+    limit?: number
   ): Promise<Event[]> {
     try {
       const response = await axios.get<EventApiDataResponse>(
@@ -23,6 +27,10 @@ export class ApiEventRepository implements EventRepository {
             ...(startDate && { startDate: startDate.toISOString() }),
             ...(endDate && { endDate: endDate.toISOString() }),
             ...(categories && categories.length > 0 && { categories: categories.join(",") }),
+            ...(sort && { sort }),
+            ...(order && { order }),
+            ...(cursor && { cursor: JSON.stringify(cursor) }),
+            ...(limit && { limit }),
           },
         }
       );
@@ -32,141 +40,16 @@ export class ApiEventRepository implements EventRepository {
     }
   }
 
-  async getEventsSortedByTimestamp(
-    householdId: string,
-    startTimestamp?: Date,
-    endTimestamp?: Date,
-    order?: "asc" | "desc",
-    cursor?: { timestamp: Date; id: string },
-    limit?: number
-  ): Promise<Event[]> {
-    try {
-      const response = await axios.get<EventApiDataResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
-        {
-          headers: {
-            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-          },
-          params: {
-            ...(startTimestamp && { start: startTimestamp?.toISOString() }),
-            ...(endTimestamp && { end: endTimestamp?.toISOString() }),
-            sort: "timestamp",
-            ...(order && { order }),
-            ...(cursor && { cursor: JSON.stringify(cursor) }),
-            ...(limit && { limit }),
-          },
-        }
-      );
-      return mapApiResponseToEventsArray(response.data.events);
-    } catch {
-      throw new Error("Failed to fetch sorted events");
-    }
-  }
-
-  async getEventsSortedByConsumption(
-    householdId: string,
-    startDate?: Date,
-    endDate?: Date,
-    categories?: string[],
-    order?: "asc" | "desc",
-    cursor?: { consumption: number; id: string },
-    limit?: number
-  ): Promise<Event[]> {
-    try {
-      const response = await axios.get<EventApiDataResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
-        {
-          headers: {
-            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-          },
-          params: {
-            ...(startDate && { start: startDate.toISOString() }),
-            ...(endDate && { end: endDate.toISOString() }),
-            ...(categories && categories.length > 0 && { categories: categories.join(",") }),
-            sort: "consumption",
-            ...(order && { order }),
-            ...(cursor && { cursor: JSON.stringify(cursor) }),
-            ...(limit && { limit }),
-          },
-        }
-      );
-
-      return mapApiResponseToEventsArray(response.data.events);
-    } catch {
-      throw new Error("Failed to fetch sorted events");
-    }
-  }
-
-  async getLeakEvents(
-    householdId: string,
-    startDate?: Date,
-    endDate?: Date,
-    order: "asc" | "desc" = "desc",
-    cursor?: { timestamp: Date; id: string },
-    limit?: number
-  ): Promise<Event[]> {
-    try {
-      const response = await axios.get<EventApiDataResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
-        {
-          headers: {
-            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-          },
-          params: {
-            ...(startDate && { start: startDate.toISOString() }),
-            ...(endDate && { end: endDate.toISOString() }),
-            categories: "leak",
-            sort: "timestamp",
-            ...(order && { order }),
-            ...(cursor && { cursor: JSON.stringify(cursor) }),
-            ...(limit && { limit }),
-          },
-        }
-      );
-      return mapApiResponseToEventsArray(response.data.events);
-    } catch {
-      throw new Error("Failed to fetch leak events");
-    }
-  }
-
-  async getUnknownEvents(
-    householdId: string,
-    startDate?: Date,
-    endDate?: Date,
-    order: "asc" | "desc" = "desc",
-    cursor?: { timestamp: Date; id: string },
-    limit?: number
-  ): Promise<Event[]> {
-    try {
-      const response = await axios.get<EventApiDataResponse>(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
-        {
-          headers: {
-            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-          },
-          params: {
-            ...(startDate && { start: startDate.toISOString() }),
-            ...(endDate && { end: endDate.toISOString() }),
-            categories: "unknown",
-            sort: "timestamp",
-            ...(order && { order }),
-            ...(cursor && { cursor: JSON.stringify(cursor) }),
-            ...(limit && { limit }),
-          },
-        }
-      );
-      return mapApiResponseToEventsArray(response.data.events);
-    } catch {
-      throw new Error("Failed to fetch unknown events");
-    }
-  }
-
   async getNumberOfLeakEvents(householdId: string): Promise<number> {
-    return this.getLeakEvents(householdId).then((events) => events.length);
+    return this.getEvents(householdId, undefined, undefined, ["leak"]).then(
+      (events) => events.length
+    );
   }
 
   async getNumberOfUnknownEvents(householdId: string): Promise<number> {
-    return this.getUnknownEvents(householdId).then((events) => events.length);
+    return this.getEvents(householdId, undefined, undefined, ["unknown"]).then(
+      (events) => events.length
+    );
   }
 
   async updateEvent(

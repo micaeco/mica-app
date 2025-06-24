@@ -16,234 +16,68 @@ export class MockEventRepository implements EventRepository {
     householdId: string,
     startDate?: Date,
     endDate?: Date,
-    categories?: Category[]
+    categories?: Category[],
+    sort: "timestamp" | "consumption" = "timestamp",
+    order: "asc" | "desc" = "desc",
+    cursor?: { timestamp: Date; id: string } | { consumption: number; id: string },
+    limit?: number
   ): Promise<Event[]> {
-    return this.filterEventsByDateRange(
+    let filteredEvents = this.filterEventsByDateRange(
       startDate || new Date("2024-01-01"),
       endDate || new Date()
     ).filter((event) => {
       if (!categories || categories.length === 0) return true;
       return categories.includes(event.category);
     });
-  }
-
-  async getEventsSortedByTimestamp(
-    householdId: string,
-    startTimestamp?: Date,
-    endTimestamp?: Date,
-    order: "asc" | "desc" = "desc",
-    cursor?: { timestamp: Date; id: string },
-    limit: number = 50
-  ): Promise<Event[]> {
-    const effectiveStartTimestamp = startTimestamp || new Date(0);
-    const effectiveEndTimestamp = endTimestamp || new Date();
-
-    const filteredEvents = this.filterEventsByDateRange(
-      effectiveStartTimestamp,
-      effectiveEndTimestamp
-    );
-
-    const sortedEvents = [...filteredEvents].sort((a, b) => {
-      const dateComparison = a.startTimestamp.getTime() - b.startTimestamp.getTime();
-      if (dateComparison === 0) {
-        return a.id.localeCompare(b.id);
-      }
-      return order === "asc" ? dateComparison : -dateComparison;
-    });
-
-    let startIndex = 0;
 
     if (cursor) {
-      const cursorComparisonFunction = (event: Event) => {
-        const dateDiff = event.startTimestamp.getTime() - cursor.timestamp.getTime();
-
-        if (dateDiff === 0) {
-          return event.id.localeCompare(cursor.id);
-        }
-
-        return order === "asc" ? dateDiff : -dateDiff;
-      };
-
-      startIndex = sortedEvents.findIndex((event) => {
-        const comparisonResult = cursorComparisonFunction(event);
-        return comparisonResult > 0;
-      });
-
-      if (startIndex === -1) {
-        return [];
-      }
-    }
-
-    return sortedEvents.slice(startIndex, startIndex + limit);
-  }
-
-  async getEventsSortedByConsumption(
-    householdId: string,
-    startTimestamp?: Date,
-    endTimestamp?: Date,
-    categories?: Category[],
-    order: "asc" | "desc" = "desc",
-    cursor?: { consumption: number; id: string },
-    limit: number = 50
-  ): Promise<Event[]> {
-    let filteredEvents = this.filterEventsByDateRange(
-      startTimestamp || new Date(0),
-      endTimestamp || new Date()
-    );
-
-    if (categories && categories.length > 0) {
       filteredEvents = filteredEvents.filter((event) => {
-        return categories.includes(event.category);
-      });
-    }
-
-    const sortedEvents = filteredEvents.sort((a, b) => {
-      const consumptionComparison =
-        order === "asc"
-          ? a.consumptionInLiters - b.consumptionInLiters
-          : b.consumptionInLiters - a.consumptionInLiters;
-
-      if (consumptionComparison === 0) {
-        return a.id < b.id ? -1 : 1;
-      }
-
-      return consumptionComparison;
-    });
-
-    let startIndex = 0;
-    if (cursor) {
-      const foundIndex = sortedEvents.findIndex((e) => {
-        const consumptionDiff =
-          order === "asc"
-            ? e.consumptionInLiters - cursor.consumption
-            : cursor.consumption - e.consumptionInLiters;
-
-        if (consumptionDiff === 0) {
-          return e.id > cursor.id;
+        if (sort === "consumption" && "consumption" in cursor) {
+          return order === "asc"
+            ? event.consumptionInLiters > cursor.consumption ||
+                (event.consumptionInLiters === cursor.consumption && event.id > cursor.id)
+            : event.consumptionInLiters < cursor.consumption ||
+                (event.consumptionInLiters === cursor.consumption && event.id > cursor.id);
+        } else if ("timestamp" in cursor) {
+          return order === "asc"
+            ? event.startTimestamp > cursor.timestamp ||
+                (event.startTimestamp.getTime() === cursor.timestamp.getTime() &&
+                  event.id > cursor.id)
+            : event.startTimestamp < cursor.timestamp ||
+                (event.startTimestamp.getTime() === cursor.timestamp.getTime() &&
+                  event.id > cursor.id);
         }
-
-        return consumptionDiff > 0;
+        return true;
       });
-      if (foundIndex !== -1) {
-        startIndex = foundIndex;
-      } else {
-        return [];
-      }
     }
 
-    const result = sortedEvents.slice(startIndex, startIndex + limit);
-
-    return result;
-  }
-
-  async getLeakEvents(
-    householdId: string,
-    startDate?: Date,
-    endDate?: Date,
-    order: "asc" | "desc" = "desc",
-    cursor?: { timestamp: Date; id: string },
-    limit: number = 50
-  ): Promise<Event[]> {
-    const effectiveStartDate = startDate || new Date(0);
-    const effectiveEndDate = endDate || new Date();
-
-    const filteredEvents = this.filterEventsByDateRange(
-      effectiveStartDate,
-      effectiveEndDate
-    ).filter((event) => event.category === "leak");
-
-    const sortedEvents = [...filteredEvents].sort((a, b) => {
-      const dateComparison = a.startTimestamp.getTime() - b.startTimestamp.getTime();
-      if (dateComparison === 0) {
-        return a.id.localeCompare(b.id);
-      }
-      return order === "asc" ? dateComparison : -dateComparison;
-    });
-
-    let startIndex = 0;
-
-    if (cursor) {
-      const cursorComparisonFunction = (event: Event) => {
-        const dateDiff = event.startTimestamp.getTime() - cursor.timestamp.getTime();
-
-        if (dateDiff === 0) {
-          return event.id.localeCompare(cursor.id);
+    return filteredEvents
+      .sort((a, b) => {
+        if (sort === "consumption") {
+          const consumptionComparison = a.consumptionInLiters - b.consumptionInLiters;
+          if (consumptionComparison === 0) {
+            return a.id.localeCompare(b.id);
+          }
+          return order === "asc" ? consumptionComparison : -consumptionComparison;
+        } else {
+          const dateComparison = a.startTimestamp.getTime() - b.startTimestamp.getTime();
+          if (dateComparison === 0) {
+            return a.id.localeCompare(b.id);
+          }
+          return order === "asc" ? dateComparison : -dateComparison;
         }
-
-        return order === "asc" ? dateDiff : -dateDiff;
-      };
-
-      startIndex = sortedEvents.findIndex((event) => {
-        const comparisonResult = cursorComparisonFunction(event);
-        return comparisonResult > 0;
-      });
-
-      if (startIndex === -1) {
-        return [];
-      }
-    }
-
-    return sortedEvents.slice(startIndex, startIndex + limit);
-  }
-
-  async getUnknownEvents(
-    householdId: string,
-    startDate?: Date,
-    endDate?: Date,
-    order: "asc" | "desc" = "desc",
-    cursor?: { timestamp: Date; id: string },
-    limit: number = 50
-  ): Promise<Event[]> {
-    const effectiveStartDate = startDate || new Date(0);
-    const effectiveEndDate = endDate || new Date();
-
-    const filteredEvents = this.filterEventsByDateRange(
-      effectiveStartDate,
-      effectiveEndDate
-    ).filter((event) => event.category === "unknown");
-
-    const sortedEvents = [...filteredEvents].sort((a, b) => {
-      const dateComparison = a.startTimestamp.getTime() - b.startTimestamp.getTime();
-      if (dateComparison === 0) {
-        return a.id.localeCompare(b.id);
-      }
-      return order === "asc" ? dateComparison : -dateComparison;
-    });
-
-    let startIndex = 0;
-
-    if (cursor) {
-      const cursorComparisonFunction = (event: Event) => {
-        const dateDiff = event.startTimestamp.getTime() - cursor.timestamp.getTime();
-
-        if (dateDiff === 0) {
-          return event.id.localeCompare(cursor.id);
-        }
-
-        return order === "asc" ? dateDiff : -dateDiff;
-      };
-
-      startIndex = sortedEvents.findIndex((event) => {
-        const comparisonResult = cursorComparisonFunction(event);
-        return comparisonResult > 0;
-      });
-
-      if (startIndex === -1) {
-        return [];
-      }
-    }
-
-    return sortedEvents.slice(startIndex, startIndex + limit);
+      })
+      .slice(0, limit);
   }
 
   async getNumberOfLeakEvents(householdId: string): Promise<number> {
-    const leakEvents = await this.getEvents(householdId);
-    return leakEvents.filter((event) => event.category === "leak").length;
+    const leakEvents = await this.getEvents(householdId, undefined, undefined, ["leak"]);
+    return leakEvents.length;
   }
 
   async getNumberOfUnknownEvents(householdId: string): Promise<number> {
-    const unknownEvents = await this.getEvents(householdId);
-    return unknownEvents.filter((event) => event.category === "unknown").length;
+    const unknownEvents = await this.getEvents(householdId, undefined, undefined, ["unknown"]);
+    return unknownEvents.length;
   }
 
   private filterEventsByDateRange(startDate: Date, endDate: Date): Event[] {

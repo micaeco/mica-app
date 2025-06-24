@@ -40,10 +40,12 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, order, cursor, limit } = input;
-      const events = await ctx.eventRepo.getEventsSortedByTimestamp(
+      const events = await ctx.eventRepo.getEvents(
         householdId,
         startDate || new Date(0),
         endDate || new Date(),
+        undefined,
+        "timestamp",
         order,
         cursor ? { timestamp: new Date(cursor.date), id: cursor.id } : undefined,
         limit
@@ -83,11 +85,12 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, categories, limit, order, cursor } = input;
-      const events = await ctx.eventRepo.getEventsSortedByConsumption(
+      const events = await ctx.eventRepo.getEvents(
         householdId,
         startDate,
         endDate,
         categories || undefined,
+        "consumption",
         order,
         cursor ? { consumption: cursor.consumption, id: cursor.id } : undefined,
         limit
@@ -126,10 +129,12 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, order, cursor, limit } = input;
-      const events = await ctx.eventRepo.getLeakEvents(
+      const events = await ctx.eventRepo.getEvents(
         householdId,
         startDate,
         endDate,
+        ["leak"],
+        "timestamp",
         order,
         cursor ? { timestamp: new Date(cursor.date), id: cursor.id } : undefined,
         limit
@@ -168,10 +173,12 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, order, cursor, limit } = input;
-      const events = await ctx.eventRepo.getUnknownEvents(
+      const events = await ctx.eventRepo.getEvents(
         householdId,
         startDate,
         endDate,
+        ["unknown"],
+        "timestamp",
         order,
         cursor ? { timestamp: new Date(cursor.date), id: cursor.id } : undefined,
         limit
@@ -224,10 +231,12 @@ export const eventRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const { householdId, cursor, limit } = input;
 
-      const events = await ctx.eventRepo.getEventsSortedByTimestamp(
+      const events = await ctx.eventRepo.getEvents(
         householdId,
         undefined,
         undefined,
+        undefined,
+        "timestamp",
         "desc",
         cursor ? { timestamp: new Date(cursor.date), id: cursor.id } : undefined,
         limit
