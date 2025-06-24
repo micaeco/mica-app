@@ -53,13 +53,13 @@ export function Header({ className }: { className?: string }) {
 
         <div className="fixed top-2 right-3">
           <EditProfilePanel>
-            <Avatar className="border-brand-primary h-9 w-9 border-2 transition-transform hover:scale-105">
+            <Avatar className="border-brand-primary mx-auto border-2">
               <AvatarImage
                 className="object-contain"
-                src={user?.picture ? user?.picture : "/logos/logo.webp"}
-                alt="avatar"
+                src={user?.picture ? user.picture : "/logos/logo.webp"}
+                alt={user?.name || "User Avatar"}
               />
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
             </Avatar>
           </EditProfilePanel>
         </div>

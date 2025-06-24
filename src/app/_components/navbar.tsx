@@ -8,14 +8,13 @@ import { Link } from "@app/_i18n/routing";
 import { cn } from "@app/_lib/utils";
 
 const navItems = [
-  { icon: PieChart, tag: "Consumption", href: "/consumption" },
-  { icon: Home, tag: "Home", href: "/" },
-  { icon: CopyCheck, tag: "Actions", href: "/actions" },
+  { icon: PieChart, href: "/consumption" },
+  { icon: Home, href: "/" },
+  { icon: CopyCheck, href: "/actions" },
 ];
 
 export function Navbar({ className }: { className?: string }) {
   const pathname = usePathname();
-  // Remove locale prefix (assuming it's two letters, e.g., /es, /en)
   const cleanPathname = pathname.replace(/^\/[a-z]{2}(\/|$)/, "/");
 
   return (
