@@ -151,10 +151,16 @@ export class MockConsumptionRepository implements ConsumptionRepository {
 
   async getConsumptionByGranularity(
     householdId: string,
-    startDate: Date,
-    endDate: Date,
-    granularity: Granularity
+    granularity: Granularity,
+    startDate: Date = new Date(0),
+    endDate: Date = new Date(),
+    order: "asc" | "desc" = "asc",
+    cursor?: { timestamp: Date },
+    limit?: number
   ): Promise<Consumption[]> {
+    console.log("Order:", order);
+    console.log("Cursor:", cursor);
+    console.log("Limit:", limit);
     switch (granularity) {
       case "hour":
         return this.getHourlyConsumption(householdId, startDate, endDate);
