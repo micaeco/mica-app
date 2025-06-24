@@ -1,39 +1,31 @@
 import { useState } from "react";
 
-import Image from "next/image";
-
 import { format } from "date-fns";
-import { CircleCheck } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { InfiniteCarouselNext } from "@app/[locale]/actions/_components/infinite-carousel-next";
 import { InfiniteCarouselPrev } from "@app/[locale]/actions/_components/infinite-carousel-prev";
 import { useInfiniteCarousel } from "@app/[locale]/actions/_hooks/use-infinite-carousel";
-import { Card, CardContent } from "@app/_components/ui/card";
+import { EditEventForm } from "@app/_components/edit-event-form";
+import { Card, CardContent, CardDescription } from "@app/_components/ui/card";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@app/_components/ui/carousel";
-import { ToggleGroup, ToggleGroupItem } from "@app/_components/ui/toggle-group";
 import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
-import { categories, Category, categoryMap } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 
 export function UnknownEventsCarousel() {
   const { selectedHouseholdId } = useHouseholdStore();
 
-  const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [unknownEventsApi, setUnknownEventsApi] = useState<CarouselApi>();
+
+  const utils = trpc.useUtils();
 
   const locale = useLocale();
   const dateFnsLocale = getDateFnsLocale(locale);
 
   const tCommon = useTranslations("common");
   const tActions = useTranslations("actions");
-  const tCategories = useTranslations("common.categories");
-
-  const filteredCategories = categories.filter(
-    (category) => category !== "rest" && category !== "unknown"
-  );
 
   const {
     data: unknownEventsData,
@@ -65,71 +57,39 @@ export function UnknownEventsCarousel() {
     <>
       {!isLoadingUnknownEvents && unknownEvents.length > 0 ? (
         <>
-          <Carousel
-            setApi={setUnknownEventsApi}
-            className="flex w-full max-w-3xs flex-row gap-2 sm:max-w-xs md:max-w-sm lg:max-w-md"
-          >
+          <Carousel setApi={setUnknownEventsApi} className="flex w-full max-w-xl flex-row gap-2">
             <InfiniteCarouselPrev className="rounded-lg" />
             <CarouselContent className="h-full">
               {unknownEvents.map((event: Event) => (
                 <CarouselItem key={event.id} className="h-full">
                   <Card>
-                    <CardContent className="flex flex-col gap-2 p-6">
-                      <Image
-                        src={categoryMap[event.category].icon!}
-                        alt={event.category}
-                        height={48}
-                        width={48}
-                      />
-                      <span className="font-semibold">{tCategories(event.category)}</span>
-                      <div className="flex flex-col">
-                        <span>
-                          {format(event.startTimestamp, "PPPP", { locale: dateFnsLocale })}
-                        </span>
-                        <span>
-                          {format(new Date(event.startTimestamp), "HH:mm:ss", {
+                    <CardContent className="flex flex-col gap-2 pt-6">
+                      <span className="font-medium">{tCommon("event")}</span>
+                      {event && (
+                        <CardDescription className="pb-6">
+                          {format(event.startTimestamp, "cccc PPP", { locale: dateFnsLocale })}
+                          <br />
+                          {format(event.startTimestamp, "HH:mm:ss", {
                             locale: dateFnsLocale,
                           })}{" "}
                           -{" "}
-                          {format(new Date(event.endTimestamp), "HH:mm:ss", {
-                            locale: dateFnsLocale,
-                          })}
-                        </span>
-                      </div>
-                      <span className="text-brand-secondary font-bold">
-                        {event.consumptionInLiters.toFixed(2)} L
-                      </span>
-                      <div className="flex flex-col gap-2">
-                        <span> {tCommon("consumption-point")} </span>
-                        <ToggleGroup
-                          type="single"
-                          value={selectedCategory}
-                          onValueChange={(value) => {
-                            if (value) setSelectedCategory(value as Category);
-                          }}
-                          className="flex flex-wrap gap-2"
-                        >
-                          {filteredCategories.map((category: Category) => (
-                            <ToggleGroupItem
-                              className="data-[state=on]:bg-brand-secondary hover:text-primary hover:bg-brand-tertiary rounded-lg bg-gray-200 transition-colors"
-                              value={category}
-                              key={category}
-                            >
-                              <Image
-                                className="object-contain"
-                                src={categoryMap[category].icon!}
-                                alt={category}
-                                width={24}
-                                height={24}
-                              />
-                              <span className="text-xs">{tCategories(category)}</span>
-                              {selectedCategory === category && (
-                                <CircleCheck className="ml-2 h-4 w-4" />
-                              )}
-                            </ToggleGroupItem>
-                          ))}
-                        </ToggleGroup>
-                      </div>
+                          {event.endTimestamp
+                            ? format(event.endTimestamp, "HH:mm:ss", { locale: dateFnsLocale })
+                            : tCommon("in-progress")}
+                          <br />
+                          <br />
+                          <p className="text-brand-secondary font-bold">
+                            {event.consumptionInLiters.toFixed(1)} L
+                          </p>
+                        </CardDescription>
+                      )}
+
+                      <EditEventForm
+                        event={event}
+                        onFormSubmitSuccess={() => {
+                          utils.event.getUnknownEvents.invalidate();
+                        }}
+                      />
                     </CardContent>
                   </Card>
                 </CarouselItem>

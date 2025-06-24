@@ -58,13 +58,7 @@ export function LeakEventsCarousel() {
     <>
       {!isLoadingLeakEvents && leakEvents.length > 0 ? (
         <>
-          <Carousel
-            setApi={setLeakEventsApi}
-            className="flex w-full max-w-3xs flex-row gap-2 sm:max-w-xs md:max-w-sm lg:max-w-md"
-            opts={{
-              align: "start",
-            }}
-          >
+          <Carousel setApi={setLeakEventsApi} className="flex w-full max-w-xl flex-row gap-2">
             <InfiniteCarouselPrev className="rounded-lg" />
             <CarouselContent>
               {leakEvents.map((event: Event) => (
