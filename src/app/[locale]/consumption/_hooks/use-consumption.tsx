@@ -1,111 +1,58 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 import { skipToken } from "@tanstack/react-query";
-import {
-  addDays,
-  addHours,
-  addMonths,
-  addWeeks,
-  subDays,
-  subHours,
-  subMonths,
-  subWeeks,
-  startOfDay,
-  startOfHour,
-  startOfMonth,
-  startOfWeek,
-  endOfDay,
-  endOfHour,
-  endOfMonth,
-  endOfWeek,
-  min,
-} from "date-fns";
 
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
-import { Granularity, TimeWindow } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/errors";
-
-const granularityConfig = {
-  month: {
-    add: addMonths,
-    sub: subMonths,
-    startOf: startOfMonth,
-    endOf: endOfMonth,
-  },
-  week: {
-    add: addWeeks,
-    sub: subWeeks,
-    startOf: (date: Date) => startOfWeek(date, { weekStartsOn: 1 }),
-    endOf: (date: Date) => endOfWeek(date, { weekStartsOn: 1 }),
-  },
-  day: {
-    add: addDays,
-    sub: subDays,
-    startOf: startOfDay,
-    endOf: endOfDay,
-  },
-  hour: {
-    add: addHours,
-    sub: subHours,
-    startOf: startOfHour,
-    endOf: endOfHour,
-  },
-};
+import { Consumption, Granularity, TimeWindow } from "@domain/entities/consumption";
 
 export function useConsumption() {
+  const intervals = 4;
+
   const { selectedHouseholdId } = useHouseholdStore();
   const [granularity, setGranularity] = useState<Granularity>("month");
-  const [fetchTimeWindow, setFetchTimeWindow] = useState<TimeWindow | undefined>(undefined);
+  const [selectedPage, setSelectedPage] = useState<number>(0);
+  const [intervalConsumption, setIntervalConsumption] = useState<Consumption[]>([]);
   const [selectedTimeWindow, setSelectedTimeWindow] = useState<TimeWindow | undefined>(undefined);
 
-  const intervals = 4;
-  const currentGranularityConfig = granularityConfig[granularity];
-
-  useEffect(() => {
-    const now = new Date();
-    const start = currentGranularityConfig.sub(now, intervals - 1);
-    const alignedStart =
-      granularity === "hour"
-        ? currentGranularityConfig.startOf(start)
-        : startOfDay(currentGranularityConfig.startOf(start));
-    setFetchTimeWindow({ startDate: alignedStart, endDate: now });
-    setSelectedTimeWindow(undefined);
-  }, [granularity, currentGranularityConfig, intervals]);
-
-  const inputsReady =
-    !!selectedHouseholdId &&
-    !!fetchTimeWindow &&
-    !!fetchTimeWindow.startDate &&
-    !!fetchTimeWindow.endDate;
-
-  const queryInput = inputsReady
-    ? {
-        householdId: selectedHouseholdId,
-        startDate: fetchTimeWindow.startDate,
-        endDate: fetchTimeWindow.endDate,
-        granularity,
-      }
-    : skipToken;
-
   const {
-    data: consumptionData,
+    data: consumption,
     isLoading,
     error,
-    isError,
-  } = trpc.consumption.getConsumptionByGranularity.useQuery(queryInput, {
-    enabled: inputsReady,
-    staleTime: 5 * 60 * 1000,
-    retry: 1,
-  });
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = trpc.consumption.getConsumptionByGranularity.useInfiniteQuery(
+    {
+      householdId: selectedHouseholdId || (skipToken as unknown as string),
+      granularity,
+      limit: intervals,
+    },
+    {
+      enabled: !!selectedHouseholdId,
+      initialCursor: undefined,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
 
   useEffect(() => {
-    if (consumptionData && consumptionData.length > 0) {
-      const lastEntry = consumptionData[consumptionData.length - 1];
-      if (lastEntry && lastEntry.startDate && lastEntry.endDate) {
+    if (selectedHouseholdId) {
+      refetch();
+      setSelectedPage(0);
+    }
+  }, [granularity, refetch, selectedHouseholdId]);
+
+  const consumptionPages = useMemo(() => consumption?.pages || [], [consumption?.pages]);
+
+  useEffect(() => {
+    if (consumptionPages[selectedPage]?.data && consumptionPages[selectedPage].data.length > 0) {
+      const page = consumptionPages[selectedPage];
+      const firstEntry = page.data[0];
+      if (firstEntry && firstEntry.startDate && firstEntry.endDate) {
         setSelectedTimeWindow({
-          startDate: new Date(lastEntry.startDate),
-          endDate: new Date(lastEntry.endDate),
+          startDate: new Date(firstEntry.startDate),
+          endDate: new Date(firstEntry.endDate),
         });
       } else {
         setSelectedTimeWindow(undefined);
@@ -113,53 +60,65 @@ export function useConsumption() {
     } else {
       setSelectedTimeWindow(undefined);
     }
-  }, [consumptionData]);
+  }, [consumption, selectedPage, consumptionPages]);
 
   const canMoveTimeWindowForward = useCallback(() => {
-    if (!fetchTimeWindow?.endDate) return false;
-    return fetchTimeWindow.endDate < currentGranularityConfig.sub(new Date(), 1);
-  }, [fetchTimeWindow?.endDate, currentGranularityConfig]);
+    if (selectedPage === 0) {
+      return false;
+    }
+    return true;
+  }, [selectedPage]);
+
+  const canMoveTimeWindowBackward = useCallback(() => {
+    if (selectedPage + 1 >= consumptionPages.length && hasNextPage && !isFetchingNextPage) {
+      return true;
+    }
+    return selectedPage < consumptionPages.length - 1;
+  }, [selectedPage, hasNextPage, isFetchingNextPage, consumptionPages.length]);
 
   const moveTimeWindow = useCallback(
     (direction: "back" | "forward") => {
-      if (!fetchTimeWindow?.startDate || !fetchTimeWindow?.endDate) return;
-      if (direction === "forward" && !canMoveTimeWindowForward()) return;
-
-      const shift = direction === "back" ? -intervals : intervals;
-      const rawStart = currentGranularityConfig.add(fetchTimeWindow.startDate, shift);
-      const rawEnd = currentGranularityConfig.add(fetchTimeWindow.endDate, shift);
-      const newEnd =
-        direction === "forward"
-          ? min([rawEnd, new Date()])
-          : currentGranularityConfig.endOf(rawEnd);
-      const newStart =
-        granularity === "hour"
-          ? currentGranularityConfig.startOf(rawStart)
-          : startOfDay(currentGranularityConfig.startOf(rawStart));
-      setFetchTimeWindow({ startDate: newStart, endDate: newEnd });
+      if (direction === "back") {
+        if (selectedPage + 1 >= consumptionPages.length && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+        setSelectedPage((prevPage) => {
+          const newPage = prevPage + 1;
+          if (newPage < consumptionPages.length || hasNextPage) {
+            return newPage;
+          }
+          return prevPage;
+        });
+      } else if (direction === "forward") {
+        setSelectedPage((prevPage) => {
+          const newPage = prevPage - 1;
+          if (newPage >= 0) {
+            return newPage;
+          }
+          return prevPage;
+        });
+      }
     },
-    [fetchTimeWindow, currentGranularityConfig, canMoveTimeWindowForward, granularity, intervals]
+    [fetchNextPage, consumptionPages.length, hasNextPage, isFetchingNextPage, selectedPage]
   );
 
-  let finalError: ErrorKey | undefined = undefined;
-  if (isError && error) {
-    const message = error.message;
-    if (typeof message === "string") {
-      finalError = message as ErrorKey;
-    } else {
-      finalError = "UNKNOWN_ERROR" as ErrorKey;
-    }
-  }
+  useEffect(() => {
+    const currentIntervalData = consumptionPages[selectedPage]?.data || [];
+    setIntervalConsumption(currentIntervalData);
+  }, [consumptionPages, selectedPage]);
 
   return {
     granularity,
     setGranularity,
     selectedTimeWindow,
     setSelectedTimeWindow,
-    consumption: consumptionData || [],
-    isLoading,
-    error: finalError,
+    consumption: intervalConsumption,
+    isLoading: isLoading || isFetchingNextPage,
+    error,
     moveTimeWindow,
     canMoveTimeWindowForward,
+    canMoveTimeWindowBackward,
+    isFetchingNextPage,
+    hasNextPage,
   } as const;
 }

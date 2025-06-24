@@ -24,8 +24,8 @@ export class ApiEventRepository implements EventRepository {
             Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
           },
           params: {
-            ...(startDate && { startDate: startDate.toISOString() }),
-            ...(endDate && { endDate: endDate.toISOString() }),
+            ...(startDate && { start: startDate.toISOString() }),
+            ...(endDate && { end: endDate.toISOString() }),
             ...(categories && categories.length > 0 && { categories: categories.join(",") }),
             ...(sort && { sort }),
             ...(order && { order }),

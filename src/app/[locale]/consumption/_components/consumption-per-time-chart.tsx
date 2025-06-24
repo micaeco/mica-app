@@ -7,7 +7,6 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, LabelProps } from
 import { ChartConfig, ChartContainer } from "@app/_components/ui/chart";
 import { cn, formatDateRange } from "@app/_lib/utils";
 import { Consumption, Granularity, TimeWindow } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/errors";
 
 const chartConfig = {
   consumption: {
@@ -23,8 +22,8 @@ type Props = {
   consumption: Consumption[];
   moveTimeWindow: (direction: "forward" | "back") => void;
   canMoveTimeWindowForward: () => boolean;
+  canMoveTimeWindowBackward: () => boolean;
   isLoading: boolean;
-  error?: ErrorKey;
 };
 
 export function ConsumptionPerTimeChart({
@@ -34,11 +33,13 @@ export function ConsumptionPerTimeChart({
   consumption,
   moveTimeWindow,
   canMoveTimeWindowForward,
+  canMoveTimeWindowBackward,
   isLoading,
-  error,
 }: Props) {
   const locale = useLocale();
   const tCommon = useTranslations("common");
+
+  const reversedConsumption = [...consumption].reverse();
 
   const handleClick = (clickedConsumptionItem: Consumption) => {
     setSelectedTimeWindow({
@@ -48,7 +49,7 @@ export function ConsumptionPerTimeChart({
   };
 
   const handleLabelClick = (tag: string) => {
-    const clickedEntry = consumption.find(
+    const clickedEntry = reversedConsumption.find(
       (entry) => formatDateRange(entry.startDate, entry.endDate, granularity, locale) === tag
     );
     if (clickedEntry) {
@@ -65,7 +66,7 @@ export function ConsumptionPerTimeChart({
     return <LoaderCircle className="animate-spin" />;
   }
 
-  if (consumption.length === 0 || error) {
+  if (consumption.length === 0) {
     return (
       <div className="text-muted-foreground flex h-[350px] w-full items-center justify-center">
         {tCommon("no-data")}
@@ -77,12 +78,15 @@ export function ConsumptionPerTimeChart({
     <div className="flex w-full flex-row items-center">
       <ChevronLeft
         onClick={() => moveTimeWindow("back")}
-        className="text-muted-foreground hover:text-foreground cursor-pointer"
+        className={cn(
+          "text-muted-foreground hover:text-foreground cursor-pointer",
+          !canMoveTimeWindowBackward() && "pointer-events-none opacity-30"
+        )}
       />
 
       <ChartContainer config={chartConfig} className="w-full">
         <BarChart
-          data={consumption}
+          data={reversedConsumption}
           barSize={30}
           margin={{ top: 25, bottom: 10, left: 10, right: 10 }}
         >
@@ -99,12 +103,14 @@ export function ConsumptionPerTimeChart({
               <CustomTick
                 {...props}
                 onClick={handleLabelClick}
-                isSelected={props.index !== undefined && isSelected(consumption[props.index])}
+                isSelected={
+                  props.index !== undefined && isSelected(reversedConsumption[props.index])
+                }
               />
             )}
           />
           <Bar dataKey="consumptionInLiters" radius={20}>
-            {consumption.map((entry, index) => (
+            {reversedConsumption.map((entry, index) => (
               <Cell
                 key={`cell-${index}-${entry.startDate.toISOString()}`}
                 fill={
@@ -125,7 +131,9 @@ export function ConsumptionPerTimeChart({
                   width: Number(props.width) || 0,
                   value: Number(props.value) || 0,
                   isSelected:
-                    props.index !== undefined ? isSelected(consumption[props.index]) : false,
+                    props.index !== undefined
+                      ? isSelected(reversedConsumption[props.index])
+                      : false,
                 })
               }
             />

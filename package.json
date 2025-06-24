@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.6",
+    "@tanstack/react-query-devtools": "^5.81.2",
     "@types/negotiator": "^0.6.3",
     "@types/node": "^20",
     "@types/pg": "^8.15.4",

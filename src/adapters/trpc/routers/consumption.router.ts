@@ -23,21 +23,45 @@ export const consumptionRouter = createTRPCRouter({
     .input(
       z.object({
         householdId: z.string(),
-        startDate: z.date(),
-        endDate: z.date(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
         granularity: Granularity,
+        order: z.enum(["asc", "desc"]).optional(),
+        cursor: z.object({ timestamp: z.date() }).nullish(),
+        limit: z.number().min(1).default(10),
       })
     )
-    .output(z.array(Consumption))
+    .output(
+      z.object({
+        data: z.array(Consumption),
+        nextCursor: z.object({ timestamp: z.date() }).nullish(),
+      })
+    )
     .query(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate, granularity } = input;
+      const { householdId, startDate, endDate, granularity, order, cursor, limit } = input;
+      const queryLimit = limit + 1;
+
       const consumption = await ctx.consumptionRepo.getConsumptionByGranularity(
         householdId,
+        granularity,
         startDate,
         endDate,
-        granularity
+        order,
+        cursor || undefined,
+        queryLimit
       );
-      return consumption;
+
+      let nextCursor: { timestamp: Date } | undefined = undefined;
+
+      if (consumption.length > limit) {
+        nextCursor = { timestamp: consumption[limit - 1].startDate };
+        consumption.pop();
+      }
+
+      return {
+        data: consumption,
+        nextCursor,
+      };
     }),
 
   getCurrentMonthConsumption: protectedProcedure

@@ -8,13 +8,11 @@ import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { ChartConfig, ChartContainer } from "@app/_components/ui/chart";
 import { categories, Category, categoryMap } from "@domain/entities/category";
 import { CategoryBreakdown } from "@domain/entities/consumption";
-import { ErrorKey } from "@domain/entities/errors";
 
 type Props = {
   setSelectedCategories: (category: Category[] | undefined) => void;
   categoryBreakdown: CategoryBreakdown[];
   isLoading: boolean;
-  error?: ErrorKey;
 };
 
 const chartConfig: ChartConfig = categories.reduce((config: ChartConfig, category) => {
@@ -29,7 +27,6 @@ export function ConsumptionPerCategoryChart({
   setSelectedCategories,
   categoryBreakdown,
   isLoading,
-  error,
 }: Props) {
   const [activeCategory, setActiveCategory] = useState<Category | undefined>(undefined);
   const tCommon = useTranslations("common");
@@ -57,7 +54,7 @@ export function ConsumptionPerCategoryChart({
     return <LoaderCircle className="animate-spin" />;
   }
 
-  if (categoryBreakdown.length === 0 || error) {
+  if (categoryBreakdown.length === 0) {
     return (
       <div className="text-muted-foreground flex aspect-13/9 min-h-[280px] w-full items-center justify-center">
         {tCommon("no-data")}

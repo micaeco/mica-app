@@ -55,9 +55,12 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
 
   async getConsumptionByGranularity(
     householdId: string,
-    startDate: Date,
-    endDate: Date,
-    granularity: Granularity
+    granularity: Granularity,
+    startDate?: Date,
+    endDate?: Date,
+    order: "asc" | "desc" = "desc",
+    cursor?: { timestamp: Date },
+    limit?: number
   ): Promise<Consumption[]> {
     return axios
       .get<ApiConsumptionResponse>(
@@ -67,9 +70,13 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
             Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
           },
           params: {
-            start: startDate.toISOString(),
-            end: endDate.toISOString(),
+            ...(startDate && { start: startDate?.toISOString() }),
+            ...(endDate && { end: endDate?.toISOString() }),
             granularity,
+            sort: "timestamp",
+            order,
+            ...(cursor && { cursor: JSON.stringify(cursor) }),
+            ...(limit && { limit }),
           },
         }
       )
@@ -77,7 +84,6 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
         return this.mapApiConsumptionToEntity(response.data);
       })
       .catch((error) => {
-        debugger;
         throw new Error("Failed to fetch consumption data by granularity", { cause: error });
       });
   }

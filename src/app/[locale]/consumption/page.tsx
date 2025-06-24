@@ -33,9 +33,9 @@ export default function ConsumptionPage() {
     setSelectedTimeWindow,
     consumption,
     isLoading: isLoadingConsumption,
-    error: errorConsumption,
     moveTimeWindow,
     canMoveTimeWindowForward,
+    canMoveTimeWindowBackward,
   } = useConsumption();
 
   const [selectedCategories, setSelectedCategories] = useState<Category[] | undefined>(undefined);
@@ -75,7 +75,7 @@ export default function ConsumptionPage() {
       <TimeGranularitySelect granularity={granularity} setGranularity={setGranularity} />
 
       <div className="flex flex-col gap-4 2xl:flex-row">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 2xl:min-w-md">
           <Card className="flex h-full flex-col">
             <CardContent className="flex flex-grow flex-col items-center justify-center px-2 pt-6">
               <ConsumptionPerTimeChart
@@ -85,8 +85,8 @@ export default function ConsumptionPage() {
                 consumption={consumption}
                 moveTimeWindow={moveTimeWindow}
                 canMoveTimeWindowForward={canMoveTimeWindowForward}
+                canMoveTimeWindowBackward={canMoveTimeWindowBackward}
                 isLoading={isLoadingConsumption}
-                error={errorConsumption}
               />
             </CardContent>
           </Card>
@@ -138,7 +138,6 @@ export default function ConsumptionPage() {
                 categoryBreakdown={currentConsumption?.categoryBreakdown || []}
                 setSelectedCategories={setSelectedCategories}
                 isLoading={isLoadingConsumption}
-                error={errorConsumption}
               />
             </CardContent>
           </Card>

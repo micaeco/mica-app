@@ -4,9 +4,12 @@ export interface ConsumptionRepository {
 
   getConsumptionByGranularity(
     householdId: string,
-    startDate: Date,
-    endDate: Date,
-    granularity: Granularity
+    granularity: Granularity,
+    startDate?: Date,
+    endDate?: Date,
+    order?: "asc" | "desc",
+    cursor?: { timestamp: Date },
+    limit?: number
   ): Promise<Consumption[]>;
 
   getCurrentMonthConsumption(householdId: string): Promise<Consumption>;
