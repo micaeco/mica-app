@@ -103,7 +103,7 @@ export class ApiEventRepository implements EventRepository {
     endDate?: Date,
     order: "asc" | "desc" = "desc",
     cursor?: { timestamp: Date; id: string },
-    limit: number = 50
+    limit?: number
   ): Promise<Event[]> {
     try {
       const response = await axios.get<EventApiDataResponse>(
@@ -135,7 +135,7 @@ export class ApiEventRepository implements EventRepository {
     endDate?: Date,
     order: "asc" | "desc" = "desc",
     cursor?: { timestamp: Date; id: string },
-    limit: number = 50
+    limit?: number
   ): Promise<Event[]> {
     try {
       const response = await axios.get<EventApiDataResponse>(
