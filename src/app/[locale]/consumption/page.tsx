@@ -24,7 +24,6 @@ import { Category } from "@domain/entities/category";
 
 export default function ConsumptionPage() {
   const locale = useLocale();
-  const t = useTranslations("consumption-per-time-chart");
   const tCommon = useTranslations("common");
 
   const {
@@ -59,15 +58,15 @@ export default function ConsumptionPage() {
     if (granularity === "hour") {
       const startHour = format(startDate, "HH:mm");
       const endHour = format(endDate, "HH:mm");
-      return `${format(startDate, "dd MMM y", { locale: dateFnsLocale })} | ${startHour} - ${endHour}`;
+      return `${format(startDate, "dd MMMM y", { locale: dateFnsLocale })} | ${startHour} - ${endHour}`;
     } else if (granularity === "day") {
-      return format(startDate, "dd MMM y", { locale: dateFnsLocale });
+      return format(startDate, "dd MMMM y", { locale: dateFnsLocale });
     } else if (granularity === "week") {
-      return `${format(startDate, "dd MMM", { locale: dateFnsLocale })} - ${format(endDate, sameYear ? "dd MMM y" : "dd MMM y", { locale: dateFnsLocale })}`;
+      return `${format(startDate, "dd MMMM", { locale: dateFnsLocale })} - ${format(endDate, sameYear ? "dd MMMM y" : "dd MMMM y", { locale: dateFnsLocale })}`;
     } else if (granularity === "month") {
-      return format(startDate, "MMM y", { locale: dateFnsLocale });
+      return format(startDate, "MMMM y", { locale: dateFnsLocale });
     } else {
-      return `${format(startDate, "dd MMM y", { locale: dateFnsLocale })} - ${format(endDate, "dd MMM y", { locale: dateFnsLocale })}`;
+      return `${format(startDate, "dd MMMM y", { locale: dateFnsLocale })} - ${format(endDate, "dd MMMM y", { locale: dateFnsLocale })}`;
     }
   };
 
@@ -75,22 +74,10 @@ export default function ConsumptionPage() {
     <div className="flex w-full flex-col gap-4 p-4">
       <TimeGranularitySelect granularity={granularity} setGranularity={setGranularity} />
 
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-4 xl:flex-row">
-          <Card className="flex h-full flex-col xl:w-1/2">
-            <CardHeader>
-              <CardTitle className="text-2xl">
-                {isLoadingConsumption ? (
-                  <Skeleton className="h-8 w-48" />
-                ) : (
-                  formatSelectedTimeWindow()
-                )}
-              </CardTitle>
-              <CardDescription>
-                {t("description", { granularity: tCommon(granularity) })}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-grow flex-col items-center justify-center px-2">
+      <div className="flex flex-col gap-4 2xl:flex-row">
+        <div className="flex flex-col gap-4">
+          <Card className="flex h-full flex-col">
+            <CardContent className="flex flex-grow flex-col items-center justify-center px-2 pt-6">
               <ConsumptionPerTimeChart
                 selectedTimeWindow={selectedTimeWindow}
                 setSelectedTimeWindow={setSelectedTimeWindow}
@@ -104,29 +91,34 @@ export default function ConsumptionPage() {
             </CardContent>
           </Card>
 
-          <Card className="flex h-full flex-col xl:w-1/2">
+          <Card className="flex h-full flex-col">
             <CardHeader>
               <CardTitle className="space-x-4">
                 {isLoadingConsumption ? (
                   <Skeleton className="h-8 w-32" />
                 ) : (
-                  <div className="flex items-end gap-4">
-                    <span className="text-2xl">
-                      {currentConsumption?.consumptionInLiters.toFixed(2) ?? "--"} L
+                  <div className="flex flex-col gap-4">
+                    <span className="font-medium first-letter:capitalize">
+                      {formatSelectedTimeWindow()}
                     </span>
-                    <p className="flex items-center">
-                      {currentConsumption &&
-                      currentConsumption.consumptionPercentDeviationFromBaseline > 0 ? (
-                        <ChevronUp />
-                      ) : (
-                        <ChevronDown />
-                      )}
-                      {currentConsumption &&
-                        Math.abs(
-                          currentConsumption?.consumptionPercentDeviationFromBaseline
-                        ).toFixed(0)}
-                      %
-                    </p>
+                    <div className="flex flex-row gap-2">
+                      <span className="text-2xl">
+                        {currentConsumption?.consumptionInLiters.toFixed(2) ?? "--"} L
+                      </span>
+                      <span className="text-muted-foreground flex items-end text-sm font-light">
+                        {currentConsumption &&
+                        currentConsumption.consumptionPercentDeviationFromBaseline > 0 ? (
+                          <ChevronUp />
+                        ) : (
+                          <ChevronDown />
+                        )}
+                        {currentConsumption &&
+                          Math.abs(
+                            currentConsumption?.consumptionPercentDeviationFromBaseline
+                          ).toFixed(0)}
+                        %
+                      </span>
+                    </div>
                   </div>
                 )}
               </CardTitle>
@@ -152,11 +144,12 @@ export default function ConsumptionPage() {
           </Card>
         </div>
 
-        <Card className="w-full">
-          <CardContent className="p-6">
+        <Card className="flex w-full flex-col 2xl:max-h-[calc(140vh-250px)] 2xl:min-h-[calc(100vh-250px)] 2xl:flex-grow">
+          <CardContent className="flex-grow p-6 2xl:overflow-y-auto">
             <ConsumptionPerEventChart
               selectedCategories={selectedCategories}
               selectedTimeWindow={selectedTimeWindow}
+              granularity={granularity}
             />
           </CardContent>
         </Card>

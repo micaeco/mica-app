@@ -15,15 +15,20 @@ import { Skeleton } from "@app/_components/ui/skeleton";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 import { Category, categories, categoryMap } from "@domain/entities/category";
-import { TimeWindow } from "@domain/entities/consumption";
+import { Granularity, TimeWindow } from "@domain/entities/consumption";
 import { Event } from "@domain/entities/event";
 
 type Props = {
   selectedCategories: Category[] | undefined;
   selectedTimeWindow: TimeWindow | undefined;
+  granularity: Granularity;
 };
 
-export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindow }: Props) {
+export function ConsumptionPerEventChart({
+  selectedCategories,
+  selectedTimeWindow,
+  granularity,
+}: Props) {
   const t = useTranslations("consumption-per-event-chart");
   const tCommon = useTranslations("common");
 
@@ -83,7 +88,12 @@ export function ConsumptionPerEventChart({ selectedCategories, selectedTimeWindo
     return (
       <div className="space-y-4">
         {events.map((event) => (
-          <EventBar key={event.id} event={event} totalConsumption={maxConsumption} />
+          <EventBar
+            key={event.id}
+            event={event}
+            totalConsumption={maxConsumption}
+            granularity={granularity}
+          />
         ))}
         {(hasNextPage || isLoading || isFetchingNextPage) && (
           <div ref={ref} className="py-4 text-center">

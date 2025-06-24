@@ -12,14 +12,16 @@ import { ConsumptionBar } from "@app/_components/consumption-bar";
 import { EditEventSheet } from "@app/_components/edit-event-sheet";
 import { getDateFnsLocale } from "@app/_i18n/routing";
 import { categoryMap } from "@domain/entities/category";
+import { Granularity } from "@domain/entities/consumption";
 import { Event } from "@domain/entities/event";
 
 interface EventBarProps {
   event: Event;
   totalConsumption: number;
+  granularity?: Granularity;
 }
 
-export function EventBar({ event, totalConsumption }: EventBarProps) {
+export function EventBar({ event, totalConsumption, granularity }: EventBarProps) {
   const tCommon = useTranslations("common");
   const tCategories = useTranslations("common.categories");
   const locale = useLocale();
@@ -56,8 +58,11 @@ export function EventBar({ event, totalConsumption }: EventBarProps) {
                 )}
               </div>
               <span className="line-clamp-1">
-                {format(event.startTimestamp, "HH:mm", { locale: dateLocale })} –{" "}
-                {format(event.endTimestamp, "HH:mm", { locale: dateLocale })}
+                {granularity === "month" || granularity === "week"
+                  ? format(event.startTimestamp, "eeee d", { locale: dateLocale })
+                  : format(event.startTimestamp, "HH:mm", { locale: dateLocale }) +
+                    " – " +
+                    format(event.endTimestamp, "HH:mm", { locale: dateLocale })}
               </span>
             </div>
             <div className="flex flex-row items-center gap-2">
