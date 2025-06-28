@@ -12,6 +12,34 @@ export class MockEventRepository implements EventRepository {
     this.initializeEvents();
   }
 
+  async create(
+    userId: string,
+    householdId: string,
+    category: Category,
+    startDate?: Date,
+    endDate?: Date,
+    tag?: string,
+    notes?: string
+  ): Promise<Event> {
+    const eventStartDate = startDate || new Date();
+    const eventEndDate =
+      endDate || new Date(eventStartDate.getTime() + this.averageEventDurationMs);
+
+    const newEvent: Event = {
+      id: (this.events.length + 1).toString(),
+      category,
+      startTimestamp: eventStartDate,
+      endTimestamp: eventEndDate,
+      durationInSeconds: Math.floor((eventEndDate.getTime() - eventStartDate.getTime()) / 1000),
+      consumptionInLiters: Math.round(Math.random() * 100) / 10, // Random consumption for mock
+      notes: notes ? [notes] : [],
+      tag: tag || undefined,
+    };
+
+    this.events.push(newEvent);
+    return newEvent;
+  }
+
   async getEvents(
     householdId: string,
     startDate?: Date,

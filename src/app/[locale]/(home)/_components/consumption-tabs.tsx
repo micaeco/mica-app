@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 
 import { Skeleton } from "@app/_components/ui/skeleton";
 import { Tabs, TabsContent, TabsTrigger, TabsList } from "@app/_components/ui/tabs";
@@ -13,7 +12,6 @@ import { useHouseholdStore } from "@app/_stores/household";
 
 export function ConsumptionTabs() {
   const tCommon = useTranslations("common");
-  const tErrors = useTranslations("common.errors");
 
   const [granularity, setGranularity] = useState<"month" | "today">("month");
 
@@ -27,35 +25,23 @@ export function ConsumptionTabs() {
     retry: 1,
   };
 
-  const {
-    data: consumptionMonth,
-    isLoading: isLoadingMonth,
-    error: errorMonth,
-  } = trpc.consumption.getCurrentMonthConsumption.useQuery(
-    { householdId: selectedHouseholdId },
-    {
-      ...queryOptions,
-      enabled: !!selectedHouseholdId && granularity == "month",
-    }
-  );
+  const { data: consumptionMonth, isLoading: isLoadingMonth } =
+    trpc.consumption.getCurrentMonthConsumption.useQuery(
+      { householdId: selectedHouseholdId },
+      {
+        ...queryOptions,
+        enabled: !!selectedHouseholdId && granularity == "month",
+      }
+    );
 
-  const {
-    data: consumptionToday,
-    isLoading: isLoadingToday,
-    error: errorToday,
-  } = trpc.consumption.getCurrentDayConsumption.useQuery(
-    { householdId: selectedHouseholdId },
-    {
-      ...queryOptions,
-      enabled: !!selectedHouseholdId && granularity == "today",
-    }
-  );
-
-  const error = errorMonth ?? errorToday;
-
-  if (error) {
-    toast.error(tErrors(/*error.data?.code || */ "INTERNAL_SERVER_ERROR"));
-  }
+  const { data: consumptionToday, isLoading: isLoadingToday } =
+    trpc.consumption.getCurrentDayConsumption.useQuery(
+      { householdId: selectedHouseholdId },
+      {
+        ...queryOptions,
+        enabled: !!selectedHouseholdId && granularity == "today",
+      }
+    );
 
   return (
     <Tabs defaultValue="month">

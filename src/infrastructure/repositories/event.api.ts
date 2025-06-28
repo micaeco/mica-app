@@ -6,6 +6,49 @@ import { EventRepository } from "@domain/repositories/event";
 import { env } from "env";
 
 export class ApiEventRepository implements EventRepository {
+  async create(
+    userId: string,
+    householdId: string,
+    category: Category,
+    startDate?: Date,
+    endDate?: Date,
+    tag?: string,
+    notes?: string
+  ): Promise<Event> {
+    try {
+      console.log("Creating event with data:", {
+        userId,
+        householdId,
+        category,
+        startDate,
+        endDate,
+        tag,
+        notes,
+      });
+      const response = await axios.post<EventApiResponse>(
+        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
+        {
+          userId,
+          category,
+          ...(startDate && { start: startDate?.toISOString() }),
+          ...(endDate && { end: endDate?.toISOString() }),
+          ...(tag && { tag }),
+          ...(notes && { notes }),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+          },
+        }
+      );
+      console.log("Event created:", response.data);
+      return mapApiResponseToEvent(response.data);
+    } catch (error) {
+      console.error("Error creating event:", error);
+      throw new Error("Failed to create event");
+    }
+  }
+
   async getEvents(
     householdId: string,
     startDate?: Date,

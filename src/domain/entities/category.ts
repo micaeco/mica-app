@@ -1,13 +1,15 @@
 import { z } from "zod";
 
 export const categories = [
-  "sink",
   "shower",
+  "sink",
   "toilet",
   "dishwasher",
   "washer",
-  "irrigation",
+  "softener",
+  "osmosis",
   "pool",
+  "irrigation",
   "leak",
   "other",
   "unknown",
@@ -68,5 +70,13 @@ export const categoryMap: Record<Category, CategoryMetadata> = {
   },
   rest: {
     color: "muted-foreground",
+  },
+  softener: {
+    icon: "/icons/sink.webp",
+    color: "chart-1",
+  },
+  osmosis: {
+    icon: "/icons/sink.webp",
+    color: "chart-2",
   },
 };

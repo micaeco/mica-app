@@ -69,10 +69,11 @@
       "washer": "Washer",
       "toilet": "Toilet",
       "sink": "Sink",
-      "dishwasher": "Dishwasher",
       "irrigation": "Irrigation",
       "pool": "Pool",
       "unknown": "Unknown",
+      "softener": "Softener",
+      "osmosis": "Osmosis",
       "leak": "Leak",
       "other": "Other",
       "rest": "Rest"
@@ -182,6 +183,7 @@
     "enable-timer": "Enable Timer",
     "set-start-time": "Starts now",
     "set-end-time": "Ends now",
+    "end-time-reset": "End time has been reset",
     "event-created-successfully": "Event created successfully"
   },
   "edit-event-sheet": {

@@ -73,6 +73,8 @@
       "irrigation": "Reg",
       "pool": "Piscina",
       "unknown": "Desconegut",
+      "softener": "Descalcificador",
+      "osmosis": "Osmosis",
       "leak": "Fuita",
       "other": "Altres",
       "rest": "Resta"
@@ -182,6 +184,7 @@
     "enable-timer": "Activar temporitzador",
     "set-start-time": "Ara comença",
     "set-end-time": "Ara acaba",
+    "end-time-reset": "El moment de finalització s'ha restablert",
     "event-created-successfully": "Esdeveniment creat correctament"
   },
   "edit-event-sheet": {

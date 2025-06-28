@@ -2,6 +2,16 @@ import { Category } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 
 export interface EventRepository {
+  create(
+    userId: string,
+    householdId: string,
+    category: Category,
+    startDate?: Date,
+    endDate?: Date,
+    tag?: string,
+    notes?: string
+  ): Promise<Event>;
+
   getEvents(
     householdId: string,
     startDate?: Date,

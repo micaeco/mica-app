@@ -68,11 +68,13 @@
       "shower": "Ducha",
       "washer": "Lavadora",
       "toilet": "Inodoro",
-      "sink": "Fregadero",
+      "sink": "Aixeta",
       "dishwasher": "Lavavajillas",
       "irrigation": "Riego",
       "pool": "Piscina",
       "unknown": "Desconocido",
+      "softener": "Descalcificador",
+      "osmosis": "Osmosis",
       "leak": "Fuga",
       "other": "Otro",
       "rest": "Resto"
@@ -182,6 +184,7 @@
     "enable-timer": "Activar temporizador",
     "set-start-time": "Empieza ahora",
     "set-end-time": "Acaba ahora",
+    "end-time-reset": "El momento de finalización se ha restablecido",
     "event-created-successfully": "Evento creado correctamente"
   },
   "edit-event-sheet": {

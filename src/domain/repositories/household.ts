@@ -3,6 +3,8 @@ import { Household } from "@domain/entities/household";
 export interface HouseholdRepository {
   create(household: Omit<Household, "id">): Promise<Household>;
 
+  exists(householdId: string): Promise<boolean>;
+
   findAll(): Promise<Household[]>;
 
   findById(householdId: string): Promise<Household | null>;

@@ -10,10 +10,6 @@ export class MockHouseholdRepository implements HouseholdRepository {
     this.households = [...mockHouseholds];
   }
 
-  async findAll(): Promise<Household[]> {
-    return [...this.households];
-  }
-
   async create(household: Omit<Household, "id">): Promise<Household> {
     const newHousehold: Household = {
       ...household,
@@ -23,6 +19,14 @@ export class MockHouseholdRepository implements HouseholdRepository {
     };
     this.households.push(newHousehold);
     return newHousehold;
+  }
+
+  async exists(householdId: string): Promise<boolean> {
+    return this.households.some((household) => household.id === householdId);
+  }
+
+  async findAll(): Promise<Household[]> {
+    return [...this.households];
   }
 
   async findById(householdId: string): Promise<Household | null> {

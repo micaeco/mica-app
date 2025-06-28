@@ -24,8 +24,8 @@ export default function Home() {
         </Card>
       </div>
 
-      <Card className="w-full xl:overflow-y-auto">
-        <CardHeader>
+      <Card className="w-full xl:flex xl:flex-col xl:overflow-hidden">
+        <CardHeader className="xl:flex-shrink-0">
           <CardTitle className="flex flex-row items-center gap-2">
             {tEventsList("title")}
             <LabelEventSheet>
@@ -33,7 +33,7 @@ export default function Home() {
             </LabelEventSheet>
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="xl:flex-1 xl:overflow-y-auto">
           <EventsList />
         </CardContent>
       </Card>

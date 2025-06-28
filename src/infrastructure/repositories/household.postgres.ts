@@ -39,6 +39,15 @@ export class PostgresHouseholdRepository implements HouseholdRepository {
     return mapHouseholdFromSchema(newHousehold);
   }
 
+  async exists(householdId: string): Promise<boolean> {
+    const households = await this.db
+      .select()
+      .from(householdSchema)
+      .where(eq(householdSchema.id, householdId));
+
+    return households.length > 0;
+  }
+
   async findAll(): Promise<Household[]> {
     const households = await this.db.select().from(householdSchema);
     return households.map(mapHouseholdFromSchema);
