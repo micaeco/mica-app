@@ -66,7 +66,7 @@ export function UnknownEventsCarousel() {
                     <CardContent className="flex flex-col gap-2 pt-6">
                       <span className="font-medium">{tCommon("event")}</span>
                       {event && (
-                        <CardDescription className="pb-6">
+                        <CardDescription>
                           {format(event.startTimestamp, "cccc PPP", { locale: dateFnsLocale })}
                           <br />
                           {format(event.startTimestamp, "HH:mm:ss", {
@@ -76,9 +76,7 @@ export function UnknownEventsCarousel() {
                           {event.endTimestamp
                             ? format(event.endTimestamp, "HH:mm:ss", { locale: dateFnsLocale })
                             : tCommon("in-progress")}
-                          <br />
-                          <br />
-                          <p className="text-brand-secondary font-bold">
+                          <p className="text-brand-secondary py-4 font-bold">
                             {event.consumptionInLiters.toFixed(1)} L
                           </p>
                         </CardDescription>
