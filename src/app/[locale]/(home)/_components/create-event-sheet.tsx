@@ -79,7 +79,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
     defaultValues: defaultFormValues,
   });
 
-  const mutation = trpc.event.createEvent.useMutation({
+  const mutation = trpc.event.create.useMutation({
     onSuccess: () => {
       toast.success(tNewEventSheet("event-created-successfully"));
       eventForm.reset(defaultFormValues);

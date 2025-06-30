@@ -77,7 +77,7 @@ export function EditEventForm({
 
   const utils = trpc.useUtils();
 
-  const { mutate: updateEvent } = trpc.event.updateEvent.useMutation({
+  const { mutate: updateEvent } = trpc.event.update.useMutation({
     onSuccess: () => {
       utils.event.invalidate();
       eventForm.reset();

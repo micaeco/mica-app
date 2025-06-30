@@ -295,7 +295,7 @@ export const eventRouter = createTRPCRouter({
       };
     }),
 
-  updateEvent: protectedProcedure
+  update: protectedProcedure
     .input(
       z.object({
         eventId: z.string(),
@@ -310,7 +310,7 @@ export const eventRouter = createTRPCRouter({
       await ctx.eventRepo.updateEvent(ctx.user.sub, eventId, startDate, endDate, category, tag);
     }),
 
-  createEvent: protectedProcedure
+  create: protectedProcedure
     .input(
       z.object({
         householdId: z.string(),
