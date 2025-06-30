@@ -9,6 +9,38 @@ const hoursBeforeNowForLeakEvents = 3;
 const hoursBeforeNowForUnknownEvents = 3;
 
 export const eventRouter = createTRPCRouter({
+  create: protectedProcedure
+    .input(
+      z.object({
+        householdId: z.string(),
+        category: Category,
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        tag: z.string().optional(),
+        notes: z.string().optional(),
+      })
+    )
+    .output(Event)
+    .mutation(async ({ input, ctx }) => {
+      const { householdId, startDate, endDate, category, tag, notes } = input;
+
+      if (!(await ctx.householdRepo.exists(householdId))) {
+        throw new Error("Household does not exist");
+      }
+
+      const event = await ctx.eventRepo.create(
+        householdId,
+        ctx.user.sub,
+        category,
+        startDate,
+        endDate,
+        tag,
+        notes
+      );
+
+      return event;
+    }),
+
   getEvents: protectedProcedure
     .input(
       z.object({
@@ -308,37 +340,5 @@ export const eventRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { eventId, startDate, endDate, category, tag } = input;
       await ctx.eventRepo.updateEvent(ctx.user.sub, eventId, startDate, endDate, category, tag);
-    }),
-
-  create: protectedProcedure
-    .input(
-      z.object({
-        householdId: z.string(),
-        category: Category,
-        startDate: z.date().optional(),
-        endDate: z.date().optional(),
-        tag: z.string().optional(),
-        notes: z.string().optional(),
-      })
-    )
-    .output(Event)
-    .mutation(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate, category, tag, notes } = input;
-
-      if (!(await ctx.householdRepo.exists(householdId))) {
-        throw new Error("Household does not exist");
-      }
-
-      const event = await ctx.eventRepo.create(
-        householdId,
-        ctx.user.sub,
-        category,
-        startDate,
-        endDate,
-        tag,
-        notes
-      );
-
-      return event;
     }),
 });
