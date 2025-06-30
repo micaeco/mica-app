@@ -47,16 +47,12 @@ export function EditEventSheet({
               {event.endTimestamp
                 ? format(event.endTimestamp, "HH:mm:ss", { locale: dateFnsLocale })
                 : tCommon("in-progress")}
-              <br />
-              <br />
-              <p className="text-brand-secondary font-bold">
+              <p className="text-brand-secondary py-4 font-bold">
                 {event.consumptionInLiters.toFixed(1)} L
               </p>
             </SheetDescription>
           )}
         </SheetHeader>
-
-        <br />
 
         <EditEventForm
           event={event}
