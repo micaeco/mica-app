@@ -7,13 +7,21 @@ import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheck, Edit, LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { EditTagsDialog } from "@app/_components/edit-tags-dialog";
 import { Button } from "@app/_components/ui/button";
-import { Form } from "@app/_components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@app/_components/ui/form";
 import { ToggleGroup, ToggleGroupItem } from "@app/_components/ui/toggle-group";
 import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
@@ -23,8 +31,8 @@ import { Event } from "@domain/entities/event";
 import { Tag } from "@domain/entities/tag";
 
 const editEventFormSchema = z.object({
-  category: z.custom<Category>().optional(),
-  tag: z.string().optional(),
+  category: z.custom<Category>().nullable(),
+  tag: z.string().nullable(),
 });
 
 type EditEventFormValues = z.infer<typeof editEventFormSchema>;
@@ -95,8 +103,8 @@ export function EditEventForm({
       eventId: event.id,
       startDate: event.startTimestamp,
       endDate: event.endTimestamp,
-      category: data.category,
-      tag: data.tag,
+      category: data.category ?? undefined,
+      tag: data.tag ?? undefined,
     });
   };
 
@@ -105,28 +113,28 @@ export function EditEventForm({
       <Form {...eventForm}>
         <form onSubmit={eventForm.handleSubmit(onSubmitEvent)} className="flex flex-col space-y-6">
           {/* Category */}
-          <div className="flex flex-col gap-2">
-            <span className="font-medium">{tCommon("consumption-point")}</span>
-            <Controller
-              control={eventForm.control}
-              name="category"
-              render={({ field }) => {
-                const currentCategoryValue = field.value;
-                return (
+          <FormField
+            control={eventForm.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <span className="font-medium">{tCommon("consumption-point")}</span>
+                </FormLabel>
+                <FormControl>
                   <ToggleGroup
                     type="single"
-                    value={field.value || ""}
-                    onValueChange={(valueFromGroup: string) => {
-                      const newCategory =
-                        valueFromGroup === "" ? undefined : (valueFromGroup as Category);
-                      field.onChange(newCategory);
-                      if (currentCategoryValue !== newCategory) {
-                        eventForm.setValue("tag", undefined, { shouldValidate: false });
+                    value={field.value ?? ""}
+                    onValueChange={(value: Category | "") => {
+                      const newValue = value || null;
+                      if (field.value !== newValue) {
+                        eventForm.setValue("tag", null);
                       }
+                      field.onChange(newValue);
                     }}
                     className="flex flex-wrap gap-2"
                   >
-                    {filteredCategories.map((category: Category) => (
+                    {filteredCategories.map((category) => (
                       <ToggleGroupItem
                         className={cn(
                           "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
@@ -144,72 +152,66 @@ export function EditEventForm({
                           height={24}
                         />
                         <span className="ml-1 text-sm">{tCategories(category)}</span>
-                        {field.value === category && <CircleCheck className="h-4 w-4" />}
+                        {field.value === category && <CircleCheck />}
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
-                );
-              }}
-            />
-            {eventForm.formState.errors.category && (
-              <p className="text-destructive text-sm">
-                {eventForm.formState.errors.category.message}
-              </p>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
+          />
 
           {/* Tag */}
           <div className="flex flex-col gap-2">
-            <span className="mt-2 font-medium">{tCommon("tag")}</span>
-            {isLoadingTags ? (
-              <LoaderCircle className="animate-spin" />
-            ) : !tags || tags.length === 0 ? (
-              <div className="flex flex-col gap-2">
-                <span className="text-muted-foreground text-sm">
-                  {tEditEventSheet("no-tags-for-category")}
-                </span>
-              </div>
-            ) : (
-              <Controller
-                control={eventForm.control}
-                name="tag"
-                render={({ field }) => (
-                  <ToggleGroup
-                    type="single"
-                    value={field.value || ""}
-                    onValueChange={(valueFromGroup: string) => {
-                      field.onChange(valueFromGroup === "" ? undefined : valueFromGroup);
-                    }}
-                    className="flex flex-wrap gap-2"
-                  >
-                    {tags.map((tag: Tag) => (
-                      <ToggleGroupItem
-                        className={cn(
-                          "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                          tag.name === field.value ? "!bg-brand-secondary" : "bg-gray-100"
-                        )}
-                        value={tag.name}
-                        key={tag.name + tag.category + tag.householdId}
-                        aria-label={tag.name}
+            <FormField
+              control={eventForm.control}
+              name="tag"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{tCommon("tag")}</FormLabel>
+                  <FormControl>
+                    {isLoadingTags ? (
+                      <LoaderCircle className="animate-spin" />
+                    ) : !tags || tags.length === 0 ? (
+                      <FormDescription className="text-muted-foreground text-sm">
+                        {tEditEventSheet("no-tags-for-category")}
+                      </FormDescription>
+                    ) : (
+                      <ToggleGroup
+                        type="single"
+                        value={field.value ?? ""}
+                        onValueChange={(value) => field.onChange(value || null)}
+                        className="flex flex-wrap gap-2"
                       >
-                        <span className="text-sm">{tag.name}</span>
-                        {field.value === tag.name && <CircleCheck className="h-4 w-4" />}
-                      </ToggleGroupItem>
-                    ))}
-                  </ToggleGroup>
-                )}
-              />
-            )}
+                        {tags.map((tag: Tag) => (
+                          <ToggleGroupItem
+                            className={cn(
+                              "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
+                              tag.name === field.value ? "!bg-brand-secondary" : "bg-gray-100"
+                            )}
+                            value={tag.name}
+                            key={tag.name}
+                            aria-label={tag.name}
+                          >
+                            <span className="text-sm">{tag.name}</span>
+                            {field.value === tag.name && <CircleCheck />}
+                          </ToggleGroupItem>
+                        ))}
+                      </ToggleGroup>
+                    )}
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             <Button
               size="sm"
               type="button"
               variant="secondary"
               className="w-fit"
-              onClick={() => {
-                setIsEditTagsDialogOpen(true);
-              }}
+              onClick={() => setIsEditTagsDialogOpen(true)}
             >
-              <Edit className="h-4 w-4" />
+              <Edit />
               {tEditTagsDialog("title")}
             </Button>
           </div>
