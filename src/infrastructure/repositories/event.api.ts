@@ -14,18 +14,9 @@ export class ApiEventRepository implements EventRepository {
     endDate?: Date,
     tag?: string,
     notes?: string
-  ): Promise<Event> {
+  ): Promise<void> {
     try {
-      console.log("Creating event with data:", {
-        userId,
-        householdId,
-        category,
-        startDate,
-        endDate,
-        tag,
-        notes,
-      });
-      const response = await axios.post<EventApiResponse>(
+      await axios.post(
         env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events",
         {
           userId,
@@ -41,10 +32,8 @@ export class ApiEventRepository implements EventRepository {
           },
         }
       );
-      console.log("Event created:", response.data);
-      return mapApiResponseToEvent(response.data);
-    } catch (error) {
-      console.error("Error creating event:", error);
+      return;
+    } catch {
       throw new Error("Failed to create event");
     }
   }
@@ -161,6 +150,22 @@ export class ApiEventRepository implements EventRepository {
       );
     } catch {
       throw new Error("Failed to update event");
+    }
+  }
+
+  async deleteByTag(householdId: string, category: string, tag: string): Promise<void> {
+    try {
+      await axios.delete(env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/tags", {
+        headers: {
+          Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+        },
+        params: {
+          tag,
+          category,
+        },
+      });
+    } catch {
+      throw new Error("Failed to delete events by tag");
     }
   }
 }

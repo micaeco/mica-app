@@ -158,19 +158,42 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     cursor?: { timestamp: Date },
     limit?: number
   ): Promise<Consumption[]> {
-    console.log("Order:", order);
-    console.log("Cursor:", cursor);
-    console.log("Limit:", limit);
+    let result: Consumption[];
+
     switch (granularity) {
       case "hour":
-        return this.getHourlyConsumption(householdId, startDate, endDate);
+        result = await this.getHourlyConsumption(householdId, startDate, endDate);
+        break;
       case "day":
-        return this.getDailyConsumption(householdId, startDate, endDate);
+        result = await this.getDailyConsumption(householdId, startDate, endDate);
+        break;
       case "week":
-        return this.getWeeklyConsumption(householdId, startDate, endDate);
+        result = await this.getWeeklyConsumption(householdId, startDate, endDate);
+        break;
       case "month":
-        return this.getMonthlyConsumption(householdId, startDate, endDate);
+        result = await this.getMonthlyConsumption(householdId, startDate, endDate);
+        break;
     }
+
+    if (cursor) {
+      result = result.filter((consumption) =>
+        order === "asc"
+          ? consumption.startDate > cursor.timestamp
+          : consumption.startDate < cursor.timestamp
+      );
+    }
+
+    result.sort((a, b) =>
+      order === "asc"
+        ? a.startDate.getTime() - b.startDate.getTime()
+        : b.startDate.getTime() - a.startDate.getTime()
+    );
+
+    if (limit && limit > 0) {
+      result = result.slice(0, limit);
+    }
+
+    return result;
   }
 
   private async getHourlyConsumption(

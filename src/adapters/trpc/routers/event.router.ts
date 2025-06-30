@@ -20,7 +20,6 @@ export const eventRouter = createTRPCRouter({
         notes: z.string().optional(),
       })
     )
-    .output(Event)
     .mutation(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, category, tag, notes } = input;
 
@@ -28,7 +27,7 @@ export const eventRouter = createTRPCRouter({
         throw new Error("Household does not exist");
       }
 
-      const event = await ctx.eventRepo.create(
+      await ctx.eventRepo.create(
         householdId,
         ctx.user.sub,
         category,
@@ -37,8 +36,6 @@ export const eventRouter = createTRPCRouter({
         tag,
         notes
       );
-
-      return event;
     }),
 
   getEvents: protectedProcedure

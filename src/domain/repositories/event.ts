@@ -10,7 +10,7 @@ export interface EventRepository {
     endDate?: Date,
     tag?: string,
     notes?: string
-  ): Promise<Event>;
+  ): Promise<void>;
 
   getEvents(
     householdId: string,
@@ -35,4 +35,6 @@ export interface EventRepository {
     category?: Category,
     tag?: string
   ): Promise<void>;
+
+  deleteByTag(householdId: string, category: string, tag: string): Promise<void>;
 }

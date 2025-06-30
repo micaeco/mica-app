@@ -1,7 +1,6 @@
 import { categories, Category } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 import { EventRepository } from "@domain/repositories/event";
-import { MockTagRepository } from "@infrastructure/repositories/tag.mock";
 
 export class MockEventRepository implements EventRepository {
   private eventsPerDay = 12;
@@ -20,7 +19,7 @@ export class MockEventRepository implements EventRepository {
     endDate?: Date,
     tag?: string,
     notes?: string
-  ): Promise<Event> {
+  ): Promise<void> {
     const eventStartDate = startDate || new Date();
     const eventEndDate =
       endDate || new Date(eventStartDate.getTime() + this.averageEventDurationMs);
@@ -37,7 +36,6 @@ export class MockEventRepository implements EventRepository {
     };
 
     this.events.push(newEvent);
-    return newEvent;
   }
 
   async getEvents(
@@ -123,9 +121,6 @@ export class MockEventRepository implements EventRepository {
     const expectedEvents = daysFraction * this.eventsPerDay;
     const numberOfEvents = Math.max(1, Math.round(expectedEvents * (0.7 + Math.random() * 0.6)));
 
-    const tagRepository = new MockTagRepository();
-    const householdTags = await tagRepository.getHouseholdTags("1");
-
     for (let i = 0; i < numberOfEvents; i++) {
       const eventStartTime = startDate.getTime() + Math.random() * timeDifferenceMs;
       const eventDuration = this.averageEventDurationMs * (0.5 + Math.random());
@@ -147,11 +142,6 @@ export class MockEventRepository implements EventRepository {
         randomCategory = normalCategories[Math.floor(Math.random() * normalCategories.length)];
       }
 
-      const possibleTags = householdTags.filter((tag) => tag.category === randomCategory);
-      const randomTag =
-        Math.random() > 0.3 && possibleTags.length > 0
-          ? possibleTags[Math.floor(Math.random() * possibleTags.length)]
-          : undefined;
       const randomConsumption = Math.round(Math.random() * 100) / 10;
 
       this.events.push({
@@ -162,7 +152,7 @@ export class MockEventRepository implements EventRepository {
         durationInSeconds: Math.floor((eventEndDate.getTime() - eventStartDate.getTime()) / 1000),
         consumptionInLiters: randomConsumption,
         notes: [],
-        tag: randomTag?.name,
+        tag: "",
       });
     }
   }
@@ -189,5 +179,11 @@ export class MockEventRepository implements EventRepository {
     }
 
     this.events[eventIndex] = updatedEvent;
+  }
+
+  async deleteByTag(householdId: string, category: string, tag: string): Promise<void> {
+    this.events = this.events.filter(
+      (event) => !(event.category === category && event.tag === tag)
+    );
   }
 }
