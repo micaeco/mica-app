@@ -1,5 +1,8 @@
 {
   "common": {
+    "tomorrow": "Tomorrow",
+    "clear": "Clear",
+    "confirm": "Confirm",
     "delete-confirm": "Delete",
     "error": "An error occurred",
     "in-progress": "In progress",
@@ -11,9 +14,6 @@
     "pause": "Pause",
     "resume": "Resume",
     "reset": "Reset",
-    "start-time": "Start time",
-    "starts-now": "Starts now",
-    "starts-later": "Starts later",
     "consumption-point": "Consumption point",
     "tag": "Tag",
     "today": "Today",
@@ -178,12 +178,17 @@
   },
   "new-event-sheet": {
     "title": "New event",
-    "no-tags-for-category": "No tags found for this category.",
-    "event-timing-title": "Event Timing",
-    "enable-timer": "Enable Timer",
-    "set-start-time": "Starts now",
-    "set-end-time": "Ends now",
-    "end-time-reset": "End time has been reset",
+    "no-tags-for-category": "No tags found for this category",
+    "no-tags-for-sink": "You can create a tag for the different sinks, for example for the kitchen sink, the bathroom sink, etc.",
+    "no-tags-for-shower": "You can create a tag for the different showers, for example for your child's shower, your shower, etc.",
+    "no-tags-for-washer": "You can create a tag for the different programs of the washing machine, for example for the eco, sport, etc.",
+    "no-tags-for-dishwasher": "You can create a tag for the different programs of the dishwasher, for example for the eco, normal, etc.",
+    "select-date": "Select date",
+    "start-time": "Start time",
+    "end-time": "End time",
+    "category-required": "The category is required",
+    "either-start-or-end-required": "Either start time or end time is required, or both",
+    "end-cannot-be-before-start": "End time cannot be before start time",
     "event-created-successfully": "Event created successfully"
   },
   "edit-event-sheet": {

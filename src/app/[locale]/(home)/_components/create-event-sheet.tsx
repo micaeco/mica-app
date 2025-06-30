@@ -1,20 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CircleCheck, LoaderCircle, Plus, Trash2 } from "lucide-react";
+import { format, isToday, isYesterday, isTomorrow, addMinutes, addSeconds } from "date-fns";
+import { CircleCheck, Clock, LoaderCircle, Plus, Undo2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useForm, Controller } from "react-hook-form";
+import { Control, FieldValues, Path, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { DateTimePicker } from "@app/[locale]/(home)/_components/date-time-picker";
 import { CreateTagDialog } from "@app/_components/create-new-tag-dialog";
 import { Button } from "@app/_components/ui/button";
-import { Form } from "@app/_components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@app/_components/ui/form";
 import {
   Sheet,
   SheetContent,
@@ -27,87 +36,89 @@ import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
-import { categoryMap, Category, categories } from "@domain/entities/category";
+import { Category, categories, categoryMap } from "@domain/entities/category";
 import { Tag } from "@domain/entities/tag";
 
 const eventFormSchema = z.object({
-  startTimestamp: z.date().optional(),
-  endTimestamp: z.date().optional(),
-  category: z.custom<Category>().optional(),
-  tag: z.string().optional(),
+  startDateTime: z.date().nullable(),
+  endDateTime: z.date().nullable(),
+  category: z.custom<Category>().nullable(),
+  tag: z.string().nullable(),
 });
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
 
-export function LabelEventSheet({ children }: { children: React.ReactNode }) {
-  const filteredCategories = categories.filter(
-    (category) => category !== "rest" && category !== "unknown"
-  );
+const filteredCategories = categories.filter(
+  (category) => category !== "rest" && category !== "unknown"
+);
 
+export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activePicker, setActivePicker] = useState<"start" | "end" | null>(null);
   const [isCreateTagDialogOpen, setIsCreateTagDialogOpen] = useState(false);
 
   const { selectedHouseholdId } = useHouseholdStore();
 
   const locale = useLocale();
-  const tCategories = useTranslations("common.categories");
-  const tErrors = useTranslations("common.errors");
   const tCommon = useTranslations("common");
+  const tErrors = useTranslations("common.errors");
+  const tCategories = useTranslations("common.categories");
   const tNewEventSheet = useTranslations("new-event-sheet");
   const tNewTagDialog = useTranslations("new-tag-dialog");
 
+  const now = new Date();
+  const defaultFormValues: EventFormValues = {
+    startDateTime: now,
+    endDateTime: null,
+    category: null,
+    tag: null,
+  };
+
   const eventForm = useForm<EventFormValues>({
     resolver: zodResolver(eventFormSchema),
-    defaultValues: {
-      startTimestamp: undefined,
-      endTimestamp: undefined,
-      category: undefined,
-      tag: undefined,
-    },
+    defaultValues: defaultFormValues,
   });
 
   const mutation = trpc.event.createEvent.useMutation({
     onSuccess: () => {
       toast.success(tNewEventSheet("event-created-successfully"));
-      eventForm.reset();
+      eventForm.reset(defaultFormValues);
       setIsOpen(false);
     },
     onError: () => {
-      toast.error(tCommon("errors.INTERNAL_SERVER_ERROR"));
+      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
     },
   });
 
   const onSubmit = (data: EventFormValues) => {
+    if (data.startDateTime && data.endDateTime && data.startDateTime > data.endDateTime) {
+      toast.error(tNewEventSheet("end-cannot-be-before-start"));
+      return;
+    }
+
+    if (!data.startDateTime && !data.endDateTime) {
+      toast.error(tNewEventSheet("either-start-or-end-required"));
+      return;
+    }
+
+    if (!data.category) {
+      toast.error(tNewEventSheet("category-required"));
+      return;
+    }
+
     mutation.mutate({
       householdId: selectedHouseholdId,
-      category: data.category!,
-      startDate: data.startTimestamp,
-      endDate: data.endTimestamp,
-      tag: data.tag,
+      category: data.category,
+      startDate: data.startDateTime ?? undefined,
+      endDate: data.endDateTime ?? undefined,
+      tag: data.tag ?? undefined,
       notes: undefined,
     });
   };
 
   const watchedCategory = eventForm.watch("category");
-  const watchedStartTimestamp = eventForm.watch("startTimestamp");
-  const watchedEndTimestamp = eventForm.watch("endTimestamp");
 
-  useEffect(() => {
-    if (
-      watchedStartTimestamp &&
-      watchedEndTimestamp &&
-      watchedEndTimestamp < watchedStartTimestamp
-    ) {
-      eventForm.setValue("endTimestamp", undefined, { shouldValidate: true });
-      toast.info(tNewEventSheet("end-time-reset"));
-    }
-  }, [watchedStartTimestamp, watchedEndTimestamp, eventForm, tNewEventSheet]);
-
-  const {
-    data: tags,
-    isLoading: isLoadingTags,
-    error: tagsError,
-  } = trpc.tag.getHouseholdCategoryTags.useQuery(
+  const { data: tags, isLoading: isLoadingTags } = trpc.tag.findTagsByCategory.useQuery(
     {
       householdId: selectedHouseholdId,
       category: watchedCategory!,
@@ -117,12 +128,22 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
     }
   );
 
-  if (tagsError) {
-    toast.error(tErrors("INTERNAL_SERVER_ERROR"));
-  }
+  const getDisplayDateTime = (date: Date | null) => {
+    if (!date) return tNewEventSheet("select-date");
 
-  const handleTagCreated = (tagName: string) => {
-    eventForm.setValue("tag", tagName, { shouldValidate: true });
+    const time = format(date, "HH:mm:ss", { locale: getDateFnsLocale(locale) });
+
+    let dateString;
+    if (isToday(date)) {
+      dateString = tCommon("today");
+    } else if (isYesterday(date)) {
+      dateString = tCommon("yesterday");
+    } else if (isTomorrow(date)) {
+      dateString = tCommon("tomorrow");
+    } else {
+      dateString = format(date, "EEE, d MMM yy", { locale: getDateFnsLocale(locale) });
+    }
+    return dateString + " - " + time;
   };
 
   return (
@@ -132,11 +153,12 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
         onOpenChange={(open) => {
           setIsOpen(open);
           if (!open) {
-            eventForm.reset();
+            eventForm.reset(defaultFormValues);
+            setActivePicker(null);
           }
         }}
       >
-        <SheetTrigger>{children}</SheetTrigger>
+        <SheetTrigger asChild>{children}</SheetTrigger>
         <SheetContent className="w-full overflow-y-auto">
           <SheetHeader>
             <SheetTitle>
@@ -149,29 +171,28 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
               onSubmit={eventForm.handleSubmit(onSubmit)}
               className="flex flex-col space-y-6 py-4"
             >
-              {/* Category */}
-              <div className="flex flex-col gap-2">
-                <span className="font-medium">{tCommon("consumption-point")}</span>
-                <Controller
-                  control={eventForm.control}
-                  name="category"
-                  render={({ field }) => {
-                    const currentCategoryValue = field.value;
-                    return (
+              <FormField
+                control={eventForm.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <span className="font-medium">{tCommon("consumption-point")}</span>
+                    </FormLabel>
+                    <FormControl>
                       <ToggleGroup
                         type="single"
-                        value={field.value || ""}
-                        onValueChange={(valueFromGroup: string) => {
-                          const newCategory =
-                            valueFromGroup === "" ? undefined : (valueFromGroup as Category);
-                          field.onChange(newCategory);
-                          if (currentCategoryValue !== newCategory) {
-                            eventForm.setValue("tag", undefined, { shouldValidate: false });
+                        value={field.value ?? ""}
+                        onValueChange={(value: Category | "") => {
+                          const newValue = value || null;
+                          if (field.value !== newValue) {
+                            eventForm.setValue("tag", null);
                           }
+                          field.onChange(newValue);
                         }}
                         className="flex flex-wrap gap-2"
                       >
-                        {filteredCategories.map((category: Category) => (
+                        {filteredCategories.map((category) => (
                           <ToggleGroupItem
                             className={cn(
                               "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
@@ -189,169 +210,113 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
                               height={24}
                             />
                             <span className="ml-1 text-sm">{tCategories(category)}</span>
-                            {field.value === category && <CircleCheck className="h-4 w-4" />}
+                            {field.value === category && <CircleCheck />}
                           </ToggleGroupItem>
                         ))}
                       </ToggleGroup>
-                    );
-                  }}
-                />
-                {eventForm.formState.errors.category && (
-                  <p className="text-sm text-red-500">
-                    {eventForm.formState.errors.category.message}
-                  </p>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
 
-              {/* Tag */}
               <div className="flex flex-col gap-2">
-                <span className="mt-2 font-medium">{tCommon("tag")}</span>
-                {isLoadingTags ? (
-                  <LoaderCircle className="animate-spin" />
-                ) : !tags || tags.length === 0 ? (
-                  <div className="flex flex-col gap-2">
-                    <span className="text-muted-foreground text-sm">
-                      {tNewEventSheet("no-tags-for-category")}
-                    </span>
-                  </div>
-                ) : (
-                  <Controller
-                    control={eventForm.control}
-                    name="tag"
-                    render={({ field }) => (
-                      <ToggleGroup
-                        type="single"
-                        value={field.value || ""}
-                        onValueChange={(valueFromGroup: string) => {
-                          field.onChange(valueFromGroup === "" ? undefined : valueFromGroup);
-                        }}
-                        className="flex flex-wrap gap-2"
-                      >
-                        {tags.map((tag: Tag) => (
-                          <ToggleGroupItem
-                            className={cn(
-                              "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                              tag.name === field.value ? "!bg-brand-secondary" : "bg-gray-100"
-                            )}
-                            value={tag.name}
-                            key={tag.name + tag.category + tag.householdId}
-                            aria-label={tag.name}
+                <FormField
+                  control={eventForm.control}
+                  name="tag"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{tCommon("tag")}</FormLabel>
+                      <FormControl>
+                        {isLoadingTags ? (
+                          <LoaderCircle className="animate-spin" />
+                        ) : !tags || tags.length === 0 ? (
+                          <FormDescription className="text-muted-foreground text-sm">
+                            {
+                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                              tNewEventSheet.has(("no-tags-for-" + watchedCategory) as any)
+                                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                  tNewEventSheet(("no-tags-for-" + watchedCategory) as any)
+                                : tNewEventSheet("no-tags-for-category")
+                            }
+                          </FormDescription>
+                        ) : (
+                          <ToggleGroup
+                            type="single"
+                            value={field.value ?? ""}
+                            onValueChange={(value) => field.onChange(value || null)}
+                            className="flex flex-wrap gap-2"
                           >
-                            <span className="text-sm">{tag.name}</span>
-                            {field.value === tag.name && <CircleCheck className="h-4 w-4" />}
-                          </ToggleGroupItem>
-                        ))}
-                      </ToggleGroup>
-                    )}
-                  />
-                )}
+                            {tags.map((tag: Tag) => (
+                              <ToggleGroupItem
+                                className={cn(
+                                  "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
+                                  tag.name === field.value ? "!bg-brand-secondary" : "bg-gray-100"
+                                )}
+                                value={tag.name}
+                                key={tag.name}
+                                aria-label={tag.name}
+                              >
+                                <span className="text-sm">{tag.name}</span>
+                                {field.value === tag.name && <CircleCheck />}
+                              </ToggleGroupItem>
+                            ))}
+                          </ToggleGroup>
+                        )}
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
                 <Button
                   size="sm"
                   type="button"
                   variant="secondary"
                   className="flex w-fit items-center gap-1"
                   disabled={!watchedCategory}
-                  onClick={() => {
-                    setIsCreateTagDialogOpen(true);
-                  }}
+                  onClick={() => setIsCreateTagDialogOpen(true)}
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus />
                   {tNewTagDialog("title")}
                 </Button>
-                <span className="text-xs"> TODO: exemple personalitzat per cada categoria </span>
               </div>
 
-              <br />
+              <DateTimeField
+                control={eventForm.control}
+                name="startDateTime"
+                label={tNewEventSheet("start-time")}
+                getDisplayDateTime={getDisplayDateTime}
+                isActive={activePicker === "start"}
+                onToggle={() => {
+                  setActivePicker((prev) => (prev === "start" ? null : "start"));
+                }}
+              />
 
-              {/* Event Timing */}
-              <div className="flex flex-col gap-4">
-                <span className="font-medium">{tNewEventSheet("event-timing-title")}</span>
-                <Controller
-                  control={eventForm.control}
-                  name="startTimestamp"
-                  render={({ field }) => (
-                    <>
-                      <div className="flex items-center justify-between gap-2">
-                        <Button
-                          variant="secondary"
-                          type="button"
-                          onClick={() => field.onChange(new Date())}
-                        >
-                          {tNewEventSheet("set-start-time")}
-                        </Button>
-                        <span>
-                          {watchedStartTimestamp
-                            ? format(watchedStartTimestamp, "HH:mm:ss", {
-                                locale: getDateFnsLocale(locale),
-                              })
-                            : "---:---:---"}
-                        </span>
-                        <Button
-                          variant="destructive"
-                          type="button"
-                          onClick={() => field.onChange(null)}
-                        >
-                          <Trash2 />
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                />
-                <Controller
-                  control={eventForm.control}
-                  name="endTimestamp"
-                  render={({ field }) => (
-                    <>
-                      <div className="flex items-center justify-between gap-2">
-                        <Button
-                          variant="secondary"
-                          type="button"
-                          onClick={() => field.onChange(new Date())}
-                        >
-                          {tNewEventSheet("set-end-time")}
-                        </Button>
-                        <span>
-                          {watchedEndTimestamp
-                            ? format(watchedEndTimestamp, "HH:mm:ss", {
-                                locale: getDateFnsLocale(locale),
-                              })
-                            : "---:---:---"}
-                        </span>
-                        <Button
-                          variant="destructive"
-                          type="button"
-                          onClick={() => field.onChange(null)}
-                        >
-                          <Trash2 />
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                />
-              </div>
+              <DateTimeField
+                control={eventForm.control}
+                name="endDateTime"
+                label={tNewEventSheet("end-time")}
+                getDisplayDateTime={getDisplayDateTime}
+                isActive={activePicker === "end"}
+                onToggle={() => {
+                  setActivePicker((prev) => (prev === "end" ? null : "end"));
+                }}
+              />
 
               <div className="flex justify-end gap-2">
                 <Button
                   variant="secondary"
                   type="button"
-                  onClick={() => {
-                    setIsOpen(false);
-                    eventForm.reset();
-                  }}
+                  onClick={() => setIsOpen(false)}
                   className="w-fit"
                 >
                   {tCommon("cancel")}
                 </Button>
                 <Button
-                  disabled={
-                    mutation.isPending ||
-                    !watchedCategory ||
-                    (!watchedStartTimestamp && !watchedEndTimestamp)
-                  }
+                  disabled={mutation.isPending || !watchedCategory}
                   type="submit"
                   className="w-fit"
                 >
-                  {mutation.isPending && <LoaderCircle className="animate-spin" />}
+                  {mutation.isPending && <LoaderCircle className="mr-2 animate-spin" />}
                   {tCommon("save")}
                 </Button>
               </div>
@@ -365,9 +330,88 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
           isOpen={isCreateTagDialogOpen}
           onOpenChange={setIsCreateTagDialogOpen}
           selectedCategory={watchedCategory}
-          onTagCreated={handleTagCreated}
+          onTagCreated={(tag) => eventForm.setValue("tag", tag)}
         />
       )}
     </>
+  );
+}
+
+interface DateTimeFieldProps<T extends FieldValues> {
+  name: Path<T>;
+  label: string;
+  control: Control<T>;
+  getDisplayDateTime: (date: Date | null) => string;
+  isActive: boolean;
+  onToggle: () => void;
+}
+
+export function DateTimeField<T extends FieldValues>({
+  name,
+  label,
+  control,
+  getDisplayDateTime,
+  isActive,
+  onToggle,
+}: DateTimeFieldProps<T>) {
+  const tCommon = useTranslations("common");
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field, fieldState }) => (
+        <FormItem className="flex flex-col gap-2">
+          <FormLabel>{label}</FormLabel>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={onToggle}
+              className={isActive ? "bg-secondary" : ""}
+            >
+              <Clock />
+              {getDisplayDateTime(field.value)}
+            </Button>
+            <Button onClick={() => field.onChange(null)} variant="outline" type="button">
+              <Undo2 /> {tCommon("clear")}
+            </Button>
+          </div>
+
+          {isActive && (
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2 overflow-x-auto">
+                <Button onClick={() => field.onChange(new Date())} variant="outline" type="button">
+                  {tCommon("now")}
+                </Button>
+                <Button
+                  onClick={() => field.onChange(addSeconds(new Date(), 15))}
+                  variant="outline"
+                  type="button"
+                >
+                  15 sec
+                </Button>
+                <Button
+                  onClick={() => field.onChange(addMinutes(new Date(), 1))}
+                  variant="outline"
+                  type="button"
+                >
+                  1 min
+                </Button>
+                <Button
+                  onClick={() => field.onChange(addMinutes(new Date(), 5))}
+                  variant="outline"
+                  type="button"
+                >
+                  5 min
+                </Button>
+              </div>
+              <DateTimePicker value={field.value} onChange={field.onChange} />
+            </div>
+          )}
+          <FormMessage>{fieldState.error?.message}</FormMessage>
+        </FormItem>
+      )}
+    />
   );
 }

@@ -41,7 +41,7 @@ export async function BaseLayout({
             </SidebarProvider>
           </HouseholdsInitializer>
         </ClientProviders>
-        <Toaster richColors />
+        <Toaster richColors closeButton />
       </body>
     </html>
   );

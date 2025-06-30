@@ -62,9 +62,9 @@ export function CreateTagDialog({
   });
 
   const utils = trpc.useUtils();
-  const { mutate: createTag } = trpc.tag.createHouseholdTag.useMutation({
+  const { mutate: createTag } = trpc.tag.create.useMutation({
     onSuccess: async (data, variables) => {
-      await utils.tag.getHouseholdCategoryTags.invalidate({
+      await utils.tag.findTagsByCategory.invalidate({
         householdId: selectedHouseholdId,
         category: selectedCategory,
       });

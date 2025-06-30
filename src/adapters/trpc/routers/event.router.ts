@@ -1,9 +1,12 @@
-import { format, startOfDay } from "date-fns";
+import { format, startOfDay, subHours } from "date-fns";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { Category } from "@domain/entities/category";
 import { Event, EventsForDay } from "@domain/entities/event";
+
+const hoursBeforeNowForLeakEvents = 3;
+const hoursBeforeNowForUnknownEvents = 3;
 
 export const eventRouter = createTRPCRouter({
   getEvents: protectedProcedure
@@ -114,8 +117,6 @@ export const eventRouter = createTRPCRouter({
     .input(
       z.object({
         householdId: z.string(),
-        startDate: z.date().optional(),
-        endDate: z.date().optional(),
         order: z.enum(["asc", "desc"]).default("desc"),
         cursor: z.object({ date: z.date(), id: z.string() }).nullish(),
         limit: z.number().min(1).max(100).default(50),
@@ -128,7 +129,10 @@ export const eventRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate, order, cursor, limit } = input;
+      const { householdId, order, cursor, limit } = input;
+      const endDate = new Date();
+      const startDate = new Date(subHours(endDate, hoursBeforeNowForLeakEvents));
+
       const events = await ctx.eventRepo.getEvents(
         householdId,
         startDate,
@@ -158,8 +162,6 @@ export const eventRouter = createTRPCRouter({
     .input(
       z.object({
         householdId: z.string(),
-        startDate: z.date().optional(),
-        endDate: z.date().optional(),
         order: z.enum(["asc", "desc"]).default("desc"),
         cursor: z.object({ date: z.date(), id: z.string() }).nullish(),
         limit: z.number().min(1).max(100).default(50),
@@ -172,7 +174,10 @@ export const eventRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate, order, cursor, limit } = input;
+      const { householdId, order, cursor, limit } = input;
+      const endDate = new Date();
+      const startDate = new Date(subHours(endDate, hoursBeforeNowForUnknownEvents));
+
       const events = await ctx.eventRepo.getEvents(
         householdId,
         startDate,
@@ -202,7 +207,14 @@ export const eventRouter = createTRPCRouter({
     .input(z.object({ householdId: z.string() }))
     .output(z.number())
     .query(async ({ input, ctx }) => {
-      const leaks = await ctx.eventRepo.getNumberOfLeakEvents(input.householdId);
+      const endDate = new Date();
+      const startDate = new Date(subHours(endDate, hoursBeforeNowForLeakEvents));
+
+      const leaks = await ctx.eventRepo.getNumberOfLeakEvents(
+        input.householdId,
+        startDate,
+        endDate
+      );
       return leaks;
     }),
 
@@ -210,7 +222,14 @@ export const eventRouter = createTRPCRouter({
     .input(z.object({ householdId: z.string() }))
     .output(z.number())
     .query(async ({ input, ctx }) => {
-      const unknowns = await ctx.eventRepo.getNumberOfUnknownEvents(input.householdId);
+      const endDate = new Date();
+      const startDate = new Date(subHours(endDate, hoursBeforeNowForUnknownEvents));
+
+      const unknowns = await ctx.eventRepo.getNumberOfUnknownEvents(
+        input.householdId,
+        startDate,
+        endDate
+      );
       return unknowns;
     }),
 

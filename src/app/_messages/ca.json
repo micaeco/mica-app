@@ -1,5 +1,8 @@
 {
   "common": {
+    "tomorrow": "Demà",
+    "clear": "Neteja",
+    "confirm": "Confirmar",
     "delete-confirm": "Eliminar",
     "error": "S'ha produït un error",
     "in-progress": "En curs",
@@ -11,9 +14,6 @@
     "pause": "Pausar",
     "resume": "Reprendre ",
     "reset": "Reiniciar",
-    "start-time": "Hora d'inici",
-    "starts-now": "Comença ara",
-    "starts-later": "Comença més tard",
     "consumption-point": "Punt de consum",
     "tag": "Etiqueta",
     "today": "Avui",
@@ -179,12 +179,17 @@
   },
   "new-event-sheet": {
     "title": "Nou esdeveniment",
-    "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria.",
-    "event-timing-title": "Moment de l'esdeveniment",
-    "enable-timer": "Activar temporitzador",
-    "set-start-time": "Ara comença",
-    "set-end-time": "Ara acaba",
-    "end-time-reset": "El moment de finalització s'ha restablert",
+    "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria",
+    "no-tags-for-sink": "Pots crear una etiqueta per a les diferents aixetes, per exemple per a l'aixeta de la cuina, l'aixeta del bany, etc.",
+    "no-tags-for-shower": "Pots crear una etiqueta per a les diferents dutxes, per exemple per a la dutxa del teu fill, la teva dutxa, etc.",
+    "no-tags-for-washer": "Pots crear una etiqueta per als diferents programes de la rentadora, eco, sport, etc.",
+    "no-tags-for-dishwasher": "Pots crear una etiqueta per als diferents programes del rentavaixelles, eco, normal, etc.",
+    "select-date": "Selecciona la data",
+    "start-time": "Hora d'inici",
+    "end-time": "Hora de fi",
+    "category-required": "La categoria és obligatòria",
+    "either-start-or-end-required": "Cal que introdueixis una hora d'inici o una hora de fi, o ambdues",
+    "end-cannot-be-before-start": "L'hora de fi no pot ser anterior a l'hora d'inici",
     "event-created-successfully": "Esdeveniment creat correctament"
   },
   "edit-event-sheet": {

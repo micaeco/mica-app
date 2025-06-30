@@ -23,9 +23,9 @@ export interface EventRepository {
     limit?: number
   ): Promise<Event[]>;
 
-  getNumberOfLeakEvents(householdId: string): Promise<number>;
+  getNumberOfLeakEvents(householdId: string, startDate: Date, endDate: Date): Promise<number>;
 
-  getNumberOfUnknownEvents(householdId: string): Promise<number>;
+  getNumberOfUnknownEvents(householdId: string, startDate: Date, endDate: Date): Promise<number>;
 
   updateEvent(
     userId: string,

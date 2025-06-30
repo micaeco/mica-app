@@ -83,16 +83,54 @@ export class ApiEventRepository implements EventRepository {
     }
   }
 
-  async getNumberOfLeakEvents(householdId: string): Promise<number> {
-    return this.getEvents(householdId, undefined, undefined, ["leak"]).then(
-      (events) => events.length
-    );
+  async getNumberOfLeakEvents(
+    householdId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<number> {
+    try {
+      const response = await axios.get<{ leak: number } | null>(
+        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/count",
+        {
+          headers: {
+            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+          },
+          params: {
+            categories: "leak",
+            ...(startDate && { start: startDate.toISOString() }),
+            ...(endDate && { end: endDate.toISOString() }),
+          },
+        }
+      );
+      return response.data?.leak || 0;
+    } catch {
+      throw new Error("Failed to fetch number of leak events");
+    }
   }
 
-  async getNumberOfUnknownEvents(householdId: string): Promise<number> {
-    return this.getEvents(householdId, undefined, undefined, ["unknown"]).then(
-      (events) => events.length
-    );
+  async getNumberOfUnknownEvents(
+    householdId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<number> {
+    try {
+      const response = await axios.get<{ unknown: number } | null>(
+        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/count",
+        {
+          headers: {
+            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+          },
+          params: {
+            categories: "unknown",
+            ...(startDate && { start: startDate.toISOString() }),
+            ...(endDate && { end: endDate.toISOString() }),
+          },
+        }
+      );
+      return response.data?.unknown || 0;
+    } catch {
+      throw new Error("Failed to fetch number of unknown events");
+    }
   }
 
   async updateEvent(

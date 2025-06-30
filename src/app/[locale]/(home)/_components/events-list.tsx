@@ -64,7 +64,7 @@ export function EventsList() {
     } else if (isYesterday(date)) {
       return tCommon("yesterday");
     } else {
-      return format(date, "MMMM d, yyyy", { locale: dateFnsLocale });
+      return format(date, "EEEE d MMMM, yyyy", { locale: dateFnsLocale });
     }
   };
 

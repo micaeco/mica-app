@@ -44,6 +44,15 @@ const DrawerContent = React.forwardRef<
         "bg-background fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border",
         className
       )}
+      onInteractOutside={(e) => {
+        const { originalEvent } = e.detail;
+        if (
+          originalEvent.target instanceof Element &&
+          originalEvent.target.closest(".group.toast")
+        ) {
+          e.preventDefault();
+        }
+      }}
       {...props}
     >
       <div className="bg-muted mx-auto mt-4 h-2 w-[100px] rounded-full" />

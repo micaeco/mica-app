@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { ActionCards } from "@app/[locale]/(home)/_components/action-cards";
 import { ConsumptionTabs } from "@app/[locale]/(home)/_components/consumption-tabs";
 import { LabelEventSheet } from "@app/[locale]/(home)/_components/create-event-sheet";
-import { EventsList } from "@app/_components/events-list";
+import { EventsList } from "@app/[locale]/(home)/_components/events-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
 
 export default function Home() {

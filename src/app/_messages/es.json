@@ -1,5 +1,8 @@
 {
   "common": {
+    "tomorrow": "Mañana",
+    "clear": "Limpiar",
+    "confirm": "Confirmar",
     "delete-confirm": "Eliminar",
     "error": "Ha ocurrido un error",
     "in-progress": "En curso",
@@ -11,9 +14,6 @@
     "pause": "Pausar",
     "resume": "Reanudar",
     "reset": "Reiniciar",
-    "start-time": "Hora de inicio",
-    "starts-now": "Comienza ahora",
-    "starts-later": "Comienza más tarde",
     "consumption-point": "Punto de consumo",
     "tag": "Etiqueta",
     "today": "Hoy",
@@ -179,12 +179,17 @@
   },
   "new-event-sheet": {
     "title": "Nuevo evento",
-    "no-tags-for-category": "No se encontraron etiquetas para esta categoría.",
-    "event-timing-title": "Momento del evento",
-    "enable-timer": "Activar temporizador",
-    "set-start-time": "Empieza ahora",
-    "set-end-time": "Acaba ahora",
-    "end-time-reset": "El momento de finalización se ha restablecido",
+    "no-tags-for-category": "No se encontraron etiquetas para esta categoría",
+    "no-tags-for-sink": "Puedes crear una etiqueta para los diferentes grifos, por ejemplo el grifo de la cocina, del baño, etc.",
+    "no-tags-for-shower": "Puedes crear una etiqueta para las diferentes duchas, por ejemplo para la ducha de tu hijo, tu ducha, etc.",
+    "no-tags-for-washer": "Puedes crear una etiqueta para los diferentes programas de la lavadora, por ejemplo lavadora eco, sport, etc.",
+    "no-tags-for-dishwasher": "Puedes crear una etiqueta para los diferentes programas del lavavajillas, por ejemplo lavavajillas eco, normal, etc.",
+    "select-date": "Selecciona la fecha",
+    "start-time": "Hora de inicio",
+    "end-time": "Hora de fin",
+    "category-required": "La categoría es obligatoria",
+    "either-start-or-end-required": "Es necesario introducir una hora de inicio o una hora de fin, o ambas",
+    "end-cannot-be-before-start": "La hora de fin no puede ser anterior a la hora de inicio",
     "event-created-successfully": "Evento creado correctamente"
   },
   "edit-event-sheet": {
