@@ -7,19 +7,7 @@ import { HouseholdUser } from "@domain/entities/household-user";
 import { Repositories } from "@domain/services/unit-of-work";
 
 export const householdRouter = createTRPCRouter({
-  findAllHouseholds: protectedProcedure.output(z.array(Household)).query(async ({ ctx }) => {
-    const householdIds = await ctx.householdUserRepo.findHouseholdsByUserId(ctx.user.sub);
-
-    const households = [];
-    for (const householdId of householdIds) {
-      const household = await ctx.householdRepo.findById(householdId);
-      if (household) households.push(household);
-    }
-
-    return households;
-  }),
-
-  createHousehold: protectedProcedure.input(createHousehold).mutation(async ({ input, ctx }) => {
+  create: protectedProcedure.input(createHousehold).mutation(async ({ input, ctx }) => {
     if (!(await ctx.sensorRepo.exists(input.sensorId))) {
       throw new BadRequestError();
     }
@@ -45,7 +33,19 @@ export const householdRouter = createTRPCRouter({
     return household;
   }),
 
-  updateHousehold: protectedProcedure
+  getAll: protectedProcedure.output(z.array(Household)).query(async ({ ctx }) => {
+    const householdIds = await ctx.householdUserRepo.findHouseholdsByUserId(ctx.user.sub);
+
+    const households = [];
+    for (const householdId of householdIds) {
+      const household = await ctx.householdRepo.findById(householdId);
+      if (household) households.push(household);
+    }
+
+    return households;
+  }),
+
+  update: protectedProcedure
     .input(
       createHousehold.extend({
         id: z.string(),
@@ -70,7 +70,7 @@ export const householdRouter = createTRPCRouter({
       return household;
     }),
 
-  deleteHousehold: protectedProcedure
+  delete: protectedProcedure
     .input(z.object({ sensorId: z.string(), householdId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       await ctx.sensorRepo.unassignHouseholdFromSensor(input.sensorId, input.householdId);

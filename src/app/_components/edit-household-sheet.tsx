@@ -93,9 +93,9 @@ export function EditHouseholdSheet({
   });
 
   const utils = trpc.useUtils();
-  const updateMutation = trpc.household.updateHousehold.useMutation({
+  const updateMutation = trpc.household.update.useMutation({
     onSuccess: () => {
-      utils.household.findAllHouseholds.invalidate();
+      utils.household.getAll.invalidate();
       toast.success(t("update-success"));
       setOpen(false);
     },
@@ -103,9 +103,9 @@ export function EditHouseholdSheet({
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
     },
   });
-  const deleteMutation = trpc.household.deleteHousehold.useMutation({
+  const deleteMutation = trpc.household.delete.useMutation({
     onSuccess: () => {
-      utils.household.findAllHouseholds.invalidate();
+      utils.household.getAll.invalidate();
       toast.success(t("delete-success"));
       setOpen(false);
       setShowConfirmDelete(false);

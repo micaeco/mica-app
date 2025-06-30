@@ -12,7 +12,7 @@ import { useHouseholdStore } from "@app/_stores/household";
 export function HouseholdsInitializer({ children }: { children: React.ReactNode }) {
   const tErrors = useTranslations("common.errors");
 
-  const { data: households, isLoading, error } = trpc.household.findAllHouseholds.useQuery();
+  const { data: households, isLoading, error } = trpc.household.getAll.useQuery();
 
   useEffect(() => {
     if (households) {

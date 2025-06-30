@@ -11,7 +11,7 @@ import { CreateHouseholdPanel } from "./create-household-panel";
 import { Button } from "./ui/button";
 
 export function HouseholdGate({ children }: { children: React.ReactNode }) {
-  const { data: households, isLoading } = trpc.household.findAllHouseholds.useQuery();
+  const { data: households, isLoading } = trpc.household.getAll.useQuery();
   const t = useTranslations("onboarding");
 
   if (isLoading) {

@@ -76,12 +76,12 @@ export function CreateHouseholdPanel({
   });
 
   const utils = trpc.useUtils();
-  const mutation = trpc.household.createHousehold.useMutation({
+  const mutation = trpc.household.create.useMutation({
     onSuccess: () => {
       form.reset();
       setCurrentStep(0);
       setOpen(false);
-      utils.household.findAllHouseholds.invalidate();
+      utils.household.getAll.invalidate();
       toast.success(t("success"));
     },
     onError: () => {
