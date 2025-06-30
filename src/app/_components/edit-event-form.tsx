@@ -65,7 +65,7 @@ export function EditEventForm({
 
   const watchedCategory = eventForm.watch("category");
 
-  const { data: tags, isLoading: isLoadingTags } = trpc.tag.findTagsByCategory.useQuery(
+  const { data: tags, isLoading: isLoadingTags } = trpc.tag.getTagsByCategory.useQuery(
     {
       householdId: selectedHouseholdId,
       category: watchedCategory!,

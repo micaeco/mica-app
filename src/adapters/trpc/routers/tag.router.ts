@@ -13,7 +13,7 @@ export const tagRouter = createTRPCRouter({
       return createdTag;
     }),
 
-  findTagsByCategory: protectedProcedure
+  getTagsByCategory: protectedProcedure
     .input(z.object({ householdId: z.string(), category: Category }))
     .output(z.array(Tag))
     .query(async ({ input, ctx }) => {
