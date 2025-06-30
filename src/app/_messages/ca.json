@@ -180,10 +180,6 @@
   "new-event-sheet": {
     "title": "Nou esdeveniment",
     "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria",
-    "no-tags-for-sink": "Pots crear una etiqueta per a les diferents aixetes, per exemple per a l'aixeta de la cuina, l'aixeta del bany, etc.",
-    "no-tags-for-shower": "Pots crear una etiqueta per a les diferents dutxes, per exemple per a la dutxa del teu fill, la teva dutxa, etc.",
-    "no-tags-for-washer": "Pots crear una etiqueta per als diferents programes de la rentadora, eco, sport, etc.",
-    "no-tags-for-dishwasher": "Pots crear una etiqueta per als diferents programes del rentavaixelles, eco, normal, etc.",
     "select-date": "Selecciona la data",
     "start-time": "Hora d'inici",
     "end-time": "Hora de fi",
@@ -198,10 +194,22 @@
     "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria.",
     "event-edited-successfully": "Esdeveniment actualitzat correctament"
   },
-  "new-tag-dialog": {
-    "title": "Crear nova etiqueta",
-    "description": "Introdueix un nom per a la nova etiqueta dins de la categoria {category}.",
-    "tag-created-successfully": "Etiqueta creada correctament"
+  "edit-tags-dialog": {
+    "title": "Editar etiquetes",
+    "new-tag-placeholder": "Nova etiqueta",
+    "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria",
+    "no-tags-for-sink": "Pots crear una etiqueta per a les diferents aixetes, per exemple per a l'aixeta de la cuina, l'aixeta del bany, etc.",
+    "no-tags-for-shower": "Pots crear una etiqueta per a les diferents dutxes, per exemple per a la dutxa del teu fill, la teva dutxa, etc.",
+    "no-tags-for-washer": "Pots crear una etiqueta per als diferents programes de la rentadora, eco, sport, etc.",
+    "no-tags-for-dishwasher": "Pots crear una etiqueta per als diferents programes del rentavaixelles, eco, normal, etc.",
+    "delete-tag-title": "Eliminar etiqueta",
+    "delete-tag-description": "Estàs segur que vols eliminar aquesta etiqueta? Aquesta acció no es pot desfer i eliminarà l'etiqueta de tots els esdeveniments que la tinguin.",
+    "delete-tag-confirm": "Eliminar etiqueta",
+    "delete-tag-cancel": "Cancel·lar",
+    "delete-tag-success": "Etiqueta eliminada correctament",
+    "tag-created-successfully": "Etiqueta creada correctament",
+    "tag-updated-successfully": "Etiqueta actualitzada correctament",
+    "tag-deleted-successfully": "Etiqueta eliminada correctament"
   },
   "actions": {
     "no-leaks": "No hi ha fuites",

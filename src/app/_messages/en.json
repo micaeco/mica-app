@@ -179,10 +179,6 @@
   "new-event-sheet": {
     "title": "New event",
     "no-tags-for-category": "No tags found for this category",
-    "no-tags-for-sink": "You can create a tag for the different sinks, for example for the kitchen sink, the bathroom sink, etc.",
-    "no-tags-for-shower": "You can create a tag for the different showers, for example for your child's shower, your shower, etc.",
-    "no-tags-for-washer": "You can create a tag for the different programs of the washing machine, for example for the eco, sport, etc.",
-    "no-tags-for-dishwasher": "You can create a tag for the different programs of the dishwasher, for example for the eco, normal, etc.",
     "select-date": "Select date",
     "start-time": "Start time",
     "end-time": "End time",
@@ -197,10 +193,22 @@
     "no-tags-for-category": "No tags found for this category.",
     "event-edited-successfully": "Event edited successfully"
   },
-  "new-tag-dialog": {
-    "title": "Create new tag",
-    "description": "Enter a name for the new tag under the {category} category.",
-    "tag-created-successfully": "Tag created successfully"
+  "edit-tags-dialog": {
+    "title": "Edit tags",
+    "new-tag-placeholder": "New tag",
+    "no-tags-for-category": "No tags found for this category",
+    "no-tags-for-sink": "You can create a tag for the different sinks, for example for the kitchen sink, the bathroom sink, etc.",
+    "no-tags-for-shower": "You can create a tag for the different showers, for example for your child's shower, your shower, etc.",
+    "no-tags-for-washer": "You can create a tag for the different programs of the washing machine, for example for the eco, sport, etc.",
+    "no-tags-for-dishwasher": "You can create a tag for the different programs of the dishwasher, for example for the eco, normal, etc.",
+    "delete-tag-title": "Delete tag",
+    "delete-tag-description": "Are you sure you want to delete this tag? This action cannot be undone and it will remove the tag from all events that have it.",
+    "delete-tag-confirm": "Delete tag",
+    "delete-tag-cancel": "Cancel",
+    "delete-tag-success": "Tag deleted successfully",
+    "tag-created-successfully": "Tag created successfully",
+    "tag-updated-successfully": "Tag updated successfully",
+    "tag-deleted-successfully": "Tag deleted successfully"
   },
   "actions": {
     "no-leaks": "No leaks",

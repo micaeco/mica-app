@@ -2,9 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 import { Context } from "@adapters/trpc/context";
-import { AppError, ErrorKey as DomainErrorKey } from "@domain/entities/errors";
-
-import type { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
+import { AppError } from "@domain/entities/errors";
 
 export const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -14,7 +12,7 @@ export const t = initTRPC.context<Context>().create({
       message: error.message,
       data: {
         ...shape.data,
-        code: error.code as ServerErrorCode,
+        code: error.code,
       },
     };
   },
@@ -35,8 +33,6 @@ const enforceAuth = t.middleware(({ ctx, next }) => {
   });
 });
 
-export type ServerErrorCode = DomainErrorKey | TRPC_ERROR_CODE_KEY;
-
 const errorFormatterMiddleware = t.middleware(async ({ next }) => {
   try {
     return await next();
@@ -44,13 +40,15 @@ const errorFormatterMiddleware = t.middleware(async ({ next }) => {
     if (error instanceof TRPCError) {
       throw error;
     }
+
     if (error instanceof AppError) {
       throw new TRPCError({
-        code: error.code,
+        code: "BAD_REQUEST",
         message: error.message,
         cause: error,
       });
     }
+
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "An unexpected server error occurred. Please try again later.",

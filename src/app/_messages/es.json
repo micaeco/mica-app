@@ -180,10 +180,6 @@
   "new-event-sheet": {
     "title": "Nuevo evento",
     "no-tags-for-category": "No se encontraron etiquetas para esta categoría",
-    "no-tags-for-sink": "Puedes crear una etiqueta para los diferentes grifos, por ejemplo el grifo de la cocina, del baño, etc.",
-    "no-tags-for-shower": "Puedes crear una etiqueta para las diferentes duchas, por ejemplo para la ducha de tu hijo, tu ducha, etc.",
-    "no-tags-for-washer": "Puedes crear una etiqueta para los diferentes programas de la lavadora, por ejemplo lavadora eco, sport, etc.",
-    "no-tags-for-dishwasher": "Puedes crear una etiqueta para los diferentes programas del lavavajillas, por ejemplo lavavajillas eco, normal, etc.",
     "select-date": "Selecciona la fecha",
     "start-time": "Hora de inicio",
     "end-time": "Hora de fin",
@@ -198,10 +194,22 @@
     "no-tags-for-category": "No se encontraron etiquetas para esta categoría.",
     "event-edited-successfully": "Evento actualizado correctamente"
   },
-  "new-tag-dialog": {
-    "title": "Crear nueva etiqueta",
-    "description": "Introduce un nombre para la nueva etiqueta dentro de la categoría {category}.",
-    "tag-created-successfully": "Etiqueta creada correctamente"
+  "edit-tags-dialog": {
+    "title": "Editar etiquetas",
+    "new-tag-placeholder": "Nueva etiqueta",
+    "no-tags-for-category": "No se encontraron etiquetas para esta categoría.",
+    "no-tags-for-sink": "Puedes crear una etiqueta para los diferentes grifos, por ejemplo el grifo de la cocina, del baño, etc.",
+    "no-tags-for-shower": "Puedes crear una etiqueta para las diferentes duchas, por ejemplo para la ducha de tu hijo, tu ducha, etc.",
+    "no-tags-for-washer": "Puedes crear una etiqueta para los diferentes programas de la lavadora, por ejemplo lavadora eco, sport, etc.",
+    "no-tags-for-dishwasher": "Puedes crear una etiqueta para los diferentes programas del lavavajillas, por ejemplo lavavajillas eco, normal, etc.",
+    "delete-tag-title": "Eliminar etiqueta",
+    "delete-tag-description": "Estás seguro que quieres eliminar esta etiqueta? Esta acción no se puede deshacer y eliminará la etiqueta de todos los eventos que la tengan.",
+    "delete-tag-confirm": "Eliminar etiqueta",
+    "delete-tag-cancel": "Cancelar",
+    "delete-tag-success": "Etiqueta eliminada correctamente",
+    "tag-created-successfully": "Etiqueta creada correctamente",
+    "tag-updated-successfully": "Etiqueta actualizada correctamente",
+    "tag-deleted-successfully": "Etiqueta eliminada correctamente"
   },
   "actions": {
     "no-leaks": "No hay fugas",

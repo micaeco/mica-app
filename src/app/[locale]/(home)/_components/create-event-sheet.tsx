@@ -6,14 +6,14 @@ import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, isToday, isYesterday, isTomorrow, addMinutes, addSeconds } from "date-fns";
-import { CircleCheck, Clock, LoaderCircle, Plus, Undo2 } from "lucide-react";
+import { CircleCheck, Clock, Edit, LoaderCircle, Undo2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Control, FieldValues, Path, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { DateTimePicker } from "@app/[locale]/(home)/_components/date-time-picker";
-import { CreateTagDialog } from "@app/_components/create-new-tag-dialog";
+import { EditTagsDialog } from "@app/_components/edit-tags-dialog";
 import { Button } from "@app/_components/ui/button";
 import {
   Form,
@@ -55,7 +55,7 @@ const filteredCategories = categories.filter(
 export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activePicker, setActivePicker] = useState<"start" | "end" | null>(null);
-  const [isCreateTagDialogOpen, setIsCreateTagDialogOpen] = useState(false);
+  const [isEditTagsDialogOpen, setIsEditTagsDialogOpen] = useState(false);
 
   const { selectedHouseholdId } = useHouseholdStore();
 
@@ -64,7 +64,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
   const tErrors = useTranslations("common.errors");
   const tCategories = useTranslations("common.categories");
   const tNewEventSheet = useTranslations("new-event-sheet");
-  const tNewTagDialog = useTranslations("new-tag-dialog");
+  const tEditTagsDialog = useTranslations("edit-tags-dialog");
 
   const now = new Date();
   const defaultFormValues: EventFormValues = {
@@ -232,13 +232,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
                           <LoaderCircle className="animate-spin" />
                         ) : !tags || tags.length === 0 ? (
                           <FormDescription className="text-muted-foreground text-sm">
-                            {
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              tNewEventSheet.has(("no-tags-for-" + watchedCategory) as any)
-                                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                  tNewEventSheet(("no-tags-for-" + watchedCategory) as any)
-                                : tNewEventSheet("no-tags-for-category")
-                            }
+                            {tNewEventSheet("no-tags-for-category")}
                           </FormDescription>
                         ) : (
                           <ToggleGroup
@@ -271,12 +265,11 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
                   size="sm"
                   type="button"
                   variant="secondary"
-                  className="flex w-fit items-center gap-1"
-                  disabled={!watchedCategory}
-                  onClick={() => setIsCreateTagDialogOpen(true)}
+                  className="w-fit"
+                  onClick={() => setIsEditTagsDialogOpen(true)}
                 >
-                  <Plus />
-                  {tNewTagDialog("title")}
+                  <Edit />
+                  {tEditTagsDialog("title")}
                 </Button>
               </div>
 
@@ -325,14 +318,7 @@ export function LabelEventSheet({ children }: { children: React.ReactNode }) {
         </SheetContent>
       </Sheet>
 
-      {watchedCategory && (
-        <CreateTagDialog
-          isOpen={isCreateTagDialogOpen}
-          onOpenChange={setIsCreateTagDialogOpen}
-          selectedCategory={watchedCategory}
-          onTagCreated={(tag) => eventForm.setValue("tag", tag)}
-        />
-      )}
+      <EditTagsDialog isOpen={isEditTagsDialogOpen} onOpenChange={setIsEditTagsDialogOpen} />
     </>
   );
 }

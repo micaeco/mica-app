@@ -58,6 +58,11 @@ export class MockTagRepository implements TagRepository {
     );
   }
 
+  async getTagById(id: number): Promise<Tag | null> {
+    const tag = this.mockLabels.find((t) => t.id === id);
+    return tag || null;
+  }
+
   async getTagsByCategory(householdId: string, category: string): Promise<Tag[]> {
     return this.mockLabels.filter(
       (tag) => tag.householdId === householdId && tag.category === category

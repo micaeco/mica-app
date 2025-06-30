@@ -51,6 +51,12 @@ export class PostgresTagRepository implements TagRepository {
     return existingTag.length > 0;
   }
 
+  async getTagById(id: number): Promise<Tag | null> {
+    const tag = await this.db.select().from(tagSchema).where(eq(tagSchema.id, id)).limit(1);
+
+    return tag.length > 0 ? mapTagFromSchema(tag[0]) : null;
+  }
+
   async getTagsByCategory(householdId: string, category: string): Promise<Tag[]> {
     const tags = await this.db
       .select()

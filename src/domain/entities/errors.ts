@@ -1,9 +1,8 @@
 export type ErrorKey =
-  | "NOT_FOUND"
-  | "UNAUTHORIZED"
-  | "FORBIDDEN"
-  | "BAD_REQUEST"
-  | "INTERNAL_SERVER_ERROR";
+  | "TAG_ALREADY_EXISTS"
+  | "TAG_NOT_FOUND"
+  | "SENSOR_NOT_FOUND"
+  | "HOUSEHOLD_SENSOR_ALREADY_EXISTS";
 
 export class AppError extends Error {
   constructor(
@@ -17,37 +16,29 @@ export class AppError extends Error {
   }
 }
 
-export class ServerError extends AppError {
+export class SensorNotFoundError extends AppError {
   constructor(metadata?: Record<string, unknown>, message?: string) {
-    super("INTERNAL_SERVER_ERROR", 500, metadata, message);
-    this.name = "ServerError";
+    super("SENSOR_NOT_FOUND", 404, metadata, message);
+    this.name = "SensorNotFoundError";
   }
 }
 
-export class NotFoundError extends AppError {
+export class HouseholdSensorAlreadyExistsError extends AppError {
   constructor(metadata?: Record<string, unknown>, message?: string) {
-    super("NOT_FOUND", 404, metadata, message);
-    this.name = "NotFoundError";
+    super("HOUSEHOLD_SENSOR_ALREADY_EXISTS", 409, metadata, message);
+    this.name = "HouseholdSensorAlreadyExistsError";
+  }
+}
+export class TagAlreadyExistsError extends AppError {
+  constructor(metadata?: Record<string, unknown>, message?: string) {
+    super("TAG_ALREADY_EXISTS", 409, metadata, message);
+    this.name = "TagAlreadyExistsError";
   }
 }
 
-export class UnauthorizedError extends AppError {
+export class TagNotFoundError extends AppError {
   constructor(metadata?: Record<string, unknown>, message?: string) {
-    super("UNAUTHORIZED", 401, metadata, message);
-    this.name = "UnauthorizedError";
-  }
-}
-
-export class ForbiddenError extends AppError {
-  constructor(metadata?: Record<string, unknown>, message?: string) {
-    super("FORBIDDEN", 403, metadata, message);
-    this.name = "ForbiddenError";
-  }
-}
-
-export class BadRequestError extends AppError {
-  constructor(metadata?: Record<string, unknown>, message?: string) {
-    super("BAD_REQUEST", 400, metadata, message);
-    this.name = "BadRequestError";
+    super("TAG_NOT_FOUND", 404, metadata, message);
+    this.name = "TagNotFoundError";
   }
 }

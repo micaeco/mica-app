@@ -122,7 +122,7 @@ export class ApiEventRepository implements EventRepository {
     }
   }
 
-  async updateEvent(
+  async update(
     userId: string,
     eventId: string,
     startDate: Date,
@@ -132,7 +132,7 @@ export class ApiEventRepository implements EventRepository {
     notes?: string
   ): Promise<void> {
     try {
-      await axios.post<EventApiResponse>(
+      await axios.post(
         env.AWS_API_GATEWAY_URL + "/events/" + eventId + "/labels",
         {
           userId,
@@ -150,6 +150,31 @@ export class ApiEventRepository implements EventRepository {
       );
     } catch {
       throw new Error("Failed to update event");
+    }
+  }
+
+  async updateByTag(
+    householdId: string,
+    category: string,
+    tag: string,
+    newTag: string
+  ): Promise<void> {
+    try {
+      await axios.patch(
+        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/tags",
+        {
+          tag,
+          category,
+          newTag,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+          },
+        }
+      );
+    } catch {
+      throw new Error("Failed to update events by tag");
     }
   }
 

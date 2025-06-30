@@ -157,7 +157,7 @@ export class MockEventRepository implements EventRepository {
     }
   }
 
-  async updateEvent(
+  async update(
     userId: string,
     sensorId: string,
     startDate: Date,
@@ -179,6 +179,19 @@ export class MockEventRepository implements EventRepository {
     }
 
     this.events[eventIndex] = updatedEvent;
+  }
+
+  async updateByTag(
+    householdId: string,
+    category: string,
+    tag: string,
+    newTag: string
+  ): Promise<void> {
+    this.events.forEach((event) => {
+      if (event.category === category && event.tag === tag) {
+        event.tag = newTag;
+      }
+    });
   }
 
   async deleteByTag(householdId: string, category: string, tag: string): Promise<void> {

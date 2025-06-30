@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleCheck, LoaderCircle, Plus } from "lucide-react";
+import { CircleCheck, Edit, LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { CreateTagDialog } from "@app/_components/create-new-tag-dialog";
+import { EditTagsDialog } from "@app/_components/edit-tags-dialog";
 import { Button } from "@app/_components/ui/button";
 import { Form } from "@app/_components/ui/form";
 import { ToggleGroup, ToggleGroupItem } from "@app/_components/ui/toggle-group";
@@ -40,7 +40,7 @@ export function EditEventForm({
     (category) => category !== "rest" && category !== "unknown"
   );
 
-  const [isCreateTagDialogOpen, setIsCreateTagDialogOpen] = useState(false);
+  const [isEditTagsDialogOpen, setIsEditTagsDialogOpen] = useState(false);
 
   const { selectedHouseholdId } = useHouseholdStore();
 
@@ -48,7 +48,7 @@ export function EditEventForm({
   const tErrors = useTranslations("common.errors");
   const tCommon = useTranslations("common");
   const tEditEventSheet = useTranslations("edit-event-sheet");
-  const tNewTagDialog = useTranslations("new-tag-dialog");
+  const tEditTagsDialog = useTranslations("edit-tags-dialog");
 
   const eventForm = useForm<EditEventFormValues>({
     resolver: zodResolver(editEventFormSchema),
@@ -98,10 +98,6 @@ export function EditEventForm({
       category: data.category,
       tag: data.tag,
     });
-  };
-
-  const handleTagCreated = (tagName: string) => {
-    eventForm.setValue("tag", tagName, { shouldValidate: true });
   };
 
   return (
@@ -156,7 +152,9 @@ export function EditEventForm({
               }}
             />
             {eventForm.formState.errors.category && (
-              <p className="text-sm text-red-500">{eventForm.formState.errors.category.message}</p>
+              <p className="text-destructive text-sm">
+                {eventForm.formState.errors.category.message}
+              </p>
             )}
           </div>
 
@@ -206,14 +204,13 @@ export function EditEventForm({
               size="sm"
               type="button"
               variant="secondary"
-              className="flex w-fit items-center gap-1"
-              disabled={!watchedCategory}
+              className="w-fit"
               onClick={() => {
-                setIsCreateTagDialogOpen(true);
+                setIsEditTagsDialogOpen(true);
               }}
             >
-              <Plus className="h-4 w-4" />
-              {tNewTagDialog("title")}
+              <Edit className="h-4 w-4" />
+              {tEditTagsDialog("title")}
             </Button>
           </div>
 
@@ -221,7 +218,7 @@ export function EditEventForm({
             disabled={
               eventForm.formState.isSubmitting ||
               !watchedCategory ||
-              (watchedCategory === event.category && eventForm.getValues("tag") === event.tag) // Disable if no actual change
+              (watchedCategory === event.category && eventForm.getValues("tag") === event.tag)
             }
             type="submit"
             className="ml-auto w-fit"
@@ -234,14 +231,7 @@ export function EditEventForm({
         </form>
       </Form>
 
-      {watchedCategory && (
-        <CreateTagDialog
-          isOpen={isCreateTagDialogOpen}
-          onOpenChange={setIsCreateTagDialogOpen}
-          selectedCategory={watchedCategory}
-          onTagCreated={handleTagCreated}
-        />
-      )}
+      <EditTagsDialog isOpen={isEditTagsDialogOpen} onOpenChange={setIsEditTagsDialogOpen} />
     </>
   );
 }

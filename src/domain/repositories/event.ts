@@ -27,7 +27,7 @@ export interface EventRepository {
 
   getNumberOfUnknownEvents(householdId: string, startDate: Date, endDate: Date): Promise<number>;
 
-  updateEvent(
+  update(
     userId: string,
     eventId: string,
     startDate: Date,
@@ -35,6 +35,8 @@ export interface EventRepository {
     category?: Category,
     tag?: string
   ): Promise<void>;
+
+  updateByTag(householdId: string, category: string, tag: string, newTag: string): Promise<void>;
 
   deleteByTag(householdId: string, category: string, tag: string): Promise<void>;
 }
