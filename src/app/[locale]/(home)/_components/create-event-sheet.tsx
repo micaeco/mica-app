@@ -52,7 +52,7 @@ const filteredCategories = categories.filter(
   (category) => category !== "rest" && category !== "unknown"
 );
 
-export function LabelEventSheet({ children }: { children: React.ReactNode }) {
+export function CreateEventSheet({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activePicker, setActivePicker] = useState<"start" | "end" | null>(null);
   const [isEditTagsDialogOpen, setIsEditTagsDialogOpen] = useState(false);

@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { ActionCards } from "@app/[locale]/(home)/_components/action-cards";
 import { ConsumptionTabs } from "@app/[locale]/(home)/_components/consumption-tabs";
-import { LabelEventSheet } from "@app/[locale]/(home)/_components/create-event-sheet";
+import { CreateEventSheet } from "@app/[locale]/(home)/_components/create-event-sheet";
 import { EventsList } from "@app/[locale]/(home)/_components/events-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
 
@@ -28,9 +28,9 @@ export default function Home() {
         <CardHeader className="xl:flex-shrink-0">
           <CardTitle className="flex flex-row items-center gap-2">
             {tEventsList("title")}
-            <LabelEventSheet>
+            <CreateEventSheet>
               <CirclePlus className="cursor-pointer" />
-            </LabelEventSheet>
+            </CreateEventSheet>
           </CardTitle>
         </CardHeader>
         <CardContent className="xl:flex-1 xl:overflow-y-auto">
