@@ -92,7 +92,7 @@ export function EditEventForm({
       onFormSubmitSuccess();
       toast.success(tEditEventSheet("event-edited-successfully"));
     },
-    onError: (error) => {
+    onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
     },
   });
