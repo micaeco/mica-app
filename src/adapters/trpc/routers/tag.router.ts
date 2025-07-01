@@ -53,7 +53,7 @@ export const tagRouter = createTRPCRouter({
         name: input.name,
       });
 
-      // await ctx.eventRepo.updateByTag(tag.householdId, tag.category, tag.name, input.name);
+      await ctx.eventRepo.updateByTag(tag.householdId, tag.category, tag.name, input.name);
 
       return tag;
     });
@@ -78,7 +78,7 @@ export const tagRouter = createTRPCRouter({
       const deleted = await ctx.unitOfWork.execute(async (repos: Repositories) => {
         const deletedTags = await repos.tagRepo.delete(input.id);
 
-        // await ctx.eventRepo.deleteByTag(tag.householdId, tag.category, tag.name);
+        await ctx.eventRepo.deleteByTag(tag.householdId, tag.category, tag.name);
 
         return deletedTags;
       });
