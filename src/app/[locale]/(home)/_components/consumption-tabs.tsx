@@ -44,7 +44,7 @@ export function ConsumptionTabs() {
     );
 
   return (
-    <Tabs defaultValue="month">
+    <Tabs defaultValue="month" className="flex min-w-70 flex-col items-center justify-center">
       <TabsList className="w-fit">
         <TabsTrigger value="month" onClick={() => setGranularity("month")}>
           {tCommon("this") + " " + tCommon("month")}
