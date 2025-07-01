@@ -47,9 +47,9 @@ export function EditEventSheet({
               {event.endTimestamp
                 ? format(event.endTimestamp, "HH:mm:ss", { locale: dateFnsLocale })
                 : tCommon("in-progress")}
-              <p className="text-brand-secondary py-4 font-bold">
+              <span className="text-brand-secondary py-4 font-bold">
                 {event.consumptionInLiters.toFixed(1)} L
-              </p>
+              </span>
             </SheetDescription>
           )}
         </SheetHeader>
