@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
@@ -15,6 +16,11 @@ export const consumptionRouter = createTRPCRouter({
     .output(Consumption)
     .query(async ({ input, ctx }) => {
       const { householdId, startDate, endDate } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const consumption = await ctx.consumptionRepo.getConsumption(householdId, startDate, endDate);
       return consumption;
     }),
@@ -39,6 +45,11 @@ export const consumptionRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, granularity, order, cursor, limit } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const queryLimit = limit + 1;
 
       const consumption = await ctx.consumptionRepo.getConsumptionByGranularity(
@@ -68,7 +79,13 @@ export const consumptionRouter = createTRPCRouter({
     .input(z.object({ householdId: z.string() }))
     .output(Consumption.nullable())
     .query(async ({ input, ctx }) => {
-      const consumption = await ctx.consumptionRepo.getCurrentMonthConsumption(input.householdId);
+      const { householdId } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const consumption = await ctx.consumptionRepo.getCurrentMonthConsumption(householdId);
       return consumption || null;
     }),
 
@@ -76,7 +93,13 @@ export const consumptionRouter = createTRPCRouter({
     .input(z.object({ householdId: z.string() }))
     .output(Consumption.nullable())
     .query(async ({ input, ctx }) => {
-      const consumption = await ctx.consumptionRepo.getCurrentDayConsumption(input.householdId);
+      const { householdId } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const consumption = await ctx.consumptionRepo.getCurrentDayConsumption(householdId);
       return consumption || null;
     }),
 });
