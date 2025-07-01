@@ -182,6 +182,8 @@
     "select-date": "Select date",
     "start-time": "Start time",
     "end-time": "End time",
+    "notes-label": "Add a note",
+    "notes-placeholder": "Add an optional note for this event",
     "category-required": "The category is required",
     "either-start-or-end-required": "Either start time or end time is required, or both",
     "end-cannot-be-before-start": "End time cannot be before start time",
@@ -189,7 +191,8 @@
   },
   "edit-event-sheet": {
     "title": "Edit event",
-    "create-new-tag": "Create new tag",
+    "notes-label": "Add a note",
+    "notes-placeholder": "Add an optional note for this event",
     "no-tags-for-category": "No tags found for this category.",
     "event-edited-successfully": "Event edited successfully"
   },

@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import { CircleCheck, Edit, LoaderCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -22,7 +23,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@app/_components/ui/form";
+import { Textarea } from "@app/_components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@app/_components/ui/toggle-group";
+import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
@@ -33,6 +36,7 @@ import { Tag } from "@domain/entities/tag";
 const editEventFormSchema = z.object({
   category: z.custom<Category>().nullable(),
   tag: z.string().nullable(),
+  notes: z.string().optional(),
 });
 
 type EditEventFormValues = z.infer<typeof editEventFormSchema>;
@@ -52,6 +56,7 @@ export function EditEventForm({
 
   const { selectedHouseholdId } = useHouseholdStore();
 
+  const locale = useLocale();
   const tCategories = useTranslations("common.categories");
   const tErrors = useTranslations("common.errors");
   const tCommon = useTranslations("common");
@@ -104,6 +109,7 @@ export function EditEventForm({
       endDate: event.endTimestamp,
       category: data.category ?? undefined,
       tag: data.tag ?? undefined,
+      notes: data.notes ?? undefined,
     });
   };
 
@@ -111,6 +117,24 @@ export function EditEventForm({
     <>
       <Form {...eventForm}>
         <form onSubmit={eventForm.handleSubmit(onSubmitEvent)} className="flex flex-col space-y-6">
+          {event && (
+            <p className="text-muted-foreground text-sm">
+              {format(event.startTimestamp, "cccc PPP", { locale: getDateFnsLocale(locale) })}{" "}
+              <br />
+              {format(event.startTimestamp, "HH:mm:ss", {
+                locale: getDateFnsLocale(locale),
+              })}{" "}
+              -{" "}
+              {event.endTimestamp
+                ? format(event.endTimestamp, "HH:mm:ss", { locale: getDateFnsLocale(locale) })
+                : tCommon("in-progress")}
+              <br />
+              <span className="text-brand-secondary font-bold">
+                {event.consumptionInLiters.toFixed(1)} L
+              </span>
+            </p>
+          )}
+
           {/* Category */}
           <FormField
             control={eventForm.control}
@@ -214,6 +238,25 @@ export function EditEventForm({
               {tEditTagsDialog("title")}
             </Button>
           </div>
+
+          {/* Notes */}
+          <FormField
+            control={eventForm.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{tEditEventSheet("notes-label")}</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder={tEditEventSheet("notes-placeholder")}
+                    {...field}
+                    value={field.value ?? ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <Button
             disabled={

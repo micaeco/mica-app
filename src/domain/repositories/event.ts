@@ -33,7 +33,8 @@ export interface EventRepository {
     startDate: Date,
     endDate: Date,
     category?: Category,
-    tag?: string
+    tag?: string,
+    notes?: string
   ): Promise<void>;
 
   updateByTag(householdId: string, category: string, tag: string, newTag: string): Promise<void>;

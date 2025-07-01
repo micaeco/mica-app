@@ -203,7 +203,7 @@ interface EventApiResponse {
   consumptionInLiters: number;
   category: string | null;
   tag: string | null;
-  notes: string[] | null;
+  notes: string | null;
 }
 
 interface EventApiDataResponse {
@@ -219,7 +219,7 @@ function mapApiResponseToEvent(apiResponse: EventApiResponse): Event {
     durationInSeconds: apiResponse.duration || 0,
     consumptionInLiters: apiResponse.consumptionInLiters,
     tag: apiResponse.tag || undefined,
-    notes: apiResponse.notes || [],
+    notes: apiResponse.notes || undefined,
   };
 }
 

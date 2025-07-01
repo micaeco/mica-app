@@ -183,6 +183,8 @@
     "select-date": "Selecciona la fecha",
     "start-time": "Hora de inicio",
     "end-time": "Hora de fin",
+    "notes-label": "Nota",
+    "notes-placeholder": "Añade una nota opcional para este evento",
     "category-required": "La categoría es obligatoria",
     "either-start-or-end-required": "Es necesario introducir una hora de inicio o una hora de fin, o ambas",
     "end-cannot-be-before-start": "La hora de fin no puede ser anterior a la hora de inicio",
@@ -190,7 +192,8 @@
   },
   "edit-event-sheet": {
     "title": "Edita el evento",
-    "create-new-tag": "Crear nueva etiqueta",
+    "notes-label": "Nota",
+    "notes-placeholder": "Añade una nota opcional para este evento",
     "no-tags-for-category": "No se encontraron etiquetas para esta categoría.",
     "event-edited-successfully": "Evento actualizado correctamente"
   },

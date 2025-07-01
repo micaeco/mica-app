@@ -1,17 +1,9 @@
 "use client";
 
-import { format } from "date-fns";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { EditEventForm } from "@app/_components/edit-event-form";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@app/_components/ui/sheet";
-import { getDateFnsLocale } from "@app/_i18n/routing";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@app/_components/ui/sheet";
 import { Event } from "@domain/entities/event";
 
 export function EditEventSheet({
@@ -25,8 +17,6 @@ export function EditEventSheet({
   onFormSubmitSuccess?: () => void;
 }) {
   const tCommon = useTranslations("common");
-  const locale = useLocale();
-  const dateFnsLocale = getDateFnsLocale(locale);
 
   const handleSheetOpenChange = (isOpen: boolean) => {
     onOpenChange(isOpen);
@@ -39,19 +29,6 @@ export function EditEventSheet({
           <SheetTitle>
             {tCommon("edit")} <span className="lowercase">{tCommon("event")}</span>
           </SheetTitle>
-          {event && (
-            <SheetDescription>
-              {format(event.startTimestamp, "cccc PPP", { locale: dateFnsLocale })}
-              <br />
-              {format(event.startTimestamp, "HH:mm:ss", { locale: dateFnsLocale })} -{" "}
-              {event.endTimestamp
-                ? format(event.endTimestamp, "HH:mm:ss", { locale: dateFnsLocale })
-                : tCommon("in-progress")}
-              <span className="text-brand-secondary py-4 font-bold">
-                {event.consumptionInLiters.toFixed(1)} L
-              </span>
-            </SheetDescription>
-          )}
         </SheetHeader>
 
         <EditEventForm

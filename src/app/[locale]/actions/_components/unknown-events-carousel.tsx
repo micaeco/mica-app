@@ -2,16 +2,14 @@
 
 import { useState, useEffect } from "react";
 
-import { format } from "date-fns";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { InfiniteCarouselNext } from "@app/[locale]/actions/_components/infinite-carousel-next";
 import { InfiniteCarouselPrev } from "@app/[locale]/actions/_components/infinite-carousel-prev";
 import { useInfiniteCarousel } from "@app/[locale]/actions/_hooks/use-infinite-carousel";
 import { EditEventForm } from "@app/_components/edit-event-form";
-import { Card, CardContent, CardDescription } from "@app/_components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@app/_components/ui/carousel";
-import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 import { Event } from "@domain/entities/event";
@@ -26,9 +24,6 @@ export function UnknownEventsCarousel({ onDataStatusChange }: UnknownEventsCarou
   const [unknownEventsApi, setUnknownEventsApi] = useState<CarouselApi>();
 
   const utils = trpc.useUtils();
-
-  const locale = useLocale();
-  const dateFnsLocale = getDateFnsLocale(locale);
 
   const tCommon = useTranslations("common");
   const tActions = useTranslations("actions");
@@ -75,25 +70,10 @@ export function UnknownEventsCarousel({ onDataStatusChange }: UnknownEventsCarou
               {unknownEvents.map((event: Event) => (
                 <CarouselItem key={event.id} className="h-full">
                   <Card>
-                    <CardContent className="flex flex-col gap-2 pt-6">
-                      <span className="font-medium">{tCommon("event")}</span>
-                      {event && (
-                        <CardDescription>
-                          {format(event.startTimestamp, "cccc PPP", { locale: dateFnsLocale })}
-                          <br />
-                          {format(event.startTimestamp, "HH:mm:ss", {
-                            locale: dateFnsLocale,
-                          })}{" "}
-                          -{" "}
-                          {event.endTimestamp
-                            ? format(event.endTimestamp, "HH:mm:ss", { locale: dateFnsLocale })
-                            : tCommon("in-progress")}
-                          <p className="text-brand-secondary py-4 font-bold">
-                            {event.consumptionInLiters.toFixed(1)} L
-                          </p>
-                        </CardDescription>
-                      )}
-
+                    <CardHeader>
+                      <CardTitle>{tCommon("event")}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-2">
                       <EditEventForm
                         event={event}
                         onFormSubmitSuccess={() => {

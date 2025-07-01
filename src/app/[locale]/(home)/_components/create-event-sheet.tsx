@@ -31,6 +31,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@app/_components/ui/sheet";
+import { Textarea } from "@app/_components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@app/_components/ui/toggle-group";
 import { getDateFnsLocale } from "@app/_i18n/routing";
 import { trpc } from "@app/_lib/trpc";
@@ -44,6 +45,7 @@ const eventFormSchema = z.object({
   endDateTime: z.date().nullable(),
   category: z.custom<Category>().nullable(),
   tag: z.string().nullable(),
+  notes: z.string().nullable(),
 });
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
@@ -72,6 +74,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
     endDateTime: null,
     category: null,
     tag: null,
+    notes: null,
   };
 
   const eventForm = useForm<EventFormValues>({
@@ -112,7 +115,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
       startDate: data.startDateTime ?? undefined,
       endDate: data.endDateTime ?? undefined,
       tag: data.tag ?? undefined,
-      notes: undefined,
+      notes: data.notes ?? undefined,
     });
   };
 
@@ -293,6 +296,25 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
                 onToggle={() => {
                   setActivePicker((prev) => (prev === "end" ? null : "end"));
                 }}
+              />
+
+              {/* Notes */}
+              <FormField
+                control={eventForm.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{tNewEventSheet("notes-label")}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={tNewEventSheet("notes-placeholder")}
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
               <div className="flex justify-end gap-2">

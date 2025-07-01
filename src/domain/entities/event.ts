@@ -10,7 +10,7 @@ export const Event = z.object({
   durationInSeconds: z.number().nonnegative(),
   consumptionInLiters: z.number().nonnegative(),
   tag: z.string().optional(),
-  notes: z.array(z.string()),
+  notes: z.string().optional(),
 });
 
 export type Event = z.infer<typeof Event>;

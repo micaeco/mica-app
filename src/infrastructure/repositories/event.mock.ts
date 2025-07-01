@@ -31,7 +31,7 @@ export class MockEventRepository implements EventRepository {
       endTimestamp: eventEndDate,
       durationInSeconds: Math.floor((eventEndDate.getTime() - eventStartDate.getTime()) / 1000),
       consumptionInLiters: Math.round(Math.random() * 100) / 10, // Random consumption for mock
-      notes: notes ? [notes] : [],
+      notes: notes || undefined,
       tag: tag || undefined,
     };
 
@@ -151,7 +151,7 @@ export class MockEventRepository implements EventRepository {
         endTimestamp: eventEndDate,
         durationInSeconds: Math.floor((eventEndDate.getTime() - eventStartDate.getTime()) / 1000),
         consumptionInLiters: randomConsumption,
-        notes: [],
+        notes: "",
         tag: "",
       });
     }
@@ -163,7 +163,8 @@ export class MockEventRepository implements EventRepository {
     startDate: Date,
     endDate: Date,
     category?: Category,
-    tag?: string
+    tag?: string,
+    notes?: string
   ): Promise<void> {
     const eventIndex = this.events.findIndex((event) => event.id === sensorId);
     if (eventIndex === -1) {
@@ -176,6 +177,9 @@ export class MockEventRepository implements EventRepository {
     }
     if (tag) {
       updatedEvent.tag = tag;
+    }
+    if (notes) {
+      updatedEvent.notes = notes;
     }
 
     this.events[eventIndex] = updatedEvent;

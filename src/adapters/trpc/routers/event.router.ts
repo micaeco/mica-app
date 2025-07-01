@@ -369,11 +369,12 @@ export const eventRouter = createTRPCRouter({
         endDate: z.date(),
         category: Category.optional(),
         tag: z.string().optional(),
+        notes: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { eventId, startDate, endDate, category, tag } = input;
+      const { eventId, startDate, endDate, category, tag, notes } = input;
 
-      await ctx.eventRepo.update(ctx.user.sub, eventId, startDate, endDate, category, tag);
+      await ctx.eventRepo.update(ctx.user.sub, eventId, startDate, endDate, category, tag, notes);
     }),
 });

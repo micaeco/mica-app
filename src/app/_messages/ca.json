@@ -183,6 +183,8 @@
     "select-date": "Selecciona la data",
     "start-time": "Hora d'inici",
     "end-time": "Hora de fi",
+    "notes-label": "Nota",
+    "notes-placeholder": "Afegeix una nota opcional per a aquest esdeveniment",
     "category-required": "La categoria és obligatòria",
     "either-start-or-end-required": "Cal que introdueixis una hora d'inici o una hora de fi, o ambdues",
     "end-cannot-be-before-start": "L'hora de fi no pot ser anterior a l'hora d'inici",
@@ -190,7 +192,8 @@
   },
   "edit-event-sheet": {
     "title": "Edita l'esdeveniment",
-    "create-new-tag": "Crear nova etiqueta",
+    "notes-label": "Nota",
+    "notes-placeholder": "Afegeix una nota opcional per a aquest esdeveniment",
     "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria.",
     "event-edited-successfully": "Esdeveniment actualitzat correctament"
   },
