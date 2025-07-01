@@ -67,7 +67,7 @@ export function Navbar({ className }: { className?: string }) {
               <Link
                 href={item.href}
                 className={cn(
-                  "relative flex h-full w-full flex-col items-center justify-center px-3 py-2 text-sm hover:text-white",
+                  "relative flex h-full w-full flex-col items-center justify-center px-3 py-2 text-sm hover:text-white focus:text-white",
                   isActive ? "text-white" : "text-muted-foreground"
                 )}
               >
