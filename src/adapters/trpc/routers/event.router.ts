@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { format, startOfDay, subHours } from "date-fns";
 import { z } from "zod";
 
@@ -22,6 +23,10 @@ export const eventRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, category, tag, notes } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
 
       if (!(await ctx.householdRepo.exists(householdId))) {
         throw new Error("Household does not exist");
@@ -72,6 +77,11 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, order, cursor, limit } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const events = await ctx.eventRepo.getEvents(
         householdId,
         startDate || new Date(0),
@@ -117,6 +127,11 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, categories, limit, order, cursor } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const events = await ctx.eventRepo.getEvents(
         householdId,
         startDate,
@@ -159,6 +174,11 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, order, cursor, limit } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const endDate = new Date();
       const startDate = new Date(subHours(endDate, hoursBeforeNowForLeakEvents));
 
@@ -204,6 +224,11 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, order, cursor, limit } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const endDate = new Date();
       const startDate = new Date(subHours(endDate, hoursBeforeNowForUnknownEvents));
 
@@ -236,14 +261,16 @@ export const eventRouter = createTRPCRouter({
     .input(z.object({ householdId: z.string() }))
     .output(z.number())
     .query(async ({ input, ctx }) => {
+      const { householdId } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const endDate = new Date();
       const startDate = new Date(subHours(endDate, hoursBeforeNowForLeakEvents));
 
-      const leaks = await ctx.eventRepo.getNumberOfLeakEvents(
-        input.householdId,
-        startDate,
-        endDate
-      );
+      const leaks = await ctx.eventRepo.getNumberOfLeakEvents(householdId, startDate, endDate);
       return leaks;
     }),
 
@@ -251,11 +278,17 @@ export const eventRouter = createTRPCRouter({
     .input(z.object({ householdId: z.string() }))
     .output(z.number())
     .query(async ({ input, ctx }) => {
+      const { householdId } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
       const endDate = new Date();
       const startDate = new Date(subHours(endDate, hoursBeforeNowForUnknownEvents));
 
       const unknowns = await ctx.eventRepo.getNumberOfUnknownEvents(
-        input.householdId,
+        householdId,
         startDate,
         endDate
       );
@@ -278,6 +311,10 @@ export const eventRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { householdId, cursor, limit } = input;
+
+      if (!ctx.userHouseholds.includes(householdId)) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
 
       const events = await ctx.eventRepo.getEvents(
         householdId,
@@ -336,6 +373,7 @@ export const eventRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { eventId, startDate, endDate, category, tag } = input;
+
       await ctx.eventRepo.update(ctx.user.sub, eventId, startDate, endDate, category, tag);
     }),
 });
