@@ -46,33 +46,27 @@ export const householdRouter = createTRPCRouter({
     return households;
   }),
 
-  update: protectedProcedure
-    .input(
-      createHousehold.extend({
-        id: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { id, ...data } = input;
+  update: protectedProcedure.input(Household).mutation(async ({ input, ctx }) => {
+    const { id, ...data } = input;
 
-      if (!ctx.userHouseholds.includes(id)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+    if (!ctx.userHouseholds.includes(id)) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    if (data.sensorId) {
+      if (!(await ctx.sensorRepo.exists(data.sensorId))) {
+        throw new SensorNotFoundError();
       }
 
-      if (input.sensorId) {
-        if (!(await ctx.sensorRepo.exists(input.sensorId))) {
-          throw new SensorNotFoundError();
-        }
-
-        const existingHousehold = await ctx.householdRepo.findBySensorId(input.sensorId);
-        if (existingHousehold && existingHousehold.id !== id) {
-          throw new HouseholdSensorAlreadyExistsError();
-        }
+      const existingHousehold = await ctx.householdRepo.findBySensorId(data.sensorId);
+      if (existingHousehold && existingHousehold.id !== id) {
+        throw new HouseholdSensorAlreadyExistsError();
       }
+    }
 
-      const household = await ctx.householdRepo.update(id, data);
-      return household;
-    }),
+    const household = await ctx.householdRepo.update(id, data);
+    return household;
+  }),
 
   delete: protectedProcedure
     .input(z.object({ sensorId: z.string(), householdId: z.string() }))
