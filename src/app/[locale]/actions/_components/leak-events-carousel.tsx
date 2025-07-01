@@ -30,6 +30,7 @@ export function LeakEventsCarousel({ onDataStatusChange }: LeakEventsCarouselPro
   const locale = useLocale();
   const dateFnsLocale = getDateFnsLocale(locale);
 
+  const tCommon = useTranslations("common");
   const tActions = useTranslations("actions");
   const tCategories = useTranslations("common.categories");
 
@@ -99,12 +100,8 @@ export function LeakEventsCarousel({ onDataStatusChange }: LeakEventsCarouselPro
                       <span className="font-bold">{event.consumptionInLiters} L</span>
                       {event.notes && event.notes.length > 0 && (
                         <div className="mt-2 flex flex-col gap-1">
-                          <span className="font-semibold">Notes:</span>
-                          <ul className="list-disc pl-5">
-                            {event.notes.map((note, noteIndex) => (
-                              <li key={noteIndex}>{note}</li>
-                            ))}
-                          </ul>
+                          <span className="font-semibold">{tCommon("notes")}:</span>
+                          <ul className="list-disc pl-5">{event.notes}</ul>
                         </div>
                       )}
                     </CardContent>
