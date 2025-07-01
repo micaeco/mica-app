@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 
 import Image from "next/image";
 
@@ -17,7 +19,11 @@ import { Event } from "@domain/entities/event";
 
 import { InfiniteCarouselPrev } from "./infinite-carousel-prev";
 
-export function LeakEventsCarousel() {
+interface LeakEventsCarouselProps {
+  onDataStatusChange: (hasData: boolean) => void;
+}
+
+export function LeakEventsCarousel({ onDataStatusChange }: LeakEventsCarouselProps) {
   const { selectedHouseholdId } = useHouseholdStore();
   const [leakEventsApi, setLeakEventsApi] = useState<CarouselApi>();
 
@@ -45,6 +51,12 @@ export function LeakEventsCarousel() {
   );
 
   const leakEvents = leakEventsData?.pages.flatMap((page) => page.data) ?? [];
+
+  useEffect(() => {
+    if (!isLoadingLeakEvents) {
+      onDataStatusChange(leakEvents.length > 0);
+    }
+  }, [isLoadingLeakEvents, leakEvents.length, onDataStatusChange]);
 
   useInfiniteCarousel({
     api: leakEventsApi,

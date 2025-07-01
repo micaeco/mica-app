@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 
 import { format } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
@@ -14,7 +16,11 @@ import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 import { Event } from "@domain/entities/event";
 
-export function UnknownEventsCarousel() {
+interface UnknownEventsCarouselProps {
+  onDataStatusChange: (hasData: boolean) => void;
+}
+
+export function UnknownEventsCarousel({ onDataStatusChange }: UnknownEventsCarouselProps) {
   const { selectedHouseholdId } = useHouseholdStore();
 
   const [unknownEventsApi, setUnknownEventsApi] = useState<CarouselApi>();
@@ -44,6 +50,12 @@ export function UnknownEventsCarousel() {
     }
   );
   const unknownEvents = unknownEventsData?.pages.flatMap((page) => page.data) ?? [];
+
+  useEffect(() => {
+    if (!isLoadingUnknownEvents) {
+      onDataStatusChange(unknownEvents.length > 0);
+    }
+  }, [isLoadingUnknownEvents, unknownEvents.length, onDataStatusChange]);
 
   useInfiniteCarousel({
     api: unknownEventsApi,
