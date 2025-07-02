@@ -39,6 +39,7 @@ import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 import { categories, Category, categoryMap } from "@domain/entities/category";
+import { Tag } from "@domain/entities/tag";
 
 const filteredCategories: Category[] = categories.filter(
   (category) => category !== "rest" && category !== "unknown"
@@ -212,12 +213,13 @@ export function EditTagsDialog({ isOpen, onOpenChange }: EditTagsDialogProps) {
     });
   };
 
-  const handleUpdate = (tagId: number, newName: string) => {
+  const handleUpdate = (tag: Tag, newName: string) => {
     updateTag({
-      id: tagId,
-      householdId: selectedHouseholdId,
-      category: selectedCategory,
-      name: newName.trim(),
+      id: tag.id,
+      householdId: tag.householdId,
+      category: tag.category,
+      name: tag.name,
+      newName: newName.trim(),
     });
   };
 
@@ -269,7 +271,7 @@ export function EditTagsDialog({ isOpen, onOpenChange }: EditTagsDialogProps) {
                 <EditableField
                   key={tag.id}
                   value={tag.name}
-                  onChange={(newValue) => handleUpdate(tag.id, newValue)}
+                  onChange={(newValue) => handleUpdate(tag, newValue)}
                   onDelete={() => handleDelete(tag.id)}
                   className={
                     tags.length == 1
