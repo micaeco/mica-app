@@ -1,12 +1,14 @@
 import { auth } from "@adapters/auth";
 import { createContainer } from "@di/container";
 
-export async function createContext() {
-  const session = await auth.getSession();
+export async function createContext(request: Request) {
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
   const container = createContainer();
 
   const userHouseholds = await container.householdUserRepo.findHouseholdsByUserId(
-    session?.user.sub ?? ""
+    session?.user.id ?? ""
   );
 
   return {

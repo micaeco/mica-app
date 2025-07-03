@@ -4,13 +4,21 @@ import { z } from "zod";
 export const env = createEnv({
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
-    AUTH0_SECRET: z.string(),
-    AUTH0_CLIENT_ID: z.string(),
-    AUTH0_DOMAIN: z.string().url(),
-    AUTH0_CLIENT_SECRET: z.string(),
-    DATABASE_URL: z.string().url(),
+
+    BETTER_AUTH_URL: z.string().url(),
+    BETTER_AUTH_SECRET: z.string(),
+
     AWS_API_GATEWAY_URL: z.string().url(),
     AWS_API_GATEWAY_TOKEN: z.string(),
+
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
+
+    AWS_REGION: z.string(),
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_SECRET_ACCESS_KEY: z.string(),
+
+    DATABASE_URL: z.string().url(),
   },
 
   client: {
@@ -21,13 +29,21 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV ?? "development",
     NEXT_PUBLIC_URL:
       process.env.NODE_ENV === "production" ? "https://app.mica.eco" : "http://localhost:3000",
-    AUTH0_SECRET: process.env.AUTH0_SECRET,
-    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
-    AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
-    AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
-    DATABASE_URL: process.env.DATABASE_URL,
+
+    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+
     AWS_API_GATEWAY_URL: process.env.AWS_API_GATEWAY_URL,
     AWS_API_GATEWAY_TOKEN: process.env.AWS_API_GATEWAY_TOKEN,
+
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+
+    DATABASE_URL: process.env.DATABASE_URL,
   },
 
   emptyStringAsUndefined: true,

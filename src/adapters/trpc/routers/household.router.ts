@@ -22,7 +22,7 @@ export const householdRouter = createTRPCRouter({
 
       const householdUser: HouseholdUser = {
         householdId: household.id,
-        userId: ctx.user.sub,
+        userId: ctx.user.id,
         role: "admin",
       };
 
@@ -35,7 +35,7 @@ export const householdRouter = createTRPCRouter({
   }),
 
   getAll: protectedProcedure.output(z.array(Household)).query(async ({ ctx }) => {
-    const householdIds = await ctx.householdUserRepo.findHouseholdsByUserId(ctx.user.sub);
+    const householdIds = await ctx.householdUserRepo.findHouseholdsByUserId(ctx.user.id);
 
     const households: Household[] = [];
     for (const householdId of householdIds) {

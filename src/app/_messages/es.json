@@ -226,6 +226,7 @@
   },
   "not-found": {
     "title": "Página no encontrada.",
-    "description": "La página que buscas no existe."
+    "description": "La página que buscas no existe.",
+    "go-home": "Volver al inicio"
   }
 }

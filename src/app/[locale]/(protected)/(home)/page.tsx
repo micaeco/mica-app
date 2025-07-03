@@ -3,10 +3,10 @@
 import { CirclePlus } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { ActionCards } from "@app/[locale]/(home)/_components/action-cards";
-import { ConsumptionTabs } from "@app/[locale]/(home)/_components/consumption-tabs";
-import { CreateEventSheet } from "@app/[locale]/(home)/_components/create-event-sheet";
-import { EventsList } from "@app/[locale]/(home)/_components/events-list";
+import { ActionCards } from "@app/[locale]/(protected)/(home)/_components/action-cards";
+import { ConsumptionTabs } from "@app/[locale]/(protected)/(home)/_components/consumption-tabs";
+import { CreateEventSheet } from "@app/[locale]/(protected)/(home)/_components/create-event-sheet";
+import { EventsList } from "@app/[locale]/(protected)/(home)/_components/events-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
 
 export default function Home() {

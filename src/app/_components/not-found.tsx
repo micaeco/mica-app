@@ -1,12 +1,18 @@
 import { useTranslations } from "next-intl";
 
+import { Button } from "@app/_components/ui/button";
+import { Link } from "@app/_i18n/routing";
+
 export function NotFound() {
   const t = useTranslations("not-found");
 
   return (
-    <div className="p-8">
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4 p-8">
       <h4>{t("title")}</h4>
-      <p className="max-w-[460px]">{t("description")}</p>
+      <p>{t("description")}</p>
+      <Button>
+        <Link href="/">{t("go-home")}</Link>
+      </Button>
     </div>
   );
 }

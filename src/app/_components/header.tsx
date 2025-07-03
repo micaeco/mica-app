@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 
-import { useUser } from "@auth0/nextjs-auth0";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -10,6 +9,7 @@ import { EditProfilePanel } from "@app/_components/edit-profile-panel";
 import { Avatar, AvatarFallback, AvatarImage } from "@app/_components/ui/avatar";
 import { useSidebar } from "@app/_components/ui/sidebar";
 import { usePathname } from "@app/_i18n/routing";
+import { authClient } from "@app/_lib/auth-client";
 import { cn } from "@app/_lib/utils";
 
 export function Header({ className }: { className?: string }) {
@@ -18,7 +18,7 @@ export function Header({ className }: { className?: string }) {
 
   const tNavPages = useTranslations("common.nav-pages");
 
-  const { user } = useUser();
+  const { data: session } = authClient.useSession();
 
   return (
     <header
@@ -53,13 +53,13 @@ export function Header({ className }: { className?: string }) {
 
         <div className="fixed top-2 right-3">
           <EditProfilePanel>
-            <Avatar className="border-brand-primary mx-auto border-2">
+            <Avatar className="border-brand-primary mx-auto border-2 bg-white">
               <AvatarImage
                 className="object-contain"
-                src={user?.picture ? user.picture : "/logos/logo.webp"}
-                alt={user?.name || "User Avatar"}
+                src={session?.user?.image ? session.user.image : "/logos/logo.webp"}
+                alt={session?.user?.name || "User Avatar"}
               />
-              <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
+              <AvatarFallback>{session?.user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
             </Avatar>
           </EditProfilePanel>
         </div>

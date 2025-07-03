@@ -7,8 +7,8 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 
-import { InfiniteCarouselNext } from "@app/[locale]/actions/_components/infinite-carousel-next";
-import { useInfiniteCarousel } from "@app/[locale]/actions/_hooks/use-infinite-carousel";
+import { InfiniteCarouselNext } from "@app/[locale]/(protected)/actions/_components/infinite-carousel-next";
+import { useInfiniteCarousel } from "@app/[locale]/(protected)/actions/_hooks/use-infinite-carousel";
 import { Card, CardContent } from "@app/_components/ui/card";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@app/_components/ui/carousel";
 import { getDateFnsLocale } from "@app/_i18n/routing";

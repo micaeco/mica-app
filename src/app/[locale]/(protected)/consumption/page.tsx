@@ -6,11 +6,11 @@ import { format } from "date-fns";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
-import { ConsumptionPerCategoryChart } from "@app/[locale]/consumption/_components/consumption-per-category-chart";
-import { ConsumptionPerEventChart } from "@app/[locale]/consumption/_components/consumption-per-event-chart";
-import { ConsumptionPerTimeChart } from "@app/[locale]/consumption/_components/consumption-per-time-chart";
-import { TimeGranularitySelect } from "@app/[locale]/consumption/_components/time-granularity-select";
-import { useConsumption } from "@app/[locale]/consumption/_hooks/use-consumption";
+import { ConsumptionPerCategoryChart } from "@app/[locale]/(protected)/consumption/_components/consumption-per-category-chart";
+import { ConsumptionPerEventChart } from "@app/[locale]/(protected)/consumption/_components/consumption-per-event-chart";
+import { ConsumptionPerTimeChart } from "@app/[locale]/(protected)/consumption/_components/consumption-per-time-chart";
+import { TimeGranularitySelect } from "@app/[locale]/(protected)/consumption/_components/time-granularity-select";
+import { useConsumption } from "@app/[locale]/(protected)/consumption/_hooks/use-consumption";
 import {
   Card,
   CardContent,

@@ -4,12 +4,15 @@ import { PgTransaction } from "drizzle-orm/pg-core";
 import { HouseholdUser } from "@domain/entities/household-user";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
 import { DbType } from "@infrastructure/db/db";
-import { HouseholdUserSchema, householdUserSchema } from "@infrastructure/db/schema/household-user";
+import {
+  HouseholdUser as HouseholdUserTable,
+  householdUser as householdUserTable,
+} from "@infrastructure/db/schema/app/household-user";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DrizzleTx = PgTransaction<any, any, any>;
 
-export function mapHouseholdUserFromSchema(schema: HouseholdUserSchema): HouseholdUser {
+export function mapHouseholdUserFromSchema(schema: HouseholdUserTable): HouseholdUser {
   return {
     householdId: schema.householdId,
     userId: schema.userId,
@@ -22,7 +25,7 @@ export class PostgresHouseholdUserRepository implements HouseholdUserRepository 
 
   async create(householdUser: HouseholdUser): Promise<HouseholdUser> {
     const [newHouseholdUser] = await this.db
-      .insert(householdUserSchema)
+      .insert(householdUserTable)
       .values(householdUser)
       .returning();
 
@@ -30,19 +33,16 @@ export class PostgresHouseholdUserRepository implements HouseholdUserRepository 
   }
 
   async findAll(): Promise<HouseholdUser[]> {
-    const householdUsers = await this.db.select().from(householdUserSchema);
+    const householdUsers = await this.db.select().from(householdUserTable);
     return householdUsers.map(mapHouseholdUserFromSchema);
   }
 
   async findById(householdId: string, userId: string): Promise<HouseholdUser | null> {
     const [householdUser] = await this.db
       .select()
-      .from(householdUserSchema)
+      .from(householdUserTable)
       .where(
-        and(
-          eq(householdUserSchema.householdId, householdId),
-          eq(householdUserSchema.userId, userId)
-        )
+        and(eq(householdUserTable.householdId, householdId), eq(householdUserTable.userId, userId))
       );
 
     if (!householdUser) return null;
@@ -53,8 +53,8 @@ export class PostgresHouseholdUserRepository implements HouseholdUserRepository 
   async findByUserId(userId: string): Promise<HouseholdUser[]> {
     const householdUsers = await this.db
       .select()
-      .from(householdUserSchema)
-      .where(eq(householdUserSchema.userId, userId));
+      .from(householdUserTable)
+      .where(eq(householdUserTable.userId, userId));
 
     return householdUsers.map(mapHouseholdUserFromSchema);
   }
@@ -62,26 +62,26 @@ export class PostgresHouseholdUserRepository implements HouseholdUserRepository 
   async findByHouseholdId(householdId: string): Promise<HouseholdUser[]> {
     const householdUsers = await this.db
       .select()
-      .from(householdUserSchema)
-      .where(eq(householdUserSchema.householdId, householdId));
+      .from(householdUserTable)
+      .where(eq(householdUserTable.householdId, householdId));
 
     return householdUsers.map(mapHouseholdUserFromSchema);
   }
 
   async findUsersByHouseholdId(householdId: string): Promise<string[]> {
     const householdUsers = await this.db
-      .select({ userId: householdUserSchema.userId })
-      .from(householdUserSchema)
-      .where(eq(householdUserSchema.householdId, householdId));
+      .select({ userId: householdUserTable.userId })
+      .from(householdUserTable)
+      .where(eq(householdUserTable.householdId, householdId));
 
     return householdUsers.map((relation) => relation.userId);
   }
 
   async findHouseholdsByUserId(userId: string): Promise<string[]> {
     const householdUsers = await this.db
-      .select({ householdId: householdUserSchema.householdId })
-      .from(householdUserSchema)
-      .where(eq(householdUserSchema.userId, userId));
+      .select({ householdId: householdUserTable.householdId })
+      .from(householdUserTable)
+      .where(eq(householdUserTable.userId, userId));
 
     return householdUsers.map((relation) => relation.householdId);
   }
@@ -92,16 +92,13 @@ export class PostgresHouseholdUserRepository implements HouseholdUserRepository 
     role: HouseholdUser["role"]
   ): Promise<HouseholdUser | null> {
     const [updatedHouseholdUser] = await this.db
-      .update(householdUserSchema)
+      .update(householdUserTable)
       .set({
         role,
         updatedAt: new Date(),
       })
       .where(
-        and(
-          eq(householdUserSchema.householdId, householdId),
-          eq(householdUserSchema.userId, userId)
-        )
+        and(eq(householdUserTable.householdId, householdId), eq(householdUserTable.userId, userId))
       )
       .returning();
 
@@ -112,12 +109,9 @@ export class PostgresHouseholdUserRepository implements HouseholdUserRepository 
 
   async delete(householdId: string, userId: string): Promise<boolean> {
     const result = await this.db
-      .delete(householdUserSchema)
+      .delete(householdUserTable)
       .where(
-        and(
-          eq(householdUserSchema.householdId, householdId),
-          eq(householdUserSchema.userId, userId)
-        )
+        and(eq(householdUserTable.householdId, householdId), eq(householdUserTable.userId, userId))
       )
       .returning();
 

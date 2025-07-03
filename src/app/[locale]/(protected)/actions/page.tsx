@@ -5,8 +5,8 @@ import { useState } from "react";
 import { Bell, ChevronDown, HelpCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { LeakEventsCarousel } from "@app/[locale]/actions/_components/leak-events-carousel";
-import { UnknownEventsCarousel } from "@app/[locale]/actions/_components/unknown-events-carousel";
+import { LeakEventsCarousel } from "@app/[locale]/(protected)/actions/_components/leak-events-carousel";
+import { UnknownEventsCarousel } from "@app/[locale]/(protected)/actions/_components/unknown-events-carousel";
 import {
   Accordion,
   AccordionContent,

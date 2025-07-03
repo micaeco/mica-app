@@ -12,7 +12,7 @@ import { Control, FieldValues, Path, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { DateTimePicker } from "@app/[locale]/(home)/_components/date-time-picker";
+import { DateTimePicker } from "@app/[locale]/(protected)/(home)/_components/date-time-picker";
 import { EditTagsDialog } from "@app/_components/edit-tags-dialog";
 import { Button } from "@app/_components/ui/button";
 import {

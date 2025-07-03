@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 
 import { useTranslations } from "next-intl";
 
-import { InfiniteCarouselNext } from "@app/[locale]/actions/_components/infinite-carousel-next";
-import { InfiniteCarouselPrev } from "@app/[locale]/actions/_components/infinite-carousel-prev";
-import { useInfiniteCarousel } from "@app/[locale]/actions/_hooks/use-infinite-carousel";
+import { InfiniteCarouselNext } from "@app/[locale]/(protected)/actions/_components/infinite-carousel-next";
+import { InfiniteCarouselPrev } from "@app/[locale]/(protected)/actions/_components/infinite-carousel-prev";
+import { useInfiniteCarousel } from "@app/[locale]/(protected)/actions/_hooks/use-infinite-carousel";
 import { EditEventForm } from "@app/_components/edit-event-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@app/_components/ui/carousel";

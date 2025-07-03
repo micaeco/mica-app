@@ -70,18 +70,3 @@ export function getDateFnsLocale(locale: string): DateFnsLocale {
       return getDateFnsLocale(defaultLocale);
   }
 }
-
-export type Auth0Locale = "ca-ES" | "es" | "en";
-
-export function getAuth0Locale(locale: Locale): Auth0Locale {
-  switch (locale) {
-    case "ca":
-      return "ca-ES";
-    case "en":
-      return "en";
-    case "es":
-      return "es";
-    default:
-      return getAuth0Locale(defaultLocale);
-  }
-}

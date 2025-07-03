@@ -34,7 +34,7 @@ export const eventRouter = createTRPCRouter({
 
       await ctx.eventRepo.create(
         householdId,
-        ctx.user.sub,
+        ctx.user.id,
         category,
         startDate,
         endDate,
@@ -375,6 +375,6 @@ export const eventRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { eventId, startDate, endDate, category, tag, notes } = input;
 
-      await ctx.eventRepo.update(ctx.user.sub, eventId, startDate, endDate, category, tag, notes);
+      await ctx.eventRepo.update(ctx.user.id, eventId, startDate, endDate, category, tag, notes);
     }),
 });

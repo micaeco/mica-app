@@ -226,6 +226,7 @@
   },
   "not-found": {
     "title": "Pàgina no trobada.",
-    "description": "La pàgina que busques no existeix."
+    "description": "La pàgina que busques no existeix.",
+    "go-home": "Torna a l'inici"
   }
 }

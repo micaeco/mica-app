@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { useUser } from "@auth0/nextjs-auth0";
 import { ChevronRight, HelpCircle, LogOut, Users } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -13,6 +12,7 @@ import {
   SheetTrigger,
 } from "@app/_components/ui/sheet";
 import { Locale } from "@app/_i18n/routing";
+import { authClient } from "@app/_lib/auth-client";
 import { cn } from "@app/_lib/utils";
 import { KeysOfType } from "@app/_types/utils";
 
@@ -40,7 +40,10 @@ const menuItems: SettingsListItemData[] = [
     id: "logout",
     icon: <LogOut className="h-5 w-5" />,
     label: "logout",
-    onClick: () => redirect("/auth/logout"),
+    onClick: () =>
+      authClient.signOut().then(() => {
+        redirect("/signin");
+      }),
   },
 ];
 
@@ -48,23 +51,25 @@ export function EditProfilePanel({ children }: { children: React.ReactNode }) {
   const locale = useLocale();
   const tCommon = useTranslations("common");
 
-  const { user } = useUser();
+  const { data: session } = authClient.useSession();
 
   return (
     <Sheet>
       <SheetTrigger>{children}</SheetTrigger>
       <SheetContent className="from-brand-secondary w-full space-y-12 bg-gradient-to-b from-5% to-white to-45% p-4 py-16 sm:p-6">
         <SheetHeader>
-          <Avatar className="border-brand-primary mx-auto h-12 w-12 border-2 sm:h-16 sm:w-16">
+          <Avatar className="border-brand-primary mx-auto h-12 w-12 border-2 bg-white sm:h-16 sm:w-16">
             <AvatarImage
               className="object-contain"
-              src={user?.picture ? user.picture : "/logos/logo.webp"}
-              alt={user?.name || "User Avatar"}
+              src={session?.user?.image ? session.user.image : "/logos/logo.webp"}
+              alt={session?.user?.name || "User Avatar"}
             />
-            <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
+            <AvatarFallback>{session?.user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
           </Avatar>
-          <SheetTitle className="text-center">{user?.name || "User Profile"}</SheetTitle>
-          {user?.email && <p className="text-center text-sm text-gray-500">{user.email}</p>}
+          <SheetTitle className="text-center">{session?.user?.name || "User Profile"}</SheetTitle>
+          {session?.user?.email && (
+            <p className="text-center text-sm text-gray-500">{session.user.email}</p>
+          )}
         </SheetHeader>
 
         <div className="px-2 sm:px-0">
