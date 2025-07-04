@@ -21,24 +21,24 @@ const languages: { code: Locale; name: string }[] = [
   { code: "ca", name: "Català" },
 ];
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({ className }: { className?: string }) {
   const router = useRouter();
   const locale = useLocale() as Locale;
   const pathname = usePathname();
 
   const [isPending, setIsPending] = useState(false);
 
-  const handleLanguageChange = (newLocale: Locale) => {
+  const handleLanguageChange = async (newLocale: Locale) => {
     setIsPending(true);
-    authClient.updateUser({ locale: newLocale });
+    await authClient.updateUser({ locale: newLocale });
     router.replace(pathname, { locale: newLocale });
     setIsPending(false);
   };
 
   return (
     <Select onValueChange={handleLanguageChange} value={locale}>
-      <SelectTrigger>
-        {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <SelectValue />}
+      <SelectTrigger className={className}>
+        {isPending ? <Loader2 className="animate-spin" /> : <SelectValue />}
       </SelectTrigger>
       <SelectContent>
         {languages.map((lang) => (
