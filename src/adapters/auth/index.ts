@@ -6,7 +6,7 @@ import { getMessages } from "next-intl/server";
 import ResetPasswordEmail from "@app/_components/emails/reset-password";
 import VerificationEmail from "@app/_components/emails/verification";
 import { env } from "@env";
-import { db } from "@infrastructure/db/db";
+import { db } from "@infrastructure/db";
 import { sendEmail } from "@infrastructure/services/email.ses";
 
 type User = {

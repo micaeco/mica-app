@@ -4,7 +4,7 @@ import { HouseholdRepository } from "@domain/repositories/household";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
 import { TagRepository } from "@domain/repositories/tag";
 import { UnitOfWork, Repositories } from "@domain/services/unit-of-work";
-import { DbType } from "@infrastructure/db/db";
+import { DbType } from "@infrastructure/db";
 import { PostgresHouseholdUserRepository } from "@infrastructure/repositories/household-user.postgres";
 import { PostgresHouseholdRepository } from "@infrastructure/repositories/household.postgres";
 import { PostgresTagRepository } from "@infrastructure/repositories/tag.postgres";

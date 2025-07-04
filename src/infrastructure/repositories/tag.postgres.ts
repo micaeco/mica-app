@@ -4,7 +4,7 @@ import { PgTransaction } from "drizzle-orm/pg-core";
 import { Category } from "@domain/entities/category";
 import { Tag } from "@domain/entities/tag";
 import { TagRepository } from "@domain/repositories/tag";
-import { DbType } from "@infrastructure/db/db";
+import { DbType } from "@infrastructure/db";
 import { Tag as TagTable, tag as tagTable } from "@infrastructure/db/schema/app/tag";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

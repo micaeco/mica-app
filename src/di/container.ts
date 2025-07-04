@@ -5,7 +5,7 @@ import { HouseholdUserRepository } from "@domain/repositories/household-user";
 import { SensorRepository } from "@domain/repositories/sensor";
 import { TagRepository } from "@domain/repositories/tag";
 import { UnitOfWork } from "@domain/services/unit-of-work";
-import { db } from "@infrastructure/db/db";
+import { db } from "@infrastructure/db";
 import { ApiConsumptionRepository } from "@infrastructure/repositories/consumption.api";
 import { ApiEventRepository } from "@infrastructure/repositories/event.api";
 import { PostgresHouseholdUserRepository } from "@infrastructure/repositories/household-user.postgres";

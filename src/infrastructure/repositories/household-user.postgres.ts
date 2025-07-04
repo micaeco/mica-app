@@ -3,7 +3,7 @@ import { PgTransaction } from "drizzle-orm/pg-core";
 
 import { HouseholdUser } from "@domain/entities/household-user";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
-import { DbType } from "@infrastructure/db/db";
+import { DbType } from "@infrastructure/db";
 import {
   HouseholdUser as HouseholdUserTable,
   householdUser as householdUserTable,
