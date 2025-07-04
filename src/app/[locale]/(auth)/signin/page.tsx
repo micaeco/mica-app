@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -34,15 +34,19 @@ import { Separator } from "@app/_components/ui/separator";
 import { redirect } from "@app/_i18n/routing";
 import { authClient } from "@app/_lib/auth-client";
 
-const signinSchema = z.object({
-  email: z.string().email("Please enter a valid email address").min(1, "Email is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
-type SigninForm = z.infer<typeof signinSchema>;
-
 export default function SigninPage() {
   const locale = useLocale();
+  const t = useTranslations();
+
+  const signinSchema = z.object({
+    email: z
+      .string()
+      .email(t("auth.validation.email-invalid"))
+      .min(1, t("auth.validation.email-required")),
+    password: z.string().min(8, t("auth.validation.password-min")),
+  });
+
+  type SigninForm = z.infer<typeof signinSchema>;
 
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -63,7 +67,10 @@ export default function SigninPage() {
       },
       {
         onError: (ctx) => {
-          toast.error(ctx.error.message + " " + ctx.error.status + " " + ctx.error.code);
+          const errorKey = `common.errors.${ctx.error.code}`;
+          // @ts-expect-error - Dynamic key for error translation
+          const translatedError = t(errorKey);
+          toast.error(translatedError || ctx.error.message);
         },
         onSuccess: () => {
           redirect({ href: "/", locale });
@@ -85,7 +92,10 @@ export default function SigninPage() {
       },
       {
         onError: (ctx) => {
-          toast.error(ctx.error.message + " " + ctx.error.status + " " + ctx.error.code);
+          const errorKey = `common.errors.${ctx.error.code}`;
+          // @ts-expect-error - Dynamic key for error translation
+          const translatedError = t(errorKey);
+          toast.error(translatedError || ctx.error.message);
         },
         onRequest: () => {
           setIsLoading(true);
@@ -101,10 +111,8 @@ export default function SigninPage() {
     <Card className="w-full max-w-sm">
       <CardHeader className="space-y-1">
         <Image src="/logos/logo.webp" alt="Logo" width={60} height={60} className="mx-auto" />
-        <CardTitle className="text-center text-xl">Welcome</CardTitle>
-        <CardDescription className="text-center">
-          Enter your email and password to access your account
-        </CardDescription>
+        <CardTitle className="text-center text-xl">{t("auth.signin.title")}</CardTitle>
+        <CardDescription className="text-center">{t("auth.signin.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Button
@@ -120,7 +128,7 @@ export default function SigninPage() {
             width={20}
             height={20}
           />
-          Continue with Google
+          {t("auth.signin.google-signin")}
         </Button>
 
         <div className="relative">
@@ -128,7 +136,7 @@ export default function SigninPage() {
             <Separator className="w-full" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background text-muted-foreground px-2">Or</span>
+            <span className="bg-background text-muted-foreground px-2">{t("auth.signin.or")}</span>
           </div>
         </div>
 
@@ -139,9 +147,9 @@ export default function SigninPage() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("auth.signin.email")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your email" {...field} />
+                    <Input placeholder={t("auth.signin.email-placeholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -154,19 +162,19 @@ export default function SigninPage() {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{t("auth.signin.password")}</FormLabel>
                     <Link
                       href="/forgot-password"
                       className="text-muted-foreground hover:text-primary text-sm underline underline-offset-4"
                     >
-                      Forgot password?
+                      {t("auth.signin.forgot-password")}
                     </Link>
                   </div>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
+                        placeholder={t("auth.signin.password-placeholder")}
                         {...field}
                       />
                       <Button
@@ -190,16 +198,16 @@ export default function SigninPage() {
             />
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign in"}
+              {isLoading ? t("auth.signin.signin-loading") : t("auth.signin.signin-button")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="text-muted-foreground w-full text-center text-sm">
-          Don&apos;t have an account?{" "}
+          {t("auth.signin.no-account")}{" "}
           <Link href="/signup" className="hover:text-primary underline underline-offset-4">
-            Sign up
+            {t("auth.signin.signup-link")}
           </Link>
         </p>
       </CardFooter>

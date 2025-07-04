@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -31,19 +32,23 @@ import {
 import { Input } from "@app/_components/ui/input";
 import { authClient } from "@app/_lib/auth-client";
 
-const ResetPasswordSchema = z
-  .object({
-    password: z.string().min(8, { message: "Password must be at least 8 characters" }),
-    confirmPassword: z.string().min(8, { message: "Please confirm your password" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
 export default function ResetPassword() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations();
+
+  const ResetPasswordSchema = z
+    .object({
+      password: z.string().min(8, { message: t("auth.validation.password-min") }),
+      confirmPassword: z
+        .string()
+        .min(8, { message: t("auth.validation.confirm-password-required") }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("auth.validation.passwords-no-match"),
+      path: ["confirmPassword"],
+    });
+
   const [loading, setLoading] = useState(false);
   const [tokenStatus, setTokenStatus] = useState<"valid" | "invalid" | "checking">("checking");
   const [showPassword, setShowPassword] = useState(false);
@@ -90,13 +95,14 @@ export default function ResetPassword() {
           setLoading(true);
         },
         onSuccess: () => {
-          toast.success("Your password has been reset successfully!");
+          toast.success(t("auth.reset-password.success-message"));
           router.push("/signin");
         },
         onError: (ctx) => {
-          toast.error(
-            `Error: ${ctx.error.message} (Status: ${ctx.error.status}, Code: ${ctx.error.code})`
-          );
+          const errorKey = `common.errors.${ctx.error.code}`;
+          // @ts-expect-error - Dynamic key for error translation
+          const translatedError = t(errorKey);
+          toast.error(translatedError || ctx.error.message);
         },
       }
     );
@@ -106,8 +112,8 @@ export default function ResetPassword() {
     return (
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Loading...</CardTitle>
-          <CardDescription>Checking the reset password link.</CardDescription>
+          <CardTitle>{t("auth.reset-password.checking-token")}</CardTitle>
+          <CardDescription hidden></CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex h-32 items-center justify-center">
@@ -122,10 +128,8 @@ export default function ResetPassword() {
     return (
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Invalid Link</CardTitle>
-          <CardDescription>
-            The password reset link is invalid or has expired. Please request a new one.
-          </CardDescription>
+          <CardTitle>{t("auth.reset-password.invalid-token.title")}</CardTitle>
+          <CardDescription>{t("auth.reset-password.invalid-token.description")}</CardDescription>
         </CardHeader>
         <CardFooter>
           <p className="text-muted-foreground w-full text-center text-sm">
@@ -133,7 +137,7 @@ export default function ResetPassword() {
               href="/forgot-password"
               className="hover:text-primary underline underline-offset-4"
             >
-              Request a new password reset link
+              {t("auth.reset-password.get-new-link")}
             </Link>
           </p>
         </CardFooter>
@@ -144,8 +148,8 @@ export default function ResetPassword() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Reset Password</CardTitle>
-        <CardDescription>Enter your new password below.</CardDescription>
+        <CardTitle>{t("auth.reset-password.title")}</CardTitle>
+        <CardDescription>{t("auth.reset-password.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -155,13 +159,13 @@ export default function ResetPassword() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Password</FormLabel>
+                  <FormLabel>{t("auth.reset-password.password")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         disabled={loading}
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter your new password"
+                        placeholder={t("auth.reset-password.password-placeholder")}
                         {...field}
                       />
                       <Button
@@ -189,13 +193,13 @@ export default function ResetPassword() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormLabel>{t("auth.reset-password.confirm-password")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         disabled={loading}
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm your new password"
+                        placeholder={t("auth.reset-password.confirm-password-placeholder")}
                         {...field}
                       />
                       <Button
@@ -219,16 +223,18 @@ export default function ResetPassword() {
               )}
             />
             <Button disabled={loading} type="submit" className="w-full">
-              {loading ? "Resetting password..." : "Reset Password"}
+              {loading
+                ? t("auth.reset-password.reset-loading")
+                : t("auth.reset-password.reset-button")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="text-muted-foreground text-sm">
-          Remember your password?{" "}
+          {t("auth.forgot-password.remember")}{" "}
           <Link href="/signin" className="hover:text-primary underline underline-offset-4">
-            Sign in
+            {t("auth.forgot-password.signin-link")}
           </Link>
         </p>
       </CardFooter>

@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -32,21 +33,26 @@ import { Input } from "@app/_components/ui/input";
 import { Separator } from "@app/_components/ui/separator";
 import { authClient } from "@app/_lib/auth-client";
 
-const signupSchema = z
-  .object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Please enter a valid email address").min(1, "Email is required"),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
-    confirmPassword: z.string().min(8, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-type SignupForm = z.infer<typeof signupSchema>;
-
 export default function SignupPage() {
+  const t = useTranslations();
+
+  const signupSchema = z
+    .object({
+      name: z.string().min(1, t("auth.validation.name-required")),
+      email: z
+        .string()
+        .email(t("auth.validation.email-invalid"))
+        .min(1, t("auth.validation.email-required")),
+      password: z.string().min(8, t("auth.validation.password-min")),
+      confirmPassword: z.string().min(8, t("auth.validation.confirm-password-required")),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("auth.validation.passwords-no-match"),
+      path: ["confirmPassword"],
+    });
+
+  type SignupForm = z.infer<typeof signupSchema>;
+
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -68,12 +74,13 @@ export default function SignupPage() {
       password: data.password,
       fetchOptions: {
         onError: (ctx) => {
-          toast.error(ctx.error.message + " " + ctx.error.status + " " + ctx.error.code);
+          const errorKey = `common.errors.${ctx.error.code}`;
+          // @ts-expect-error - Dynamic key for error translation
+          const translatedError = t(errorKey);
+          toast.error(translatedError || ctx.error.message);
         },
         onSuccess: () => {
-          toast.success(
-            "Account created successfully! Please check your email to verify your account."
-          );
+          toast.success(t("auth.signup.success-message"));
         },
         onRequest: () => {
           setIsLoading(true);
@@ -90,7 +97,10 @@ export default function SignupPage() {
       provider: "google",
       fetchOptions: {
         onError: (ctx) => {
-          toast.error(ctx.error.message + " " + ctx.error.status + " " + ctx.error.code);
+          const errorKey = `common.errors.${ctx.error.code}`;
+          // @ts-expect-error - Dynamic key for error translation
+          const translatedError = t(errorKey);
+          toast.error(translatedError || ctx.error.message);
         },
         onSuccess: (ctx) => {
           toast.success(ctx.response.toString());
@@ -109,10 +119,8 @@ export default function SignupPage() {
     <Card className="w-full max-w-sm">
       <CardHeader className="space-y-1">
         <Image src="/logos/logo.webp" alt="Logo" className="mx-auto" width={60} height={60} />
-        <CardTitle className="text-center text-xl">Create your account</CardTitle>
-        <CardDescription className="text-center">
-          Enter your information to create a new account
-        </CardDescription>
+        <CardTitle className="text-center text-xl">{t("auth.signup.title")}</CardTitle>
+        <CardDescription className="text-center">{t("auth.signup.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Button
@@ -128,7 +136,7 @@ export default function SignupPage() {
             width={20}
             height={20}
           />
-          Continue with Google
+          {t("auth.signup.google-signup")}
         </Button>
 
         <div className="relative">
@@ -136,7 +144,7 @@ export default function SignupPage() {
             <Separator className="w-full" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background text-muted-foreground px-2">Or</span>
+            <span className="bg-background text-muted-foreground px-2">{t("auth.signup.or")}</span>
           </div>
         </div>
 
@@ -147,9 +155,9 @@ export default function SignupPage() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t("auth.signup.name")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input placeholder={t("auth.signup.name-placeholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,9 +169,9 @@ export default function SignupPage() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("auth.signup.email")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your email" {...field} />
+                    <Input placeholder={t("auth.signup.email-placeholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,12 +183,12 @@ export default function SignupPage() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("auth.signup.password")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Create a password"
+                        placeholder={t("auth.signup.password-placeholder")}
                         {...field}
                       />
                       <Button
@@ -208,12 +216,12 @@ export default function SignupPage() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>{t("auth.signup.confirm-password")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm your password"
+                        placeholder={t("auth.signup.confirm-password-placeholder")}
                         {...field}
                       />
                       <Button
@@ -237,16 +245,16 @@ export default function SignupPage() {
             />
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating account..." : "Create account"}
+              {isLoading ? t("auth.signup.signup-loading") : t("auth.signup.signup-button")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="text-muted-foreground w-full text-center text-sm">
-          Already have an account?{" "}
+          {t("auth.signup.has-account")}{" "}
           <Link href="/signin" className="hover:text-primary underline underline-offset-4">
-            Sign in
+            {t("auth.signup.signin-link")}
           </Link>
         </p>
       </CardFooter>

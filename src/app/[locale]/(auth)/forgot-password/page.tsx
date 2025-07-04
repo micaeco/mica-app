@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -29,14 +30,16 @@ import {
 import { Input } from "@app/_components/ui/input";
 import { authClient } from "@app/_lib/auth-client";
 
-const ForgotPasswordSchema = z.object({
-  email: z
-    .string()
-    .email({ message: "Please enter a valid email address" })
-    .min(1, { message: "Email is required" }),
-});
-
 export default function ForgotPassword() {
+  const t = useTranslations();
+
+  const ForgotPasswordSchema = z.object({
+    email: z
+      .string()
+      .email({ message: t("auth.validation.email-invalid") })
+      .min(1, { message: t("auth.validation.email-required") }),
+  });
+
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof ForgotPasswordSchema>>({
@@ -60,12 +63,13 @@ export default function ForgotPassword() {
           setLoading(true);
         },
         onSuccess: () => {
-          toast.success("Reset password link has been sent to your email");
+          toast.success(t("auth.forgot-password.success-message"));
         },
         onError: (ctx) => {
-          toast.error(
-            `Error: ${ctx.error.message} (Status: ${ctx.error.status}, Code: ${ctx.error.code})`
-          );
+          const errorKey = `common.errors.${ctx.error.code}`;
+          // @ts-expect-error - Dynamic key for error translation
+          const translatedError = t(errorKey);
+          toast.error(translatedError || ctx.error.message);
         },
       }
     );
@@ -74,10 +78,8 @@ export default function ForgotPassword() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Forgot Password</CardTitle>
-        <CardDescription>
-          Enter your email to receive a link to reset your password.
-        </CardDescription>
+        <CardTitle>{t("auth.forgot-password.title")}</CardTitle>
+        <CardDescription hidden></CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -87,12 +89,12 @@ export default function ForgotPassword() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("auth.forgot-password.email")}</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
                       type="email"
-                      placeholder="example@gmail.com"
+                      placeholder={t("auth.forgot-password.email-placeholder")}
                       {...field}
                     />
                   </FormControl>
@@ -101,16 +103,16 @@ export default function ForgotPassword() {
               )}
             />
             <Button disabled={loading} type="submit" className="w-full">
-              Submit
+              {t("auth.forgot-password.submit")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="text-muted-foreground text-sm">
-          Remember your password?{" "}
+          {t("auth.forgot-password.remember")}{" "}
           <Link href="/signin" className="hover:text-primary underline underline-offset-4">
-            Sign in
+            {t("auth.forgot-password.signin-link")}
           </Link>
         </p>
       </CardFooter>
