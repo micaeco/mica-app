@@ -33,7 +33,11 @@ export const env = createEnv({
         ? "https://app.mica.eco"
         : "http://localhost:3000",
 
-    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    BETTER_AUTH_URL: process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NODE_ENV === "production"
+        ? "https://app.mica.eco"
+        : "http://localhost:3000",
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
 
     AWS_API_GATEWAY_URL: process.env.AWS_API_GATEWAY_URL,
