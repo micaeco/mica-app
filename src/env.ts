@@ -27,8 +27,11 @@ export const env = createEnv({
 
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV ?? "development",
-    NEXT_PUBLIC_URL:
-      process.env.NODE_ENV === "production" ? "https://app.mica.eco" : "http://localhost:3000",
+    NEXT_PUBLIC_URL: process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NODE_ENV === "production"
+        ? "https://app.mica.eco"
+        : "http://localhost:3000",
 
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
