@@ -63,13 +63,7 @@ export default function SigninPage() {
       },
       {
         onError: (ctx) => {
-          if (ctx.error.status === 403) {
-            toast.warning(
-              "Please verify your email before signing in. We've sent you a verification email."
-            );
-          } else {
-            toast.error(ctx.error.message + " " + ctx.error.status + " " + ctx.error.code);
-          }
+          toast.error(ctx.error.message + " " + ctx.error.status + " " + ctx.error.code);
         },
         onSuccess: () => {
           redirect({ href: "/", locale });
