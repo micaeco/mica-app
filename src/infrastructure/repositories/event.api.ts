@@ -160,13 +160,7 @@ export class ApiEventRepository implements EventRepository {
     newTag: string
   ): Promise<void> {
     try {
-      console.log("Updating events by tag:", {
-        householdId,
-        category,
-        tag,
-        newTag,
-      });
-      const response = await axios.patch(
+      await axios.patch(
         env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/tags",
         {
           tag,
@@ -179,7 +173,6 @@ export class ApiEventRepository implements EventRepository {
           },
         }
       );
-      console.log("Response from updateByTag:", response.data);
     } catch {
       throw new Error("Failed to update events by tag");
     }
@@ -187,19 +180,15 @@ export class ApiEventRepository implements EventRepository {
 
   async deleteByTag(householdId: string, category: string, tag: string): Promise<void> {
     try {
-      const response = await axios.delete(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/tags",
-        {
-          headers: {
-            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-          },
-          params: {
-            tag,
-            category,
-          },
-        }
-      );
-      console.log("Response from deleteByTag:", response.data);
+      await axios.delete(env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/tags", {
+        headers: {
+          Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
+        },
+        params: {
+          tag,
+          category,
+        },
+      });
     } catch {
       throw new Error("Failed to delete events by tag");
     }

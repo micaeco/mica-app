@@ -54,7 +54,6 @@ export const auth = betterAuth({
           }
         ),
       });
-      console.log(`Password reset email sent to ${user.email}`);
     },
   },
   user: {
@@ -104,7 +103,6 @@ export const auth = betterAuth({
           }
         ),
       });
-      console.log(`Verification email sent to ${user.email}`);
     },
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
