@@ -324,5 +324,33 @@
       "passwords-no-match": "Les contrasenyes no coincideixen",
       "confirm-password-required": "Si us plau, confirma la teva contrasenya"
     }
+  },
+  "emails": {
+    "verification": {
+      "title": "Verifica la teva adreça de correu electrònic",
+      "greeting": "Hola,",
+      "thankYou": "Gracies per registrar-te a MICA! Estem encantants de tenir-te a bord.",
+      "instruction": "Per completar el procés de registre, si us plau, verifica la teva adreça de correu electrònic fent clic al botó de sota.",
+      "button": "Verifica el meu correu electrònic",
+      "important": "Important: Si no has sol·licitat aquest registre, si us plau, ignora aquest correu electrònic.",
+      "fallback": "Si tens problemes amb el botó de verificació, copia i enganxa la següent URL al teu navegador:",
+      "expiryNote": "Aquest enllaç expirarà en {days} dies.",
+      "help": "Si tens qualsevol dubte, si us plau, contacta'ns.",
+      "regards": "Salutacions,",
+      "teamSignature": "L'equip de MICA",
+      "automaticNote": "Aquest correu electrònic s'ha generat automàticament. Si us plau, no responguis."
+    },
+    "resetPassword": {
+      "title": "Restableix la teva contrasenya",
+      "greeting": "Hola,",
+      "instruction": "Algú ha sol·licitat restablir la contrasenya del teu compte. Si has estat tu, si us plau, fes clic al botó de sota per continuar.",
+      "buttonInstruction": "Fes clic al botó de sota per restablir la teva contrasenya:",
+      "button": "Restablir contrasenya",
+      "important": "Important:",
+      "fallback": "Si el botó anterior no funciona, si us plau, copia i enganxa la següent URL al teu navegador web:",
+      "regards": "Salutacions cordials,",
+      "teamSignature": "L'equip",
+      "automaticNote": "Aquest és un correu electrònic automatitzat, si us plau no responguis."
+    }
   }
 }

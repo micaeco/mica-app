@@ -324,5 +324,33 @@
       "passwords-no-match": "Las contraseñas no coinciden",
       "confirm-password-required": "Por favor, confirma tu contraseña"
     }
+  },
+  "emails": {
+    "verification": {
+      "title": "Verifica tu correo electrónico",
+      "greeting": "Hola,",
+      "thankYou": "Gracias por registrarte en MICA. ¡Estamos encantados de tenerte con nosotros!",
+      "instruction": "Para completar tu registro y verificar tu dirección de correo electrónico, por favor haz clic en el siguiente botón:",
+      "button": "Verificar mi correo",
+      "important": "Importante: Si no has solicitado este correo o no te has registrado en MICA, por favor ignora este mensaje.",
+      "fallback": "Si el botón no funciona, puedes hacer clic en este enlace:",
+      "expiryNote": "Este enlace caducará en {days} días.",
+      "help": "Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos.",
+      "regards": "Saludos,",
+      "teamSignature": "El equipo de MICA",
+      "automaticNote": "Este es un correo automático. Por favor, no respondas a este mensaje."
+    },
+    "resetPassword": {
+      "title": "Restablece tu contraseña",
+      "greeting": "Hola,",
+      "instruction": "Alguien ha solicitado restablecer la contraseña de tu cuenta. Si has sido tú, por favor, haz clic en el botón de abajo para continuar.",
+      "buttonInstruction": "Haz clic en el botón de abajo para restablecer tu contraseña:",
+      "button": "Restablecer contraseña",
+      "important": "Importante:",
+      "fallback": "Si el botón anterior no funciona, por favor, copia y pega la siguiente URL en tu navegador web:",
+      "regards": "Saludos cordiales,",
+      "teamSignature": "El equipo",
+      "automaticNote": "Este es un correo electrónico automatizado, por favor no respondas."
+    }
   }
 }

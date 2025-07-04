@@ -10,6 +10,7 @@ export const user = authSchema.table("user", {
     .$defaultFn(() => false)
     .notNull(),
   image: text("image"),
+  locale: text("locale"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),

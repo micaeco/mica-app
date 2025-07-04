@@ -70,6 +70,7 @@
       "washer": "Washer",
       "toilet": "Toilet",
       "sink": "Sink",
+      "dishwasher": "Dishwasher",
       "irrigation": "Irrigation",
       "pool": "Pool",
       "unknown": "Unknown",
@@ -322,6 +323,34 @@
       "name-required": "Name is required",
       "passwords-no-match": "Passwords don't match",
       "confirm-password-required": "Please confirm your password"
+    }
+  },
+  "emails": {
+    "verification": {
+      "title": "Verify your email address",
+      "greeting": "Hello,",
+      "thankYou": "Thank you for registering with MICA. We're delighted to have you with us!",
+      "instruction": "To complete your registration and verify your email address, please click the button below:",
+      "button": "Verify my email",
+      "important": "Important: If you didn't request this email or haven't registered with MICA, please ignore this message.",
+      "fallback": "If the button doesn't work, you can click on this link:",
+      "expiryNote": "This link will expire in {days} days.",
+      "help": "If you have any questions or need help, don't hesitate to contact us.",
+      "regards": "Best regards,",
+      "teamSignature": "The MICA Team",
+      "automaticNote": "This is an automated email. Please do not reply to this message."
+    },
+    "resetPassword": {
+      "title": "Reset Your Password",
+      "greeting": "Hello,",
+      "instruction": "Someone has requested a password reset for your account. If this was you, please click the button below to continue.",
+      "buttonInstruction": "Click the button below to reset your password:",
+      "button": "Reset Password",
+      "important": "Important:",
+      "fallback": "If the button above does not work, please copy and paste the following URL into your web browser:",
+      "regards": "Best regards,",
+      "teamSignature": "The Team",
+      "automaticNote": "This is an automated email, please do not reply."
     }
   }
 }

@@ -7,7 +7,7 @@ import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -34,6 +34,7 @@ import { Separator } from "@app/_components/ui/separator";
 import { authClient } from "@app/_lib/auth-client";
 
 export default function SignupPage() {
+  const locale = useLocale();
   const t = useTranslations();
 
   const signupSchema = z
@@ -72,6 +73,7 @@ export default function SignupPage() {
       name: data.name,
       email: data.email,
       password: data.password,
+      locale,
       fetchOptions: {
         onError: (ctx) => {
           const errorKey = `common.errors.${ctx.error.code}`;
