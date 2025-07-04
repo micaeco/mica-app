@@ -3,7 +3,7 @@ import axios from "axios";
 import { Category } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 import { EventRepository } from "@domain/repositories/event";
-import { env } from "env";
+import { env } from "@env";
 
 export class ApiEventRepository implements EventRepository {
   async create(

@@ -1,7 +1,7 @@
 import "@app/globals.css";
 import { Metadata } from "next";
 
-import { env } from "env";
+import { env } from "@env";
 
 export const metadata: Metadata = {
   title: "MICA App",

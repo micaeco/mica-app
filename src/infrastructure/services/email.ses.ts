@@ -1,6 +1,6 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 
-import { env } from "env";
+import { env } from "@env";
 
 const ses = new SESClient({
   region: env.AWS_REGION,

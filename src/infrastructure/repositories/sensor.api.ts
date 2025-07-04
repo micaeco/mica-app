@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { Sensor } from "@domain/entities/sensor";
 import { SensorRepository } from "@domain/repositories/sensor";
-import { env } from "env";
+import { env } from "@env";
 
 interface ApiSensorResponse {
   sensorId: string;

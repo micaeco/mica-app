@@ -5,7 +5,7 @@ import { Category } from "@domain/entities/category";
 import { Consumption, Granularity } from "@domain/entities/consumption";
 import { ConsumptionRepository } from "@domain/repositories/consumption";
 import { HouseholdRepository } from "@domain/repositories/household";
-import { env } from "env";
+import { env } from "@env";
 
 interface ApiConsumptionDataPoint {
   timeBucket: string;

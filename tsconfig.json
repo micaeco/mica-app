@@ -24,7 +24,7 @@
       "@infrastructure/*": ["src/infrastructure/*"],
       "@di/*": ["src/di/*"],
       "@adapters/*": ["src/adapters/*"],
-      "env": ["src/env"]
+      "@env": ["src/env"]
     },
     "target": "ES2017"
   },
