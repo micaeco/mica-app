@@ -69,8 +69,7 @@ export default function SigninPage() {
         onError: (ctx) => {
           const errorKey = `common.errors.${ctx.error.code}`;
           // @ts-expect-error - Dynamic key for error translation
-          const translatedError = t(errorKey);
-          toast.error(translatedError || ctx.error.message);
+          toast.error(t.has(errorKey) ? t(errorKey) : ctx.error.message);
         },
         onSuccess: () => {
           redirect({ href: "/", locale });
