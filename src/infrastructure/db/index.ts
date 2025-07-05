@@ -1,4 +1,5 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 
 import { env } from "@env";
 import { household } from "@infrastructure/db/schema/app/household";
@@ -19,14 +20,9 @@ export const schema = {
   verification,
 };
 
+const sql = neon(env.DATABASE_URL);
+
+export const db = drizzle(sql, { schema });
+
 export type Schema = typeof schema;
-
-export const db = drizzle({
-  connection: {
-    connectionString: env.DATABASE_URL,
-    ssl: env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
-  },
-  schema,
-});
-
 export type DbType = typeof db;

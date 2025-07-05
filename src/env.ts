@@ -19,6 +19,7 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: z.string(),
 
     DATABASE_URL: z.string().url(),
+    DATABASE_URL_UNPOOLED: z.string().url(),
   },
 
   client: {
@@ -51,6 +52,7 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
 
     DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
   },
 
   emptyStringAsUndefined: true,
