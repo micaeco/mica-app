@@ -1,5 +1,6 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle as drizzleNeon } from "drizzle-orm/neon-serverless";
+import { drizzle as drizzleNode } from "drizzle-orm/node-postgres";
+import ws from "ws";
 
 import { env } from "@env";
 import { household } from "@infrastructure/db/schema/app/household";
@@ -20,9 +21,24 @@ export const schema = {
   verification,
 };
 
-const sql = neon(env.DATABASE_URL);
+let db: ReturnType<typeof drizzleNode> | ReturnType<typeof drizzleNeon>;
 
-export const db = drizzle(sql, { schema });
+if (env.NODE_ENV === "production") {
+  db = drizzleNeon({
+    connection: env.DATABASE_URL,
+    ws: ws,
+    schema,
+  });
+} else {
+  db = drizzleNode({
+    connection: {
+      connectionString: env.DATABASE_URL,
+    },
+    schema,
+  });
+}
+
+export { db };
 
 export type Schema = typeof schema;
 export type DbType = typeof db;
