@@ -328,13 +328,13 @@ export function EditHouseholdSheet({
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>{t("alert-dialog.confirm-title")}</AlertDialogTitle>
-                    <AlertDialogDescription className="space-y-2">
+                    <AlertDialogDescription className="flex flex-col space-y-2">
                       <span>
                         {t("alert-dialog.confirm-description-bold", {
                           householdName: household?.name,
                         })}
                       </span>
-                      <span className="bg-destructive/10 text-destructive mt-6 rounded p-3 text-xs">
+                      <span className="bg-destructive/10 text-destructive rounded p-3 text-xs">
                         {t("alert-dialog.confirm-description-text")}
                       </span>
                     </AlertDialogDescription>
