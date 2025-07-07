@@ -215,18 +215,18 @@ export function EditTagsDialog({ isOpen, onOpenChange }: EditTagsDialogProps) {
 
   const handleUpdate = (tag: Tag, newName: string) => {
     updateTag({
-      id: tag.id,
-      householdId: tag.householdId,
-      category: tag.category,
-      name: tag.name,
+      tagId: tag.id,
       newName: newName.trim(),
     });
+    utils.event.invalidate();
   };
 
   const handleDelete = (tagId: number) => {
     deleteTag({
       id: tagId,
     });
+    console.log("Tag deleted:", tagId);
+    utils.event.invalidate();
   };
 
   return (

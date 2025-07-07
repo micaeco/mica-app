@@ -8,7 +8,7 @@ export interface EventRepository {
     category: Category,
     startDate?: Date,
     endDate?: Date,
-    tag?: string,
+    tagId?: number,
     notes?: string
   ): Promise<void>;
 
@@ -33,11 +33,9 @@ export interface EventRepository {
     startDate: Date,
     endDate: Date,
     category?: Category,
-    tag?: string,
+    tagId?: number,
     notes?: string
   ): Promise<void>;
 
-  updateByTag(householdId: string, category: string, tag: string, newTag: string): Promise<void>;
-
-  deleteByTag(householdId: string, category: string, tag: string): Promise<void>;
+  deleteByTag(tagId: number): Promise<void>;
 }

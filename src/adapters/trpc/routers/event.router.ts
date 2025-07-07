@@ -17,12 +17,12 @@ export const eventRouter = createTRPCRouter({
         category: Category,
         startDate: z.date().optional(),
         endDate: z.date().optional(),
-        tag: z.string().optional(),
+        tagId: z.number().optional(),
         notes: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate, category, tag, notes } = input;
+      const { householdId, startDate, endDate, category, tagId, notes } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -38,7 +38,7 @@ export const eventRouter = createTRPCRouter({
         category,
         startDate,
         endDate,
-        tag,
+        tagId,
         notes
       );
     }),
@@ -368,13 +368,13 @@ export const eventRouter = createTRPCRouter({
         startDate: z.date(),
         endDate: z.date(),
         category: Category.optional(),
-        tag: z.string().optional(),
+        tagId: z.number().optional(),
         notes: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { eventId, startDate, endDate, category, tag, notes } = input;
+      const { eventId, startDate, endDate, category, tagId, notes } = input;
 
-      await ctx.eventRepo.update(ctx.user.id, eventId, startDate, endDate, category, tag, notes);
+      await ctx.eventRepo.update(ctx.user.id, eventId, startDate, endDate, category, tagId, notes);
     }),
 });

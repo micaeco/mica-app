@@ -110,7 +110,7 @@ export function ConsumptionPerEventChart({
   } else {
     const eventsByTag = events.reduce(
       (acc, event) => {
-        const tagName = event.tag || tCommon("untagged");
+        const tagName = event.tag?.name || tCommon("untagged");
         if (!acc[tagName]) acc[tagName] = { events: [], consumption: 0 };
         acc[tagName].events.push(event);
         acc[tagName].consumption += event.consumptionInLiters;

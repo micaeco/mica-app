@@ -35,7 +35,7 @@ import { Tag } from "@domain/entities/tag";
 
 const editEventFormSchema = z.object({
   category: z.custom<Category>().nullable(),
-  tag: z.string().nullable(),
+  tag: Tag.nullable(),
   notes: z.string().optional(),
 });
 
@@ -108,7 +108,7 @@ export function EditEventForm({
       startDate: event.startTimestamp,
       endDate: event.endTimestamp,
       category: data.category ?? undefined,
-      tag: data.tag ?? undefined,
+      tagId: data.tag?.id ?? undefined,
       notes: data.notes ?? undefined,
     });
   };
@@ -203,22 +203,25 @@ export function EditEventForm({
                     ) : (
                       <ToggleGroup
                         type="single"
-                        value={field.value ?? ""}
-                        onValueChange={(value) => field.onChange(value || null)}
+                        value={field.value?.name ?? ""}
+                        onValueChange={(name: string) => {
+                          const selectedTag = tags.find((tag) => tag.name === name);
+                          field.onChange(selectedTag || null);
+                        }}
                         className="flex flex-wrap gap-2"
                       >
                         {tags.map((tag: Tag) => (
                           <ToggleGroupItem
                             className={cn(
                               "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                              tag.name === field.value ? "!bg-brand-secondary" : "bg-gray-100"
+                              tag.id === field.value?.id ? "!bg-brand-secondary" : "bg-gray-100"
                             )}
                             value={tag.name}
-                            key={tag.name}
+                            key={tag.id}
                             aria-label={tag.name}
                           >
                             <span className="text-sm">{tag.name}</span>
-                            {field.value === tag.name && <CircleCheck />}
+                            {field.value?.id === tag.id && <CircleCheck />}
                           </ToggleGroupItem>
                         ))}
                       </ToggleGroup>
@@ -259,11 +262,7 @@ export function EditEventForm({
           />
 
           <Button
-            disabled={
-              eventForm.formState.isSubmitting ||
-              !watchedCategory ||
-              (watchedCategory === event.category && eventForm.getValues("tag") === event.tag)
-            }
+            disabled={eventForm.formState.isSubmitting || !watchedCategory}
             type="submit"
             className="ml-auto w-fit"
           >

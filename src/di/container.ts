@@ -30,7 +30,7 @@ const householdRepo: HouseholdRepository = new PostgresHouseholdRepository(db);
 const householdUserRepo: HouseholdUserRepository = new PostgresHouseholdUserRepository(db);
 const tagRepo: TagRepository = new PostgresTagRepository(db);
 
-const eventRepo: EventRepository = new ApiEventRepository();
+const eventRepo: EventRepository = new ApiEventRepository(tagRepo);
 const consumptionRepo: ConsumptionRepository = new ApiConsumptionRepository(householdRepo);
 const sensorRepo: SensorRepository = new ApiSensorRepository();
 

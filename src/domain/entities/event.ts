@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { Category } from "@domain/entities/category";
+import { Tag } from "@domain/entities/tag";
 
 export const Event = z.object({
   id: z.string(),
@@ -9,7 +10,7 @@ export const Event = z.object({
   endTimestamp: z.date(),
   durationInSeconds: z.number().nonnegative(),
   consumptionInLiters: z.number().nonnegative(),
-  tag: z.string().optional(),
+  tag: Tag.optional(),
   notes: z.string().optional(),
 });
 

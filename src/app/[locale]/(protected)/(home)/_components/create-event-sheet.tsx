@@ -44,7 +44,7 @@ const eventFormSchema = z.object({
   startDateTime: z.date().nullable(),
   endDateTime: z.date().nullable(),
   category: z.custom<Category>().nullable(),
-  tag: z.string().nullable(),
+  tag: Tag.nullable(),
   notes: z.string().nullable(),
 });
 
@@ -114,7 +114,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
       category: data.category,
       startDate: data.startDateTime ?? undefined,
       endDate: data.endDateTime ?? undefined,
-      tag: data.tag ?? undefined,
+      tagId: data.tag?.id ?? undefined,
       notes: data.notes ?? undefined,
     });
   };
@@ -240,22 +240,25 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
                         ) : (
                           <ToggleGroup
                             type="single"
-                            value={field.value ?? ""}
-                            onValueChange={(value) => field.onChange(value || null)}
+                            value={field.value?.name ?? ""}
+                            onValueChange={(name: string) => {
+                              const selectedTag = tags.find((tag) => tag.name === name);
+                              field.onChange(selectedTag || null);
+                            }}
                             className="flex flex-wrap gap-2"
                           >
                             {tags.map((tag: Tag) => (
                               <ToggleGroupItem
                                 className={cn(
                                   "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                                  tag.name === field.value ? "!bg-brand-secondary" : "bg-gray-100"
+                                  tag.id === field.value?.id ? "!bg-brand-secondary" : "bg-gray-100"
                                 )}
                                 value={tag.name}
-                                key={tag.name}
+                                key={tag.id}
                                 aria-label={tag.name}
                               >
                                 <span className="text-sm">{tag.name}</span>
-                                {field.value === tag.name && <CircleCheck />}
+                                {field.value?.id === tag.id && <CircleCheck />}
                               </ToggleGroupItem>
                             ))}
                           </ToggleGroup>

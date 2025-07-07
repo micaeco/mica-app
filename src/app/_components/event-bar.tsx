@@ -53,7 +53,7 @@ export function EventBar({ event, totalConsumption, granularity }: EventBarProps
                 </span>
                 {event.tag && (
                   <div className="bg-brand-secondary flex items-center justify-center rounded-full px-3 py-0.5 text-xs">
-                    <span className="xs:max-w-none max-w-[6ch] truncate">{event.tag}</span>
+                    <span className="xs:max-w-none max-w-[6ch] truncate">{event.tag.name}</span>
                   </div>
                 )}
               </div>

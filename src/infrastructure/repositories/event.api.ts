@@ -3,16 +3,38 @@ import axios from "axios";
 import { Category } from "@domain/entities/category";
 import { Event } from "@domain/entities/event";
 import { EventRepository } from "@domain/repositories/event";
+import { TagRepository } from "@domain/repositories/tag";
 import { env } from "@env";
 
+interface EventApiResponse {
+  eventId: string;
+  start: string;
+  end: string;
+  duration: number;
+  consumptionInLiters: number;
+  category: string | null;
+  tagId: number | null;
+  notes: string | null;
+}
+
+interface EventApiDataResponse {
+  events: EventApiResponse[];
+}
+
 export class ApiEventRepository implements EventRepository {
+  private tagRepo: TagRepository;
+
+  constructor(tagRepo: TagRepository) {
+    this.tagRepo = tagRepo;
+  }
+
   async create(
     userId: string,
     householdId: string,
     category: Category,
     startDate?: Date,
     endDate?: Date,
-    tag?: string,
+    tagId?: number,
     notes?: string
   ): Promise<void> {
     try {
@@ -23,7 +45,7 @@ export class ApiEventRepository implements EventRepository {
           category,
           ...(startDate && { start: startDate?.toISOString() }),
           ...(endDate && { end: endDate?.toISOString() }),
-          ...(tag && { tag }),
+          ...(tagId && { tagId }),
           ...(notes && { notes }),
         },
         {
@@ -32,7 +54,6 @@ export class ApiEventRepository implements EventRepository {
           },
         }
       );
-      return;
     } catch {
       throw new Error("Failed to create event");
     }
@@ -66,7 +87,7 @@ export class ApiEventRepository implements EventRepository {
           },
         }
       );
-      return mapApiResponseToEventsArray(response.data.events);
+      return this.mapApiResponseToEventsArray(response.data.events);
     } catch {
       throw new Error("Failed to fetch events");
     }
@@ -128,7 +149,7 @@ export class ApiEventRepository implements EventRepository {
     startDate: Date,
     endDate: Date,
     category?: Category,
-    tag?: string,
+    tagId?: number,
     notes?: string
   ): Promise<void> {
     try {
@@ -139,7 +160,7 @@ export class ApiEventRepository implements EventRepository {
           start: startDate.toISOString(),
           end: endDate.toISOString(),
           ...(category && { category: category }),
-          ...(tag && { tag: tag }),
+          ...(tagId && { tagId: tagId }),
           ...(notes && { notes: notes }),
         },
         {
@@ -153,76 +174,39 @@ export class ApiEventRepository implements EventRepository {
     }
   }
 
-  async updateByTag(
-    householdId: string,
-    category: string,
-    tag: string,
-    newTag: string
-  ): Promise<void> {
+  async deleteByTag(tagId: number): Promise<void> {
     try {
-      await axios.patch(
-        env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/tags",
-        {
-          tag,
-          category,
-          newTag,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-          },
-        }
-      );
-    } catch {
-      throw new Error("Failed to update events by tag");
-    }
-  }
-
-  async deleteByTag(householdId: string, category: string, tag: string): Promise<void> {
-    try {
-      await axios.delete(env.AWS_API_GATEWAY_URL + "/households/" + householdId + "/events/tags", {
+      await axios.delete(env.AWS_API_GATEWAY_URL + "/tags/" + tagId, {
         headers: {
           Authorization: `Bearer ${env.AWS_API_GATEWAY_TOKEN}`,
-        },
-        params: {
-          tag,
-          category,
         },
       });
     } catch {
       throw new Error("Failed to delete events by tag");
     }
   }
-}
 
-interface EventApiResponse {
-  eventId: string;
-  start: string;
-  end: string;
-  duration: number;
-  consumptionInLiters: number;
-  category: string | null;
-  tag: string | null;
-  notes: string | null;
-}
+  private async mapApiResponseToEventsArray(
+    apiResponseArray: EventApiResponse[]
+  ): Promise<Event[]> {
+    return Promise.all(
+      apiResponseArray.map((apiResponse) => this.mapApiResponseToEvent(apiResponse))
+    );
+  }
 
-interface EventApiDataResponse {
-  events: EventApiResponse[];
-}
+  private async mapApiResponseToEvent(apiResponse: EventApiResponse): Promise<Event> {
+    let tag;
+    if (apiResponse.tagId) tag = await this.tagRepo.getTagById(apiResponse.tagId);
 
-function mapApiResponseToEvent(apiResponse: EventApiResponse): Event {
-  return {
-    id: apiResponse.eventId,
-    category: (apiResponse.category as Category) || "unknown",
-    startTimestamp: new Date(apiResponse.start),
-    endTimestamp: new Date(apiResponse.end),
-    durationInSeconds: apiResponse.duration || 0,
-    consumptionInLiters: apiResponse.consumptionInLiters,
-    tag: apiResponse.tag || undefined,
-    notes: apiResponse.notes || undefined,
-  };
-}
-
-function mapApiResponseToEventsArray(apiResponseArray: EventApiResponse[]): Event[] {
-  return apiResponseArray.map(mapApiResponseToEvent);
+    return {
+      id: apiResponse.eventId,
+      category: (apiResponse.category as Category) || "unknown",
+      startTimestamp: new Date(apiResponse.start),
+      endTimestamp: new Date(apiResponse.end),
+      durationInSeconds: apiResponse.duration || 0,
+      consumptionInLiters: apiResponse.consumptionInLiters,
+      tag: tag || undefined,
+      notes: apiResponse.notes || undefined,
+    };
+  }
 }

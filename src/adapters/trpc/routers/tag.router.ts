@@ -37,35 +37,34 @@ export const tagRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(Tag.extend({ newName: z.string() }))
+    .input(z.object({ tagId: z.number(), newName: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.userHouseholds.includes(input.householdId)) {
+      const tag = await ctx.tagRepo.getTagById(input.tagId);
+
+      if (!tag) {
+        throw new TagNotFoundError();
+      }
+
+      if (!ctx.userHouseholds.includes(tag.householdId)) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      if (await ctx.tagRepo.exists(input.householdId, input.category, input.newName)) {
+      if (await ctx.tagRepo.exists(tag.householdId, tag.category, input.newName)) {
         throw new TagAlreadyExistsError();
       }
 
       const updatedTag = await ctx.unitOfWork.execute(async (repos: Repositories) => {
         await repos.tagRepo.update({
-          id: input.id,
-          householdId: input.householdId,
-          category: input.category,
+          id: tag.id,
+          householdId: tag.householdId,
+          category: tag.category,
           name: input.newName,
         });
 
-        await ctx.eventRepo.updateByTag(
-          input.householdId,
-          input.category,
-          input.name,
-          input.newName
-        );
-
         return {
-          id: input.id,
-          householdId: input.householdId,
-          category: input.category,
+          id: tag.id,
+          householdId: tag.householdId,
+          category: tag.category,
           name: input.newName,
         };
       });
@@ -90,7 +89,7 @@ export const tagRouter = createTRPCRouter({
       const deleted = await ctx.unitOfWork.execute(async (repos: Repositories) => {
         const deletedTags = await repos.tagRepo.delete(input.id);
 
-        await ctx.eventRepo.deleteByTag(tag.householdId, tag.category, tag.name);
+        await ctx.eventRepo.deleteByTag(tag.id);
 
         return deletedTags;
       });
