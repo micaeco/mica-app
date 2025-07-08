@@ -1,7 +1,7 @@
 name: 🚀 Feature Request
 description: Propose a new feature or capability
 title: "[Feature] "
-labels: ["feature"]
+labels: ["enhancement"]
 assignees: []
 body:
   - type: textarea
