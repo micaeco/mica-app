@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
@@ -48,6 +48,178 @@ const filteredCategories: Category[] = categories.filter(
 interface EditTagsDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  category?: Category;
+}
+
+export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialogProps) {
+  const [selectedCategory, setSelectedCategory] = useState<Category>("shower");
+  const [name, setName] = useState("");
+
+  useEffect(() => {
+    setSelectedCategory(category ?? "shower");
+  }, [category]);
+
+  const tErrors = useTranslations("common.errors");
+  const tCategories = useTranslations("common.categories");
+  const tEditTagsDialog = useTranslations("edit-tags-dialog");
+
+  const { selectedHouseholdId } = useHouseholdStore();
+  const utils = trpc.useUtils();
+
+  const { data: tags, isLoading: isLoadingTags } = trpc.tag.getTagsByCategory.useQuery({
+    householdId: selectedHouseholdId,
+    category: selectedCategory,
+  });
+
+  const { mutate: createTag } = trpc.tag.create.useMutation({
+    onSuccess: () => {
+      toast.success(tEditTagsDialog("tag-created-successfully"));
+      utils.tag.getTagsByCategory.invalidate({
+        householdId: selectedHouseholdId,
+        category: selectedCategory,
+      });
+      setName("");
+    },
+    onError: () => {
+      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+    },
+  });
+
+  const { mutate: updateTag } = trpc.tag.update.useMutation({
+    onSuccess: () => {
+      toast.success(tEditTagsDialog("tag-updated-successfully"));
+      utils.tag.getTagsByCategory.invalidate({
+        householdId: selectedHouseholdId,
+        category: selectedCategory,
+      });
+    },
+    onError: () => {
+      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+    },
+  });
+
+  const { mutate: deleteTag } = trpc.tag.delete.useMutation({
+    onSuccess: () => {
+      toast.success(tEditTagsDialog("tag-deleted-successfully"));
+      utils.tag.getTagsByCategory.invalidate({
+        householdId: selectedHouseholdId,
+        category: selectedCategory,
+      });
+    },
+    onError: () => {
+      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+    },
+  });
+
+  const handleCreate = () => {
+    createTag({
+      householdId: selectedHouseholdId,
+      category: selectedCategory,
+      name: name.trim(),
+    });
+  };
+
+  const handleUpdate = (tag: Tag, newName: string) => {
+    updateTag({
+      tagId: tag.id,
+      newName: newName.trim(),
+    });
+    utils.event.invalidate();
+  };
+
+  const handleDelete = (tagId: number) => {
+    deleteTag({
+      id: tagId,
+    });
+    utils.event.invalidate();
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-xs rounded-lg">
+        <DialogHeader>
+          <DialogTitle>{tEditTagsDialog("title")}</DialogTitle>
+          <DialogDescription hidden></DialogDescription>
+        </DialogHeader>
+
+        <Select
+          value={selectedCategory}
+          onValueChange={(category) => setSelectedCategory(category as Category)}
+        >
+          <SelectTrigger className="bg-brand-secondary">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {filteredCategories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  <Image
+                    src={categoryMap[category].icon!}
+                    alt={tCategories(category)}
+                    width={20}
+                    height={20}
+                    className="mr-2 inline-block"
+                  />
+                  {tCategories(category)}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        {isLoadingTags ? (
+          <Loader2 className="animate-spin" />
+        ) : tags && tags.length > 0 ? (
+          <div className="max-h-52 overflow-y-auto">
+            {tags.map((tag, index) => {
+              return (
+                <EditableField
+                  key={tag.id}
+                  value={tag.name}
+                  onChange={(newValue) => handleUpdate(tag, newValue)}
+                  onDelete={() => handleDelete(tag.id)}
+                  className={
+                    tags.length == 1
+                      ? ""
+                      : index == 0
+                        ? "rounded-b-none"
+                        : index == tags.length - 1
+                          ? "rounded-t-none"
+                          : "rounded-none"
+                  }
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <span className="text-muted-foreground text-sm">
+            {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              tEditTagsDialog.has(("no-tags-for-" + selectedCategory) as any)
+                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  tEditTagsDialog(("no-tags-for-" + selectedCategory) as any)
+                : tEditTagsDialog("no-tags-for-category")
+            }
+          </span>
+        )}
+
+        <div className="mt-4 flex items-center gap-2">
+          <Input
+            placeholder={tEditTagsDialog("new-tag-placeholder")}
+            className="flex-1"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleCreate();
+            }}
+          />
+          <Button variant="secondary" size="icon" onClick={handleCreate} disabled={!name.trim()}>
+            <Check />
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 function EditableField({
@@ -146,173 +318,5 @@ function EditableField({
         </>
       )}
     </div>
-  );
-}
-
-export function EditTagsDialog({ isOpen, onOpenChange }: EditTagsDialogProps) {
-  const [selectedCategory, setSelectedCategory] = useState<Category>("shower");
-  const [name, setName] = useState("");
-
-  const tErrors = useTranslations("common.errors");
-  const tCategories = useTranslations("common.categories");
-  const tEditTagsDialog = useTranslations("edit-tags-dialog");
-
-  const { selectedHouseholdId } = useHouseholdStore();
-  const utils = trpc.useUtils();
-
-  const { data: tags, isLoading: isLoadingTags } = trpc.tag.getTagsByCategory.useQuery({
-    householdId: selectedHouseholdId,
-    category: selectedCategory,
-  });
-
-  const { mutate: createTag } = trpc.tag.create.useMutation({
-    onSuccess: () => {
-      toast.success(tEditTagsDialog("tag-created-successfully"));
-      utils.tag.getTagsByCategory.invalidate({
-        householdId: selectedHouseholdId,
-        category: selectedCategory,
-      });
-      setName("");
-    },
-    onError: () => {
-      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
-    },
-  });
-
-  const { mutate: updateTag } = trpc.tag.update.useMutation({
-    onSuccess: () => {
-      toast.success(tEditTagsDialog("tag-updated-successfully"));
-      utils.tag.getTagsByCategory.invalidate({
-        householdId: selectedHouseholdId,
-        category: selectedCategory,
-      });
-    },
-    onError: () => {
-      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
-    },
-  });
-
-  const { mutate: deleteTag } = trpc.tag.delete.useMutation({
-    onSuccess: () => {
-      toast.success(tEditTagsDialog("tag-deleted-successfully"));
-      utils.tag.getTagsByCategory.invalidate({
-        householdId: selectedHouseholdId,
-        category: selectedCategory,
-      });
-    },
-    onError: () => {
-      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
-    },
-  });
-
-  const handleCreate = () => {
-    createTag({
-      householdId: selectedHouseholdId,
-      category: selectedCategory,
-      name: name.trim(),
-    });
-  };
-
-  const handleUpdate = (tag: Tag, newName: string) => {
-    updateTag({
-      tagId: tag.id,
-      newName: newName.trim(),
-    });
-    utils.event.invalidate();
-  };
-
-  const handleDelete = (tagId: number) => {
-    deleteTag({
-      id: tagId,
-    });
-    console.log("Tag deleted:", tagId);
-    utils.event.invalidate();
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xs rounded-lg">
-        <DialogHeader>
-          <DialogTitle>{tEditTagsDialog("title")}</DialogTitle>
-          <DialogDescription hidden></DialogDescription>
-        </DialogHeader>
-
-        <Select
-          value={selectedCategory}
-          onValueChange={(category) => setSelectedCategory(category as Category)}
-        >
-          <SelectTrigger className="bg-brand-secondary">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {filteredCategories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  <Image
-                    src={categoryMap[category].icon!}
-                    alt={tCategories(category)}
-                    width={20}
-                    height={20}
-                    className="mr-2 inline-block"
-                  />
-                  {tCategories(category)}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
-        {isLoadingTags ? (
-          <Loader2 className="animate-spin" />
-        ) : tags && tags.length > 0 ? (
-          <div className="max-h-52 overflow-y-auto">
-            {tags.map((tag, index) => {
-              return (
-                <EditableField
-                  key={tag.id}
-                  value={tag.name}
-                  onChange={(newValue) => handleUpdate(tag, newValue)}
-                  onDelete={() => handleDelete(tag.id)}
-                  className={
-                    tags.length == 1
-                      ? ""
-                      : index == 0
-                        ? "rounded-b-none"
-                        : index == tags.length - 1
-                          ? "rounded-t-none"
-                          : "rounded-none"
-                  }
-                />
-              );
-            })}
-          </div>
-        ) : (
-          <span className="text-muted-foreground text-sm">
-            {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              tEditTagsDialog.has(("no-tags-for-" + selectedCategory) as any)
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  tEditTagsDialog(("no-tags-for-" + selectedCategory) as any)
-                : tEditTagsDialog("no-tags-for-category")
-            }
-          </span>
-        )}
-
-        <div className="mt-4 flex items-center gap-2">
-          <Input
-            placeholder={tEditTagsDialog("new-tag-placeholder")}
-            className="flex-1"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleCreate();
-            }}
-          />
-          <Button variant="secondary" size="icon" onClick={handleCreate} disabled={!name.trim()}>
-            <Check />
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 }
