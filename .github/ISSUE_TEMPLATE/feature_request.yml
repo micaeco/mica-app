@@ -1,0 +1,52 @@
+name: 🚀 Feature Request
+description: Propose a new feature or capability
+title: "[Feature] "
+labels: ["feature"]
+assignees: []
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 📄 Description
+      description: Describe the new functionality you're requesting.
+      placeholder: Tell us what feature you'd like to see...
+    validations:
+      required: true
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: 🎯 User Story
+      description: Describe the user story for this feature.
+      placeholder: "As a [user], I want to [do something] so that [benefit]."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Acceptance Criteria
+      description: List the acceptance criteria for this feature.
+      placeholder: |
+        - [ ] Criteria 1
+        - [ ] Criteria 2
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 💡 Additional Context
+      description: Add any other context about the feature request here.
+      placeholder: Design link, screenshots, examples, etc.
+    validations:
+      required: false
+
+  - type: textarea
+    id: related-issues
+    attributes:
+      label: 🗂 Related Issues / PRs
+      description: Link any relevant issues/PRs here.
+      placeholder: "#123, #456"
+    validations:
+      required: false
