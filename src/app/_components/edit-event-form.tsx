@@ -274,7 +274,11 @@ export function EditEventForm({
         </form>
       </Form>
 
-      <EditTagsDialog isOpen={isEditTagsDialogOpen} onOpenChange={setIsEditTagsDialogOpen} />
+      <EditTagsDialog
+        isOpen={isEditTagsDialogOpen}
+        onOpenChange={setIsEditTagsDialogOpen}
+        category={watchedCategory ?? undefined}
+      />
     </>
   );
 }

@@ -343,7 +343,11 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
         </SheetContent>
       </Sheet>
 
-      <EditTagsDialog isOpen={isEditTagsDialogOpen} onOpenChange={setIsEditTagsDialogOpen} />
+      <EditTagsDialog
+        isOpen={isEditTagsDialogOpen}
+        onOpenChange={setIsEditTagsDialogOpen}
+        category={watchedCategory ?? undefined}
+      />
     </>
   );
 }
