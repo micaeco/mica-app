@@ -1,0 +1,74 @@
+name: 🐛 Bug Report
+description: Report something that isn't working correctly
+title: "[Bug] "
+labels: ["bug"]
+assignees: []
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 🧩 Summary
+      description: A clear and concise description of the problem.
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: ✅ Steps to Reproduce
+      description: Tell us how to reproduce this behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 🔍 Expected Behavior
+      description: What should happen instead?
+      placeholder: Tell us what you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 🚫 Actual Behavior
+      description: What is happening now?
+      placeholder: Tell us what actually happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🖥 Environment
+      description: Please complete the following information
+      placeholder: |
+        - Browser & version:
+        - Device/OS:
+        - Logged in? (yes/no):
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots
+      description: If applicable, add screenshots to help explain your problem
+      placeholder: Drag and drop screenshots here or paste them
+    validations:
+      required: false
+
+  - type: textarea
+    id: related
+    attributes:
+      label: 🗂 Related Issues / PRs
+      description: Link any relevant issues/PRs here
+      placeholder: "#123, #456"
+    validations:
+      required: false

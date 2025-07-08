@@ -1,0 +1,41 @@
+name: 🔧 Refactor or Technical Task
+description: Code cleanup, restructure, or technical improvement
+title: "[Refactor] "
+labels: ["refactor"]
+assignees: []
+body:
+  - type: textarea
+    id: what-needs-refactoring
+    attributes:
+      label: 🔨 What needs to be refactored?
+      description: Brief description of the code or structure to improve.
+      placeholder: Describe what needs to be refactored...
+    validations:
+      required: true
+
+  - type: textarea
+    id: why-refactor
+    attributes:
+      label: 🤔 Why?
+      description: Explain the technical debt or architectural reason.
+      placeholder: Explain the reasoning...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-approach
+    attributes:
+      label: 🛠 Suggested Approach (optional)
+      description: How would you approach this refactoring?
+      placeholder: Describe your suggested approach...
+    validations:
+      required: false
+
+  - type: textarea
+    id: related-issues
+    attributes:
+      label: 🗂 Related Issues / PRs
+      description: Link any relevant issues/PRs here.
+      placeholder: Link related issues or PRs...
+    validations:
+      required: false
