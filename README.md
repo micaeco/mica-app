@@ -9,8 +9,12 @@
 - **Framework**: [Next.js](https://nextjs.org/) (Fullstack)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
+- **Components**: Shadcn UI
+- **Forms**: React Hook Form
 - **Validation**: Zod
 - **Global State**: Zustand
+- **Data Fetching**: React Query
+- **Typesafe API**: tRPC
 
 ## 🧱 Folder Overview
 
