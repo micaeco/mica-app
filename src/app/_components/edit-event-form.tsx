@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Image from "next/image";
 
@@ -36,7 +36,7 @@ import { Tag } from "@domain/entities/tag";
 const editEventFormSchema = z.object({
   category: z.custom<Category>().nullable(),
   tag: Tag.nullable(),
-  notes: z.string().optional(),
+  notes: z.string().nullable(),
 });
 
 type EditEventFormValues = z.infer<typeof editEventFormSchema>;
@@ -65,16 +65,12 @@ export function EditEventForm({
 
   const eventForm = useForm<EditEventFormValues>({
     resolver: zodResolver(editEventFormSchema),
+    defaultValues: {
+      category: event?.category ?? null,
+      tag: event?.tag ?? null,
+      notes: event?.notes ?? null,
+    },
   });
-
-  useEffect(() => {
-    if (event) {
-      eventForm.reset({
-        category: event.category,
-        tag: event.tag,
-      });
-    }
-  }, [event, eventForm]);
 
   const watchedCategory = eventForm.watch("category");
 
@@ -103,6 +99,7 @@ export function EditEventForm({
   });
 
   const onSubmitEvent = (data: EditEventFormValues) => {
+    console.log("Submitting event form with data:", data);
     updateEvent({
       eventId: event.id,
       startDate: event.startTimestamp,
@@ -227,6 +224,7 @@ export function EditEventForm({
                       </ToggleGroup>
                     )}
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -254,6 +252,7 @@ export function EditEventForm({
                     placeholder={tEditEventSheet("notes-placeholder")}
                     {...field}
                     value={field.value ?? ""}
+                    onChange={(value) => field.onChange(value || null)}
                   />
                 </FormControl>
                 <FormMessage />
