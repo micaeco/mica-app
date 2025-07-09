@@ -48,9 +48,7 @@ export function EditEventForm({
   event: Event;
   onFormSubmitSuccess: () => void;
 }) {
-  const filteredCategories = categories.filter(
-    (category) => category !== "rest" && category !== "unknown"
-  );
+  const filteredCategories = categories.filter((category) => category !== "rest");
 
   const [isEditTagsDialogOpen, setIsEditTagsDialogOpen] = useState(false);
 
