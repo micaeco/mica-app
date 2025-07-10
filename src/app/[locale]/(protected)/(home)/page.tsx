@@ -8,14 +8,45 @@ import { ConsumptionTabs } from "@app/[locale]/(protected)/(home)/_components/co
 import { CreateEventSheet } from "@app/[locale]/(protected)/(home)/_components/create-event-sheet";
 import { EventsList } from "@app/[locale]/(protected)/(home)/_components/events-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
+import { trpc } from "@app/_lib/trpc";
+import { useHouseholdStore } from "@app/_stores/household";
 
 export default function Home() {
   const tEventsList = useTranslations("events-list");
 
+  const { selectedHouseholdId } = useHouseholdStore();
+
+  const { data: leakEvents, isLoading: isLoadingLeakEvents } =
+    trpc.event.getNumberOfLeakEvents.useQuery(
+      {
+        householdId: selectedHouseholdId,
+      },
+      {
+        enabled: !!selectedHouseholdId,
+      }
+    );
+
+  const { data: unknownEvents, isLoading: isLoadingUnknownEvents } =
+    trpc.event.getNumberOfUnknownEvents.useQuery(
+      {
+        householdId: selectedHouseholdId,
+      },
+      {
+        enabled: !!selectedHouseholdId,
+      }
+    );
+
   return (
-    <div className="relative flex flex-col gap-4 p-4 xl:h-[calc(100svh-var(--navbar-height)-var(--header-height))] xl:flex-row">
+    <div className="flex flex-col gap-4 p-4 xl:h-[calc(100svh-var(--navbar-height)-var(--header-height))] xl:flex-row">
       <div className="flex flex-col gap-4">
-        <ActionCards />
+        {leakEvents || unknownEvents ? (
+          <ActionCards
+            leakEvents={leakEvents}
+            isLoadingLeakEvents={isLoadingLeakEvents}
+            unknownEvents={unknownEvents}
+            isLoadingUnknownEvents={isLoadingUnknownEvents}
+          />
+        ) : null}
 
         <Card className="flex justify-center">
           <CardContent className="pt-4">

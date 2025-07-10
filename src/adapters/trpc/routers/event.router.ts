@@ -33,8 +33,8 @@ export const eventRouter = createTRPCRouter({
       }
 
       await ctx.eventRepo.create(
-        householdId,
         ctx.user.id,
+        householdId,
         category,
         startDate,
         endDate,

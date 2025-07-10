@@ -29,41 +29,45 @@ export default function Actions() {
 
   return (
     <div className="p-4">
-      <Accordion type="multiple" defaultValue={["leakEvents", "unknownEvents"]}>
-        {hasLeakEvents && (
-          <AccordionItem className="border-0" value="leakEvents">
-            <AccordionTrigger
-              className="py-3 hover:no-underline [&[data-state=open]>svg]:rotate-180"
-              Icon={ChevronDown}
-              iconOnRight
-            >
-              <div className="flex gap-2 font-semibold">
-                <Bell /> {tCommon("leaks")}
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <LeakEventsCarousel onDataStatusChange={handleLeakEventsDataStatus} />
-            </AccordionContent>
-          </AccordionItem>
-        )}
+      {hasLeakEvents || hasUnknownEvents ? (
+        <Accordion type="multiple" defaultValue={["leakEvents", "unknownEvents"]}>
+          {hasLeakEvents && (
+            <AccordionItem className="border-0" value="leakEvents">
+              <AccordionTrigger
+                className="py-3 hover:no-underline [&[data-state=open]>svg]:rotate-180"
+                Icon={ChevronDown}
+                iconOnRight
+              >
+                <div className="flex gap-2 font-semibold">
+                  <Bell /> {tCommon("leaks")}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <LeakEventsCarousel onDataStatusChange={handleLeakEventsDataStatus} />
+              </AccordionContent>
+            </AccordionItem>
+          )}
 
-        {hasUnknownEvents && (
-          <AccordionItem className="border-0" value="unknownEvents">
-            <AccordionTrigger
-              className="py-3 hover:no-underline [&[data-state=open]>svg]:rotate-180"
-              Icon={ChevronDown}
-              iconOnRight
-            >
-              <div className="flex gap-2 font-semibold">
-                <HelpCircle /> {tCommon("categorize")}
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <UnknownEventsCarousel onDataStatusChange={handleUnknownEventsDataStatus} />
-            </AccordionContent>
-          </AccordionItem>
-        )}
-      </Accordion>
+          {hasUnknownEvents && (
+            <AccordionItem className="border-0" value="unknownEvents">
+              <AccordionTrigger
+                className="py-3 hover:no-underline [&[data-state=open]>svg]:rotate-180"
+                Icon={ChevronDown}
+                iconOnRight
+              >
+                <div className="flex gap-2 font-semibold">
+                  <HelpCircle /> {tCommon("categorize")}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <UnknownEventsCarousel onDataStatusChange={handleUnknownEventsDataStatus} />
+              </AccordionContent>
+            </AccordionItem>
+          )}
+        </Accordion>
+      ) : (
+        <p>{tCommon("no-actions")}</p>
+      )}
     </div>
   );
 }

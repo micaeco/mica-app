@@ -12,7 +12,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DrizzleTx = PgTransaction<any, any, any>;
 
-export function mapHouseholdFromSchema(schema: HouseholdTable): Household {
+function mapHouseholdFromSchema(schema: HouseholdTable): Household {
   return {
     id: schema.id,
     sensorId: schema.sensorId,
