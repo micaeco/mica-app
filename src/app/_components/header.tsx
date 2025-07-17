@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { EditProfilePanel } from "@app/_components/edit-profile-panel";
+import { EditProfileSheet } from "@app/_components/edit-profile-sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@app/_components/ui/avatar";
 import { useSidebar } from "@app/_components/ui/sidebar";
 import { usePathname } from "@app/_i18n/routing";
@@ -52,7 +52,7 @@ export function Header({ className }: { className?: string }) {
         </div>
 
         <div className="fixed top-2 right-3">
-          <EditProfilePanel>
+          <EditProfileSheet>
             <Avatar className="border-brand-primary mx-auto border-2 bg-white">
               <AvatarImage
                 className="object-contain"
@@ -61,7 +61,7 @@ export function Header({ className }: { className?: string }) {
               />
               <AvatarFallback>{session?.user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
             </Avatar>
-          </EditProfilePanel>
+          </EditProfileSheet>
         </div>
       </div>
     </header>

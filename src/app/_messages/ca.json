@@ -1,10 +1,10 @@
 {
   "common": {
+    "sensor": "Sensor",
     "notes": "Notes",
     "tomorrow": "Demà",
     "clear": "Neteja",
     "confirm": "Confirmar",
-    "delete-confirm": "Eliminar",
     "error": "S'ha produït un error",
     "in-progress": "En curs",
     "no-more-events-to-load": "No hi ha més events a carregar",
@@ -28,7 +28,7 @@
     "add": "Afegir",
     "edit": "Editar",
     "event": "Esdeveniment",
-    "remove": "Eliminar",
+    "delete": "Eliminar",
     "notifications": "Notificacions",
     "language": "Idioma",
     "help": "Ajuda",
@@ -53,6 +53,7 @@
     "person": "persona",
     "average": "mitjana",
     "logout": "Tancar sessió",
+    "leave": "Abandonar",
     "loading": "Carregant",
     "cancel": "Cancel·lar",
     "submit": "Enviar",
@@ -124,7 +125,10 @@
       "SESSION_EXPIRED": "La teva sessió ha expirat. Si us plau, inicia sessió de nou.",
       "FAILED_TO_UNLINK_LAST_ACCOUNT": "No es pot desvincular l'últim mètode d'autenticació.",
       "ACCOUNT_NOT_FOUND": "Compte no trobat.",
-      "USER_ALREADY_HAS_PASSWORD": "L'usuari ja té una contrasenya establerta."
+      "USER_ALREADY_HAS_PASSWORD": "L'usuari ja té una contrasenya establerta.",
+      "HOUSEHOLD_INVITATION_ALREADY_EXISTS": "Ja existeix una invitació per a aquest usuari a aquesta vivenda.",
+      "HOUSEHOLD_USER_ALREADY_EXISTS": "Aquest usuari ja forma part d'aquesta vivenda.",
+      "ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE": "L'usuari administrador no pot abandonar la vivenda. Si us plau, transfereix els drets d'administrador a un altre usuari abans d'abandonar."
     },
     "navigation": "Navegació",
     "now": "Ara",
@@ -153,18 +157,14 @@
   "edit-household": {
     "title": "Edita la vivenda.",
     "description": "Modifica la informació de la vivenda.",
-    "update-success": "Vivenda actualitzada correctament!",
-    "delete-success": "Vivenda eliminada correctament!",
-    "delete-section": {
-      "title": "Eliminar vivenda",
-      "description": "Elimina permanentment la teva vivenda i tot el seu contingut. Aquesta acció no és reversible, així que procedeix amb precaució.",
-      "button-text": "Eliminar"
-    },
-    "alert-dialog": {
-      "confirm-title": "Estàs absolutament segur?",
-      "confirm-description-bold": "Això eliminarà la vivenda \"{householdName}\" i totes les seves dades associades.",
-      "confirm-description-text": "Aquesta acció no es pot desfer. Siusplau assegura't."
-    }
+    "update-success": "Vivenda actualitzada correctament!"
+  },
+  "delete-household": {
+    "confirm-title": "Estàs absolutament segur?",
+    "confirm-description-bold": "Això eliminarà la vivenda \"{householdName}\" i totes les seves dades associades.",
+    "confirm-description-text": "Aquesta acció no es pot desfer. Siusplau assegura't.",
+    "confirm-delete": "Eliminar vivenda",
+    "success": "Vivenda eliminada correctament!"
   },
   "create-household": {
     "step1": {
@@ -189,6 +189,21 @@
       "country": "País"
     },
     "success": "Vivenda creada correctament"
+  },
+  "create-invitation": {
+    "title": "Convida a un usuari",
+    "description": "Introdueix l'adreça de correu electrònic de l'usuari que vols convidar a la teva vivenda.",
+    "email": "Correu electrònic",
+    "email-placeholder": "joan@exemple.com",
+    "send-invitation": "Enviar invitació",
+    "success": "Invitació enviada correctament! Avisa a l'usuari que comprovi el seu correu electrònic."
+  },
+  "leave-household": {
+    "title": "Vols sortir de la vivenda?",
+    "description": "Si surts de la vivenda, ja no podràs veure les dades de consum.",
+    "confirm-leave": "Sí, vull sortir",
+    "cancel": "No, cancel·lar",
+    "success": "Has sortit de la vivenda correctament."
   },
   "action-cards": {
     "leaks": {
@@ -326,6 +341,24 @@
       "confirm-password-required": "Si us plau, confirma la teva contrasenya"
     }
   },
+  "joinHousehold": {
+    "invalidTokenTitle": "Token invàlid",
+    "invalidTokenMessage": "Si us plau, proporciona un token de invitació vàlid per unir-se a una vivenda.",
+    "loadingTitle": "Carregant",
+    "checkingTokenMessage": "Comprovant token de invitació...",
+    "expiredTokenMessage": "El token de invitació no és vàlid o ha caducat.",
+    "invitationAcceptedTitle": "¡Invitació acceptada!",
+    "invitationDeclinedTitle": "Invitació rebutjada.",
+    "invitationAcceptedMessage": "T'has unit amb èxit a la vivenda.",
+    "invitationDeclinedMessage": "Has rebutjat amb èxit unir-te a la vivenda.",
+    "goHome": "Anar a inici",
+    "joinHouseholdTitle": "Unir-se a la vivenda",
+    "joinHouseholdMessage": "Has estat convidat a unir-te a una vivenda. Vols acceptar aquesta invitació?",
+    "acceptingButton": "Acceptant...",
+    "acceptButton": "Acceptar",
+    "decliningButton": "Rebutjant...",
+    "declineButton": "Rebutjar"
+  },
   "emails": {
     "verification": {
       "title": "Verifica la teva adreça de correu electrònic",
@@ -333,8 +366,8 @@
       "thankYou": "Gracies per registrar-te a MICA! Estem encantants de tenir-te a bord.",
       "instruction": "Per completar el procés de registre, si us plau, verifica la teva adreça de correu electrònic fent clic al botó de sota.",
       "button": "Verifica el meu correu electrònic",
-      "important": "Important: Si no has sol·licitat aquest registre, si us plau, ignora aquest correu electrònic.",
-      "fallback": "Si tens problemes amb el botó de verificació, copia i enganxa la següent URL al teu navegador:",
+      "important": "Important: Si no has sol·licitat aquest correu, si us plau, ignora aquest correu electrònic.",
+      "fallback": "Si el botó anterior no funciona, si us plau, copia i enganxa la següent URL al teu navegador web:",
       "expiryNote": "Aquest enllaç expirarà en {days} dies.",
       "help": "Si tens qualsevol dubte, si us plau, contacta'ns.",
       "regards": "Salutacions,",
@@ -347,11 +380,23 @@
       "instruction": "Algú ha sol·licitat restablir la contrasenya del teu compte. Si has estat tu, si us plau, fes clic al botó de sota per continuar.",
       "buttonInstruction": "Fes clic al botó de sota per restablir la teva contrasenya:",
       "button": "Restablir contrasenya",
-      "important": "Important:",
+      "important": "Important: Si no has sol·licitat aquest correu, si us plau, ignora aquest correu electrònic.",
       "fallback": "Si el botó anterior no funciona, si us plau, copia i enganxa la següent URL al teu navegador web:",
-      "regards": "Salutacions cordials,",
-      "teamSignature": "L'equip",
-      "automaticNote": "Aquest és un correu electrònic automatitzat, si us plau no responguis."
+      "regards": "Salutacions,",
+      "teamSignature": "L'equip de MICA",
+      "automaticNote": "Aquest correu electrònic s'ha generat automàticament. Si us plau, no responguis."
+    },
+    "householdInvitation": {
+      "title": "Invitació a la vivenda",
+      "greeting": "Hola,",
+      "invitation": "Has estat convidat/da per {inviterName} a unir-te a la vivenda \"{householdName}\".",
+      "instruction": "Per acceptar la invitació i unir-te a la vivenda, si us plau, fes clic al botó de sota:",
+      "button": "Unir-se a la vivenda",
+      "important": "Important: Si no has sol·licitat aquest correu, si us plau, ignora aquest correu electrònic.",
+      "fallback": "Si el botó anterior no funciona, si us plau, copia i enganxa la següent URL al teu navegador web:",
+      "regards": "Salutacions,",
+      "teamSignature": "L'equip de MICA",
+      "automaticNote": "Aquest correu electrònic s'ha generat automàticament. Si us plau, no responguis."
     }
   }
 }

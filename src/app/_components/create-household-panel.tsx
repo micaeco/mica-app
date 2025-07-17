@@ -81,7 +81,7 @@ export function CreateHouseholdPanel({
       form.reset();
       setCurrentStep(0);
       setOpen(false);
-      utils.household.getAll.invalidate();
+      utils.household.invalidate();
       toast.success(t("success"));
     },
     onError: () => {

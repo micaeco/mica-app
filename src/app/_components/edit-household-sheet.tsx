@@ -1,25 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@app/_components/ui/alert-dialog";
 import { Button } from "@app/_components/ui/button";
 import {
   Form,
@@ -38,7 +26,6 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@app/_components/ui/sheet";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
@@ -48,16 +35,13 @@ const formSchema = createHousehold;
 
 export function EditHouseholdSheet({
   householdId,
-  children,
-  className,
+  isOpen,
+  setIsOpen,
 }: {
   householdId: string;
-  children: React.ReactNode;
-  className?: string;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-
   const t = useTranslations("edit-household");
   const tForm = useTranslations("create-household.form");
   const tCommon = useTranslations("common");
@@ -92,23 +76,29 @@ export function EditHouseholdSheet({
       : undefined,
   });
 
+  useEffect(() => {
+    if (isOpen && household) {
+      form.reset({
+        sensorId: household.sensorId || "",
+        name: household.name || "",
+        residents: household.residents,
+        street1: household.street1 || "",
+        street2: household.street2 || "",
+        city: household.city || "",
+        zip: household.zip || "",
+        country: household.country || "",
+      });
+    } else if (!isOpen) {
+      form.reset();
+    }
+  }, [isOpen, household, form]);
+
   const utils = trpc.useUtils();
   const updateMutation = trpc.household.update.useMutation({
     onSuccess: () => {
-      utils.household.getAll.invalidate();
+      utils.household.invalidate();
       toast.success(t("update-success"));
-      setOpen(false);
-    },
-    onError: () => {
-      toast.error(tErrors("INTERNAL_SERVER_ERROR"));
-    },
-  });
-  const deleteMutation = trpc.household.delete.useMutation({
-    onSuccess: () => {
-      utils.household.getAll.invalidate();
-      toast.success(t("delete-success"));
-      setOpen(false);
-      setShowConfirmDelete(false);
+      setIsOpen(false);
     },
     onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
@@ -136,26 +126,17 @@ export function EditHouseholdSheet({
     );
   };
 
-  const handleDeleteHousehold = () => {
-    if (household) {
-      deleteMutation.mutate({ sensorId: household.sensorId, householdId: household.id });
-    }
-  };
-
   return (
     <Sheet
-      open={open}
-      onOpenChange={() => {
-        if (open) {
+      open={isOpen}
+      onOpenChange={(newOpenState) => {
+        setIsOpen(newOpenState);
+        if (!newOpenState) {
           form.reset();
-          setOpen(false);
-        } else setOpen(true);
+        }
       }}
     >
-      <SheetTrigger asChild className={className}>
-        {children}
-      </SheetTrigger>
-      <SheetContent className="flex w-full max-w-md flex-col">
+      <SheetContent overlay={false} className="flex w-full max-w-md flex-col">
         <SheetHeader>
           <SheetTitle>{t("title")}</SheetTitle>
           <SheetDescription>{t("description")}</SheetDescription>
@@ -309,50 +290,6 @@ export function EditHouseholdSheet({
               </SheetFooter>
             </form>
           </Form>
-
-          <div className="p-4 pt-0">
-            <div className="border-destructive bg-destructive/10 text-destructive rounded-lg border p-4 text-sm">
-              <div className="font-semibold">{t("delete-section.title")}</div>
-              <div>{t("delete-section.description")}</div>
-              <AlertDialog open={showConfirmDelete} onOpenChange={setShowConfirmDelete}>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    className="mt-4"
-                    disabled={deleteMutation.isPending}
-                  >
-                    {t("delete-section.button-text", { householdName: household?.name })}{" "}
-                    <Trash2 className="ml-2 h-4 w-4" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>{t("alert-dialog.confirm-title")}</AlertDialogTitle>
-                    <AlertDialogDescription className="flex flex-col space-y-2">
-                      <span>
-                        {t("alert-dialog.confirm-description-bold", {
-                          householdName: household?.name,
-                        })}
-                      </span>
-                      <span className="bg-destructive/10 text-destructive rounded p-3 text-xs">
-                        {t("alert-dialog.confirm-description-text")}
-                      </span>
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleDeleteHousehold}
-                      disabled={deleteMutation.isPending}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
-                    >
-                      {tCommon("delete-confirm")}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
-          </div>
         </ScrollArea>
       </SheetContent>
     </Sheet>

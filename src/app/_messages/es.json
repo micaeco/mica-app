@@ -1,10 +1,10 @@
 {
   "common": {
+    "sensor": "Sensor",
     "notes": "Notas",
     "tomorrow": "Mañana",
     "clear": "Limpiar",
     "confirm": "Confirmar",
-    "delete-confirm": "Eliminar",
     "error": "Ha ocurrido un error",
     "in-progress": "En curso",
     "no-more-events-to-load": "No quedan eventos por cargar",
@@ -28,7 +28,7 @@
     "add": "Añadir",
     "edit": "Editar",
     "event": "Evento",
-    "remove": "Eliminar",
+    "delete": "Eliminar",
     "notifications": "Notificaciones",
     "language": "Idioma",
     "help": "Ayuda",
@@ -53,6 +53,7 @@
     "person": "persona",
     "average": "media",
     "logout": "Cerrar sesión",
+    "leave": "Abandonar",
     "loading": "Cargando",
     "cancel": "Cancelar",
     "submit": "Enviar",
@@ -124,7 +125,10 @@
       "SESSION_EXPIRED": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
       "FAILED_TO_UNLINK_LAST_ACCOUNT": "No se puede desvincular el último método de autenticación.",
       "ACCOUNT_NOT_FOUND": "Cuenta no encontrada.",
-      "USER_ALREADY_HAS_PASSWORD": "El usuario ya tiene una contraseña establecida."
+      "USER_ALREADY_HAS_PASSWORD": "El usuario ya tiene una contraseña establecida.",
+      "HOUSEHOLD_INVITATION_ALREADY_EXISTS": "Ya existe una invitación para este usuario a esta vivienda.",
+      "HOUSEHOLD_USER_ALREADY_EXISTS": "Este usuario ya forma parte de esta vivienda.",
+      "ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE": "Los usuarios administradores no pueden abandonar la vivienda. Por favor, transfiere los derechos de administrador a otro usuario antes de abandonar."
     },
     "navigation": "Navegación",
     "now": "Ahora",
@@ -153,18 +157,14 @@
   "edit-household": {
     "title": "Edita la vivienda.",
     "description": "Modifica la información de la vivienda.",
-    "update-success": "¡Vivienda actualizada correctamente!",
-    "delete-success": "¡Vivienda eliminada correctamente!",
-    "delete-section": {
-      "title": "Eliminar Vivienda",
-      "description": "Elimina permanentemente tu vivienda y todo su contenido. Esta acción no es reversible, así que procede con precaución.",
-      "button-text": "Eliminar"
-    },
-    "alert-dialog": {
-      "confirm-title": "¿Estás absolutamente seguro?",
-      "confirm-description-bold": "Esto eliminará la vivienda \"{householdName}\" y todos sus datos asociados.",
-      "confirm-description-text": "Esta acción no se puede deshacer. Porfavor, asegúrate."
-    }
+    "update-success": "¡Vivienda actualizada correctamente!"
+  },
+  "delete-household": {
+    "confirm-title": "¿Estás absolutamente seguro?",
+    "confirm-description-bold": "Esto eliminará la vivienda \"{householdName}\" y todos sus datos asociados.",
+    "confirm-description-text": "Esta acción no se puede deshacer. Porfavor, asegúrate.",
+    "confirm-delete": "Eliminar vivienda",
+    "success": "¡Vivienda eliminada correctamente!"
   },
   "create-household": {
     "step1": {
@@ -199,6 +199,21 @@
       "title": "Categorizar",
       "description": "{count, plural, =0 {No tienes eventos para categorizar} =1 {Categoriza 1 evento} other {Categoriza # eventos}}"
     }
+  },
+  "create-invitation": {
+    "title": "Invita a un usuario",
+    "description": "Introduce la dirección de correo electrónico del usuario que deseas invitar a tu vivienda.",
+    "email": "Correo electrónico",
+    "email-placeholder": "juan@ejemplo.com",
+    "send-invitation": "Enviar invitación",
+    "success": "¡Invitación enviada correctamente! Avisa al usuario que revise su correo electrónico."
+  },
+  "leave-household": {
+    "title": "Quieres salir de la vivienda?",
+    "description": "Si sales de la vivienda, ya no podrás ver las datos de consumo.",
+    "confirm-leave": "Sí, quiero salir",
+    "cancel": "No, cancelar",
+    "success": "Has salido de la vivienda correctamente."
   },
   "events-list": {
     "title": "Eventos"
@@ -326,6 +341,24 @@
       "confirm-password-required": "Por favor, confirma tu contraseña"
     }
   },
+  "joinHousehold": {
+    "invalidTokenTitle": "Token inválido",
+    "invalidTokenMessage": "Por favor, proporcione un token de invitación válido para unirse a una vivienda.",
+    "loadingTitle": "Cargando",
+    "checkingTokenMessage": "Comprobando token de invitación...",
+    "expiredTokenMessage": "El token de invitación no es válido o ha expirado.",
+    "invitationAcceptedTitle": "¡Invitación aceptada!",
+    "invitationDeclinedTitle": "Invitación rechazada.",
+    "invitationAcceptedMessage": "Te has unido exitosamente a la vivienda.",
+    "invitationDeclinedMessage": "Has rechazado exitosamente unirte a la vivienda.",
+    "goHome": "Ir a inicio",
+    "joinHouseholdTitle": "Unirse a la vivienda",
+    "joinHouseholdMessage": "Has sido invitado a unirte a una vivienda. ¿Quieres aceptar esta invitación?",
+    "acceptingButton": "Aceptando...",
+    "acceptButton": "Aceptar",
+    "decliningButton": "Rechazando...",
+    "declineButton": "Rechazar"
+  },
   "emails": {
     "verification": {
       "title": "Verifica tu correo electrónico",
@@ -333,7 +366,7 @@
       "thankYou": "Gracias por registrarte en MICA. ¡Estamos encantados de tenerte con nosotros!",
       "instruction": "Para completar tu registro y verificar tu dirección de correo electrónico, por favor haz clic en el siguiente botón:",
       "button": "Verificar mi correo",
-      "important": "Importante: Si no has solicitado este correo o no te has registrado en MICA, por favor ignora este mensaje.",
+      "important": "Importante: Si no has solicitado este correo, por favor ignora este mensaje.",
       "fallback": "Si el botón no funciona, puedes hacer clic en este enlace:",
       "expiryNote": "Este enlace caducará en {days} días.",
       "help": "Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos.",
@@ -347,11 +380,23 @@
       "instruction": "Alguien ha solicitado restablecer la contraseña de tu cuenta. Si has sido tú, por favor, haz clic en el botón de abajo para continuar.",
       "buttonInstruction": "Haz clic en el botón de abajo para restablecer tu contraseña:",
       "button": "Restablecer contraseña",
-      "important": "Importante:",
+      "important": "Importante: Si no has solicitado este correo, por favor ignora este mensaje.",
       "fallback": "Si el botón anterior no funciona, por favor, copia y pega la siguiente URL en tu navegador web:",
-      "regards": "Saludos cordiales,",
-      "teamSignature": "El equipo",
+      "regards": "Saludos,",
+      "teamSignature": "El equipo de MICA",
       "automaticNote": "Este es un correo electrónico automatizado, por favor no respondas."
+    },
+    "householdInvitation": {
+      "title": "Invitación a la vivienda",
+      "greeting": "Hola,",
+      "invitation": "Has sido invitado/a por {inviterName} para unirte a la vivienda \"{householdName}\".",
+      "instruction": "Para aceptar la invitación y unirte a la vivienda, por favor haz clic en el siguiente botón:",
+      "button": "Unirse a la vivienda",
+      "important": "Importante: Si no has solicitado este correo, por favor ignora este mensaje.",
+      "fallback": "Si tienes problemas con el botón, por favor copia y pega la siguiente URL en tu navegador web:",
+      "regards": "Saludos,",
+      "teamSignature": "El equipo de MICA",
+      "automaticNote": "Este es un mensaje automático. Por favor, no respondas a este correo."
     }
   }
 }

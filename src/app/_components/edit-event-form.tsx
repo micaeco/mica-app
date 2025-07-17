@@ -97,7 +97,6 @@ export function EditEventForm({
   });
 
   const onSubmitEvent = (data: EditEventFormValues) => {
-    console.log("Submitting event form with data:", data);
     updateEvent({
       eventId: event.id,
       startDate: event.startTimestamp,

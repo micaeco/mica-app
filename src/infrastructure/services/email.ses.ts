@@ -1,5 +1,6 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 
+import { EmailService } from "@domain/services/email";
 import { env } from "@env";
 
 const ses = new SESClient({
@@ -10,35 +11,36 @@ const ses = new SESClient({
   },
 });
 
-export async function sendEmail({
-  to,
-  subject,
-  text,
-  htmlBody,
-}: {
-  to: string;
-  subject: string;
-  text: string;
-  htmlBody?: string;
-}) {
-  const command = new SendEmailCommand({
-    Source: "noreply@mica.eco",
-    Destination: {
-      ToAddresses: [to],
-    },
-    Message: {
-      Subject: { Data: subject },
-      Body: {
-        Html: { Data: htmlBody },
-        Text: { Data: text },
+export class SESEmailService implements EmailService {
+  async sendEmail({
+    to,
+    subject,
+    text,
+    html,
+  }: {
+    to: string;
+    subject: string;
+    text: string;
+    html?: string;
+  }): Promise<void> {
+    const command = new SendEmailCommand({
+      Source: "noreply@mica.eco",
+      Destination: {
+        ToAddresses: [to],
       },
-    },
-  });
+      Message: {
+        Subject: { Data: subject },
+        Body: {
+          Html: { Data: html },
+          Text: { Data: text },
+        },
+      },
+    });
 
-  try {
-    const result = await ses.send(command);
-    return result;
-  } catch (error) {
-    throw error;
+    try {
+      await ses.send(command);
+    } catch (error) {
+      throw error;
+    }
   }
 }

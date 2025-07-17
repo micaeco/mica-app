@@ -1,10 +1,10 @@
 {
   "common": {
+    "sensor": "Sensor",
     "notes": "Notes",
     "tomorrow": "Tomorrow",
     "clear": "Clear",
     "confirm": "Confirm",
-    "delete-confirm": "Delete",
     "error": "An error occurred",
     "in-progress": "In progress",
     "no-more-events-to-load": "No more events to load",
@@ -28,7 +28,7 @@
     "add": "Add",
     "edit": "Edit",
     "event": "Event",
-    "remove": "Remove",
+    "delete": "Remove",
     "notifications": "Notifications",
     "language": "Language",
     "help": "Help",
@@ -53,6 +53,7 @@
     "person": "person",
     "average": "average",
     "logout": "Log out",
+    "leave": "Leave",
     "loading": "Loading",
     "cancel": "Cancel",
     "submit": "Submit",
@@ -124,7 +125,10 @@
       "SESSION_EXPIRED": "Your session has expired. Please sign in again.",
       "FAILED_TO_UNLINK_LAST_ACCOUNT": "Cannot unlink the last authentication method.",
       "ACCOUNT_NOT_FOUND": "Account not found.",
-      "USER_ALREADY_HAS_PASSWORD": "User already has a password set."
+      "USER_ALREADY_HAS_PASSWORD": "User already has a password set.",
+      "HOUSEHOLD_INVITATION_ALREADY_EXISTS": "An invitation for this user to this household already exists.",
+      "HOUSEHOLD_USER_ALREADY_EXISTS": "This user is already part of this household.",
+      "ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE": "Admin users cannot leave the household. Please transfer admin rights to another user before leaving."
     },
     "navigation": "Navigation",
     "now": "Now",
@@ -153,18 +157,14 @@
   "edit-household": {
     "title": "Edit household.",
     "description": "Modify the household information.",
-    "update-success": "Household updated successfully!",
-    "delete-success": "Household deleted successfully!",
-    "delete-section": {
-      "title": "Delete Household",
-      "description": "Permanently remove your household and all of its contents. This action is not reversible, so please continue with caution.",
-      "button-text": "Delete Household {householdName}"
-    },
-    "alert-dialog": {
-      "confirm-title": "Are you absolutely sure?",
-      "confirm-description-bold": "This will delete the household \"{householdName}\" and all of its associated data.",
-      "confirm-description-text": "This action cannot be undone. Please be certain."
-    }
+    "update-success": "Household updated successfully!"
+  },
+  "delete-household": {
+    "confirm-title": "Are you absolutely sure?",
+    "confirm-description-bold": "This will delete the household \"{householdName}\" and all of its associated data.",
+    "confirm-description-text": "This action cannot be undone. Please be certain.",
+    "confirm-delete": "Delete household",
+    "success": "Household deleted successfully!"
   },
   "create-household": {
     "step1": {
@@ -189,6 +189,21 @@
       "country": "Country"
     },
     "success": "Household created successfully"
+  },
+  "create-invitation": {
+    "title": "Invite a user",
+    "description": "Enter the email address of the user you want to invite to your household.",
+    "email": "Email",
+    "email-placeholder": "john@example.com",
+    "send-invitation": "Send invitation",
+    "success": "Invitation sent successfully! Please notify the user to check their email."
+  },
+  "leave-household": {
+    "title": "Do you want to leave the household?",
+    "description": "If you leave the household, you will no longer be able to see the consumption data.",
+    "confirm-leave": "Yes, I want to leave",
+    "cancel": "No, cancel",
+    "success": "You have successfully left the household."
   },
   "action-cards": {
     "leaks": {
@@ -326,6 +341,24 @@
       "confirm-password-required": "Please confirm your password"
     }
   },
+  "joinHousehold": {
+    "invalidTokenTitle": "Invalid token",
+    "invalidTokenMessage": "Please provide a valid invitation token to join a household.",
+    "loadingTitle": "Loading",
+    "checkingTokenMessage": "Checking invitation token...",
+    "expiredTokenMessage": "The invitation token is invalid or has expired.",
+    "invitationAcceptedTitle": "Invitation accepted!",
+    "invitationDeclinedTitle": "Invitation declined.",
+    "invitationAcceptedMessage": "You have successfully joined the household.",
+    "invitationDeclinedMessage": "You have successfully declined to join the household.",
+    "goHome": "Go home",
+    "joinHouseholdTitle": "Join Household",
+    "joinHouseholdMessage": "You have been invited to join a household. Do you want to accept this invitation?",
+    "acceptingButton": "Accepting...",
+    "acceptButton": "Accept",
+    "decliningButton": "Declining...",
+    "declineButton": "Decline"
+  },
   "emails": {
     "verification": {
       "title": "Verify your email address",
@@ -333,7 +366,7 @@
       "thankYou": "Thank you for registering with MICA. We're delighted to have you with us!",
       "instruction": "To complete your registration and verify your email address, please click the button below:",
       "button": "Verify my email",
-      "important": "Important: If you didn't request this email or haven't registered with MICA, please ignore this message.",
+      "important": "Important: If you didn't request this email, please ignore this message.",
       "fallback": "If the button doesn't work, you can click on this link:",
       "expiryNote": "This link will expire in {days} days.",
       "help": "If you have any questions or need help, don't hesitate to contact us.",
@@ -342,16 +375,28 @@
       "automaticNote": "This is an automated email. Please do not reply to this message."
     },
     "resetPassword": {
-      "title": "Reset Your Password",
+      "title": "Reset your password",
       "greeting": "Hello,",
       "instruction": "Someone has requested a password reset for your account. If this was you, please click the button below to continue.",
       "buttonInstruction": "Click the button below to reset your password:",
-      "button": "Reset Password",
-      "important": "Important:",
+      "button": "Reset password",
+      "important": "Important: If you didn't request this email, please ignore this message.",
       "fallback": "If the button above does not work, please copy and paste the following URL into your web browser:",
       "regards": "Best regards,",
-      "teamSignature": "The Team",
+      "teamSignature": "The MICA team",
       "automaticNote": "This is an automated email, please do not reply."
+    },
+    "householdInvitation": {
+      "title": "Household invitation",
+      "greeting": "Hello,",
+      "invitation": "You have been invited by {inviterName} to join the \"{householdName}\" household.",
+      "instruction": "To accept the invitation and join the household, please click the button below:",
+      "button": "Join household",
+      "important": "Important: If you didn't request this email, please ignore this message.",
+      "fallback": "If you're having trouble with the button, please copy and paste the following URL into your web browser:",
+      "regards": "Best regards,",
+      "teamSignature": "The MICA team",
+      "automaticNote": "This is an automated message. Please do not reply to this email."
     }
   }
 }

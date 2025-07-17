@@ -4,10 +4,11 @@ import { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -31,11 +32,12 @@ import {
 } from "@app/_components/ui/form";
 import { Input } from "@app/_components/ui/input";
 import { Separator } from "@app/_components/ui/separator";
-import { redirect } from "@app/_i18n/routing";
 import { authClient } from "@app/_lib/auth-client";
 
 export default function SigninPage() {
-  const locale = useLocale();
+  const searchParams = useSearchParams();
+  const callbackURL = searchParams.get("callback") || "/";
+
   const t = useTranslations();
 
   const signinSchema = z.object({
@@ -64,15 +66,13 @@ export default function SigninPage() {
       {
         email: data.email,
         password: data.password,
+        callbackURL,
       },
       {
         onError: (ctx) => {
           const errorKey = `common.errors.${ctx.error.code}`;
           // @ts-expect-error - Dynamic key for error translation
           toast.error(t.has(errorKey) ? t(errorKey) : ctx.error.message);
-        },
-        onSuccess: () => {
-          redirect({ href: "/", locale });
         },
         onRequest: () => {
           setIsLoading(true);
@@ -88,6 +88,7 @@ export default function SigninPage() {
     await authClient.signIn.social(
       {
         provider: "google",
+        callbackURL,
       },
       {
         onError: (ctx) => {
@@ -205,7 +206,10 @@ export default function SigninPage() {
       <CardFooter>
         <p className="text-muted-foreground w-full text-center text-sm">
           {t("auth.signin.no-account")}{" "}
-          <Link href="/signup" className="hover:text-primary underline underline-offset-4">
+          <Link
+            href={`/signup?callback=${encodeURIComponent(callbackURL)}`}
+            className="hover:text-primary underline underline-offset-4"
+          >
             {t("auth.signin.signup-link")}
           </Link>
         </p>

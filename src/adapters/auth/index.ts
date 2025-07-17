@@ -5,20 +5,11 @@ import { getMessages } from "next-intl/server";
 
 import ResetPasswordEmail from "@app/_components/emails/reset-password";
 import VerificationEmail from "@app/_components/emails/verification";
+import { defaultLocale } from "@app/_i18n/routing";
+import { User } from "@domain/entities/user";
 import { env } from "@env";
 import { db } from "@infrastructure/db";
-import { sendEmail } from "@infrastructure/services/email.ses";
-
-type User = {
-  id: string;
-  name: string;
-  emailVerified: boolean;
-  email: string;
-  createdAt: Date;
-  updatedAt: Date;
-  image?: string | null | undefined | undefined;
-  locale: string;
-};
+import { SESEmailService } from "@infrastructure/services/email.ses";
 
 export const auth = betterAuth({
   emailAndPassword: {
@@ -27,26 +18,28 @@ export const auth = betterAuth({
     autoSignIn: true,
     sendResetPassword: async ({ user, url }) => {
       const messages = (await getMessages({
-        locale: (user as User).locale,
+        locale: (user as User).locale || defaultLocale,
       })) as unknown as IntlMessages;
 
-      await sendEmail({
+      const emailService = new SESEmailService();
+
+      await emailService.sendEmail({
         to: user.email,
         subject: messages.emails.resetPassword.title,
         text: await render(
           ResetPasswordEmail({
             messages,
-            locale: (user as User).locale || "en",
+            locale: (user as User).locale || defaultLocale,
             resetUrl: url,
           }),
           {
             plainText: true,
           }
         ),
-        htmlBody: await render(
+        html: await render(
           ResetPasswordEmail({
             messages,
-            locale: (user as User).locale || "en",
+            locale: (user as User).locale || defaultLocale,
             resetUrl: url,
           }),
           {
@@ -76,26 +69,28 @@ export const auth = betterAuth({
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
       const messages = (await getMessages({
-        locale: (user as User).locale,
+        locale: (user as User).locale || defaultLocale,
       })) as unknown as IntlMessages;
 
-      await sendEmail({
+      const emailService = new SESEmailService();
+
+      await emailService.sendEmail({
         to: user.email,
         subject: messages.emails.verification.title,
         text: await render(
           VerificationEmail({
             messages,
-            locale: (user as User).locale || "en",
+            locale: (user as User).locale || defaultLocale,
             verificationUrl: url,
           }),
           {
             plainText: true,
           }
         ),
-        htmlBody: await render(
+        html: await render(
           VerificationEmail({
             messages,
-            locale: (user as User).locale || "en",
+            locale: (user as User).locale || defaultLocale,
             verificationUrl: url,
           }),
           {
@@ -106,7 +101,6 @@ export const auth = betterAuth({
     },
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
-    redirectUrl: "/account",
   },
   database: drizzleAdapter(db, {
     provider: "pg",

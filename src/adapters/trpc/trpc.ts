@@ -12,7 +12,7 @@ export const t = initTRPC.context<Context>().create({
       message: error.message,
       data: {
         ...shape.data,
-        code: error.code,
+        code: error.cause instanceof AppError ? error.cause.code : error.code,
       },
     };
   },
@@ -33,30 +33,6 @@ const enforceAuth = t.middleware(({ ctx, next }) => {
   });
 });
 
-const errorFormatterMiddleware = t.middleware(async ({ next }) => {
-  try {
-    return await next();
-  } catch (error) {
-    if (error instanceof TRPCError) {
-      throw error;
-    }
-
-    if (error instanceof AppError) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: error.message,
-        cause: error,
-      });
-    }
-
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "An unexpected server error occurred. Please try again later.",
-      cause: error,
-    });
-  }
-});
-
 export const createTRPCRouter = t.router;
-export const publicProcedure = t.procedure.use(errorFormatterMiddleware);
-export const protectedProcedure = t.procedure.use(enforceAuth).use(errorFormatterMiddleware);
+export const publicProcedure = t.procedure;
+export const protectedProcedure = t.procedure.use(enforceAuth);

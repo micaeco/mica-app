@@ -6,8 +6,8 @@ import { Plus, SquarePen } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { CreateHouseholdPanel } from "@app/_components/create-household-panel";
-import { EditHouseholdSheet } from "@app/_components/edit-household-sheet";
 import { LanguageSwitcher } from "@app/_components/language-switcher";
+import { ManageHouseholdSheet } from "@app/_components/manage-household-sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@app/_components/ui/avatar";
 import { Button } from "@app/_components/ui/button";
 import {
@@ -109,7 +109,7 @@ function HouseholdMenuItem({
         {children}
       </SidebarMenuButton>
 
-      <EditHouseholdSheet householdId={householdId}>
+      <ManageHouseholdSheet householdId={householdId}>
         <Button
           size="icon"
           variant="ghost"
@@ -122,7 +122,7 @@ function HouseholdMenuItem({
         >
           <SquarePen className="text-muted-foreground group-hover/btn:text-primary h-4 w-4 transition-colors" />
         </Button>
-      </EditHouseholdSheet>
+      </ManageHouseholdSheet>
     </SidebarMenuItem>
   );
 }

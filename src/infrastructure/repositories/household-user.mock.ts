@@ -9,6 +9,12 @@ export class MockHouseholdUserRepository implements HouseholdUserRepository {
     return householdUser;
   }
 
+  async exists(householdId: string, userId: string) {
+    return mockHouseholdUsers.some(
+      (relation) => relation.householdId === householdId && relation.userId === userId
+    );
+  }
+
   async findAll() {
     return mockHouseholdUsers;
   }

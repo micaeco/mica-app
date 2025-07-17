@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
@@ -34,6 +35,9 @@ import { Separator } from "@app/_components/ui/separator";
 import { authClient } from "@app/_lib/auth-client";
 
 export default function SignupPage() {
+  const searchParams = useSearchParams();
+  const callbackURL = searchParams.get("callback") || "/";
+
   const locale = useLocale();
   const t = useTranslations();
 
@@ -69,12 +73,15 @@ export default function SignupPage() {
   });
 
   const onSubmit = async (data: SignupForm) => {
-    await authClient.signUp.email({
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      locale,
-      fetchOptions: {
+    await authClient.signUp.email(
+      {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        locale,
+        callbackURL,
+      },
+      {
         onError: (ctx) => {
           const errorKey = `common.errors.${ctx.error.code}`;
           // @ts-expect-error - Dynamic key for error translation
@@ -89,14 +96,17 @@ export default function SignupPage() {
         onResponse: () => {
           setIsLoading(false);
         },
-      },
-    });
+      }
+    );
   };
 
   const handleGoogleSignup = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      fetchOptions: {
+    await authClient.signIn.social(
+      {
+        provider: "google",
+        callbackURL,
+      },
+      {
         onError: (ctx) => {
           const errorKey = `common.errors.${ctx.error.code}`;
           // @ts-expect-error - Dynamic key for error translation
@@ -112,8 +122,8 @@ export default function SignupPage() {
         onResponse: () => {
           setIsLoading(false);
         },
-      },
-    });
+      }
+    );
   };
 
   return (
@@ -254,7 +264,10 @@ export default function SignupPage() {
       <CardFooter>
         <p className="text-muted-foreground w-full text-center text-sm">
           {t("auth.signup.has-account")}{" "}
-          <Link href="/signin" className="hover:text-primary underline underline-offset-4">
+          <Link
+            href={`/signin?callback=${encodeURIComponent(callbackURL)}`}
+            className="hover:text-primary underline underline-offset-4"
+          >
             {t("auth.signup.signin-link")}
           </Link>
         </p>

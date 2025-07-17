@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { PgTransaction } from "drizzle-orm/pg-core";
 
 import { HouseholdUser } from "@domain/entities/household-user";
@@ -16,7 +16,7 @@ export function mapHouseholdUserFromSchema(schema: HouseholdUserTable): Househol
   return {
     householdId: schema.householdId,
     userId: schema.userId,
-    role: schema.role,
+    role: schema.role as "admin" | "member",
   };
 }
 
@@ -30,6 +30,18 @@ export class PostgresHouseholdUserRepository implements HouseholdUserRepository 
       .returning();
 
     return mapHouseholdUserFromSchema(newHouseholdUser);
+  }
+
+  async exists(householdId: string, userId: string): Promise<boolean> {
+    const result = await this.db
+      .select({ count: count() })
+      .from(householdUserTable)
+      .where(
+        and(eq(householdUserTable.householdId, householdId), eq(householdUserTable.userId, userId))
+      )
+      .limit(1);
+
+    return result[0]?.count > 0;
   }
 
   async findAll(): Promise<HouseholdUser[]> {
