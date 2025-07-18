@@ -297,7 +297,7 @@ export function CreateHouseholdPanel({
 
                 {currentStep === stepFields.length - 1 && (
                   <Button type="submit" disabled={mutation.isPending}>
-                    {mutation.isPending && <LoaderCircle className="animate-spin" />}
+                    {mutation.isPending && <LoaderCircle className="mr-2 animate-spin" />}
                     {tCommon("create")}
                   </Button>
                 )}

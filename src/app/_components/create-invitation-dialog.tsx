@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -46,7 +47,7 @@ export function CreateInvitationDialog({
     },
   });
 
-  const { mutate: createInvitation } = trpc.household.createInvitation.useMutation({
+  const { mutate: createInvitation, isPending } = trpc.household.createInvitation.useMutation({
     onError: (error) => {
       const errorCode = error.data?.code || "INTERNAL_SERVER_ERROR";
       // @ts-expect-error - Dynamic key for error translation
@@ -86,7 +87,10 @@ export function CreateInvitationDialog({
               )}
             />
             <div className="flex justify-end">
-              <Button type="submit">{t("send-invitation")}</Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending && <Loader2 className="mr-2 animate-spin" />}
+                {t("send-invitation")}
+              </Button>
             </div>
           </form>
         </Form>
