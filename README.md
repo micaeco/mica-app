@@ -1,8 +1,6 @@
-# 💧 MICA APP
+# MICA APP
 
 **MICA APP** is a fullstack web application built by [mica.eco](https://mica.eco) to help households and communities **track water consumption** and **track where the consumption happens** (e.g. shower, dishwasher, toilet, etc.).
-
-> Built with ❤️ by [mica.eco](https://mica.eco) — technology for sustainable living.
 
 ## 🛠 Tech Stack
 
@@ -42,6 +40,7 @@ src/
 ```
 
 ### Key architectural principles:
+
 - **Domain layer**: Contains pure business logic, independent of frameworks
 - **Infrastructure layer**: Implements domain interfaces with external dependencies
 - **Application layer**: Orchestrates use cases via tRPC routers
@@ -51,19 +50,21 @@ src/
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - PostgreSQL database (or use Docker Compose)
 
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/micaeco/mica-app.git
 cd mica-app
 ```
 
 2. **Install dependencies**
+
 ```bash
 npm install
 ```
@@ -99,6 +100,7 @@ NEXT_PUBLIC_URL="http://localhost:3000"
 4. **Start the database**
 
 Using Docker Compose (recommended for development):
+
 ```bash
 # Make sure to set your database environment variables in .env.development.local first
 docker-compose up -d
@@ -107,11 +109,13 @@ docker-compose up -d
 Or set up your own PostgreSQL instance and update the DATABASE_URL accordingly.
 
 5. **Run database migrations**
+
 ```bash
 npm run db:migrate
 ```
 
 6. **Start the development server**
+
 ```bash
 npm run dev
 ```
@@ -147,6 +151,7 @@ npm run db:studio    # Open Drizzle Studio (database GUI)
 This project uses PostgreSQL with Drizzle ORM. The database schema is defined in `src/infrastructure/db/schema/`.
 
 ### Key commands:
+
 - `npm run db:studio` - Opens a web-based database browser
 - `npm run db:generate` - Creates migration files after schema changes
 - `npm run db:migrate` - Applies pending migrations to the database
@@ -157,19 +162,23 @@ This project uses PostgreSQL with Drizzle ORM. The database schema is defined in
 ### Common Issues
 
 **Database connection errors:**
+
 - Ensure PostgreSQL is running (`docker-compose up -d`)
 - Check that DATABASE_URL in `.env.development.local` is correct
 - Run `npm run db:migrate` to ensure schema is up to date
 
 **Build/TypeScript errors:**
+
 - Run `npm run typecheck` to see specific type errors
 - Ensure all environment variables are properly set
 
 **Authentication issues:**
+
 - Make sure BETTER_AUTH_SECRET is set in your environment variables
 - Check that BETTER_AUTH_URL matches your development URL
 
 **Missing dependencies:**
+
 - Delete `node_modules` and `package-lock.json`, then run `npm install`
 
 ## 🚢 Deployment
@@ -183,6 +192,7 @@ Ensure all required environment variables from the Getting Started section are c
 ### Database Migrations
 
 Remember to run database migrations in your production environment:
+
 ```bash
 npm run db:migrate
 ```
