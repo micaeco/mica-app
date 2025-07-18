@@ -72,11 +72,11 @@ export const categoryMap: Record<Category, CategoryMetadata> = {
     color: "muted-foreground",
   },
   softener: {
-    icon: "/icons/sink.webp",
+    icon: "/icons/softener.webp",
     color: "chart-1",
   },
   osmosis: {
-    icon: "/icons/sink.webp",
+    icon: "/icons/osmosis.webp",
     color: "chart-2",
   },
 };
