@@ -38,6 +38,7 @@ import {
 import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
+import { KeysOfType } from "@app/_types/utils";
 import { categories, Category, categoryMap } from "@domain/entities/category";
 import { Tag } from "@domain/entities/tag";
 
@@ -54,6 +55,8 @@ interface EditTagsDialogProps {
 export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialogProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category>("shower");
   const [name, setName] = useState("");
+  const [savingTagId, setSavingTagId] = useState<number | null>(null);
+  const [deletingTagId, setDeletingTagId] = useState<number | null>(null);
 
   useEffect(() => {
     setSelectedCategory(category ?? "shower");
@@ -85,7 +88,10 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
     },
   });
 
-  const { mutate: updateTag, isPending: isUpdatingTag } = trpc.tag.update.useMutation({
+  const { mutate: updateTag } = trpc.tag.update.useMutation({
+    onMutate: (variables) => {
+      setSavingTagId(variables.tagId);
+    },
     onSuccess: () => {
       toast.success(tEditTagsDialog("tag-updated-successfully"));
       utils.tag.getTagsByCategory.invalidate({
@@ -96,9 +102,15 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
     onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
     },
+    onSettled: () => {
+      setSavingTagId(null);
+    },
   });
 
-  const { mutate: deleteTag, isPending: isDeletingTag } = trpc.tag.delete.useMutation({
+  const { mutate: deleteTag } = trpc.tag.delete.useMutation({
+    onMutate: (variables) => {
+      setDeletingTagId(variables.id);
+    },
     onSuccess: () => {
       toast.success(tEditTagsDialog("tag-deleted-successfully"));
       utils.tag.getTagsByCategory.invalidate({
@@ -108,6 +120,9 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
     },
     onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
+    },
+    onSettled: () => {
+      setDeletingTagId(null);
     },
   });
 
@@ -172,14 +187,16 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
         ) : tags && tags.length > 0 ? (
           <div className="max-h-52 overflow-y-auto">
             {tags.map((tag, index) => {
+              const isTagSaving = savingTagId === tag.id;
+              const isTagDeleting = deletingTagId === tag.id;
               return (
                 <EditableField
                   key={tag.id}
                   value={tag.name}
                   onChange={(newValue) => handleUpdate(tag, newValue)}
                   onDelete={() => handleDelete(tag.id)}
-                  isSaving={isUpdatingTag}
-                  isDeleting={isDeletingTag}
+                  isSaving={isTagSaving}
+                  isDeleting={isTagDeleting}
                   className={
                     tags.length == 1
                       ? ""
@@ -195,13 +212,16 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
           </div>
         ) : (
           <span className="text-muted-foreground text-sm">
-            {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              tEditTagsDialog.has(("no-tags-for-" + selectedCategory) as any)
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  tEditTagsDialog(("no-tags-for-" + selectedCategory) as any)
-                : tEditTagsDialog("no-tags-for-category")
-            }
+            {tEditTagsDialog.has(
+              ("no-tags-for-" + selectedCategory) as KeysOfType<IntlMessages, "edit-tags-dialog">
+            )
+              ? tEditTagsDialog(
+                  ("no-tags-for-" + selectedCategory) as KeysOfType<
+                    IntlMessages,
+                    "edit-tags-dialog"
+                  >
+                )
+              : tEditTagsDialog("no-tags-for-category")}
           </span>
         )}
 
@@ -249,8 +269,8 @@ export function EditableField({
 
   const handleSave = () => {
     if (!isSaving && draft.trim() && draft !== value) {
-      setIsEditing(false);
       onChange(draft.trim());
+      setIsEditing(false);
     }
   };
 
@@ -265,24 +285,28 @@ export function EditableField({
         className={cn("mr-2 h-10 flex-1 text-sm disabled:cursor-auto", className)}
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
-        autoFocus
         disabled={!isEditing || isSaving || isDeleting}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !isSaving && !isDeleting) handleSave();
           if (e.key === "Escape" && !isSaving && !isDeleting) handleCancelEdit();
         }}
       />
-      {isEditing ? (
+      {isEditing || isSaving ? (
         <>
           <Button
             variant="ghost"
-            disabled={!draft.trim() || draft === value || isSaving}
+            disabled={!draft.trim() || draft === value || isSaving || isDeleting}
             size="icon"
             onClick={handleSave}
           >
-            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check />}
+            {isSaving ? <Loader2 className="animate-spin" /> : <Check />}
           </Button>
-          <Button variant="ghost" size="icon" onClick={handleCancelEdit} disabled={isSaving}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleCancelEdit}
+            disabled={isSaving || isDeleting}
+          >
             <X />
           </Button>
         </>
@@ -291,7 +315,6 @@ export function EditableField({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
             onClick={() => {
               setDraft(value);
               setIsEditing(true);
@@ -303,11 +326,11 @@ export function EditableField({
           <Button
             variant="ghost"
             size="icon"
-            className="text-destructive hover:text-destructive h-8 w-8"
+            className="text-destructive hover:text-destructive"
             onClick={() => setShowAlertDialog(true)}
             disabled={isSaving || isDeleting}
           >
-            <Trash2 />
+            {isDeleting ? <Loader2 className="animate-spin" /> : <Trash2 />}
           </Button>
           <AlertDialog open={showAlertDialog} onOpenChange={setShowAlertDialog}>
             <AlertDialogContent>
@@ -323,7 +346,7 @@ export function EditableField({
                 </AlertDialogCancel>
                 <AlertDialogAction onClick={onDelete} disabled={isDeleting}>
                   {isDeleting ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="animate-spin" />
                   ) : (
                     tEditTagsDialog("delete-tag-confirm")
                   )}
