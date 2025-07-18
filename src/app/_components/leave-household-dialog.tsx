@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -56,6 +57,7 @@ export function LeaveHouseholdDialog({
             {tLeaveHousehold("cancel")}
           </Button>
           <Button variant="destructive" onClick={handleLeave} disabled={leaveMutation.isPending}>
+            {leaveMutation.isPending && <Loader2 className="mr-2 animate-spin" />}
             {tLeaveHousehold("confirm-leave")}
           </Button>
         </DialogFooter>

@@ -71,7 +71,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
     category: selectedCategory,
   });
 
-  const { mutate: createTag } = trpc.tag.create.useMutation({
+  const { mutate: createTag, isPending: isCreatingTag } = trpc.tag.create.useMutation({
     onSuccess: () => {
       toast.success(tEditTagsDialog("tag-created-successfully"));
       utils.tag.getTagsByCategory.invalidate({
@@ -85,7 +85,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
     },
   });
 
-  const { mutate: updateTag } = trpc.tag.update.useMutation({
+  const { mutate: updateTag, isPending: isUpdatingTag } = trpc.tag.update.useMutation({
     onSuccess: () => {
       toast.success(tEditTagsDialog("tag-updated-successfully"));
       utils.tag.getTagsByCategory.invalidate({
@@ -98,7 +98,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
     },
   });
 
-  const { mutate: deleteTag } = trpc.tag.delete.useMutation({
+  const { mutate: deleteTag, isPending: isDeletingTag } = trpc.tag.delete.useMutation({
     onSuccess: () => {
       toast.success(tEditTagsDialog("tag-deleted-successfully"));
       utils.tag.getTagsByCategory.invalidate({
@@ -178,6 +178,8 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
                   value={tag.name}
                   onChange={(newValue) => handleUpdate(tag, newValue)}
                   onDelete={() => handleDelete(tag.id)}
+                  isSaving={isUpdatingTag}
+                  isDeleting={isDeletingTag}
                   className={
                     tags.length == 1
                       ? ""
@@ -214,7 +216,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
             }}
           />
           <Button variant="secondary" size="icon" onClick={handleCreate} disabled={!name.trim()}>
-            <Check />
+            {isCreatingTag ? <Loader2 className="mr-2 animate-spin" /> : <Check />}
           </Button>
         </div>
       </DialogContent>
@@ -222,17 +224,23 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
   );
 }
 
-function EditableField({
-  value,
-  onChange,
-  onDelete,
-  className,
-}: {
+interface EditableFieldProps {
   value: string;
   onChange: (newValue: string) => void;
   onDelete: () => void;
   className?: string;
-}) {
+  isSaving?: boolean;
+  isDeleting?: boolean;
+}
+
+export function EditableField({
+  value,
+  onChange,
+  onDelete,
+  className,
+  isSaving = false,
+  isDeleting = false,
+}: EditableFieldProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value);
   const [showAlertDialog, setShowAlertDialog] = useState(false);
@@ -240,8 +248,15 @@ function EditableField({
   const tEditTagsDialog = useTranslations("edit-tags-dialog");
 
   const handleSave = () => {
+    if (!isSaving && draft.trim() && draft !== value) {
+      setIsEditing(false);
+      onChange(draft.trim());
+    }
+  };
+
+  const handleCancelEdit = () => {
     setIsEditing(false);
-    onChange(draft.trim());
+    setDraft(value);
   };
 
   return (
@@ -251,30 +266,23 @@ function EditableField({
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         autoFocus
-        disabled={!isEditing}
+        disabled={!isEditing || isSaving || isDeleting}
         onKeyDown={(e) => {
-          if (e.key === "Enter") handleSave();
-          if (e.key === "Escape") setIsEditing(false);
+          if (e.key === "Enter" && !isSaving && !isDeleting) handleSave();
+          if (e.key === "Escape" && !isSaving && !isDeleting) handleCancelEdit();
         }}
       />
       {isEditing ? (
         <>
           <Button
             variant="ghost"
-            disabled={!draft.trim() || draft === value}
+            disabled={!draft.trim() || draft === value || isSaving}
             size="icon"
             onClick={handleSave}
           >
-            <Check />
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check />}
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              setIsEditing(false);
-              setDraft(value);
-            }}
-          >
+          <Button variant="ghost" size="icon" onClick={handleCancelEdit} disabled={isSaving}>
             <X />
           </Button>
         </>
@@ -288,6 +296,7 @@ function EditableField({
               setDraft(value);
               setIsEditing(true);
             }}
+            disabled={isSaving || isDeleting}
           >
             <Pencil />
           </Button>
@@ -296,6 +305,7 @@ function EditableField({
             size="icon"
             className="text-destructive hover:text-destructive h-8 w-8"
             onClick={() => setShowAlertDialog(true)}
+            disabled={isSaving || isDeleting}
           >
             <Trash2 />
           </Button>
@@ -304,13 +314,19 @@ function EditableField({
               <AlertDialogHeader>
                 <AlertDialogTitle>{tEditTagsDialog("delete-tag-title")}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  {tEditTagsDialog("delete-tag-description")}
+                  {tEditTagsDialog("delete-tag-description", { tagName: value })}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>{tEditTagsDialog("delete-tag-cancel")}</AlertDialogCancel>
-                <AlertDialogAction onClick={onDelete}>
-                  {tEditTagsDialog("delete-tag-confirm")}
+                <AlertDialogCancel disabled={isDeleting}>
+                  {tEditTagsDialog("delete-tag-cancel")}
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={onDelete} disabled={isDeleting}>
+                  {isDeleting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    tEditTagsDialog("delete-tag-confirm")
+                  )}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

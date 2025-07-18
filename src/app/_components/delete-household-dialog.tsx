@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -68,6 +69,7 @@ export function DeleteHouseholdDialog({
             disabled={deleteMutation.isPending}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
           >
+            {deleteMutation.isPending && <Loader2 className="mr-2 animate-spin" />}
             {t("confirm-delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
