@@ -38,7 +38,7 @@ export function EditProfileSheet({ children }: { children: React.ReactNode }) {
     },
     {
       icon: <Users className="h-5 w-5" />,
-      label: "contact-us",
+      label: "contactUs",
       onClick: (locale) => window.open(`https://mica.eco/${locale}/contact`),
     },
     {

@@ -25,7 +25,7 @@ export function LeaveHouseholdDialog({
   setIsOpen: (isOpen: boolean) => void;
 }) {
   const tErrors = useTranslations("common.errors");
-  const tLeaveHousehold = useTranslations("leave-household");
+  const tLeaveHousehold = useTranslations("leaveHousehold");
 
   const utils = trpc.useUtils();
   const leaveMutation = trpc.household.leave.useMutation({
@@ -58,7 +58,7 @@ export function LeaveHouseholdDialog({
           </Button>
           <Button variant="destructive" onClick={handleLeave} disabled={leaveMutation.isPending}>
             {leaveMutation.isPending && <Loader2 className="mr-2 animate-spin" />}
-            {tLeaveHousehold("confirm-leave")}
+            {tLeaveHousehold("confirmLeave")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -58,8 +58,8 @@ export function EditEventForm({
   const tCategories = useTranslations("common.categories");
   const tErrors = useTranslations("common.errors");
   const tCommon = useTranslations("common");
-  const tEditEventSheet = useTranslations("edit-event-sheet");
-  const tEditTagsDialog = useTranslations("edit-tags-dialog");
+  const tEditEventSheet = useTranslations("editEventSheet");
+  const tEditTagsDialog = useTranslations("editTagsDialog");
 
   const eventForm = useForm<EditEventFormValues>({
     resolver: zodResolver(editEventFormSchema),
@@ -89,7 +89,7 @@ export function EditEventForm({
       utils.event.invalidate();
       eventForm.reset();
       onFormSubmitSuccess();
-      toast.success(tEditEventSheet("event-edited-successfully"));
+      toast.success(tEditEventSheet("eventEditedSuccessfully"));
     },
     onError: () => {
       toast.error(tErrors("INTERNAL_SERVER_ERROR"));
@@ -121,7 +121,7 @@ export function EditEventForm({
               -{" "}
               {event.endTimestamp
                 ? format(event.endTimestamp, "HH:mm:ss", { locale: getDateFnsLocale(locale) })
-                : tCommon("in-progress")}
+                : tCommon("inProgress")}
               <br />
               <span className="text-brand-secondary font-bold">
                 {event.consumptionInLiters.toFixed(1)} L
@@ -136,7 +136,7 @@ export function EditEventForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  <span className="font-medium">{tCommon("consumption-point")}</span>
+                  <span className="font-medium">{tCommon("consumptionPoint")}</span>
                 </FormLabel>
                 <FormControl>
                   <ToggleGroup
@@ -192,7 +192,7 @@ export function EditEventForm({
                       <LoaderCircle className="animate-spin" />
                     ) : !tags || tags.length === 0 ? (
                       <FormDescription className="text-muted-foreground text-sm">
-                        {tEditEventSheet("no-tags-for-category")}
+                        {tEditEventSheet("noTagsForCategory")}
                       </FormDescription>
                     ) : (
                       <ToggleGroup
@@ -243,10 +243,10 @@ export function EditEventForm({
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{tEditEventSheet("notes-label")}</FormLabel>
+                <FormLabel>{tEditEventSheet("notesLabel")}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder={tEditEventSheet("notes-placeholder")}
+                    placeholder={tEditEventSheet("notesPlaceholder")}
                     {...field}
                     value={field.value ?? ""}
                     onChange={(value) => field.onChange(value || null)}

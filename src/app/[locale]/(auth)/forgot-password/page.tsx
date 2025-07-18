@@ -36,8 +36,8 @@ export default function ForgotPassword() {
   const ForgotPasswordSchema = z.object({
     email: z
       .string()
-      .email({ message: t("auth.validation.email-invalid") })
-      .min(1, { message: t("auth.validation.email-required") }),
+      .email({ message: t("auth.validation.emailInvalid") })
+      .min(1, { message: t("auth.validation.emailRequired") }),
   });
 
   const [loading, setLoading] = useState(false);
@@ -63,7 +63,7 @@ export default function ForgotPassword() {
           setLoading(true);
         },
         onSuccess: () => {
-          toast.success(t("auth.forgot-password.success-message"));
+          toast.success(t("auth.forgotPassword.successMessage"));
         },
         onError: (ctx) => {
           const errorKey = `common.errors.${ctx.error.code}`;
@@ -77,7 +77,7 @@ export default function ForgotPassword() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>{t("auth.forgot-password.title")}</CardTitle>
+        <CardTitle>{t("auth.forgotPassword.title")}</CardTitle>
         <CardDescription hidden></CardDescription>
       </CardHeader>
       <CardContent>
@@ -88,12 +88,12 @@ export default function ForgotPassword() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("auth.forgot-password.email")}</FormLabel>
+                  <FormLabel>{t("auth.forgotPassword.email")}</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
                       type="email"
-                      placeholder={t("auth.forgot-password.email-placeholder")}
+                      placeholder={t("auth.forgotPassword.emailPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -102,16 +102,16 @@ export default function ForgotPassword() {
               )}
             />
             <Button disabled={loading} type="submit" className="w-full">
-              {t("auth.forgot-password.submit")}
+              {t("auth.forgotPassword.submit")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="text-muted-foreground text-sm">
-          {t("auth.forgot-password.remember")}{" "}
+          {t("auth.forgotPassword.remember")}{" "}
           <Link href="/signin" className="hover:text-primary underline underline-offset-4">
-            {t("auth.forgot-password.signin-link")}
+            {t("auth.forgotPassword.signinLink")}
           </Link>
         </p>
       </CardFooter>

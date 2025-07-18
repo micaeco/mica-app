@@ -93,7 +93,7 @@ export function UnknownEventsCarousel({ onDataStatusChange }: UnknownEventsCarou
           </Carousel>
         </>
       ) : (
-        !isLoadingUnknownEvents && <div> {tActions("no-unknowns")}</div>
+        !isLoadingUnknownEvents && <div> {tActions("noUnknowns")}</div>
       )}
     </>
   );

@@ -65,8 +65,8 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("common.errors");
   const tCategories = useTranslations("common.categories");
-  const tNewEventSheet = useTranslations("new-event-sheet");
-  const tEditTagsDialog = useTranslations("edit-tags-dialog");
+  const tNewEventSheet = useTranslations("newEventSheet");
+  const tEditTagsDialog = useTranslations("editTagsDialog");
 
   const now = new Date();
   const defaultFormValues: EventFormValues = {
@@ -84,7 +84,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
 
   const mutation = trpc.event.create.useMutation({
     onSuccess: () => {
-      toast.success(tNewEventSheet("event-created-successfully"));
+      toast.success(tNewEventSheet("eventCreatedSuccessfully"));
       eventForm.reset(defaultFormValues);
       setIsOpen(false);
     },
@@ -95,17 +95,17 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
 
   const onSubmit = (data: EventFormValues) => {
     if (data.startDateTime && data.endDateTime && data.startDateTime > data.endDateTime) {
-      toast.error(tNewEventSheet("end-cannot-be-before-start"));
+      toast.error(tNewEventSheet("endCannotBeBeforeStart"));
       return;
     }
 
     if (!data.startDateTime && !data.endDateTime) {
-      toast.error(tNewEventSheet("either-start-or-end-required"));
+      toast.error(tNewEventSheet("eitherStartOrEndRequired"));
       return;
     }
 
     if (!data.category) {
-      toast.error(tNewEventSheet("category-required"));
+      toast.error(tNewEventSheet("categoryRequired"));
       return;
     }
 
@@ -132,7 +132,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
   );
 
   const getDisplayDateTime = (date: Date | null) => {
-    if (!date) return tNewEventSheet("select-date");
+    if (!date) return tNewEventSheet("selectDate");
 
     const time = format(date, "HH:mm:ss", { locale: getDateFnsLocale(locale) });
 
@@ -180,7 +180,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      <span className="font-medium">{tCommon("consumption-point")}</span>
+                      <span className="font-medium">{tCommon("consumptionPoint")}</span>
                     </FormLabel>
                     <FormControl>
                       <ToggleGroup
@@ -235,7 +235,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
                           <LoaderCircle className="animate-spin" />
                         ) : !tags || tags.length === 0 ? (
                           <FormDescription className="text-muted-foreground text-sm">
-                            {tNewEventSheet("no-tags-for-category")}
+                            {tNewEventSheet("noTagsForCategory")}
                           </FormDescription>
                         ) : (
                           <ToggleGroup
@@ -282,7 +282,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
               <DateTimeField
                 control={eventForm.control}
                 name="startDateTime"
-                label={tNewEventSheet("start-time")}
+                label={tNewEventSheet("startTime")}
                 getDisplayDateTime={getDisplayDateTime}
                 isActive={activePicker === "start"}
                 onToggle={() => {
@@ -293,7 +293,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
               <DateTimeField
                 control={eventForm.control}
                 name="endDateTime"
-                label={tNewEventSheet("end-time")}
+                label={tNewEventSheet("endTime")}
                 getDisplayDateTime={getDisplayDateTime}
                 isActive={activePicker === "end"}
                 onToggle={() => {
@@ -307,10 +307,10 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
                 name="notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{tNewEventSheet("notes-label")}</FormLabel>
+                    <FormLabel>{tNewEventSheet("notesLabel")}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={tNewEventSheet("notes-placeholder")}
+                        placeholder={tNewEventSheet("notesPlaceholder")}
                         {...field}
                         value={field.value ?? ""}
                       />

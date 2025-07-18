@@ -57,7 +57,7 @@ export function ConsumptionPerCategoryChart({
   if (categoryBreakdown.length === 0) {
     return (
       <div className="text-muted-foreground flex aspect-13/9 min-h-[280px] w-full items-center justify-center">
-        {tCommon("no-data")}
+        {tCommon("noData")}
       </div>
     );
   }

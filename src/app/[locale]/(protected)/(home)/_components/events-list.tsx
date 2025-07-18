@@ -72,7 +72,7 @@ export function EventsList() {
 
   if (eventsGroupedByDays.length === 0) {
     return (
-      <div className="text-muted-foreground py-4 text-center text-sm">{tCommon("no-data")}</div>
+      <div className="text-muted-foreground py-4 text-center text-sm">{tCommon("noData")}</div>
     );
   }
 
@@ -109,7 +109,7 @@ export function EventsList() {
       )}
       {!hasNextPage && (
         <div className="text-muted-foreground py-4 text-center text-sm">
-          {tCommon("no-more-events-to-load")}
+          {tCommon("noMoreEventsToLoad")}
         </div>
       )}
     </div>

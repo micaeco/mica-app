@@ -12,7 +12,7 @@ import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 
 export default function Home() {
-  const tEventsList = useTranslations("events-list");
+  const tEventsList = useTranslations("eventsList");
 
   const { selectedHouseholdId } = useHouseholdStore();
 

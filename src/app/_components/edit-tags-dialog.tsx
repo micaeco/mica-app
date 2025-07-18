@@ -64,7 +64,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
 
   const tErrors = useTranslations("common.errors");
   const tCategories = useTranslations("common.categories");
-  const tEditTagsDialog = useTranslations("edit-tags-dialog");
+  const tEditTagsDialog = useTranslations("editTagsDialog");
 
   const { selectedHouseholdId } = useHouseholdStore();
   const utils = trpc.useUtils();
@@ -76,7 +76,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
 
   const { mutate: createTag, isPending: isCreatingTag } = trpc.tag.create.useMutation({
     onSuccess: () => {
-      toast.success(tEditTagsDialog("tag-created-successfully"));
+      toast.success(tEditTagsDialog("tagCreatedSuccessfully"));
       utils.tag.getTagsByCategory.invalidate({
         householdId: selectedHouseholdId,
         category: selectedCategory,
@@ -93,7 +93,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
       setSavingTagId(variables.tagId);
     },
     onSuccess: () => {
-      toast.success(tEditTagsDialog("tag-updated-successfully"));
+      toast.success(tEditTagsDialog("tagUpdatedSuccessfully"));
       utils.tag.getTagsByCategory.invalidate({
         householdId: selectedHouseholdId,
         category: selectedCategory,
@@ -112,7 +112,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
       setDeletingTagId(variables.id);
     },
     onSuccess: () => {
-      toast.success(tEditTagsDialog("tag-deleted-successfully"));
+      toast.success(tEditTagsDialog("tagDeletedSuccessfully"));
       utils.tag.getTagsByCategory.invalidate({
         householdId: selectedHouseholdId,
         category: selectedCategory,
@@ -213,21 +213,21 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
         ) : (
           <span className="text-muted-foreground text-sm">
             {tEditTagsDialog.has(
-              ("no-tags-for-" + selectedCategory) as KeysOfType<IntlMessages, "edit-tags-dialog">
+              ("no-tags-for-" + selectedCategory) as KeysOfType<IntlMessages, "editTagsDialog">
             )
               ? tEditTagsDialog(
                   ("no-tags-for-" + selectedCategory) as KeysOfType<
                     IntlMessages,
-                    "edit-tags-dialog"
+                    "editTagsDialog"
                   >
                 )
-              : tEditTagsDialog("no-tags-for-category")}
+              : tEditTagsDialog("noTagsForCategory")}
           </span>
         )}
 
         <div className="mt-4 flex items-center gap-2">
           <Input
-            placeholder={tEditTagsDialog("new-tag-placeholder")}
+            placeholder={tEditTagsDialog("newTagPlaceholder")}
             className="flex-1"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -265,7 +265,7 @@ export function EditableField({
   const [draft, setDraft] = useState(value);
   const [showAlertDialog, setShowAlertDialog] = useState(false);
 
-  const tEditTagsDialog = useTranslations("edit-tags-dialog");
+  const tEditTagsDialog = useTranslations("editTagsDialog");
 
   const handleSave = () => {
     if (!isSaving && draft.trim() && draft !== value) {
@@ -335,20 +335,20 @@ export function EditableField({
           <AlertDialog open={showAlertDialog} onOpenChange={setShowAlertDialog}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>{tEditTagsDialog("delete-tag-title")}</AlertDialogTitle>
+                <AlertDialogTitle>{tEditTagsDialog("deleteTagTitle")}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  {tEditTagsDialog("delete-tag-description", { tagName: value })}
+                  {tEditTagsDialog("deleteTagDescription", { tagName: value })}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel disabled={isDeleting}>
-                  {tEditTagsDialog("delete-tag-cancel")}
+                  {tEditTagsDialog("deleteTagCancel")}
                 </AlertDialogCancel>
                 <AlertDialogAction onClick={onDelete} disabled={isDeleting}>
                   {isDeleting ? (
                     <Loader2 className="animate-spin" />
                   ) : (
-                    tEditTagsDialog("delete-tag-confirm")
+                    tEditTagsDialog("deleteTagConfirm")
                   )}
                 </AlertDialogAction>
               </AlertDialogFooter>

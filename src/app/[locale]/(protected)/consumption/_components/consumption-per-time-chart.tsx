@@ -69,7 +69,7 @@ export function ConsumptionPerTimeChart({
   if (consumption.length === 0) {
     return (
       <div className="text-muted-foreground flex h-[350px] w-full items-center justify-center">
-        {tCommon("no-data")}
+        {tCommon("noData")}
       </div>
     );
   }

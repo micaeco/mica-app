@@ -50,7 +50,7 @@ export default function ConsumptionPage() {
   const dateFnsLocale = getDateFnsLocale(locale);
 
   const formatSelectedTimeWindow = () => {
-    if (!selectedTimeWindow) return tCommon("no-data");
+    if (!selectedTimeWindow) return tCommon("noData");
 
     const { startDate, endDate } = selectedTimeWindow;
     const sameYear = startDate.getFullYear() === endDate.getFullYear();

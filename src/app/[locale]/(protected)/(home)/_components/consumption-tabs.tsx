@@ -75,7 +75,7 @@ export function ConsumptionTabs() {
           <ConsumptionBlockSkeleton />
         ) : (
           <div className="flex flex-col text-center">
-            <p>{tCommon("no-data")}</p>
+            <p>{tCommon("noData")}</p>
           </div>
         )}
       </TabsContent>
@@ -100,7 +100,7 @@ export function ConsumptionTabs() {
           <ConsumptionBlockSkeleton />
         ) : (
           <div className="flex flex-col text-center">
-            <p>{tCommon("no-data")}</p>
+            <p>{tCommon("noData")}</p>
           </div>
         )}
       </TabsContent>

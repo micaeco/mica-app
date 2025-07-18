@@ -117,7 +117,7 @@ export function LeakEventsCarousel({ onDataStatusChange }: LeakEventsCarouselPro
           </Carousel>
         </>
       ) : (
-        !isLoadingLeakEvents && <div>{tActions("no-leaks")}</div>
+        !isLoadingLeakEvents && <div>{tActions("noLeaks")}</div>
       )}
     </>
   );
