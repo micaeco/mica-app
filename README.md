@@ -196,12 +196,3 @@ Remember to run database migrations in your production environment:
 ```bash
 npm run db:migrate
 ```
-
-## 👥 Contributing
-
-We welcome contributions from sustainability-focused developers!
-Please check out our CONTRIBUTING.md and open an issue or PR.
-
-## 📄 License
-
-MIT

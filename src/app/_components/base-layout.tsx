@@ -18,6 +18,9 @@ export async function BaseLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        <meta name="apple-mobile-web-app-title" content="MICA" />
+      </head>
       <body className={montserrat.className}>
         <ClientProviders locale={locale} messages={messages}>
           {children}
