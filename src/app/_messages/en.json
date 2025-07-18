@@ -6,17 +6,17 @@
     "clear": "Clear",
     "confirm": "Confirm",
     "error": "An error occurred",
-    "in-progress": "In progress",
-    "no-more-events-to-load": "No more events to load",
-    "contact-us": "Contact us",
-    "no-data": "No data",
-    "no-actions": "No actions",
+    "inProgress": "In progress",
+    "noMoreEventsToLoad": "No more events to load",
+    "contactUs": "Contact us",
+    "noData": "No data",
+    "noActions": "No actions",
     "untagged": "No tag",
     "start": "Start",
     "pause": "Pause",
     "resume": "Resume",
     "reset": "Reset",
-    "consumption-point": "Consumption point",
+    "consumptionPoint": "Consumption point",
     "tag": "Tag",
     "today": "Today",
     "yesterday": "Yesterday",
@@ -43,7 +43,7 @@
     "minutes": "minutes",
     "second": "second",
     "seconds": "seconds",
-    "day-and-time": "day and time",
+    "dayAndTime": "day and time",
     "duration": "duration",
     "device": "device",
     "consumption": "consumption",
@@ -82,14 +82,14 @@
       "other": "Other",
       "rest": "Rest"
     },
-    "nav-pages": {
+    "navPages": {
       "/": "Home",
       "/consumption": "Consumption",
       "/data": "Data",
       "/actions": "Actions",
       "/404": "Page not found"
     },
-    "nav-settings": {
+    "navSettings": {
       "profile": "Profile",
       "settings": "Settings",
       "help": "Help",
@@ -134,39 +134,39 @@
     "now": "Now",
     "settings": "Settings"
   },
-  "consumption-card": {
+  "consumptionCard": {
     "title": "Selected consumption."
   },
-  "consumption-per-person": {
+  "consumptionPerPerson": {
     "title": "Consumption per person."
   },
-  "consumption-historic": {
+  "consumptionHistoric": {
     "title": "Historic consumption."
   },
-  "consumption-per-time-chart": {
+  "consumptionPerTimeChart": {
     "title": "Filter the consumption by {granularity}.",
     "description": "Select one of the bars to view consumption."
   },
-  "consumption-per-category-chart": {
+  "consumptionPerCategoryChart": {
     "title": "Filter consumption by category.",
     "description": "Select one of the sections to view consumption."
   },
-  "consumption-per-event-chart": {
-    "no-events-found": "Here you will find the events ordered by highest to lowest consumption. In case the category selected has one or more Tags, the events will be classified into Tags."
+  "consumptionPerEventChart": {
+    "noEventsFound": "Here you will find the events ordered by highest to lowest consumption. In case the category selected has one or more Tags, the events will be classified into Tags."
   },
-  "edit-household": {
+  "editHousehold": {
     "title": "Edit household.",
     "description": "Modify the household information.",
-    "update-success": "Household updated successfully!"
+    "updateSuccess": "Household updated successfully!"
   },
-  "delete-household": {
-    "confirm-title": "Are you absolutely sure?",
-    "confirm-description-bold": "This will delete the household \"{householdName}\" and all of its associated data.",
-    "confirm-description-text": "This action cannot be undone. Please be certain.",
-    "confirm-delete": "Delete household",
+  "deleteHousehold": {
+    "confirmTitle": "Are you absolutely sure?",
+    "confirmDescriptionBold": "This will delete the household \"{householdName}\" and all of its associated data.",
+    "confirmDescriptionText": "This action cannot be undone. Please be certain.",
+    "confirmDelete": "Delete household",
     "success": "Household deleted successfully!"
   },
-  "create-household": {
+  "createHousehold": {
     "step1": {
       "title": "Basic information.",
       "description": "Enter the basic household information."
@@ -177,7 +177,7 @@
     },
     "form": {
       "name": "Name",
-      "sensor-id": {
+      "sensorId": {
         "label": "Sensor ID",
         "description": "Enter the 12-character ID from the back of your sensor. Just type the letters and numbers; the colons (:) will be added for you automatically."
       },
@@ -190,22 +190,22 @@
     },
     "success": "Household created successfully"
   },
-  "create-invitation": {
+  "createInvitation": {
     "title": "Invite a user",
     "description": "Enter the email address of the user you want to invite to your household.",
     "email": "Email",
-    "email-placeholder": "john@example.com",
-    "send-invitation": "Send invitation",
+    "emailPlaceholder": "john@example.com",
+    "sendInvitation": "Send invitation",
     "success": "Invitation sent successfully! Please notify the user to check their email."
   },
-  "leave-household": {
+  "leaveHousehold": {
     "title": "Do you want to leave the household?",
     "description": "If you leave the household, you will no longer be able to see the consumption data.",
-    "confirm-leave": "Yes, I want to leave",
+    "confirmLeave": "Yes, I want to leave",
     "cancel": "No, cancel",
     "success": "You have successfully left the household."
   },
-  "action-cards": {
+  "actionCards": {
     "leaks": {
       "title": "Leaks",
       "description": "{count, plural, =0 {You have no leaks} =1 {You have 1 leak} other {You have # leaks}}"
@@ -215,59 +215,59 @@
       "description": "{count, plural, =0 {You have no events to categorize} =1 {Categorize 1 event} other {Categorize # events}}"
     }
   },
-  "events-list": {
+  "eventsList": {
     "title": "Events"
   },
-  "new-event-sheet": {
+  "newEventSheet": {
     "title": "New event",
-    "no-tags-for-category": "No tags found for this category",
-    "select-date": "Select date",
-    "start-time": "Start time",
-    "end-time": "End time",
-    "notes-label": "Add a note",
-    "notes-placeholder": "Add an optional note for this event",
-    "category-required": "The category is required",
-    "either-start-or-end-required": "Either start time or end time is required, or both",
-    "end-cannot-be-before-start": "End time cannot be before start time",
-    "event-created-successfully": "Event created successfully"
+    "noTagsForCategory": "No tags found for this category",
+    "selectDate": "Select date",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "notesLabel": "Add a note",
+    "notesPlaceholder": "Add an optional note for this event",
+    "categoryRequired": "The category is required",
+    "eitherStartOrEndRequired": "Either start time or end time is required, or both",
+    "endCannotBeBeforeStart": "End time cannot be before start time",
+    "eventCreatedSuccessfully": "Event created successfully"
   },
-  "edit-event-sheet": {
+  "editEventSheet": {
     "title": "Edit event",
-    "notes-label": "Add a note",
-    "notes-placeholder": "Add an optional note for this event",
-    "no-tags-for-category": "No tags found for this category.",
-    "event-edited-successfully": "Event edited successfully"
+    "notesLabel": "Add a note",
+    "notesPlaceholder": "Add an optional note for this event",
+    "noTagsForCategory": "No tags found for this category.",
+    "eventEditedSuccessfully": "Event edited successfully"
   },
-  "edit-tags-dialog": {
+  "editTagsDialog": {
     "title": "Edit tags",
-    "new-tag-placeholder": "New tag",
-    "no-tags-for-category": "No tags found for this category",
-    "no-tags-for-sink": "You can create a tag for the different sinks, for example for the kitchen sink, the bathroom sink, etc.",
-    "no-tags-for-shower": "You can create a tag for the different showers, for example for your child's shower, your shower, etc.",
-    "no-tags-for-washer": "You can create a tag for the different programs of the washing machine, for example for the eco, sport, etc.",
-    "no-tags-for-dishwasher": "You can create a tag for the different programs of the dishwasher, for example for the eco, normal, etc.",
-    "delete-tag-title": "Delete tag",
-    "delete-tag-description": "Are you sure you want to delete this tag? This action cannot be undone and it will remove the tag from all events that have it.",
-    "delete-tag-confirm": "Delete tag",
-    "delete-tag-cancel": "Cancel",
-    "delete-tag-success": "Tag deleted successfully",
-    "tag-created-successfully": "Tag created successfully",
-    "tag-updated-successfully": "Tag updated successfully",
-    "tag-deleted-successfully": "Tag deleted successfully"
+    "newTagPlaceholder": "New tag",
+    "noTagsForCategory": "No tags found for this category",
+    "noTagsForSink": "You can create a tag for the different sinks, for example for the kitchen sink, the bathroom sink, etc.",
+    "noTagsForShower": "You can create a tag for the different showers, for example for your child's shower, your shower, etc.",
+    "noTagsForWasher": "You can create a tag for the different programs of the washing machine, for example for the eco, sport, etc.",
+    "noTagsForDishwasher": "You can create a tag for the different programs of the dishwasher, for example for the eco, normal, etc.",
+    "deleteTagTitle": "Delete tag",
+    "deleteTagDescription": "Are you sure you want to delete this tag? This action cannot be undone and it will remove the tag from all events that have it.",
+    "deleteTagConfirm": "Delete tag",
+    "deleteTagCancel": "Cancel",
+    "deleteTagSuccess": "Tag deleted successfully",
+    "tagCreatedSuccessfully": "Tag created successfully",
+    "tagUpdatedSuccessfully": "Tag updated successfully",
+    "tagDeletedSuccessfully": "Tag deleted successfully"
   },
   "actions": {
-    "no-leaks": "No leaks",
-    "no-unknowns": "No events to categorize"
+    "noLeaks": "No leaks",
+    "noUnknowns": "No events to categorize"
   },
   "onboarding": {
     "title": "Start by creating your first household",
     "subtitle": "Track your water usage and discover where you can save the most. Let’s get started by setting up your home.",
-    "create-button": "Create your first household"
+    "createButton": "Create your first household"
   },
-  "not-found": {
+  "notFound": {
     "title": "Page not found.",
     "description": "The page you are looking for does not exist.",
-    "go-home": "Go to home"
+    "goHome": "Go to home"
   },
   "auth": {
     "signin": {
@@ -275,15 +275,15 @@
       "description": "Enter your email and password to access your account",
       "email": "Email",
       "password": "Password",
-      "forgot-password": "Forgot password?",
-      "signin-button": "Sign in",
-      "signin-loading": "Signing in...",
-      "google-signin": "Continue with Google",
+      "forgotPassword": "Forgot password?",
+      "signinButton": "Sign in",
+      "signinLoading": "Signing in...",
+      "googleSignin": "Continue with Google",
       "or": "Or",
-      "no-account": "Don't have an account?",
-      "signup-link": "Sign up",
-      "email-placeholder": "Enter your email",
-      "password-placeholder": "Enter your password"
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password"
     },
     "signup": {
       "title": "Create your account",
@@ -291,54 +291,54 @@
       "name": "Name",
       "email": "Email",
       "password": "Password",
-      "confirm-password": "Confirm Password",
-      "signup-button": "Create account",
-      "signup-loading": "Creating account...",
-      "google-signup": "Continue with Google",
+      "confirmPassword": "Confirm Password",
+      "signupButton": "Create account",
+      "signupLoading": "Creating account...",
+      "googleSignup": "Continue with Google",
       "or": "Or",
-      "has-account": "Already have an account?",
-      "signin-link": "Sign in",
-      "name-placeholder": "John Doe",
-      "email-placeholder": "Enter your email",
-      "password-placeholder": "Create a password",
-      "confirm-password-placeholder": "Confirm your password",
-      "success-message": "Account created successfully! Please check your email to verify your account."
+      "hasAccount": "Already have an account?",
+      "signinLink": "Sign in",
+      "namePlaceholder": "John Doe",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Create a password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "successMessage": "Account created successfully! Please check your email to verify your account."
     },
-    "forgot-password": {
+    "forgotPassword": {
       "title": "Forgot Password",
       "description": "Enter your email to receive a link to reset your password.",
       "email": "Email",
       "submit": "Submit",
       "remember": "Remember your password?",
-      "signin-link": "Sign in",
-      "email-placeholder": "example@gmail.com",
-      "success-message": "Reset password link has been sent to your email"
+      "signinLink": "Sign in",
+      "emailPlaceholder": "example@gmail.com",
+      "successMessage": "Reset password link has been sent to your email"
     },
-    "reset-password": {
+    "resetPassword": {
       "title": "Reset Password",
       "description": "Enter your new password below.",
       "password": "New Password",
-      "confirm-password": "Confirm New Password",
-      "reset-button": "Reset Password",
-      "reset-loading": "Resetting password...",
-      "password-placeholder": "Enter your new password",
-      "confirm-password-placeholder": "Confirm your new password",
-      "success-message": "Your password has been reset successfully!",
-      "invalid-token": {
+      "confirmPassword": "Confirm New Password",
+      "resetButton": "Reset Password",
+      "resetLoading": "Resetting password...",
+      "passwordPlaceholder": "Enter your new password",
+      "confirmPasswordPlaceholder": "Confirm your new password",
+      "successMessage": "Your password has been reset successfully!",
+      "invalidToken": {
         "title": "Invalid or expired reset token.",
         "description": "Please request a new password reset."
       },
-      "checking-token": "Verifying reset token...",
-      "get-new-link": "Get a new reset link"
+      "checkingToken": "Verifying reset token...",
+      "getNewLink": "Get a new reset link"
     },
     "validation": {
-      "email-required": "Email is required",
-      "email-invalid": "Please enter a valid email address",
-      "password-required": "Password is required",
-      "password-min": "Password must be at least 8 characters",
-      "name-required": "Name is required",
-      "passwords-no-match": "Passwords don't match",
-      "confirm-password-required": "Please confirm your password"
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least 8 characters",
+      "nameRequired": "Name is required",
+      "passwordsNoMatch": "Passwords don't match",
+      "confirmPasswordRequired": "Please confirm your password"
     }
   },
   "joinHousehold": {

@@ -66,7 +66,7 @@ export default function Actions() {
           )}
         </Accordion>
       ) : (
-        <p>{tCommon("no-actions")}</p>
+        <p>{tCommon("noActions")}</p>
       )}
     </div>
   );

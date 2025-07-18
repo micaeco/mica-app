@@ -29,7 +29,7 @@ export function ConsumptionPerEventChart({
   selectedTimeWindow,
   granularity,
 }: Props) {
-  const t = useTranslations("consumption-per-event-chart");
+  const t = useTranslations("consumptionPerEventChart");
   const tCommon = useTranslations("common");
 
   const { selectedHouseholdId } = useHouseholdStore();
@@ -75,7 +75,7 @@ export function ConsumptionPerEventChart({
   if (events.length === 0) {
     return (
       <div className="flex items-center justify-center p-6">
-        <p className="text-muted-foreground max-w-md text-center text-sm">{t("no-events-found")}</p>
+        <p className="text-muted-foreground max-w-md text-center text-sm">{t("noEventsFound")}</p>
       </div>
     );
   }
@@ -102,7 +102,7 @@ export function ConsumptionPerEventChart({
         )}
         {!hasNextPage && (
           <div className="text-muted-foreground py-4 text-center text-sm">
-            {tCommon("no-more-events-to-load")}
+            {tCommon("noMoreEventsToLoad")}
           </div>
         )}
       </div>
@@ -133,7 +133,7 @@ export function ConsumptionPerEventChart({
           )}
           {!hasNextPage && (
             <div className="text-muted-foreground py-4 text-center text-sm">
-              {tCommon("no-more-events-to-load")}
+              {tCommon("noMoreEventsToLoad")}
             </div>
           )}
         </div>
@@ -185,7 +185,7 @@ export function ConsumptionPerEventChart({
                 )}
                 {!hasNextPage && (
                   <div className="text-muted-foreground py-4 text-center text-sm">
-                    {tCommon("no-more-events-to-load")}
+                    {tCommon("noMoreEventsToLoad")}
                   </div>
                 )}
               </AccordionContent>

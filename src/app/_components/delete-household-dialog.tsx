@@ -24,7 +24,7 @@ export function DeleteHouseholdDialog({
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }) {
-  const t = useTranslations("delete-household");
+  const t = useTranslations("deleteHousehold");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("common.errors");
 
@@ -50,15 +50,15 @@ export function DeleteHouseholdDialog({
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("confirm-title")}</AlertDialogTitle>
+          <AlertDialogTitle>{t("confirmTitle")}</AlertDialogTitle>
           <AlertDialogDescription className="flex flex-col space-y-2">
             <span>
-              {t("confirm-description-bold", {
+              {t("confirmDescriptionBold", {
                 householdName: household?.name,
               })}
             </span>
             <span className="bg-destructive/10 text-destructive rounded p-3 text-xs">
-              {t("confirm-description-text")}
+              {t("confirmDescriptionText")}
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -70,7 +70,7 @@ export function DeleteHouseholdDialog({
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
           >
             {deleteMutation.isPending && <Loader2 className="mr-2 animate-spin" />}
-            {t("confirm-delete")}
+            {t("confirmDelete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

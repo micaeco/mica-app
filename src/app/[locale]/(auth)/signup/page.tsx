@@ -43,16 +43,16 @@ export default function SignupPage() {
 
   const signupSchema = z
     .object({
-      name: z.string().min(1, t("auth.validation.name-required")),
+      name: z.string().min(1, t("auth.validation.nameRequired")),
       email: z
         .string()
-        .email(t("auth.validation.email-invalid"))
-        .min(1, t("auth.validation.email-required")),
-      password: z.string().min(8, t("auth.validation.password-min")),
-      confirmPassword: z.string().min(8, t("auth.validation.confirm-password-required")),
+        .email(t("auth.validation.emailInvalid"))
+        .min(1, t("auth.validation.emailRequired")),
+      password: z.string().min(8, t("auth.validation.passwordMin")),
+      confirmPassword: z.string().min(8, t("auth.validation.confirmPasswordRequired")),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: t("auth.validation.passwords-no-match"),
+      message: t("auth.validation.passwordsNoMatch"),
       path: ["confirmPassword"],
     });
 
@@ -88,7 +88,7 @@ export default function SignupPage() {
           toast.error(t.has(errorKey) ? t(errorKey) : ctx.error.message);
         },
         onSuccess: () => {
-          toast.success(t("auth.signup.success-message"));
+          toast.success(t("auth.signup.successMessage"));
         },
         onRequest: () => {
           setIsLoading(true);
@@ -147,7 +147,7 @@ export default function SignupPage() {
             width={20}
             height={20}
           />
-          {t("auth.signup.google-signup")}
+          {t("auth.signup.googleSignup")}
         </Button>
 
         <div className="relative">
@@ -168,7 +168,7 @@ export default function SignupPage() {
                 <FormItem>
                   <FormLabel>{t("auth.signup.name")}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t("auth.signup.name-placeholder")} {...field} />
+                    <Input placeholder={t("auth.signup.namePlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -182,7 +182,7 @@ export default function SignupPage() {
                 <FormItem>
                   <FormLabel>{t("auth.signup.email")}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t("auth.signup.email-placeholder")} {...field} />
+                    <Input placeholder={t("auth.signup.emailPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -199,7 +199,7 @@ export default function SignupPage() {
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder={t("auth.signup.password-placeholder")}
+                        placeholder={t("auth.signup.passwordPlaceholder")}
                         {...field}
                       />
                       <Button
@@ -227,12 +227,12 @@ export default function SignupPage() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("auth.signup.confirm-password")}</FormLabel>
+                  <FormLabel>{t("auth.signup.confirmPassword")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder={t("auth.signup.confirm-password-placeholder")}
+                        placeholder={t("auth.signup.confirmPasswordPlaceholder")}
                         {...field}
                       />
                       <Button
@@ -256,19 +256,19 @@ export default function SignupPage() {
             />
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? t("auth.signup.signup-loading") : t("auth.signup.signup-button")}
+              {isLoading ? t("auth.signup.signupLoading") : t("auth.signup.signupButton")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="text-muted-foreground w-full text-center text-sm">
-          {t("auth.signup.has-account")}{" "}
+          {t("auth.signup.hasAccount")}{" "}
           <Link
             href={`/signin?callback=${encodeURIComponent(callbackURL)}`}
             className="hover:text-primary underline underline-offset-4"
           >
-            {t("auth.signup.signin-link")}
+            {t("auth.signup.signinLink")}
           </Link>
         </p>
       </CardFooter>

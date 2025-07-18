@@ -43,9 +43,9 @@ export default function SigninPage() {
   const signinSchema = z.object({
     email: z
       .string()
-      .email(t("auth.validation.email-invalid"))
-      .min(1, t("auth.validation.email-required")),
-    password: z.string().min(8, t("auth.validation.password-min")),
+      .email(t("auth.validation.emailInvalid"))
+      .min(1, t("auth.validation.emailRequired")),
+    password: z.string().min(8, t("auth.validation.passwordMin")),
   });
 
   type SigninForm = z.infer<typeof signinSchema>;
@@ -128,7 +128,7 @@ export default function SigninPage() {
             width={20}
             height={20}
           />
-          {t("auth.signin.google-signin")}
+          {t("auth.signin.googleSignin")}
         </Button>
 
         <div className="relative">
@@ -149,7 +149,7 @@ export default function SigninPage() {
                 <FormItem>
                   <FormLabel>{t("auth.signin.email")}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t("auth.signin.email-placeholder")} {...field} />
+                    <Input placeholder={t("auth.signin.emailPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -167,14 +167,14 @@ export default function SigninPage() {
                       href="/forgot-password"
                       className="text-muted-foreground hover:text-primary text-sm underline underline-offset-4"
                     >
-                      {t("auth.signin.forgot-password")}
+                      {t("auth.signin.forgotPassword")}
                     </Link>
                   </div>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder={t("auth.signin.password-placeholder")}
+                        placeholder={t("auth.signin.passwordPlaceholder")}
                         {...field}
                       />
                       <Button
@@ -198,19 +198,19 @@ export default function SigninPage() {
             />
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? t("auth.signin.signin-loading") : t("auth.signin.signin-button")}
+              {isLoading ? t("auth.signin.signinLoading") : t("auth.signin.signinButton")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="text-muted-foreground w-full text-center text-sm">
-          {t("auth.signin.no-account")}{" "}
+          {t("auth.signin.noAccount")}{" "}
           <Link
             href={`/signup?callback=${encodeURIComponent(callbackURL)}`}
             className="hover:text-primary underline underline-offset-4"
           >
-            {t("auth.signin.signup-link")}
+            {t("auth.signin.signupLink")}
           </Link>
         </p>
       </CardFooter>

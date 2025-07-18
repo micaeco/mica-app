@@ -22,7 +22,7 @@ export function ActionCards({
   className?: string;
 }) {
   const router = useRouter();
-  const tActionCards = useTranslations("action-cards");
+  const tActionCards = useTranslations("actionCards");
 
   return (
     <div className={cn("flex gap-2", className)}>

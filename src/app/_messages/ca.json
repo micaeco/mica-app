@@ -6,17 +6,17 @@
     "clear": "Neteja",
     "confirm": "Confirmar",
     "error": "S'ha produït un error",
-    "in-progress": "En curs",
-    "no-more-events-to-load": "No hi ha més events a carregar",
-    "contact-us": "Contacta'ns",
-    "no-data": "No hi ha dades",
-    "no-actions": "No hi ha accions",
+    "inProgress": "En curs",
+    "noMoreEventsToLoad": "No hi ha més events a carregar",
+    "contactUs": "Contacta'ns",
+    "noData": "No hi ha dades",
+    "noActions": "No hi ha accions",
     "untagged": "Sense etiqueta",
     "start": "Iniciar",
     "pause": "Pausar",
     "resume": "Reprendre ",
     "reset": "Reiniciar",
-    "consumption-point": "Punt de consum",
+    "consumptionPoint": "Punt de consum",
     "tag": "Etiqueta",
     "today": "Avui",
     "yesterday": "Ahir",
@@ -43,7 +43,7 @@
     "minutes": "minuts",
     "second": "segon",
     "seconds": "segons",
-    "day-and-time": "dia i hora",
+    "dayAndTime": "dia i hora",
     "duration": "duració",
     "device": "dispositiu",
     "consumption": "consum",
@@ -82,14 +82,14 @@
       "other": "Altres",
       "rest": "Resta"
     },
-    "nav-pages": {
+    "navPages": {
       "/": "Inici",
       "/consumption": "Consum",
       "/data": "Dades",
       "/actions": "Accions",
       "/404": "Pàgina no trobada"
     },
-    "nav-settings": {
+    "navSettings": {
       "profile": "Perfil",
       "settings": "Configuració",
       "help": "Ajuda",
@@ -134,39 +134,39 @@
     "now": "Ara",
     "settings": "Configuració"
   },
-  "consumption-card": {
+  "consumptionCard": {
     "title": "Consum seleccionat."
   },
-  "consumption-per-person": {
+  "consumptionPerPerson": {
     "title": "Consum per persona."
   },
-  "consumption-historic": {
+  "consumptionHistoric": {
     "title": "Consum històric."
   },
-  "consumption-per-time-chart": {
+  "consumptionPerTimeChart": {
     "title": "Filtra el consum per {granularity}.",
     "description": "Selecciona una de les barres per veure el consum."
   },
-  "consumption-per-category-chart": {
+  "consumptionPerCategoryChart": {
     "title": "Filtra el consum per categoria.",
     "description": "Selecciona una de les seccions per veure el consum."
   },
-  "consumption-per-event-chart": {
-    "no-events-found": "Aquí trobaràs els esdeveniments ordenats de major a menor consum. En cas que la categoria seleccionada tingui una o més etiquetes, els esdeveniments es classificaran en etiquetes."
+  "consumptionPerEventChart": {
+    "noEventsFound": "Aquí trobaràs els esdeveniments ordenats de major a menor consum. En cas que la categoria seleccionada tingui una o més etiquetes, els esdeveniments es classificaran en etiquetes."
   },
-  "edit-household": {
+  "editHousehold": {
     "title": "Edita la vivenda.",
     "description": "Modifica la informació de la vivenda.",
-    "update-success": "Vivenda actualitzada correctament!"
+    "updateSuccess": "Vivenda actualitzada correctament!"
   },
-  "delete-household": {
-    "confirm-title": "Estàs absolutament segur?",
-    "confirm-description-bold": "Això eliminarà la vivenda \"{householdName}\" i totes les seves dades associades.",
-    "confirm-description-text": "Aquesta acció no es pot desfer. Siusplau assegura't.",
-    "confirm-delete": "Eliminar vivenda",
+  "deleteHousehold": {
+    "confirmTitle": "Estàs absolutament segur?",
+    "confirmDescriptionBold": "Això eliminarà la vivenda \"{householdName}\" i totes les seves dades associades.",
+    "confirmDescriptionText": "Aquesta acció no es pot desfer. Siusplau assegura't.",
+    "confirmDelete": "Eliminar vivenda",
     "success": "Vivenda eliminada correctament!"
   },
-  "create-household": {
+  "createHousehold": {
     "step1": {
       "title": "Informació bàsica.",
       "description": "Introdueix la informació bàsica de la vivenda."
@@ -177,7 +177,7 @@
     },
     "form": {
       "name": "Nom",
-      "sensor-id": {
+      "sensorId": {
         "label": "ID del sensor",
         "description": "Introdueix el codi de 12 caràcters del teu sensor. Escriu només les lletres i els números; els dos punts (:) s'afegiran automàticament."
       },
@@ -190,22 +190,22 @@
     },
     "success": "Vivenda creada correctament"
   },
-  "create-invitation": {
+  "createInvitation": {
     "title": "Convida a un usuari",
     "description": "Introdueix l'adreça de correu electrònic de l'usuari que vols convidar a la teva vivenda.",
     "email": "Correu electrònic",
-    "email-placeholder": "joan@exemple.com",
-    "send-invitation": "Enviar invitació",
+    "emailPlaceholder": "joan@exemple.com",
+    "sendInvitation": "Enviar invitació",
     "success": "Invitació enviada correctament! Avisa a l'usuari que comprovi el seu correu electrònic."
   },
-  "leave-household": {
+  "leaveHousehold": {
     "title": "Vols sortir de la vivenda?",
     "description": "Si surts de la vivenda, ja no podràs veure les dades de consum.",
-    "confirm-leave": "Sí, vull sortir",
+    "confirmLeave": "Sí, vull sortir",
     "cancel": "No, cancel·lar",
     "success": "Has sortit de la vivenda correctament."
   },
-  "action-cards": {
+  "actionCards": {
     "leaks": {
       "title": "Fuites",
       "description": "{count, plural, =0 {No tens fuites} =1 {Tens 1 fuita} other {Tens # fuites}} "
@@ -215,59 +215,59 @@
       "description": "{count, plural, =0 {No tens res per categoritzar} =1 {Categoritza 1 esdeveniment} other {Categoritza # esdeveniments}}"
     }
   },
-  "events-list": {
+  "eventsList": {
     "title": "Esdeveniments"
   },
-  "new-event-sheet": {
+  "newEventSheet": {
     "title": "Nou esdeveniment",
-    "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria",
-    "select-date": "Selecciona la data",
-    "start-time": "Hora d'inici",
-    "end-time": "Hora de fi",
-    "notes-label": "Nota",
-    "notes-placeholder": "Afegeix una nota opcional per a aquest esdeveniment",
-    "category-required": "La categoria és obligatòria",
-    "either-start-or-end-required": "Cal que introdueixis una hora d'inici o una hora de fi, o ambdues",
-    "end-cannot-be-before-start": "L'hora de fi no pot ser anterior a l'hora d'inici",
-    "event-created-successfully": "Esdeveniment creat correctament"
+    "noTagsForCategory": "No s'han trobat etiquetes per a aquesta categoria",
+    "selectDate": "Selecciona la data",
+    "startTime": "Hora d'inici",
+    "endTime": "Hora de fi",
+    "notesLabel": "Nota",
+    "notesPlaceholder": "Afegeix una nota opcional per a aquest esdeveniment",
+    "categoryRequired": "La categoria és obligatòria",
+    "eitherStartOrEndRequired": "Cal que introdueixis una hora d'inici o una hora de fi, o ambdues",
+    "endCannotBeBeforeStart": "L'hora de fi no pot ser anterior a l'hora d'inici",
+    "eventCreatedSuccessfully": "Esdeveniment creat correctament"
   },
-  "edit-event-sheet": {
+  "editEventSheet": {
     "title": "Edita l'esdeveniment",
-    "notes-label": "Nota",
-    "notes-placeholder": "Afegeix una nota opcional per a aquest esdeveniment",
-    "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria.",
-    "event-edited-successfully": "Esdeveniment actualitzat correctament"
+    "notesLabel": "Nota",
+    "notesPlaceholder": "Afegeix una nota opcional per a aquest esdeveniment",
+    "noTagsForCategory": "No s'han trobat etiquetes per a aquesta categoria.",
+    "eventEditedSuccessfully": "Esdeveniment actualitzat correctament"
   },
-  "edit-tags-dialog": {
+  "editTagsDialog": {
     "title": "Editar etiquetes",
-    "new-tag-placeholder": "Nova etiqueta",
-    "no-tags-for-category": "No s'han trobat etiquetes per a aquesta categoria",
-    "no-tags-for-sink": "Pots crear una etiqueta per a les diferents aixetes, per exemple per a l'aixeta de la cuina, l'aixeta del bany, etc.",
-    "no-tags-for-shower": "Pots crear una etiqueta per a les diferents dutxes, per exemple per a la dutxa del teu fill, la teva dutxa, etc.",
-    "no-tags-for-washer": "Pots crear una etiqueta per als diferents programes de la rentadora, eco, sport, etc.",
-    "no-tags-for-dishwasher": "Pots crear una etiqueta per als diferents programes del rentavaixelles, eco, normal, etc.",
-    "delete-tag-title": "Eliminar etiqueta",
-    "delete-tag-description": "Estàs segur que vols eliminar aquesta etiqueta? Aquesta acció no es pot desfer i eliminarà l'etiqueta de tots els esdeveniments que la tinguin.",
-    "delete-tag-confirm": "Eliminar etiqueta",
-    "delete-tag-cancel": "Cancel·lar",
-    "delete-tag-success": "Etiqueta eliminada correctament",
-    "tag-created-successfully": "Etiqueta creada correctament",
-    "tag-updated-successfully": "Etiqueta actualitzada correctament",
-    "tag-deleted-successfully": "Etiqueta eliminada correctament"
+    "newTagPlaceholder": "Nova etiqueta",
+    "noTagsForCategory": "No s'han trobat etiquetes per a aquesta categoria",
+    "noTagsForSink": "Pots crear una etiqueta per a les diferents aixetes, per exemple per a l'aixeta de la cuina, l'aixeta del bany, etc.",
+    "noTagsForShower": "Pots crear una etiqueta per a les diferents dutxes, per exemple per a la dutxa del teu fill, la teva dutxa, etc.",
+    "noTagsForWasher": "Pots crear una etiqueta per als diferents programes de la rentadora, eco, sport, etc.",
+    "noTagsForDishwasher": "Pots crear una etiqueta per als diferents programes del rentavaixelles, eco, normal, etc.",
+    "deleteTagTitle": "Eliminar etiqueta",
+    "deleteTagDescription": "Estàs segur que vols eliminar aquesta etiqueta? Aquesta acció no es pot desfer i eliminarà l'etiqueta de tots els esdeveniments que la tinguin.",
+    "deleteTagConfirm": "Eliminar etiqueta",
+    "deleteTagCancel": "Cancel·lar",
+    "deleteTagSuccess": "Etiqueta eliminada correctament",
+    "tagCreatedSuccessfully": "Etiqueta creada correctament",
+    "tagUpdatedSuccessfully": "Etiqueta actualitzada correctament",
+    "tagDeletedSuccessfully": "Etiqueta eliminada correctament"
   },
   "actions": {
-    "no-leaks": "No hi ha fuites",
-    "no-unknowns": "No hi ha events per categoritzar"
+    "noLeaks": "No hi ha fuites",
+    "noUnknowns": "No hi ha events per categoritzar"
   },
   "onboarding": {
     "title": "Comença creant la teva primera vivenda",
     "subtitle": "Fes un seguiment del teu consum d’aigua i descobreix on pots estalviar més. Comencem configurant casa teva.",
-    "create-button": "Crear la teva primera vivenda"
+    "createButton": "Crear la teva primera vivenda"
   },
-  "not-found": {
+  "notFound": {
     "title": "Pàgina no trobada.",
     "description": "La pàgina que busques no existeix.",
-    "go-home": "Torna a l'inici"
+    "goHome": "Torna a l'inici"
   },
   "auth": {
     "signin": {
@@ -275,15 +275,15 @@
       "description": "Introdueix el teu correu electrònic i contrasenya per accedir al teu compte",
       "email": "Correu electrònic",
       "password": "Contrasenya",
-      "forgot-password": "Has oblidat la contrasenya?",
-      "signin-button": "Iniciar sessió",
-      "signin-loading": "Iniciant sessió...",
-      "google-signin": "Continuar amb Google",
+      "forgotPassword": "Has oblidat la contrasenya?",
+      "signinButton": "Iniciar sessió",
+      "signinLoading": "Iniciant sessió...",
+      "googleSignin": "Continuar amb Google",
       "or": "O",
-      "no-account": "No tens un compte?",
-      "signup-link": "Registrar-se",
-      "email-placeholder": "Introdueix el teu correu electrònic",
-      "password-placeholder": "Introdueix la teva contrasenya"
+      "noAccount": "No tens un compte?",
+      "signupLink": "Registrar-se",
+      "emailPlaceholder": "Introdueix el teu correu electrònic",
+      "passwordPlaceholder": "Introdueix la teva contrasenya"
     },
     "signup": {
       "title": "Crea el teu compte",
@@ -291,54 +291,54 @@
       "name": "Nom",
       "email": "Correu electrònic",
       "password": "Contrasenya",
-      "confirm-password": "Confirmar contrasenya",
-      "signup-button": "Crear compte",
-      "signup-loading": "Creant compte...",
-      "google-signup": "Continuar amb Google",
+      "confirmPassword": "Confirmar contrasenya",
+      "signupButton": "Crear compte",
+      "signupLoading": "Creant compte...",
+      "googleSignup": "Continuar amb Google",
       "or": "O",
-      "has-account": "Ja tens un compte?",
-      "signin-link": "Iniciar sessió",
-      "name-placeholder": "Joan Pérez",
-      "email-placeholder": "Introdueix el teu correu electrònic",
-      "password-placeholder": "Crea una contrasenya",
-      "confirm-password-placeholder": "Confirma la teva contrasenya",
-      "success-message": "Compte creat amb èxit! Si us plau, revisa el teu correu per verificar el teu compte."
+      "hasAccount": "Ja tens un compte?",
+      "signinLink": "Iniciar sessió",
+      "namePlaceholder": "Joan Pérez",
+      "emailPlaceholder": "Introdueix el teu correu electrònic",
+      "passwordPlaceholder": "Crea una contrasenya",
+      "confirmPasswordPlaceholder": "Confirma la teva contrasenya",
+      "successMessage": "Compte creat amb èxit! Si us plau, revisa el teu correu per verificar el teu compte."
     },
-    "forgot-password": {
+    "forgotPassword": {
       "title": "He oblidat la contrasenya",
       "description": "Introdueix el teu correu electrònic per rebre un enllaç per restablir la teva contrasenya.",
       "email": "Correu electrònic",
       "submit": "Enviar",
       "remember": "Recordes la teva contrasenya?",
-      "signin-link": "Iniciar sessió",
-      "email-placeholder": "exemple@gmail.com",
-      "success-message": "S'ha enviat un enllaç per restablir la contrasenya al teu correu"
+      "signinLink": "Iniciar sessió",
+      "emailPlaceholder": "exemple@gmail.com",
+      "successMessage": "S'ha enviat un enllaç per restablir la contrasenya al teu correu"
     },
-    "reset-password": {
+    "resetPassword": {
       "title": "Restablir contrasenya",
       "description": "Introdueix la teva nova contrasenya a continuació.",
       "password": "Nova contrasenya",
-      "confirm-password": "Confirmar nova contrasenya",
-      "reset-button": "Restablir contrasenya",
-      "reset-loading": "Restablint contrasenya...",
-      "password-placeholder": "Introdueix la teva nova contrasenya",
-      "confirm-password-placeholder": "Confirma la teva nova contrasenya",
-      "success-message": "La teva contrasenya s'ha restablert amb èxit!",
-      "invalid-token": {
+      "confirmPassword": "Confirmar nova contrasenya",
+      "resetButton": "Restablir contrasenya",
+      "resetLoading": "Restablint contrasenya...",
+      "passwordPlaceholder": "Introdueix la teva nova contrasenya",
+      "confirmPasswordPlaceholder": "Confirma la teva nova contrasenya",
+      "successMessage": "La teva contrasenya s'ha restablert amb èxit!",
+      "invalidToken": {
         "title": "Token de restabliment invàlid o expirat.",
         "description": "Si us plau, sol·licita un nou restabliment de contrasenya."
       },
-      "checking-token": "Verificant token de restabliment...",
-      "get-new-link": "Obtenir un nou enllaç de restabliment"
+      "checkingToken": "Verificant token de restabliment...",
+      "getNewLink": "Obtenir un nou enllaç de restabliment"
     },
     "validation": {
-      "email-required": "El correu electrònic és obligatori",
-      "email-invalid": "Si us plau, introdueix una adreça de correu vàlida",
-      "password-required": "La contrasenya és obligatòria",
-      "password-min": "La contrasenya ha de tenir almenys 8 caràcters",
-      "name-required": "El nom és obligatori",
-      "passwords-no-match": "Les contrasenyes no coincideixen",
-      "confirm-password-required": "Si us plau, confirma la teva contrasenya"
+      "emailRequired": "El correu electrònic és obligatori",
+      "emailInvalid": "Si us plau, introdueix una adreça de correu vàlida",
+      "passwordRequired": "La contrasenya és obligatòria",
+      "passwordMin": "La contrasenya ha de tenir almenys 8 caràcters",
+      "nameRequired": "El nom és obligatori",
+      "passwordsNoMatch": "Les contrasenyes no coincideixen",
+      "confirmPasswordRequired": "Si us plau, confirma la teva contrasenya"
     }
   },
   "joinHousehold": {

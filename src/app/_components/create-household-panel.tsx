@@ -55,8 +55,8 @@ export function CreateHouseholdPanel({
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const t = useTranslations("create-household");
-  const tForm = useTranslations("create-household.form");
+  const t = useTranslations("createHousehold");
+  const tForm = useTranslations("createHousehold.form");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("common.errors");
 
@@ -173,7 +173,7 @@ export function CreateHouseholdPanel({
                     render={({ field }) => (
                       <FormItem className="sm:col-span-2">
                         <FormLabel required={isFieldRequired("sensorId")}>
-                          {tForm("sensor-id.label")}
+                          {tForm("sensorId.label")}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -194,7 +194,7 @@ export function CreateHouseholdPanel({
                             }}
                           />
                         </FormControl>
-                        <FormDescription>{tForm("sensor-id.description")}</FormDescription>
+                        <FormDescription>{tForm("sensorId.description")}</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

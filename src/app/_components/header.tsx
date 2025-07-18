@@ -16,7 +16,7 @@ export function Header({ className }: { className?: string }) {
   const pathname = usePathname();
   const { toggleSidebar, state } = useSidebar();
 
-  const tNavPages = useTranslations("common.nav-pages");
+  const tNavPages = useTranslations("common.navPages");
 
   const { data: session } = authClient.useSession();
 

@@ -6,17 +6,17 @@
     "clear": "Limpiar",
     "confirm": "Confirmar",
     "error": "Ha ocurrido un error",
-    "in-progress": "En curso",
-    "no-more-events-to-load": "No quedan eventos por cargar",
-    "contact-us": "Contáctanos",
-    "no-data": "No hay datos",
-    "no-actions": "No hay acciones",
+    "inProgress": "En curso",
+    "noMoreEventsToLoad": "No quedan eventos por cargar",
+    "contactUs": "Contáctanos",
+    "noData": "No hay datos",
+    "noActions": "No hay acciones",
     "untagged": "Sin etiqueta",
     "start": "Empezar",
     "pause": "Pausar",
     "resume": "Reanudar",
     "reset": "Reiniciar",
-    "consumption-point": "Punto de consumo",
+    "consumptionPoint": "Punto de consumo",
     "tag": "Etiqueta",
     "today": "Hoy",
     "yesterday": "Ayer",
@@ -43,7 +43,7 @@
     "minutes": "minutos",
     "second": "segundo",
     "seconds": "segundos",
-    "day-and-time": "día y hora",
+    "dayAndTime": "día y hora",
     "duration": "duración",
     "device": "dispositivo",
     "consumption": "consumo",
@@ -82,14 +82,14 @@
       "other": "Otro",
       "rest": "Resto"
     },
-    "nav-pages": {
+    "navPages": {
       "/": "Inicio",
       "/consumption": "Consumo",
       "/data": "Datos",
       "/actions": "Acciones",
       "/404": "Página no encontrada"
     },
-    "nav-settings": {
+    "navSettings": {
       "profile": "Perfil",
       "settings": "Configuración",
       "help": "Ayuda",
@@ -134,39 +134,39 @@
     "now": "Ahora",
     "settings": "Configuración"
   },
-  "consumption-card": {
+  "consumptionCard": {
     "title": "Consumo seleccionado."
   },
-  "consumption-per-person": {
+  "consumptionPerPerson": {
     "title": "Consumo por persona."
   },
-  "consumption-historic": {
+  "consumptionHistoric": {
     "title": "Consumo histórico."
   },
-  "consumption-per-time-chart": {
+  "consumptionPerTimeChart": {
     "title": "Filtra el consumo por {granularity}.",
     "description": "Selecciona una de las barras para ver el consumo."
   },
-  "consumption-per-category-chart": {
+  "consumptionPerCategoryChart": {
     "title": "Filtra el consumo por categoría.",
     "description": "Selecciona una de las secciones para ver el consumo."
   },
-  "consumption-per-event-chart": {
-    "no-events-found": "Aquí encontrarás los eventos ordenados de mayor a menor consumo. En caso de que la categoría seleccionada tenga una o más etiquetas, los eventos se clasificarán en etiquetas."
+  "consumptionPerEventChart": {
+    "noEventsFound": "Aquí encontrarás los eventos ordenados de mayor a menor consumo. En caso de que la categoría seleccionada tenga una o más etiquetas, los eventos se clasificarán en etiquetas."
   },
-  "edit-household": {
+  "editHousehold": {
     "title": "Edita la vivienda.",
     "description": "Modifica la información de la vivienda.",
-    "update-success": "¡Vivienda actualizada correctamente!"
+    "updateSuccess": "¡Vivienda actualizada correctamente!"
   },
-  "delete-household": {
-    "confirm-title": "¿Estás absolutamente seguro?",
-    "confirm-description-bold": "Esto eliminará la vivienda \"{householdName}\" y todos sus datos asociados.",
-    "confirm-description-text": "Esta acción no se puede deshacer. Porfavor, asegúrate.",
-    "confirm-delete": "Eliminar vivienda",
+  "deleteHousehold": {
+    "confirmTitle": "¿Estás absolutamente seguro?",
+    "confirmDescriptionBold": "Esto eliminará la vivienda \"{householdName}\" y todos sus datos asociados.",
+    "confirmDescriptionText": "Esta acción no se puede deshacer. Porfavor, asegúrate.",
+    "confirmDelete": "Eliminar vivienda",
     "success": "¡Vivienda eliminada correctamente!"
   },
-  "create-household": {
+  "createHousehold": {
     "step1": {
       "title": "Información básica.",
       "description": "Introduce la información básica de la vivienda."
@@ -177,7 +177,7 @@
     },
     "form": {
       "name": "Nombre",
-      "sensor-id": {
+      "sensorId": {
         "label": "ID del sensor",
         "description": "Introduce el código de 12 caracteres de tu sensor. Escribe solo las letras y números; los dos puntos (:) se añadirán automáticamente."
       },
@@ -190,7 +190,7 @@
     },
     "success": "Vivienda creada correctamente"
   },
-  "action-cards": {
+  "actionCards": {
     "leaks": {
       "title": "Fugas",
       "description": "{count, plural, =0 {No tienes fugas} =1 {Tienes 1 fuga} other {Tienes # fugas}}"
@@ -200,74 +200,74 @@
       "description": "{count, plural, =0 {No tienes eventos para categorizar} =1 {Categoriza 1 evento} other {Categoriza # eventos}}"
     }
   },
-  "create-invitation": {
+  "createInvitation": {
     "title": "Invita a un usuario",
     "description": "Introduce la dirección de correo electrónico del usuario que deseas invitar a tu vivienda.",
     "email": "Correo electrónico",
-    "email-placeholder": "juan@ejemplo.com",
-    "send-invitation": "Enviar invitación",
+    "emailPlaceholder": "juan@ejemplo.com",
+    "sendInvitation": "Enviar invitación",
     "success": "¡Invitación enviada correctamente! Avisa al usuario que revise su correo electrónico."
   },
-  "leave-household": {
+  "leaveHousehold": {
     "title": "Quieres salir de la vivienda?",
     "description": "Si sales de la vivienda, ya no podrás ver las datos de consumo.",
-    "confirm-leave": "Sí, quiero salir",
+    "confirmLeave": "Sí, quiero salir",
     "cancel": "No, cancelar",
     "success": "Has salido de la vivienda correctamente."
   },
-  "events-list": {
+  "eventsList": {
     "title": "Eventos"
   },
-  "new-event-sheet": {
+  "newEventSheet": {
     "title": "Nuevo evento",
-    "no-tags-for-category": "No se encontraron etiquetas para esta categoría",
-    "select-date": "Selecciona la fecha",
-    "start-time": "Hora de inicio",
-    "end-time": "Hora de fin",
-    "notes-label": "Nota",
-    "notes-placeholder": "Añade una nota opcional para este evento",
-    "category-required": "La categoría es obligatoria",
-    "either-start-or-end-required": "Es necesario introducir una hora de inicio o una hora de fin, o ambas",
-    "end-cannot-be-before-start": "La hora de fin no puede ser anterior a la hora de inicio",
-    "event-created-successfully": "Evento creado correctamente"
+    "noTagsForCategory": "No se encontraron etiquetas para esta categoría",
+    "selectDate": "Selecciona la fecha",
+    "startTime": "Hora de inicio",
+    "endTime": "Hora de fin",
+    "notesLabel": "Nota",
+    "notesPlaceholder": "Añade una nota opcional para este evento",
+    "categoryRequired": "La categoría es obligatoria",
+    "eitherStartOrEndRequired": "Es necesario introducir una hora de inicio o una hora de fin, o ambas",
+    "endCannotBeBeforeStart": "La hora de fin no puede ser anterior a la hora de inicio",
+    "eventCreatedSuccessfully": "Evento creado correctamente"
   },
-  "edit-event-sheet": {
+  "editEventSheet": {
     "title": "Edita el evento",
-    "notes-label": "Nota",
-    "notes-placeholder": "Añade una nota opcional para este evento",
-    "no-tags-for-category": "No se encontraron etiquetas para esta categoría.",
-    "event-edited-successfully": "Evento actualizado correctamente"
+    "notesLabel": "Nota",
+    "notesPlaceholder": "Añade una nota opcional para este evento",
+    "noTagsForCategory": "No se encontraron etiquetas para esta categoría.",
+    "eventEditedSuccessfully": "Evento actualizado correctamente"
   },
-  "edit-tags-dialog": {
+  "editTagsDialog": {
     "title": "Editar etiquetas",
-    "new-tag-placeholder": "Nueva etiqueta",
-    "no-tags-for-category": "No se encontraron etiquetas para esta categoría.",
-    "no-tags-for-sink": "Puedes crear una etiqueta para los diferentes grifos, por ejemplo el grifo de la cocina, del baño, etc.",
-    "no-tags-for-shower": "Puedes crear una etiqueta para las diferentes duchas, por ejemplo para la ducha de tu hijo, tu ducha, etc.",
-    "no-tags-for-washer": "Puedes crear una etiqueta para los diferentes programas de la lavadora, por ejemplo lavadora eco, sport, etc.",
-    "no-tags-for-dishwasher": "Puedes crear una etiqueta para los diferentes programas del lavavajillas, por ejemplo lavavajillas eco, normal, etc.",
-    "delete-tag-title": "Eliminar etiqueta",
-    "delete-tag-description": "Estás seguro que quieres eliminar esta etiqueta? Esta acción no se puede deshacer y eliminará la etiqueta de todos los eventos que la tengan.",
-    "delete-tag-confirm": "Eliminar etiqueta",
-    "delete-tag-cancel": "Cancelar",
-    "delete-tag-success": "Etiqueta eliminada correctamente",
-    "tag-created-successfully": "Etiqueta creada correctamente",
-    "tag-updated-successfully": "Etiqueta actualizada correctamente",
-    "tag-deleted-successfully": "Etiqueta eliminada correctamente"
+    "newTagPlaceholder": "Nueva etiqueta",
+    "noTagsForCategory": "No se encontraron etiquetas para esta categoría.",
+    "noTagsForSink": "Puedes crear una etiqueta para los diferentes grifos, por ejemplo el grifo de la cocina, del baño, etc.",
+    "noTagsForShower": "Puedes crear una etiqueta para las diferentes duchas, por ejemplo para la ducha de tu hijo, tu ducha, etc.",
+    "noTagsForWasher": "Puedes crear una etiqueta para los diferentes programas de la lavadora, por ejemplo lavadora eco, sport, etc.",
+    "noTagsForDishwasher": "Puedes crear una etiqueta para los diferentes programas del lavavajillas, por ejemplo lavavajillas eco, normal, etc.",
+    "deleteTagTitle": "Eliminar etiqueta",
+    "deleteTagDescription": "Estás seguro que quieres eliminar esta etiqueta? Esta acción no se puede deshacer y eliminará la etiqueta de todos los eventos que la tengan.",
+    "deleteTagConfirm": "Eliminar etiqueta",
+    "deleteTagCancel": "Cancelar",
+    "deleteTagSuccess": "Etiqueta eliminada correctamente",
+    "tagCreatedSuccessfully": "Etiqueta creada correctamente",
+    "tagUpdatedSuccessfully": "Etiqueta actualizada correctamente",
+    "tagDeletedSuccessfully": "Etiqueta eliminada correctamente"
   },
   "actions": {
-    "no-leaks": "No hay fugas",
-    "no-unknowns": "No hay eventos para categorizar"
+    "noLeaks": "No hay fugas",
+    "noUnknowns": "No hay eventos para categorizar"
   },
   "onboarding": {
     "title": "Empieza creando tu primera vivienda",
     "subtitle": "Haz un seguimiento de tu consumo de agua y descubre dónde puedes ahorrar más. Empecemos configurando tu vivienda.",
-    "create-button": "Crear tu primer vivienda"
+    "createButton": "Crear tu primer vivienda"
   },
-  "not-found": {
+  "notFound": {
     "title": "Página no encontrada.",
     "description": "La página que buscas no existe.",
-    "go-home": "Volver al inicio"
+    "goHome": "Volver al inicio"
   },
   "auth": {
     "signin": {
@@ -275,15 +275,15 @@
       "description": "Introduce tu correo electrónico y contraseña para acceder a tu cuenta",
       "email": "Correo electrónico",
       "password": "Contraseña",
-      "forgot-password": "¿Olvidaste tu contraseña?",
-      "signin-button": "Iniciar sesión",
-      "signin-loading": "Iniciando sesión...",
-      "google-signin": "Continuar con Google",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "signinButton": "Iniciar sesión",
+      "signinLoading": "Iniciando sesión...",
+      "googleSignin": "Continuar con Google",
       "or": "O",
-      "no-account": "¿No tienes una cuenta?",
-      "signup-link": "Registrarse",
-      "email-placeholder": "Introduce tu correo electrónico",
-      "password-placeholder": "Introduce tu contraseña"
+      "noAccount": "¿No tienes una cuenta?",
+      "signupLink": "Registrarse",
+      "emailPlaceholder": "Introduce tu correo electrónico",
+      "passwordPlaceholder": "Introduce tu contraseña"
     },
     "signup": {
       "title": "Crea tu cuenta",
@@ -291,54 +291,54 @@
       "name": "Nombre",
       "email": "Correo electrónico",
       "password": "Contraseña",
-      "confirm-password": "Confirmar contraseña",
-      "signup-button": "Crear cuenta",
-      "signup-loading": "Creando cuenta...",
-      "google-signup": "Continuar con Google",
+      "confirmPassword": "Confirmar contraseña",
+      "signupButton": "Crear cuenta",
+      "signupLoading": "Creando cuenta...",
+      "googleSignup": "Continuar con Google",
       "or": "O",
-      "has-account": "¿Ya tienes una cuenta?",
-      "signin-link": "Iniciar sesión",
-      "name-placeholder": "Juan Pérez",
-      "email-placeholder": "Introduce tu correo electrónico",
-      "password-placeholder": "Crea una contraseña",
-      "confirm-password-placeholder": "Confirma tu contraseña",
-      "success-message": "¡Cuenta creada exitosamente! Por favor, revisa tu correo para verificar tu cuenta."
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signinLink": "Iniciar sesión",
+      "namePlaceholder": "Juan Pérez",
+      "emailPlaceholder": "Introduce tu correo electrónico",
+      "passwordPlaceholder": "Crea una contraseña",
+      "confirmPasswordPlaceholder": "Confirma tu contraseña",
+      "successMessage": "¡Cuenta creada exitosamente! Por favor, revisa tu correo para verificar tu cuenta."
     },
-    "forgot-password": {
+    "forgotPassword": {
       "title": "Olvidé mi contraseña",
       "description": "Introduce tu correo electrónico para recibir un enlace para restablecer tu contraseña.",
       "email": "Correo electrónico",
       "submit": "Enviar",
       "remember": "¿Recuerdas tu contraseña?",
-      "signin-link": "Iniciar sesión",
-      "email-placeholder": "ejemplo@gmail.com",
-      "success-message": "Se ha enviado un enlace para restablecer la contraseña a tu correo"
+      "signinLink": "Iniciar sesión",
+      "emailPlaceholder": "ejemplo@gmail.com",
+      "successMessage": "Se ha enviado un enlace para restablecer la contraseña a tu correo"
     },
-    "reset-password": {
+    "resetPassword": {
       "title": "Restablecer contraseña",
       "description": "Introduce tu nueva contraseña a continuación.",
       "password": "Nueva contraseña",
-      "confirm-password": "Confirmar nueva contraseña",
-      "reset-button": "Restablecer contraseña",
-      "reset-loading": "Restableciendo contraseña...",
-      "password-placeholder": "Introduce tu nueva contraseña",
-      "confirm-password-placeholder": "Confirma tu nueva contraseña",
-      "success-message": "¡Tu contraseña ha sido restablecida exitosamente!",
-      "invalid-token": {
+      "confirmPassword": "Confirmar nueva contraseña",
+      "resetButton": "Restablecer contraseña",
+      "resetLoading": "Restableciendo contraseña...",
+      "passwordPlaceholder": "Introduce tu nueva contraseña",
+      "confirmPasswordPlaceholder": "Confirma tu nueva contraseña",
+      "successMessage": "¡Tu contraseña ha sido restablecida exitosamente!",
+      "invalidToken": {
         "title": "Token de restablecimiento inválido o expirado.",
         "description": "Por favor, solicita un nuevo restablecimiento de contraseña."
       },
-      "checking-token": "Verificando token de restablecimiento...",
-      "get-new-link": "Obtener un nuevo enlace de restablecimiento"
+      "checkingToken": "Verificando token de restablecimiento...",
+      "getNewLink": "Obtener un nuevo enlace de restablecimiento"
     },
     "validation": {
-      "email-required": "El correo electrónico es obligatorio",
-      "email-invalid": "Por favor, introduce una dirección de correo válida",
-      "password-required": "La contraseña es obligatoria",
-      "password-min": "La contraseña debe tener al menos 8 caracteres",
-      "name-required": "El nombre es obligatorio",
-      "passwords-no-match": "Las contraseñas no coinciden",
-      "confirm-password-required": "Por favor, confirma tu contraseña"
+      "emailRequired": "El correo electrónico es obligatorio",
+      "emailInvalid": "Por favor, introduce una dirección de correo válida",
+      "passwordRequired": "La contraseña es obligatoria",
+      "passwordMin": "La contraseña debe tener al menos 8 caracteres",
+      "nameRequired": "El nombre es obligatorio",
+      "passwordsNoMatch": "Las contraseñas no coinciden",
+      "confirmPasswordRequired": "Por favor, confirma tu contraseña"
     }
   },
   "joinHousehold": {

@@ -38,7 +38,7 @@ export function HouseholdGate({ children }: { children: React.ReactNode }) {
           <Button asChild>
             <CreateHouseholdPanel>
               <Plus className="h-5 w-5" />
-              {t("create-button")}
+              {t("createButton")}
             </CreateHouseholdPanel>
           </Button>
         </div>

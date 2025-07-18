@@ -42,8 +42,8 @@ export function EditHouseholdSheet({
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }) {
-  const t = useTranslations("edit-household");
-  const tForm = useTranslations("create-household.form");
+  const t = useTranslations("editHousehold");
+  const tForm = useTranslations("createHousehold.form");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("common.errors");
 
@@ -97,7 +97,7 @@ export function EditHouseholdSheet({
   const updateMutation = trpc.household.update.useMutation({
     onSuccess: () => {
       utils.household.invalidate();
-      toast.success(t("update-success"));
+      toast.success(t("updateSuccess"));
       setIsOpen(false);
     },
     onError: () => {
@@ -183,7 +183,7 @@ export function EditHouseholdSheet({
                   name="sensorId"
                   render={({ field }) => (
                     <FormItem className="xl:col-span-2">
-                      <FormLabel>{tForm("sensor-id.label")}</FormLabel>
+                      <FormLabel>{tForm("sensorId.label")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}

@@ -37,7 +37,7 @@ export function CreateInvitationDialog({
   setIsOpen: (isOpen: boolean) => void;
   householdId: string;
 }) {
-  const t = useTranslations("create-invitation");
+  const t = useTranslations("createInvitation");
   const tErrors = useTranslations("common.errors");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -80,7 +80,7 @@ export function CreateInvitationDialog({
                 <FormItem>
                   <FormLabel>{t("email")}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t("email-placeholder")} {...field} />
+                    <Input placeholder={t("emailPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -89,7 +89,7 @@ export function CreateInvitationDialog({
             <div className="flex justify-end">
               <Button type="submit" disabled={isPending}>
                 {isPending && <Loader2 className="mr-2 animate-spin" />}
-                {t("send-invitation")}
+                {t("sendInvitation")}
               </Button>
             </div>
           </form>

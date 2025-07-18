@@ -39,13 +39,13 @@ export default function ResetPassword() {
 
   const ResetPasswordSchema = z
     .object({
-      password: z.string().min(8, { message: t("auth.validation.password-min") }),
+      password: z.string().min(8, { message: t("auth.validation.passwordMin") }),
       confirmPassword: z
         .string()
-        .min(8, { message: t("auth.validation.confirm-password-required") }),
+        .min(8, { message: t("auth.validation.confirmPasswordRequired") }),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: t("auth.validation.passwords-no-match"),
+      message: t("auth.validation.passwordsNoMatch"),
       path: ["confirmPassword"],
     });
 
@@ -95,7 +95,7 @@ export default function ResetPassword() {
           setLoading(true);
         },
         onSuccess: () => {
-          toast.success(t("auth.reset-password.success-message"));
+          toast.success(t("auth.resetPassword.successMessage"));
           router.push("/signin");
         },
         onError: (ctx) => {
@@ -111,7 +111,7 @@ export default function ResetPassword() {
     return (
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>{t("auth.reset-password.checking-token")}</CardTitle>
+          <CardTitle>{t("auth.resetPassword.checkingToken")}</CardTitle>
           <CardDescription hidden></CardDescription>
         </CardHeader>
         <CardContent>
@@ -127,8 +127,8 @@ export default function ResetPassword() {
     return (
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>{t("auth.reset-password.invalid-token.title")}</CardTitle>
-          <CardDescription>{t("auth.reset-password.invalid-token.description")}</CardDescription>
+          <CardTitle>{t("auth.resetPassword.invalidToken.title")}</CardTitle>
+          <CardDescription>{t("auth.resetPassword.invalidToken.description")}</CardDescription>
         </CardHeader>
         <CardFooter>
           <p className="text-muted-foreground w-full text-center text-sm">
@@ -136,7 +136,7 @@ export default function ResetPassword() {
               href="/forgot-password"
               className="hover:text-primary underline underline-offset-4"
             >
-              {t("auth.reset-password.get-new-link")}
+              {t("auth.resetPassword.getNewLink")}
             </Link>
           </p>
         </CardFooter>
@@ -147,8 +147,8 @@ export default function ResetPassword() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>{t("auth.reset-password.title")}</CardTitle>
-        <CardDescription>{t("auth.reset-password.description")}</CardDescription>
+        <CardTitle>{t("auth.resetPassword.title")}</CardTitle>
+        <CardDescription>{t("auth.resetPassword.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -158,13 +158,13 @@ export default function ResetPassword() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("auth.reset-password.password")}</FormLabel>
+                  <FormLabel>{t("auth.resetPassword.password")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         disabled={loading}
                         type={showPassword ? "text" : "password"}
-                        placeholder={t("auth.reset-password.password-placeholder")}
+                        placeholder={t("auth.resetPassword.passwordPlaceholder")}
                         {...field}
                       />
                       <Button
@@ -192,13 +192,13 @@ export default function ResetPassword() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("auth.reset-password.confirm-password")}</FormLabel>
+                  <FormLabel>{t("auth.resetPassword.confirmPassword")}</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         disabled={loading}
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder={t("auth.reset-password.confirm-password-placeholder")}
+                        placeholder={t("auth.resetPassword.confirmPasswordPlaceholder")}
                         {...field}
                       />
                       <Button
@@ -223,17 +223,17 @@ export default function ResetPassword() {
             />
             <Button disabled={loading} type="submit" className="w-full">
               {loading
-                ? t("auth.reset-password.reset-loading")
-                : t("auth.reset-password.reset-button")}
+                ? t("auth.resetPassword.resetLoading")
+                : t("auth.resetPassword.resetButton")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter>
         <p className="text-muted-foreground text-sm">
-          {t("auth.forgot-password.remember")}{" "}
+          {t("auth.forgotPassword.remember")}{" "}
           <Link href="/signin" className="hover:text-primary underline underline-offset-4">
-            {t("auth.forgot-password.signin-link")}
+            {t("auth.forgotPassword.signinLink")}
           </Link>
         </p>
       </CardFooter>
