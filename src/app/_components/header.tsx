@@ -11,6 +11,7 @@ import { useSidebar } from "@app/_components/ui/sidebar";
 import { usePathname } from "@app/_i18n/routing";
 import { authClient } from "@app/_lib/auth-client";
 import { cn } from "@app/_lib/utils";
+import { useHouseholdStore } from "@app/_stores/household";
 
 export function Header({ className }: { className?: string }) {
   const pathname = usePathname();
@@ -19,6 +20,10 @@ export function Header({ className }: { className?: string }) {
   const tNavPages = useTranslations("common.navPages");
 
   const { data: session } = authClient.useSession();
+
+  const { households, selectedHouseholdId } = useHouseholdStore();
+
+  const household = households.find((h) => h.id === selectedHouseholdId);
 
   return (
     <header
@@ -41,13 +46,15 @@ export function Header({ className }: { className?: string }) {
             )}
           </button>
           <p className="text-sm font-semibold">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
-            {tNavPages.has(pathname as any)
-              ? /* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
-                tNavPages(pathname as any)
-              : pathname == "/"
-                ? tNavPages("/")
-                : tNavPages("/404")}
+            {household?.name
+              ? household?.name
+              : /* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
+                tNavPages.has(pathname as any)
+                ? /* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
+                  tNavPages(pathname as any)
+                : pathname == "/"
+                  ? tNavPages("/")
+                  : tNavPages("/404")}
           </p>
         </div>
 
