@@ -187,26 +187,10 @@ export function EditHouseholdSheet({
                       <FormControl>
                         <Input
                           {...field}
+                          readOnly
                           placeholder="A1:B2:C3:D4:E5:F6"
                           className="font-mono"
                           maxLength={17}
-                          value={(() => {
-                            const sanitizedValue = field.value
-                              .toUpperCase()
-                              .replace(/[^A-F0-9]/g, "");
-                            return (sanitizedValue.slice(0, 12).match(/.{1,2}/g) || []).join(":");
-                          })()}
-                          onChange={(e) => {
-                            const sanitizedValue = e.target.value
-                              .toUpperCase()
-                              .replace(/[^A-F0-9]/g, "");
-
-                            const formattedValue = (
-                              sanitizedValue.slice(0, 12).match(/.{1,2}/g) || []
-                            ).join(":");
-
-                            field.onChange(formattedValue);
-                          }}
                         />
                       </FormControl>
                       <FormMessage />
