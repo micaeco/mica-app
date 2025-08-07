@@ -181,20 +181,27 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
           endDate.setDate(new Date().getDate());
         }
 
-        const aggregatedCategoryBreakdown: Record<string, number> = {};
-        for (const category in dataPoint.categoryBreakdown) {
-          if (Object.prototype.hasOwnProperty.call(dataPoint.categoryBreakdown, category)) {
-            aggregatedCategoryBreakdown[category] =
-              (aggregatedCategoryBreakdown[category] || 0) + dataPoint.categoryBreakdown[category];
-          }
-        }
+        const categoryBreakdown = (() => {
+          const sorted = Object.entries(dataPoint.categoryBreakdown)
+            .map(([category, consumptionInLiters]) => ({
+              category: category as Category,
+              consumptionInLiters,
+            }))
+            .sort((a, b) => b.consumptionInLiters - a.consumptionInLiters);
 
-        const categoryBreakdown = Object.entries(aggregatedCategoryBreakdown).map(
-          ([category, consumptionInLiters]) => ({
-            category: category as Category,
-            consumptionInLiters: consumptionInLiters,
-          })
-        );
+          const topCategories = sorted.slice(0, 4);
+          const rest = sorted.slice(4);
+          const restTotal = rest.reduce((sum, item) => sum + item.consumptionInLiters, 0);
+
+          if (restTotal > 0) {
+            topCategories.push({
+              category: "rest" as Category,
+              consumptionInLiters: restTotal,
+            });
+          }
+
+          return topCategories;
+        })();
 
         const diffInMs = differenceInMilliseconds(endDate, startDate);
         const daysInPeriod = diffInMs > 0 ? diffInMs / (1000 * 60 * 60 * 24) : 1;
