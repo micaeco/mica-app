@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -12,24 +12,24 @@ import { useHouseholdStore } from "@app/_stores/household";
 
 export function ConsumptionTabs() {
   const tCommon = useTranslations("common");
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [granularity, setGranularity] = useState<"month" | "today">("month");
+  const defaultGranularity = "today" as const;
+  const granularity = (searchParams.get("granularity") as "month" | "today") || defaultGranularity;
 
   const { selectedHouseholdId } = useHouseholdStore();
 
-  const queryOptions = {
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    retry: 1,
+  const updateGranularity = (newGranularity: "month" | "today") => {
+    const params = new URLSearchParams(searchParams);
+    params.set("granularity", newGranularity);
+    router.replace(`?${params.toString()}`);
   };
 
   const { data: consumptionMonth, isLoading: isLoadingMonth } =
     trpc.consumption.getCurrentMonthConsumption.useQuery(
       { householdId: selectedHouseholdId },
       {
-        ...queryOptions,
         enabled: !!selectedHouseholdId && granularity == "month",
       }
     );
@@ -38,19 +38,18 @@ export function ConsumptionTabs() {
     trpc.consumption.getCurrentDayConsumption.useQuery(
       { householdId: selectedHouseholdId },
       {
-        ...queryOptions,
         enabled: !!selectedHouseholdId && granularity == "today",
       }
     );
 
   return (
-    <Tabs defaultValue="month" className="flex min-w-70 flex-col items-center justify-center">
+    <Tabs value={granularity} className="flex min-w-70 flex-col items-center justify-center">
       <TabsList className="w-fit">
-        <TabsTrigger value="month" onClick={() => setGranularity("month")}>
-          {tCommon("this") + " " + tCommon("month")}
-        </TabsTrigger>
-        <TabsTrigger value="today" onClick={() => setGranularity("today")}>
+        <TabsTrigger value="today" onClick={() => updateGranularity("today")}>
           {tCommon("today")}
+        </TabsTrigger>
+        <TabsTrigger value="month" onClick={() => updateGranularity("month")}>
+          {tCommon("this") + " " + tCommon("month")}
         </TabsTrigger>
       </TabsList>
 
