@@ -47,13 +47,13 @@ export function EventBar({ event, totalConsumption, granularity }: EventBarProps
 
           <div className="flex w-full flex-col">
             <div className="flex flex-row justify-between gap-2">
-              <div className="flex flex-row space-x-2">
-                <span className="max-w-[6ch] truncate font-medium sm:max-w-none">
+              <div className="flex min-w-0 flex-row space-x-2">
+                <span className="flex-shrink flex-grow-0 truncate font-medium">
                   {tCategories(event.category)}
                 </span>
                 {event.tag && (
-                  <div className="bg-brand-secondary flex items-center justify-center rounded-full px-3 py-0.5 text-xs">
-                    <span className="xs:max-w-none max-w-[6ch] truncate">{event.tag.name}</span>
+                  <div className="bg-brand-secondary flex flex-shrink items-center justify-center rounded-full px-3 py-0.5 text-xs">
+                    <span className="truncate">{event.tag.name}</span>
                   </div>
                 )}
               </div>
