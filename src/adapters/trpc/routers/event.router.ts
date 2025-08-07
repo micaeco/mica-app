@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { format, startOfDay, subHours } from "date-fns";
+import { endOfDay, format, startOfDay, subHours } from "date-fns";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
@@ -340,7 +340,16 @@ export const eventRouter = createTRPCRouter({
           };
         }
         groupedEventsMap[dayKey].events.push(event);
-        groupedEventsMap[dayKey].totalConsumption += event.consumptionInLiters;
+      }
+
+      for (const day in groupedEventsMap) {
+        const dayConsumption = await ctx.consumptionRepo.getConsumption(
+          householdId,
+          startOfDay(groupedEventsMap[day].date),
+          endOfDay(groupedEventsMap[day].date)
+        );
+
+        groupedEventsMap[day].totalConsumption = dayConsumption.consumptionInLiters;
       }
 
       const groupedData = Object.values(groupedEventsMap).sort(
