@@ -59,7 +59,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
   const [deletingTagId, setDeletingTagId] = useState<number | null>(null);
 
   useEffect(() => {
-    setSelectedCategory(category ?? "shower");
+    setSelectedCategory(category && filteredCategories.includes(category) ? category : "shower");
   }, [category]);
 
   const tErrors = useTranslations("common.errors");
@@ -216,10 +216,7 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
               ("no-tags-for-" + selectedCategory) as KeysOfType<IntlMessages, "editTagsDialog">
             )
               ? tEditTagsDialog(
-                  ("no-tags-for-" + selectedCategory) as KeysOfType<
-                    IntlMessages,
-                    "editTagsDialog"
-                  >
+                  ("no-tags-for-" + selectedCategory) as KeysOfType<IntlMessages, "editTagsDialog">
                 )
               : tEditTagsDialog("noTagsForCategory")}
           </span>
