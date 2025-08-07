@@ -158,8 +158,17 @@ export function CreateHouseholdPanel({
                           <Input
                             type="number"
                             min={1}
+                            max={1}
                             {...field}
-                            onChange={(event) => field.onChange(Number(event.target.value))}
+                            onKeyDown={(event) => {
+                              if (["e", "E", "+", "-", ".", ","].includes(event.key)) {
+                                event.preventDefault();
+                              }
+                            }}
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              field.onChange(value === "" ? "" : Number(value));
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
