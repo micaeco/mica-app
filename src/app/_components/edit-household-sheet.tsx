@@ -169,7 +169,6 @@ export function EditHouseholdSheet({
                         <Input
                           type="number"
                           min={1}
-                          max={1}
                           {...field}
                           onKeyDown={(event) => {
                             if (["e", "E", "+", "-", ".", ","].includes(event.key)) {
