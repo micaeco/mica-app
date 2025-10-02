@@ -58,7 +58,10 @@ export const householdRouter = createTRPCRouter({
     .input(
       z.object({
         householdId: z.string().uuid(),
-        invitedEmail: z.string().email(),
+        invitedEmail: z
+          .string()
+          .email()
+          .transform((email) => email.toLowerCase()),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -324,7 +327,7 @@ async function isInvitationTokenValid(
     return null;
   }
 
-  if (ctx.user.email && invitation.invitedEmail !== ctx.user.email) {
+  if (ctx.user.email && invitation.invitedEmail.toLowerCase() !== ctx.user.email) {
     return null;
   }
 
