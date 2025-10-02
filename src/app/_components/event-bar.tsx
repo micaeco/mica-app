@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { format } from "date-fns";
-import { Timer } from "lucide-react";
+import { Sparkles, Timer } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 
 import { ConsumptionBar } from "@app/_components/consumption-bar";
@@ -51,6 +51,9 @@ export function EventBar({ event, totalConsumption, granularity }: EventBarProps
                 <span className="flex-shrink flex-grow-0 truncate font-medium">
                   {tCategories(event.category)}
                 </span>
+                {event.categorySource === "algorithm" && (
+                  <Sparkles className="text-brand-primary fill-brand-primary size-3" />
+                )}
                 {event.tag && (
                   <div className="bg-brand-secondary flex flex-shrink items-center justify-center rounded-full px-3 py-0.5 text-xs">
                     <span className="truncate">{event.tag.name}</span>

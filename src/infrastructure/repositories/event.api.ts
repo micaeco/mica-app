@@ -12,9 +12,13 @@ interface EventApiResponse {
   end: string;
   duration: number;
   consumptionInLiters: number;
-  category: string | null;
   tagId: number | null;
   notes: string | null;
+  category: string | null;
+  categorySource: "algorithm" | "user" | null;
+  algorithmCategory: string | null;
+  algorithmConfidence: number | null;
+  userCategory: string | null;
 }
 
 interface EventApiDataResponse {
@@ -201,6 +205,10 @@ export class ApiEventRepository implements EventRepository {
     return {
       id: apiResponse.eventId,
       category: (apiResponse.category as Category) || "unknown",
+      categorySource: apiResponse.categorySource || "user",
+      algorithmCategory: (apiResponse.algorithmCategory as Category) || undefined,
+      algorithmConfidence: apiResponse.algorithmConfidence || undefined,
+      userCategory: (apiResponse.userCategory as Category) || undefined,
       startTimestamp: new Date(apiResponse.start),
       endTimestamp: new Date(apiResponse.end),
       durationInSeconds: apiResponse.duration || 0,

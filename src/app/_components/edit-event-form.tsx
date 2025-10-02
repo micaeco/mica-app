@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CircleCheck, Edit, LoaderCircle } from "lucide-react";
+import { CircleCheck, Edit, LoaderCircle, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -155,7 +155,8 @@ export function EditEventForm({
                       <ToggleGroupItem
                         className={cn(
                           "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                          category === field.value ? "!bg-brand-secondary" : "bg-gray-100"
+                          category === field.value ? "!bg-brand-secondary" : "bg-gray-100",
+                          category === event.algorithmCategory && "border-brand-primary border-2"
                         )}
                         value={category}
                         key={category}
@@ -169,6 +170,9 @@ export function EditEventForm({
                           height={24}
                         />
                         <span className="ml-1 text-sm">{tCategories(category)}</span>
+                        {category === event.algorithmCategory && (
+                          <Sparkles className="fill-brand-primary size-3" />
+                        )}
                         {field.value === category && <CircleCheck />}
                       </ToggleGroupItem>
                     ))}

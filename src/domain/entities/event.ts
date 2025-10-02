@@ -6,6 +6,10 @@ import { Tag } from "@domain/entities/tag";
 export const Event = z.object({
   id: z.string(),
   category: Category,
+  categorySource: z.enum(["algorithm", "user"]).optional(),
+  algorithmCategory: Category.optional(),
+  algorithmConfidence: z.number().min(0).max(1).optional(),
+  userCategory: Category.optional(),
   startTimestamp: z.date(),
   endTimestamp: z.date(),
   durationInSeconds: z.number().nonnegative(),
