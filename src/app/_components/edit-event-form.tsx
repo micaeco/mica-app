@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CircleCheck, Edit, LoaderCircle, Sparkles } from "lucide-react";
+import { Edit, LoaderCircle, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -173,7 +173,6 @@ export function EditEventForm({
                         {category === event.algorithmCategory && (
                           <Sparkles className="fill-brand-primary size-3" />
                         )}
-                        {field.value === category && <CircleCheck />}
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
@@ -219,7 +218,6 @@ export function EditEventForm({
                             aria-label={tag.name}
                           >
                             <span className="text-sm">{tag.name}</span>
-                            {field.value?.id === tag.id && <CircleCheck />}
                           </ToggleGroupItem>
                         ))}
                       </ToggleGroup>
