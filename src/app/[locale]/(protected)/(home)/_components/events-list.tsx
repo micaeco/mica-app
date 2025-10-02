@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { format, isToday, isYesterday } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
@@ -40,6 +40,41 @@ export function EventsList() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
+  const getDisplayDateKey = (date: Date): string => {
+    if (isToday(date)) {
+      return tCommon("today");
+    } else if (isYesterday(date)) {
+      return tCommon("yesterday");
+    } else {
+      return format(date, "EEEE d MMMM, yyyy", { locale: dateFnsLocale });
+    }
+  };
+
+  const mergedDays = useMemo(() => {
+    const eventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
+
+    return eventsGroupedByDays.reduce(
+      (acc, day) => {
+        const lastDay = acc[acc.length - 1];
+        const isSameDay =
+          lastDay &&
+          lastDay.date.toISOString().split("T")[0] === day.date.toISOString().split("T")[0];
+
+        if (isSameDay) {
+          acc[acc.length - 1] = {
+            ...lastDay,
+            events: [...lastDay.events, ...day.events],
+          };
+        } else {
+          acc.push({ ...day, events: [...day.events] });
+        }
+
+        return acc;
+      },
+      [] as typeof eventsGroupedByDays
+    );
+  }, [data?.pages]);
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -58,19 +93,7 @@ export function EventsList() {
     );
   }
 
-  const getDisplayDateKey = (date: Date): string => {
-    if (isToday(date)) {
-      return tCommon("today");
-    } else if (isYesterday(date)) {
-      return tCommon("yesterday");
-    } else {
-      return format(date, "EEEE d MMMM, yyyy", { locale: dateFnsLocale });
-    }
-  };
-
-  const eventsGroupedByDays = data?.pages.flatMap((page) => page.data) || [];
-
-  if (eventsGroupedByDays.length === 0) {
+  if (mergedDays.length === 0) {
     return (
       <div className="text-muted-foreground py-4 text-center text-sm">{tCommon("noData")}</div>
     );
@@ -78,8 +101,8 @@ export function EventsList() {
 
   return (
     <div className="space-y-6">
-      {eventsGroupedByDays.map((day) => (
-        <div key={day.date.toISOString() + day.totalConsumption.toString()} className="space-y-4">
+      {mergedDays.map((day) => (
+        <div key={day.date.toISOString()} className="space-y-4">
           <div className="text-muted-foreground flex items-center justify-between text-sm font-light">
             <p>{getDisplayDateKey(day.date)}:</p>
             <p>{day.totalConsumption.toFixed(1)} L</p>
