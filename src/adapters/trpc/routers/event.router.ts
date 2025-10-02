@@ -343,19 +343,12 @@ export const eventRouter = createTRPCRouter({
       }
 
       for (const day in groupedEventsMap) {
-        console.log("Calculating consumption for day:", day);
-        console.log("Events on this day:", groupedEventsMap[day].events);
-        console.log("Start date:", groupedEventsMap[day].events[0].startTimestamp);
-        console.log("End date:", groupedEventsMap[day].events[0].startTimestamp);
-
         const dayConsumption = await ctx.consumptionRepo.getConsumptionByGranularity(
           householdId,
           "day",
           groupedEventsMap[day].events[0].startTimestamp,
           groupedEventsMap[day].events[0].startTimestamp
         );
-
-        console.log("Day consumption:", dayConsumption);
 
         groupedEventsMap[day].totalConsumption = dayConsumption[0].consumptionInLiters;
       }
