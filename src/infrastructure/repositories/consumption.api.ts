@@ -162,18 +162,18 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
 
         switch (apiResponse.granularity) {
           case "hour":
-            endDate.setMinutes(59, 59, 999);
+            endDate.setUTCMinutes(59, 59, 999);
             break;
           case "day":
-            endDate.setHours(23, 59, 59, 999);
+            endDate.setUTCHours(23, 59, 59, 999);
             break;
           case "week":
-            endDate.setDate(endDate.getDate() + 6);
-            endDate.setHours(23, 59, 59, 999);
+            endDate.setUTCDate(endDate.getUTCDate() + 6);
+            endDate.setUTCHours(23, 59, 59, 999);
             break;
           case "month":
-            endDate.setMonth(endDate.getMonth() + 1, 0);
-            endDate.setHours(23, 59, 59, 999);
+            endDate.setUTCMonth(endDate.getUTCMonth() + 1, 0);
+            endDate.setUTCHours(23, 59, 59, 999);
             break;
         }
 
