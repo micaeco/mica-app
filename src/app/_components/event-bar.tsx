@@ -52,7 +52,9 @@ export function EventBar({ event, totalConsumption, granularity }: EventBarProps
                   {tCategories(event.category)}
                 </span>
                 {(event.categorySource === "algorithm" ||
-                  (event.userCategory === event.algorithmCategory &&
+                  (event.algorithmCategory &&
+                    event.algorithmCategory !== "unknown" &&
+                    event.userCategory === event.algorithmCategory &&
                     event.categorySource === "user")) && (
                   <Sparkles className="text-brand-primary fill-brand-primary size-3" />
                 )}
