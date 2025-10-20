@@ -102,10 +102,13 @@ export function ManageHouseholdSheet({
             !isLoading &&
             users.length > 0 &&
             users.map((user) => (
-              <Avatar key={user.id} className="border-primary border-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <AvatarImage src={user.image || "/logos/logo.webp"} alt={user.name} />
-                <AvatarFallback>{user.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
+              <Avatar key={user.id} className="border-brand-primary border-2 bg-white">
+                <AvatarImage
+                  className="object-contain"
+                  src={user?.image ? user.image : "/logos/logo.webp"}
+                  alt={user?.name || "User Avatar"}
+                />
+                <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
               </Avatar>
             ))}
           <button
