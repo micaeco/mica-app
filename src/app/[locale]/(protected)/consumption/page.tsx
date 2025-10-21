@@ -77,6 +77,11 @@ export default function ConsumptionPage() {
       <div className="flex flex-col gap-4 2xl:flex-row">
         <div className="flex flex-col gap-4 2xl:min-w-md">
           <Card className="flex h-full flex-col">
+            <CardHeader>
+              <CardTitle className="first-letter:capitalize">
+                {formatSelectedTimeWindow()}
+              </CardTitle>
+            </CardHeader>
             <CardContent className="flex flex-grow flex-col items-center justify-center px-2 pt-6">
               <ConsumptionPerTimeChart
                 selectedTimeWindow={selectedTimeWindow}
@@ -97,28 +102,23 @@ export default function ConsumptionPage() {
                 {isLoadingConsumption ? (
                   <Skeleton className="h-8 w-32" />
                 ) : (
-                  <div className="flex flex-col gap-4">
-                    <span className="font-medium first-letter:capitalize">
-                      {formatSelectedTimeWindow()}
+                  <div className="flex flex-row gap-2">
+                    <span className="text-2xl">
+                      {currentConsumption?.consumptionInLiters.toFixed(2) ?? "--"} L
                     </span>
-                    <div className="flex flex-row gap-2">
-                      <span className="text-2xl">
-                        {currentConsumption?.consumptionInLiters.toFixed(2) ?? "--"} L
-                      </span>
-                      <span className="text-muted-foreground flex items-end text-sm font-light">
-                        {currentConsumption &&
-                        currentConsumption.consumptionPercentDeviationFromBaseline > 0 ? (
-                          <ChevronUp />
-                        ) : (
-                          <ChevronDown />
-                        )}
-                        {currentConsumption &&
-                          Math.abs(
-                            currentConsumption?.consumptionPercentDeviationFromBaseline
-                          ).toFixed(0)}
-                        %
-                      </span>
-                    </div>
+                    <span className="text-muted-foreground flex items-end text-sm font-light">
+                      {currentConsumption &&
+                      currentConsumption.consumptionPercentDeviationFromBaseline > 0 ? (
+                        <ChevronUp />
+                      ) : (
+                        <ChevronDown />
+                      )}
+                      {currentConsumption &&
+                        Math.abs(
+                          currentConsumption?.consumptionPercentDeviationFromBaseline
+                        ).toFixed(0)}
+                      %
+                    </span>
                   </div>
                 )}
               </CardTitle>
