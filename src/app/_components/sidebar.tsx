@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 
-import { Plus, SquarePen } from "lucide-react";
+import { ExternalLink, HelpCircle, MessageSquare, Plus, SquarePen } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { CreateHouseholdPanel } from "@app/_components/create-household-panel";
-import { LanguageSwitcher } from "@app/_components/language-switcher";
 import { ManageHouseholdSheet } from "@app/_components/manage-household-sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@app/_components/ui/avatar";
 import { Button } from "@app/_components/ui/button";
@@ -22,6 +21,7 @@ import {
   SidebarMenuButton,
   SidebarRail,
 } from "@app/_components/ui/sidebar";
+import { Link } from "@app/_i18n/routing";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 
@@ -62,11 +62,29 @@ export function AppSidebar({ className }: { className?: string }) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-gray-200 py-4">
+      <SidebarFooter className="border-t border-gray-200 p-0">
         <SidebarMenu>
-          <SidebarMenuItem className="px-2">
-            <LanguageSwitcher />
-          </SidebarMenuItem>
+          {[
+            { href: "https://mica.eco/contact", icon: MessageSquare, text: tCommon("contactUs") },
+            { href: "https://mica.eco/faqs", icon: HelpCircle, text: tCommon("help") },
+            {
+              href: "https://mica.eco",
+              icon: () => (
+                <Image src="/logos/logo-dark.webp" width={24} height={24} alt="dark logo" />
+              ),
+              text: "www.mica.eco",
+            },
+          ].map(({ href, icon: Icon, text }) => (
+            <Link key={href} href={href} target="_blank">
+              <SidebarMenuItem className="flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-100">
+                <div className="flex items-center gap-2">
+                  <Icon />
+                  {text}
+                </div>
+                <ExternalLink />
+              </SidebarMenuItem>
+            </Link>
+          ))}
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
