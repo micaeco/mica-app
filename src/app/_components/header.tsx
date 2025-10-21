@@ -27,7 +27,7 @@ export function Header({ className }: { className?: string }) {
     <header
       className={cn(
         className,
-        "fixed top-0 z-10 flex h-(--header-height) w-full items-center bg-transparent p-4"
+        "fixed top-0 z-10 flex h-(--header-height) w-full items-center bg-white p-4"
       )}
     >
       <div className="flex w-full items-center justify-between">
