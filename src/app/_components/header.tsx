@@ -27,7 +27,7 @@ export function Header({ className }: { className?: string }) {
     <header
       className={cn(
         className,
-        "fixed top-0 z-10 flex h-(--header-height) w-full items-center border-b bg-white p-4"
+        "fixed top-0 z-10 flex h-(--header-height) w-full items-center bg-transparent p-4"
       )}
     >
       <div className="flex w-full items-center justify-between">
@@ -53,7 +53,7 @@ export function Header({ className }: { className?: string }) {
             <Avatar className="border-brand-primary mx-auto border-2 bg-white">
               <AvatarImage
                 className="object-contain"
-                src={session?.user?.image ? session.user.image : "/logos/logo.webp"}
+                src={session?.user?.image || undefined}
                 alt={session?.user?.name || "User Avatar"}
               />
               <AvatarFallback>{session?.user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>

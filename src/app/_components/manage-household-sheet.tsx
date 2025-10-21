@@ -105,7 +105,7 @@ export function ManageHouseholdSheet({
               <Avatar key={user.id} className="border-brand-primary border-2 bg-white">
                 <AvatarImage
                   className="object-contain"
-                  src={user?.image ? user.image : "/logos/logo.webp"}
+                  src={user?.image || undefined}
                   alt={user?.name || "User Avatar"}
                 />
                 <AvatarFallback>{user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>

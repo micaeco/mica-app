@@ -59,7 +59,7 @@ export function EditProfileSheet({ children }: { children: React.ReactNode }) {
           <Avatar className="border-brand-primary mx-auto h-12 w-12 border-2 bg-white">
             <AvatarImage
               className="object-contain"
-              src={session?.user?.image ? session.user.image : "/logos/logo.webp"}
+              src={session?.user?.image || undefined}
               alt={session?.user?.name || "User Avatar"}
             />
             <AvatarFallback>{session?.user?.name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
