@@ -1,8 +1,6 @@
 "use client";
 
-import Image from "next/image";
-
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { EditProfileSheet } from "@app/_components/edit-profile-sheet";
@@ -15,7 +13,7 @@ import { useHouseholdStore } from "@app/_stores/household";
 
 export function Header({ className }: { className?: string }) {
   const pathname = usePathname();
-  const { toggleSidebar, state } = useSidebar();
+  const { toggleSidebar } = useSidebar();
 
   const tNavPages = useTranslations("common.navPages");
 
@@ -29,21 +27,13 @@ export function Header({ className }: { className?: string }) {
     <header
       className={cn(
         className,
-        "fixed top-0 z-10 flex h-(--header-height) w-full items-center border-b bg-white"
+        "fixed top-0 z-10 flex h-(--header-height) w-full items-center border-b bg-white p-4"
       )}
     >
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-3">
-          <button
-            onClick={toggleSidebar}
-            className="bg-primary flex h-8 w-14 items-center rounded-r-full p-1 lg:w-12"
-          >
-            <Image src="/icons/household.webp" alt="household" width={32} height={32} />
-            {state == "expanded" ? (
-              <ChevronLeft size={24} className="text-white" />
-            ) : (
-              <ChevronRight size={24} className="text-white" />
-            )}
+          <button onClick={toggleSidebar}>
+            <Menu />
           </button>
           <p className="text-sm font-semibold">
             {household?.name
