@@ -1,5 +1,6 @@
 {
   "common": {
+    "sample": "mostra",
     "sensor": "Sensor",
     "notes": "Notes",
     "tomorrow": "Demà",
@@ -358,6 +359,32 @@
     "acceptButton": "Acceptar",
     "decliningButton": "Rebutjant...",
     "declineButton": "Rebutjar"
+  },
+  "efficiency": {
+    "title": "Eficiència",
+    "compareYourself": "Compara't",
+    "recommendations": "Recomanacions",
+    "unit": "L / habitant dia",
+    "optimalConsumption": "El teu consum és òptim. Segueix així!",
+    "optimalConsumptionCategory": "El teu consum de {category} és òptim. Segueix així!",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes següent",
+    "comparison": {
+      "you": "Tu",
+      "average": "Mitjana",
+      "optimalUse": "Ús òptim"
+    },
+    "gauge": {
+      "optimalUse": "ús òptim",
+      "waste": "malbaratament"
+    },
+    "kpis": {
+      "usesPerPersonDaily": "Usos / persona dia",
+      "consumptionPerCycle": "Consum / cicle",
+      "tankVolume": "Volum cisterna",
+      "timePerUse": "Temps / ús",
+      "flowRate": "Cabal"
+    }
   },
   "emails": {
     "verification": {

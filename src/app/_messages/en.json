@@ -1,5 +1,6 @@
 {
   "common": {
+    "sample": "sample",
     "sensor": "Sensor",
     "notes": "Notes",
     "tomorrow": "Tomorrow",
@@ -358,6 +359,32 @@
     "acceptButton": "Accept",
     "decliningButton": "Declining...",
     "declineButton": "Decline"
+  },
+  "efficiency": {
+    "title": "Efficiency",
+    "compareYourself": "Compare yourself",
+    "recommendations": "Recommendations",
+    "unit": "L / inhabitant day",
+    "optimalConsumption": "Your consumption is optimal. Keep it up!",
+    "optimalConsumptionCategory": "Your {category} consumption is optimal. Keep it up!",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "comparison": {
+      "you": "You",
+      "average": "Average",
+      "optimalUse": "Optimal use"
+    },
+    "gauge": {
+      "optimalUse": "optimal use",
+      "waste": "waste"
+    },
+    "kpis": {
+      "usesPerPersonDaily": "Uses / person day",
+      "consumptionPerCycle": "Consumption / cycle",
+      "tankVolume": "Tank volume",
+      "timePerUse": "Time / use",
+      "flowRate": "Flow rate"
+    }
   },
   "emails": {
     "verification": {

@@ -1,5 +1,6 @@
 {
   "common": {
+    "sample": "muestra",
     "sensor": "Sensor",
     "notes": "Notas",
     "tomorrow": "Mañana",
@@ -359,20 +360,46 @@
     "decliningButton": "Rechazando...",
     "declineButton": "Rechazar"
   },
+  "efficiency": {
+    "title": "Eficiencia",
+    "compareYourself": "Compárate",
+    "recommendations": "Recomendaciones",
+    "unit": "L / habitante día",
+    "optimalConsumption": "Tu consumo es óptimo. ¡Sigue así!",
+    "optimalConsumptionCategory": "Tu consumo de {category} es óptimo. ¡Sigue así!",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "comparison": {
+      "you": "Tú",
+      "average": "Media",
+      "optimalUse": "Uso óptimo"
+    },
+    "gauge": {
+      "optimalUse": "uso óptimo",
+      "waste": "derroche"
+    },
+    "kpis": {
+      "usesPerPersonDaily": "Usos / persona día",
+      "consumptionPerCycle": "Consumo / ciclo",
+      "tankVolume": "Volumen cisterna",
+      "timePerUse": "Tiempo / uso",
+      "flowRate": "Caudal"
+    }
+  },
   "emails": {
     "verification": {
-      "title": "Verifica tu correo electrónico",
+      "title": "Verifica tu dirección de correo electrónico",
       "greeting": "Hola,",
       "thankYou": "Gracias por registrarte en MICA. ¡Estamos encantados de tenerte con nosotros!",
-      "instruction": "Para completar tu registro y verificar tu dirección de correo electrónico, por favor haz clic en el siguiente botón:",
-      "button": "Verificar mi correo",
+      "instruction": "Para completar tu registro y verificar tu dirección de correo electrónico, por favor haz clic en el botón de abajo:",
+      "button": "Verificar mi correo electrónico",
       "important": "Importante: Si no has solicitado este correo, por favor ignora este mensaje.",
       "fallback": "Si el botón no funciona, puedes hacer clic en este enlace:",
-      "expiryNote": "Este enlace caducará en {days} días.",
+      "expiryNote": "Este enlace expirará en {days} días.",
       "help": "Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos.",
       "regards": "Saludos,",
       "teamSignature": "El equipo de MICA",
-      "automaticNote": "Este es un correo automático. Por favor, no respondas a este mensaje."
+      "automaticNote": "Este es un correo electrónico automatizado. Por favor no respondas a este mensaje."
     },
     "resetPassword": {
       "title": "Restablece tu contraseña",

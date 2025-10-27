@@ -2,54 +2,23 @@
 
 import { usePathname } from "next/navigation";
 
-import { Home, PieChart, CopyCheck } from "lucide-react";
+import { Home, PieChart, Droplet } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Link } from "@app/_i18n/routing";
-import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
-import { useHouseholdStore } from "@app/_stores/household";
 
 const navItems = [
   { icon: PieChart, href: "/consumption" },
   { icon: Home, href: "/" },
-  { icon: CopyCheck, href: "/actions" },
+  { icon: Droplet, href: "/efficiency", sample: true },
 ];
 
 export function Navbar({ className }: { className?: string }) {
   const pathname = usePathname();
   const cleanPathname = pathname.replace(/^\/[a-z]{2}(\/|$)/, "/");
 
-  const { selectedHouseholdId } = useHouseholdStore();
-
-  const { data: leakEvents } = trpc.event.getNumberOfLeakEvents.useQuery(
-    {
-      householdId: selectedHouseholdId,
-    },
-    {
-      enabled: !!selectedHouseholdId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      retry: 1,
-    }
-  );
-
-  const { data: unknownEvents } = trpc.event.getNumberOfUnknownEvents.useQuery(
-    {
-      householdId: selectedHouseholdId,
-    },
-    {
-      enabled: !!selectedHouseholdId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      retry: 1,
-    }
-  );
-
-  const totalEvents = (leakEvents ?? 0) + (unknownEvents ?? 0);
+  const tCommon = useTranslations("common");
 
   return (
     <nav
@@ -61,7 +30,6 @@ export function Navbar({ className }: { className?: string }) {
       <ul className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
           const isActive = cleanPathname === item.href;
-          const isActionsIcon = item.href === "/actions";
           return (
             <li key={item.href}>
               <Link
@@ -78,14 +46,10 @@ export function Navbar({ className }: { className?: string }) {
                   )}
                 >
                   <item.icon className="h-6 w-6" />
-                  {isActionsIcon && totalEvents > 0 && (
-                    <span
-                      className={cn(
-                        "absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white"
-                      )}
-                    >
-                      {totalEvents}
-                    </span>
+                  {item.sample && (
+                    <div className="absolute top-2 -right-6 flex items-center justify-center rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-gray-800">
+                      {tCommon("sample")}
+                    </div>
                   )}
                 </div>
               </Link>
