@@ -362,6 +362,8 @@
   },
   "efficiency": {
     "title": "Eficiencia",
+    "sampleDataNotice": "Estos no son los datos reales de tu hogar",
+    "sampleDataDescription": "El análisis de eficiencia que se muestra a continuación utiliza datos de ejemplo para demostrar cómo funciona esta feature.",
     "compareYourself": "Compárate",
     "recommendations": "Recomendaciones",
     "unit": "L / habitante día",

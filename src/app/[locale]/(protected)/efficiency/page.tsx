@@ -5,12 +5,13 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { format } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { AlertTriangle, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { ComparisonChart } from "@app/[locale]/(protected)/efficiency/_components/comparison-chart";
 import { EfficiencyGauge } from "@app/[locale]/(protected)/efficiency/_components/efficiency-gauge";
 import { KPIGauge } from "@app/[locale]/(protected)/efficiency/_components/kpi-gauge";
+import { Alert, AlertDescription, AlertTitle } from "@app/_components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@app/_components/ui/card";
 import { getDateFnsLocale } from "@app/_i18n/routing";
 import { cn } from "@app/_lib/utils";
@@ -19,91 +20,111 @@ import {
   efficiencyCategories,
   EfficiencyCategory,
   KPIToIcon,
-  KPIToThreshold,
   KPIToUnit,
+  showerKPIThresholds,
+  toiletKPIThresholds,
+  washerKPIThresholds,
+  dishwasherKPIThresholds,
+  ShowerKPIType,
+  ToiletKPIType,
+  WasherKPIType,
+  DishwasherKPIType,
+  Thresholds,
 } from "@domain/entities/efficiency";
+
+function getKPIThresholds(category: EfficiencyCategory, kpiType: string): Thresholds {
+  switch (category) {
+    case "shower":
+      return showerKPIThresholds[kpiType as ShowerKPIType];
+    case "toilet":
+      return toiletKPIThresholds[kpiType as ToiletKPIType];
+    case "washer":
+      return washerKPIThresholds[kpiType as WasherKPIType];
+    case "dishwasher":
+      return dishwasherKPIThresholds[kpiType as DishwasherKPIType];
+  }
+}
 
 const mockEfficiency: Efficiency = {
   overall: {
-    consumptionBenchmark: { value: 105, average: 120, target: 95 },
-    thresholds: [100, 120, 150],
+    consumptionBenchmark: { value: 107, average: 130, target: 90 },
+    thresholds: [90, 110, 140],
   },
   byCategory: {
     shower: {
-      consumptionBenchmark: { value: 60, average: 70, target: 50 },
-      thresholds: [55, 69, 92],
+      consumptionBenchmark: { value: 42, average: 56, target: 30 },
+      thresholds: [30, 50, 70],
       kpis: [
-        { type: "usesPerPersonDaily", value: 4.2 },
-        { type: "timePerUse", value: 4.6 },
-        { type: "flowRate", value: 10.3 },
+        { type: "usesPerPersonDaily", value: 1 },
+        { type: "timePerUse", value: 6 },
+        { type: "flowRate", value: 7 },
       ],
     },
     toilet: {
-      consumptionBenchmark: { value: 29, average: 30, target: 20 },
-      thresholds: [21, 27, 34],
-      kpis: [{ type: "tankVolume", value: 8.3 }],
+      consumptionBenchmark: { value: 33, average: 36, target: 22.5 },
+      thresholds: [22.5, 30, 40],
+      kpis: [
+        { type: "usesPerPersonDaily", value: 5.5 },
+        { type: "tankVolume", value: 6 },
+      ],
     },
     washer: {
-      consumptionBenchmark: { value: 17, average: 15, target: 10 },
-      thresholds: [11, 14.2, 19],
-      kpis: [{ type: "consumptionPerCycle", value: 42.2 }],
+      consumptionBenchmark: { value: 14, average: 25, target: 12 },
+      thresholds: [12, 20, 30],
+      kpis: [
+        { type: "usesPerPersonDaily", value: 0.4 },
+        { type: "consumptionPerCycle", value: 35 },
+      ],
     },
     dishwasher: {
-      consumptionBenchmark: { value: 8, average: 10, target: 6 },
-      thresholds: [6.5, 9.5, 12.8],
-      kpis: [{ type: "consumptionPerCycle", value: 41.0 }],
+      consumptionBenchmark: { value: 18, average: 16, target: 9 },
+      thresholds: [9, 15, 21],
+      kpis: [
+        { type: "usesPerPersonDaily", value: 0.5 },
+        { type: "consumptionPerCycle", value: 36 },
+      ],
     },
   },
   recommendations: [
     {
       id: "rec-001",
       description: {
-        en: "Turn off the water while soaping",
-        es: "Cierra el agua mientras te enjabonas",
-        ca: "Tanca l'aigua mentre t'ensabones",
+        en: "Upgrade to a more efficient dishwasher",
+        es: "Actualiza a un lavavajillas más eficiente",
+        ca: "Actualitza a un rentavaixelles més eficient",
       },
-      category: "shower",
-      percentatgeSavings: 5,
+      category: "dishwasher",
+      percentatgeSavings: 72,
     },
     {
       id: "rec-002",
       description: {
-        en: "Install a more efficient shower head",
-        es: "Instala un cabezal de ducha más eficiente",
-        ca: "Instal·la una carxofa més eficient",
+        en: "Run dishwasher only when full",
+        es: "Usa el lavavajillas solo cuando esté lleno",
+        ca: "Usa el rentavaixelles només quan estigui ple",
       },
-      category: "shower",
-      percentatgeSavings: 20,
+      category: "dishwasher",
+      percentatgeSavings: 40,
     },
     {
       id: "rec-003",
       description: {
-        en: "Install a more efficient flush tank",
-        es: "Instala una cisterna más eficiente",
-        ca: "Instal·la una cisterna més eficient",
+        en: "Install a dual-flush or low-flow toilet",
+        es: "Instala un inodoro de doble descarga",
+        ca: "Instal·la un vàter de doble descàrrega",
       },
       category: "toilet",
-      percentatgeSavings: 30,
+      percentatgeSavings: 25,
     },
     {
       id: "rec-004",
       description: {
-        en: "Use eco programs",
-        es: "Utiliza programas eco",
-        ca: "Utilitza programes eco",
+        en: "Reduce shower time to 5 minutes",
+        es: "Reduce el tiempo de ducha a 5 minutos",
+        ca: "Redueix el temps de dutxa a 5 minuts",
       },
-      category: "washer",
-      percentatgeSavings: 30,
-    },
-    {
-      id: "rec-005",
-      description: {
-        en: "Wait for a full load",
-        es: "Espera a tener una carga completa",
-        ca: "Espera a tenir una càrrega completa",
-      },
-      category: "washer",
-      percentatgeSavings: 10,
+      category: "shower",
+      percentatgeSavings: 17,
     },
   ],
 };
@@ -133,6 +154,12 @@ export default function EfficiencyPage() {
 
   return (
     <div className="flex flex-col gap-4 p-6">
+      <Alert className="max-w-xl">
+        <AlertTriangle />
+        <AlertTitle className="line-clamp-none">{tEfficiency("sampleDataNotice")}</AlertTitle>
+        <AlertDescription>{tEfficiency("sampleDataDescription")}</AlertDescription>
+      </Alert>
+
       <div className="flex justify-center 2xl:justify-start">
         <div className="bg-muted flex items-center gap-2 rounded-xl px-4 py-2">
           <button
@@ -193,7 +220,7 @@ export default function EfficiencyPage() {
       </div>
 
       <div className="flex flex-col gap-4 2xl:flex-row">
-        <Card className="h-fit 2xl:min-w-1/3">
+        <Card className="relative h-fit overflow-hidden 2xl:min-w-1/3">
           <CardHeader>
             <CardTitle>{tEfficiency("title")}</CardTitle>
           </CardHeader>
@@ -211,7 +238,7 @@ export default function EfficiencyPage() {
                     key={kpi.type}
                     value={kpi.value}
                     unit={KPIToUnit[kpi.type as keyof typeof KPIToUnit] ?? ""}
-                    thresholds={KPIToThreshold[kpi.type as keyof typeof KPIToThreshold]}
+                    thresholds={getKPIThresholds(selectedCategory, kpi.type)}
                     label={tKPIs(kpi.type)}
                     icon={KPIToIcon[kpi.type as keyof typeof KPIToIcon]}
                   />

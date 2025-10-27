@@ -362,6 +362,8 @@
   },
   "efficiency": {
     "title": "Eficiència",
+    "sampleDataNotice": "Aquestes no són les dades reals de la teva llar",
+    "sampleDataDescription": "L'anàlisi d'eficiència que es mostra a continuació utilitza dades d'exemple per demostrar com funciona aquesta feature.",
     "compareYourself": "Compara't",
     "recommendations": "Recomanacions",
     "unit": "L / habitant dia",

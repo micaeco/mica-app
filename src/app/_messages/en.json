@@ -362,6 +362,8 @@
   },
   "efficiency": {
     "title": "Efficiency",
+    "sampleDataNotice": "This is not your household's actual data",
+    "sampleDataDescription": "The efficiency analysis shown below uses example data to demonstrate how this feature works.",
     "compareYourself": "Compare yourself",
     "recommendations": "Recommendations",
     "unit": "L / inhabitant day",
