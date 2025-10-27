@@ -23,7 +23,7 @@ import {
   KPIToUnit,
 } from "@domain/entities/efficiency";
 
-export const mockEfficiency: Efficiency = {
+const mockEfficiency: Efficiency = {
   overall: {
     consumptionBenchmark: { value: 105, average: 120, target: 95 },
     thresholds: [100, 120, 150],
