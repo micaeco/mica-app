@@ -49,7 +49,7 @@ export function ComparisonChart({ benchmark }: { benchmark: ConsumptionPerDayPer
                 {!row.isUser && (
                   <>
                     <div
-                      className="bg-brand-primary absolute z-10 h-1.5 w-1.5 rounded-full"
+                      className="bg-brand-primary absolute z-[1] h-1.5 w-1.5 rounded-full"
                       style={{ left: userOffset, top: "50%", transform: "translate(-50%, -50%)" }}
                     />
                     {pct !== userPct && (
@@ -64,7 +64,7 @@ export function ComparisonChart({ benchmark }: { benchmark: ConsumptionPerDayPer
                           }}
                         />
                         <div
-                          className="absolute z-10"
+                          className="absolute z-[1]"
                           style={{
                             left: `${pct}%`,
                             top: "50%",
