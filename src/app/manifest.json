@@ -1,6 +1,8 @@
 {
   "name": "MICA APP",
   "short_name": "MICA",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/icons/logo-192.png",
