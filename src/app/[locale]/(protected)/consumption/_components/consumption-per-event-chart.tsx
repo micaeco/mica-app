@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useTranslations } from "next-intl";
 import { useInView } from "react-intersection-observer";
@@ -60,7 +60,11 @@ export function ConsumptionPerEventChart({
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const events = data?.pages.flatMap((page) => page.data) || [];
+  const events = useMemo(() => {
+    const allEvents = data?.pages.flatMap((page) => page.data) || [];
+    const uniqueEventsMap = new Map(allEvents.map((event) => [event.id, event]));
+    return Array.from(uniqueEventsMap.values());
+  }, [data?.pages]);
 
   if (isLoading) {
     return (

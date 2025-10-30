@@ -74,9 +74,9 @@ export default function ConsumptionPage() {
     <div className="flex w-full flex-col gap-4 p-4">
       <TimeGranularitySelect granularity={granularity} setGranularity={setGranularity} />
 
-      <div className="flex flex-col gap-4 2xl:flex-row">
-        <div className="flex flex-col gap-4 2xl:min-w-md">
-          <Card className="flex h-full flex-col">
+      <div className="/* 100vh minus this container's vertical padding (p-4 => 2*space.4) */ flex flex-col gap-4 xl:grid xl:h-[calc(100vh-theme(space.8))] xl:min-h-0 xl:grid-cols-[24rem_minmax(0,1fr)] xl:grid-rows-[auto_minmax(0,1fr)] xl:gap-4">
+        <div className="col-start-1 row-start-1 flex flex-col">
+          <Card className="flex h-fit flex-col">
             <CardHeader>
               <CardTitle className="first-letter:capitalize">
                 {formatSelectedTimeWindow()}
@@ -95,7 +95,9 @@ export default function ConsumptionPage() {
               />
             </CardContent>
           </Card>
+        </div>
 
+        <div className="col-start-1 row-start-2 min-h-0">
           <Card className="flex h-full flex-col">
             <CardHeader>
               <CardTitle className="space-x-4">
@@ -103,7 +105,7 @@ export default function ConsumptionPage() {
                   <Skeleton className="h-8 w-32" />
                 ) : (
                   <div className="flex flex-row gap-2">
-                    <span className="text-2xl">
+                    <span className="text-xl">
                       {currentConsumption?.consumptionInLiters.toFixed(2) ?? "--"} L
                     </span>
                     <span className="text-muted-foreground flex items-end text-sm font-light">
@@ -143,8 +145,8 @@ export default function ConsumptionPage() {
           </Card>
         </div>
 
-        <Card className="flex w-full flex-col 2xl:max-h-[calc(140vh-250px)] 2xl:min-h-[calc(100vh-250px)] 2xl:flex-grow">
-          <CardContent className="flex-grow p-6 2xl:overflow-y-auto">
+        <Card className="col-start-2 row-span-2 row-start-1 flex h-full min-h-0 flex-col overflow-hidden">
+          <CardContent className="h-full min-h-0 overflow-auto p-6">
             <ConsumptionPerEventChart
               selectedCategories={selectedCategories}
               selectedTimeWindow={selectedTimeWindow}
