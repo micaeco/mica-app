@@ -31,6 +31,7 @@ export function EventsList() {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
         initialCursor: undefined,
         enabled: !!selectedHouseholdId,
+        refetchInterval: 5000,
       }
     );
 
