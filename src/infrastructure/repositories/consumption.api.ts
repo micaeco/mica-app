@@ -189,8 +189,18 @@ export class ApiConsumptionRepository implements ConsumptionRepository {
             }))
             .sort((a, b) => b.consumptionInLiters - a.consumptionInLiters);
 
-          const topCategories = sorted.slice(0, 4);
-          const rest = sorted.slice(4);
+          const totalConsumption = dataPoint.consumptionInLiters;
+          const threshold = totalConsumption * 0.05;
+
+          const topCategories = sorted
+            .slice(0, 4)
+            .filter((item) => item.consumptionInLiters >= threshold);
+
+          const rest = [
+            ...sorted.slice(4),
+            ...sorted.slice(0, 4).filter((item) => item.consumptionInLiters < threshold),
+          ];
+
           const restTotal = rest.reduce((sum, item) => sum + item.consumptionInLiters, 0);
 
           if (restTotal > 0) {
