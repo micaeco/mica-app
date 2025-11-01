@@ -1,9 +1,17 @@
 "use client";
 
-import { ChevronRight, HelpCircle, LogOut, Users } from "lucide-react";
+import { useState } from "react";
+
+import { Check, ChevronRight, Globe, HelpCircle, Loader2, LogOut, Users } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@app/_components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@app/_components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -11,18 +19,44 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@app/_components/ui/sheet";
-import { Locale, useRouter } from "@app/_i18n/routing";
+import { Locale, usePathname, useRouter } from "@app/_i18n/routing";
 import { authClient } from "@app/_lib/auth-client";
 import { KeysOfType } from "@app/_types/utils";
 
 import { MenuItem, MenuList } from "./ui/menu-list";
 
+const languages: { code: Locale; name: string }[] = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Español" },
+  { code: "ca", name: "Català" },
+];
+
 export function EditProfileSheet({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
+  const pathname = usePathname();
   const tCommon = useTranslations("common");
 
   const { data: session } = authClient.useSession();
+
+  const [isChangingLanguage, setIsChangingLanguage] = useState(false);
+
+  const handleLanguageChange = async (newLocale: Locale) => {
+    setIsChangingLanguage(true);
+    try {
+      if (session?.user) {
+        await authClient.updateUser({ locale: newLocale });
+      }
+      router.replace(pathname, { locale: newLocale });
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to update language:", error);
+    } finally {
+      setIsChangingLanguage(false);
+    }
+  };
+
+  const currentLanguage = languages.find((lang) => lang.code === locale);
 
   interface SettingsListItemData {
     icon: React.ReactNode;
@@ -72,6 +106,43 @@ export function EditProfileSheet({ children }: { children: React.ReactNode }) {
 
         <div className="px-2 sm:px-0">
           <MenuList>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <MenuItem className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Globe className="h-5 w-5 text-neutral-500" />
+                    <span>{tCommon("language")}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {isChangingLanguage ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-neutral-400" />
+                    ) : (
+                      <>
+                        <span className="text-sm text-neutral-500">{currentLanguage?.name}</span>
+                        <ChevronRight className="h-4 w-4 text-neutral-400" />
+                      </>
+                    )}
+                  </div>
+                </MenuItem>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {languages.map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => handleLanguageChange(lang.code)}
+                    className="flex items-center gap-2"
+                  >
+                    <Globe className="h-4 w-4" />
+                    <span>{lang.name}</span>
+                    {lang.code === locale && (
+                      <span className="ml-auto">
+                        <Check />
+                      </span>
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             {menuItems.map((item, index) => {
               return (
                 <MenuItem

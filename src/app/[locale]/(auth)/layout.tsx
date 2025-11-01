@@ -18,7 +18,7 @@ export default async function AuthLayout({
   });
 
   if (session) {
-    redirect({ href: "/", locale: locale });
+    redirect({ href: "/", locale });
   }
 
   return (

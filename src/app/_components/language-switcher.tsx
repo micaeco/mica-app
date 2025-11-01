@@ -28,29 +28,44 @@ export function LanguageSwitcher({ className }: { className?: string }) {
 
   const [isPending, setIsPending] = useState(false);
 
+  const { data: session } = authClient.useSession();
+
   const handleLanguageChange = async (newLocale: Locale) => {
     setIsPending(true);
-    await authClient.updateUser({ locale: newLocale });
-    router.replace(pathname, { locale: newLocale });
-    setIsPending(false);
+    try {
+      if (session?.user) {
+        await authClient.updateUser({ locale: newLocale });
+      }
+      router.replace(pathname, { locale: newLocale });
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to update language:", error);
+    } finally {
+      setIsPending(false);
+    }
   };
 
+  const currentLanguage = languages.find((lang) => lang.code === locale);
+
   return (
-    <Select onValueChange={handleLanguageChange} value={locale}>
+    <Select onValueChange={handleLanguageChange} value={locale} disabled={isPending}>
       <SelectTrigger className={className}>
-        {isPending ? <Loader2 className="animate-spin" /> : <SelectValue />}
+        {isPending ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <div className="flex items-center gap-2">
+            <Globe className="h-4 w-4" />
+            <SelectValue>{currentLanguage?.name}</SelectValue>
+          </div>
+        )}
       </SelectTrigger>
       <SelectContent>
         {languages.map((lang) => (
           <SelectItem key={lang.code} value={lang.code}>
-            {isPending ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <div className="flex flex-row items-center gap-2">
-                <Globe className="h-4 w-4" />
-                {lang.name}
-              </div>
-            )}
+            <div className="flex flex-row items-center gap-2">
+              <Globe className="h-4 w-4" />
+              {lang.name}
+            </div>
           </SelectItem>
         ))}
       </SelectContent>
