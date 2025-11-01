@@ -62,7 +62,7 @@ export function AppSidebar({ className }: { className?: string }) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-gray-200 p-0">
+      <SidebarFooter className="border-t border-gray-200 p-0 py-2">
         <SidebarMenu>
           {[
             { href: "https://mica.eco/contact", icon: MessageSquare, text: tCommon("contactUs") },
