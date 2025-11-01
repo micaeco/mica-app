@@ -11,6 +11,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { ConsumptionBar } from "@app/_components/consumption-bar";
 import { EditEventSheet } from "@app/_components/edit-event-sheet";
 import { getDateFnsLocale } from "@app/_i18n/routing";
+import { cn } from "@app/_lib/utils";
 import { categoryMap } from "@domain/entities/category";
 import { Granularity } from "@domain/entities/consumption";
 import { Event } from "@domain/entities/event";
@@ -31,13 +32,36 @@ export function EventBar({ event, totalConsumption, granularity }: EventBarProps
 
   const consumptionPercentage = (event.consumptionInLiters / totalConsumption) * 100;
 
+  const isActiveLeak = () => {
+    if (event.category !== "leak" || event.categorySource !== "algorithm" || !event.endTimestamp) {
+      return false;
+    }
+
+    const now = new Date();
+    const timeSinceEnd = now.getTime() - event.endTimestamp.getTime();
+    const fiveMinutesInMs = 5 * 60 * 1000;
+
+    return timeSinceEnd <= fiveMinutesInMs;
+  };
+
+  const isLeakActive = isActiveLeak();
+
   if (event.endTimestamp) {
     return (
       <>
         <div
-          className="flex flex-row items-center gap-2 transition-transform hover:scale-95 hover:cursor-pointer"
+          className={cn(
+            "relative flex flex-row items-center gap-2 transition-transform hover:scale-95 hover:cursor-pointer",
+            isLeakActive &&
+              "border-brand-quaternary bg-brand-quaternary/10 shadow-brand-quaternary/30 animate-pulse rounded-lg border-2 p-2 shadow-lg"
+          )}
           onClick={() => setIsOpenEditEventSheet(true)}
         >
+          {isLeakActive && (
+            <div className="bg-brand-quaternary absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full shadow-md">
+              <span className="text-lg font-semibold text-white">!</span>
+            </div>
+          )}
           <Image
             src={categoryMap[event.category].icon!}
             alt={event.category}
