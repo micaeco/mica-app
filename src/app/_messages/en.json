@@ -237,7 +237,9 @@
     "notesLabel": "Add a note",
     "notesPlaceholder": "Add an optional note for this event",
     "noTagsForCategory": "No tags found for this category.",
-    "eventEditedSuccessfully": "Event edited successfully"
+    "eventEditedSuccessfully": "Event edited successfully",
+    "flowRate": "Average flow rate",
+    "flowRateUnit": "L/min"
   },
   "editTagsDialog": {
     "title": "Edit tags",

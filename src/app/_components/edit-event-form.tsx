@@ -61,6 +61,28 @@ export function EditEventForm({
   const tEditEventSheet = useTranslations("editEventSheet");
   const tEditTagsDialog = useTranslations("editTagsDialog");
 
+  // Helper function to format duration
+  const formatDuration = (durationInSeconds: number) => {
+    const minutes = Math.floor(durationInSeconds / 60);
+    const seconds = Math.floor(durationInSeconds % 60);
+
+    if (minutes === 0) {
+      return `${seconds}s`;
+    }
+
+    if (seconds === 0) {
+      return `${minutes}m`;
+    }
+
+    return `${minutes}m ${seconds}s`;
+  };
+
+  // Helper function to calculate flow rate (L/min)
+  const calculateFlowRate = (consumptionInLiters: number, durationInSeconds: number) => {
+    if (durationInSeconds === 0) return 0;
+    return (consumptionInLiters / (durationInSeconds / 60)).toFixed(1);
+  };
+
   const eventForm = useForm<EditEventFormValues>({
     resolver: zodResolver(editEventFormSchema),
     defaultValues: {
@@ -112,21 +134,33 @@ export function EditEventForm({
       <Form {...eventForm}>
         <form onSubmit={eventForm.handleSubmit(onSubmitEvent)} className="flex flex-col space-y-6">
           {event && (
-            <p className="text-muted-foreground text-sm">
-              {format(event.startTimestamp, "cccc PPP", { locale: getDateFnsLocale(locale) })}{" "}
-              <br />
-              {format(event.startTimestamp, "HH:mm:ss", {
-                locale: getDateFnsLocale(locale),
-              })}{" "}
-              -{" "}
-              {event.endTimestamp
-                ? format(event.endTimestamp, "HH:mm:ss", { locale: getDateFnsLocale(locale) })
-                : tCommon("inProgress")}
-              <br />
-              <span className="text-brand-secondary font-bold">
-                {event.consumptionInLiters.toFixed(1)} L
-              </span>
-            </p>
+            <div className="bg-muted/30 space-y-3 rounded-lg p-4">
+              <p className="text-muted-foreground text-sm">
+                {format(event.startTimestamp, "cccc PPP", { locale: getDateFnsLocale(locale) })}
+              </p>
+
+              <div className="flex items-baseline justify-between">
+                <span className="text-brand-secondary text-3xl font-bold">
+                  {event.consumptionInLiters.toFixed(1)} L
+                </span>
+                <span className="text-muted-foreground text-sm">
+                  {calculateFlowRate(event.consumptionInLiters, event.durationInSeconds)} L/min
+                </span>
+              </div>
+
+              <div className="text-muted-foreground flex justify-between text-sm">
+                <span>
+                  {format(event.startTimestamp, "HH:mm", {
+                    locale: getDateFnsLocale(locale),
+                  })}
+                  {" - "}
+                  {event.endTimestamp
+                    ? format(event.endTimestamp, "HH:mm", { locale: getDateFnsLocale(locale) })
+                    : tCommon("inProgress")}
+                </span>
+                <span>{formatDuration(event.durationInSeconds)}</span>
+              </div>
+            </div>
           )}
 
           {/* Category */}

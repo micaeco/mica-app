@@ -237,7 +237,9 @@
     "notesLabel": "Nota",
     "notesPlaceholder": "Añade una nota opcional para este evento",
     "noTagsForCategory": "No se encontraron etiquetas para esta categoría.",
-    "eventEditedSuccessfully": "Evento actualizado correctamente"
+    "eventEditedSuccessfully": "Evento actualizado correctamente",
+    "flowRate": "Caudal medio",
+    "flowRateUnit": "L/min"
   },
   "editTagsDialog": {
     "title": "Editar etiquetas",

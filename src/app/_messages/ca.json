@@ -237,7 +237,9 @@
     "notesLabel": "Nota",
     "notesPlaceholder": "Afegeix una nota opcional per a aquest esdeveniment",
     "noTagsForCategory": "No s'han trobat etiquetes per a aquesta categoria.",
-    "eventEditedSuccessfully": "Esdeveniment actualitzat correctament"
+    "eventEditedSuccessfully": "Esdeveniment actualitzat correctament",
+    "flowRate": "Cabal mitjà",
+    "flowRateUnit": "L/min"
   },
   "editTagsDialog": {
     "title": "Editar etiquetes",
