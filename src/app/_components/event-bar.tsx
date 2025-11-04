@@ -22,7 +22,7 @@ interface EventBarProps {
   granularity?: Granularity;
 }
 
-export function EventBar({ event, totalConsumption, granularity }: EventBarProps) {
+export function EventBar({ event, granularity }: EventBarProps) {
   const tCommon = useTranslations("common");
   const tCategories = useTranslations("common.categories");
   const locale = useLocale();
@@ -30,7 +30,7 @@ export function EventBar({ event, totalConsumption, granularity }: EventBarProps
 
   const [isOpenEditEventSheet, setIsOpenEditEventSheet] = useState<boolean>(false);
 
-  const consumptionPercentage = (event.consumptionInLiters / totalConsumption) * 100;
+  const consumptionPercentage = Math.min((event.consumptionInLiters / 15) * 100, 100);
 
   const isActiveLeak = () => {
     if (event.category !== "leak" || event.categorySource !== "algorithm" || !event.endTimestamp) {
