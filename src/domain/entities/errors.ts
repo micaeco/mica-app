@@ -8,7 +8,11 @@ export type ErrorKey =
   | "HOUSEHOLD_INVITATION_ALREADY_EXISTS"
   | "HOUSEHOLD_INVITATION_INVALID"
   | "HOUSEHOLD_USER_ALREADY_EXISTS"
-  | "ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE";
+  | "ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE"
+  | "UNAUTHORIZED"
+  | "NOT_FOUND"
+  | "BAD_REQUEST"
+  | "INTERNAL_SERVER_ERROR";
 
 export class AppError extends Error {
   constructor(
@@ -75,5 +79,34 @@ export class AdminHouseholdUserCannotLeaveError extends AppError {
   constructor(metadata?: Record<string, unknown>, message?: string) {
     super("ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE", 403, "FORBIDDEN", metadata, message);
     this.name = "AdminHouseholdUserCannotLeaveError";
+  }
+}
+
+export class UnauthorizedError extends AppError {
+  constructor(metadata?: Record<string, unknown>, message = "Unauthorized") {
+    super("UNAUTHORIZED", 401, "UNAUTHORIZED", metadata, message);
+    this.name = "UnauthorizedError";
+  }
+}
+
+export class NotFoundError extends AppError {
+  constructor(resource?: string, metadata?: Record<string, unknown>, message?: string) {
+    const errorMessage = message || (resource ? `${resource} not found` : "Resource not found");
+    super("NOT_FOUND", 404, "NOT_FOUND", { ...metadata, resource }, errorMessage);
+    this.name = "NotFoundError";
+  }
+}
+
+export class BadRequestError extends AppError {
+  constructor(metadata?: Record<string, unknown>, message = "Bad request") {
+    super("BAD_REQUEST", 400, "BAD_REQUEST", metadata, message);
+    this.name = "BadRequestError";
+  }
+}
+
+export class InternalServerError extends AppError {
+  constructor(metadata?: Record<string, unknown>, message = "Internal server error") {
+    super("INTERNAL_SERVER_ERROR", 500, "INTERNAL_SERVER_ERROR", metadata, message);
+    this.name = "InternalServerError";
   }
 }
