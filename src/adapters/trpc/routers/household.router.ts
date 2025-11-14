@@ -17,7 +17,10 @@ import {
   UnauthorizedError,
 } from "@domain/entities/errors";
 import { createHousehold, Household } from "@domain/entities/household";
-import { HouseholdInvitation } from "@domain/entities/household-invitation";
+import {
+  createHouseholdInvitationInput,
+  HouseholdInvitation,
+} from "@domain/entities/household-invitation";
 import { HouseholdUser } from "@domain/entities/household-user";
 import { User } from "@domain/entities/user";
 import { HouseholdInvitationRepository } from "@domain/repositories/household-invitation";
@@ -56,15 +59,7 @@ export const householdRouter = createTRPCRouter({
   }),
 
   createInvitation: protectedProcedure
-    .input(
-      z.object({
-        householdId: z.string().uuid(),
-        invitedEmail: z
-          .string()
-          .email()
-          .transform((email) => email.toLowerCase()),
-      })
-    )
+    .input(createHouseholdInvitationInput)
     .mutation(async ({ input, ctx }) => {
       if (!ctx.userHouseholds.includes(input.householdId)) {
         throw new UnauthorizedError();

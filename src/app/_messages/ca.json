@@ -131,6 +131,11 @@
       "HOUSEHOLD_USER_ALREADY_EXISTS": "Aquest usuari ja forma part d'aquesta vivenda.",
       "ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE": "L'usuari administrador no pot abandonar la vivenda. Si us plau, transfereix els drets d'administrador a un altre usuari abans d'abandonar."
     },
+    "validation": {
+      "categoryRequired": "La categoria és obligatòria",
+      "eitherStartOrEndRequired": "Cal que introdueixis una hora d'inici o una hora de fi, o ambdues",
+      "endCannotBeBeforeStart": "L'hora de fi no pot ser anterior a l'hora d'inici"
+    },
     "navigation": "Navegació",
     "now": "Ara",
     "settings": "Configuració"

@@ -30,14 +30,10 @@ import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 import { categories, categoryMap, Category } from "@domain/entities/category";
-import { Event } from "@domain/entities/event";
+import { Event, updateEventForm } from "@domain/entities/event";
 import { Tag } from "@domain/entities/tag";
 
-const editEventFormSchema = z.object({
-  category: z.custom<Category>().nullable(),
-  tag: Tag.nullable(),
-  notes: z.string().nullable(),
-});
+const editEventFormSchema = updateEventForm;
 
 type EditEventFormValues = z.infer<typeof editEventFormSchema>;
 

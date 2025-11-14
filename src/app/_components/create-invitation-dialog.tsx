@@ -23,10 +23,9 @@ import {
 } from "@app/_components/ui/form";
 import { Input } from "@app/_components/ui/input";
 import { trpc } from "@app/_lib/trpc";
+import { createHouseholdInvitationForm } from "@domain/entities/household-invitation";
 
-const formSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address." }),
-});
+const formSchema = createHouseholdInvitationForm;
 
 export function CreateInvitationDialog({
   isOpen,
@@ -61,7 +60,10 @@ export function CreateInvitationDialog({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await createInvitation({ householdId, invitedEmail: values.email });
+    await createInvitation({ 
+      householdId, 
+      invitedEmail: values.email 
+    });
   }
 
   return (

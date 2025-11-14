@@ -131,6 +131,11 @@
       "HOUSEHOLD_USER_ALREADY_EXISTS": "This user is already part of this household.",
       "ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE": "Admin users cannot leave the household. Please transfer admin rights to another user before leaving."
     },
+    "validation": {
+      "categoryRequired": "The category is required",
+      "eitherStartOrEndRequired": "Either start time or end time is required, or both",
+      "endCannotBeBeforeStart": "End time cannot be before start time"
+    },
     "navigation": "Navigation",
     "now": "Now",
     "settings": "Settings"

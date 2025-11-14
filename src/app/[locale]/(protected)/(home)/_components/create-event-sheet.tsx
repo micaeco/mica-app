@@ -38,15 +38,10 @@ import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 import { Category, categories, categoryMap } from "@domain/entities/category";
+import { createEventForm } from "@domain/entities/event";
 import { Tag } from "@domain/entities/tag";
 
-const eventFormSchema = z.object({
-  startDateTime: z.date().nullable(),
-  endDateTime: z.date().nullable(),
-  category: z.custom<Category>().nullable(),
-  tag: Tag.nullable(),
-  notes: z.string().nullable(),
-});
+const eventFormSchema = createEventForm;
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
 
@@ -94,24 +89,9 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
   });
 
   const onSubmit = (data: EventFormValues) => {
-    if (data.startDateTime && data.endDateTime && data.startDateTime > data.endDateTime) {
-      toast.error(tNewEventSheet("endCannotBeBeforeStart"));
-      return;
-    }
-
-    if (!data.startDateTime && !data.endDateTime) {
-      toast.error(tNewEventSheet("eitherStartOrEndRequired"));
-      return;
-    }
-
-    if (!data.category) {
-      toast.error(tNewEventSheet("categoryRequired"));
-      return;
-    }
-
     mutation.mutate({
       householdId: selectedHouseholdId,
-      category: data.category,
+      category: data.category!,
       startDate: data.startDateTime ?? undefined,
       endDate: data.endDateTime ?? undefined,
       tagId: data.tag?.id ?? undefined,

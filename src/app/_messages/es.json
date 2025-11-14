@@ -131,6 +131,11 @@
       "HOUSEHOLD_USER_ALREADY_EXISTS": "Este usuario ya forma parte de esta vivienda.",
       "ADMIN_HOUSEHOLD_USER_CANNOT_LEAVE": "Los usuarios administradores no pueden abandonar la vivienda. Por favor, transfiere los derechos de administrador a otro usuario antes de abandonar."
     },
+    "validation": {
+      "categoryRequired": "La categoría es obligatoria",
+      "eitherStartOrEndRequired": "Es necesario introducir una hora de inicio o una hora de fin, o ambas",
+      "endCannotBeBeforeStart": "La hora de fin no puede ser anterior a la hora de inicio"
+    },
     "navigation": "Navegación",
     "now": "Ahora",
     "settings": "Configuración"

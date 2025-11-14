@@ -4,6 +4,7 @@ import * as React from "react";
 
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
+import { useTranslations } from "next-intl";
 import {
   Controller,
   ControllerProps,
@@ -145,7 +146,23 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : children;
+  const t = useTranslations("common.validation");
+  
+  let body = children;
+  
+  if (error?.message) {
+    const message = String(error.message);
+    // Check if the message is a translation key (starts with "validation.")
+    if (message.startsWith("validation.")) {
+      const key = message.replace("validation.", "") as
+        | "categoryRequired"
+        | "eitherStartOrEndRequired"
+        | "endCannotBeBeforeStart";
+      body = t(key);
+    } else {
+      body = message;
+    }
+  }
 
   if (!body) {
     return null;

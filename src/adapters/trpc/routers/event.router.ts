@@ -4,23 +4,14 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { Category } from "@domain/entities/category";
 import { NotFoundError, UnauthorizedError } from "@domain/entities/errors";
-import { Event, EventsForDay } from "@domain/entities/event";
+import { createEventInput, Event, EventsForDay, updateEventInput } from "@domain/entities/event";
 
 const hoursBeforeNowForLeakEvents = 3;
 const hoursBeforeNowForUnknownEvents = 3;
 
 export const eventRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(
-      z.object({
-        householdId: z.string(),
-        category: Category,
-        startDate: z.date().optional(),
-        endDate: z.date().optional(),
-        tagId: z.number().optional(),
-        notes: z.string().optional(),
-      })
-    )
+    .input(createEventInput)
     .mutation(async ({ input, ctx }) => {
       const { householdId, startDate, endDate, category, tagId, notes } = input;
 
@@ -372,16 +363,7 @@ export const eventRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(
-      z.object({
-        eventId: z.string(),
-        startDate: z.date(),
-        endDate: z.date(),
-        category: Category.optional(),
-        tagId: z.number().optional(),
-        notes: z.string().optional(),
-      })
-    )
+    .input(updateEventInput)
     .mutation(async ({ input, ctx }) => {
       const { eventId, startDate, endDate, category, tagId, notes } = input;
 
