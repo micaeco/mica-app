@@ -58,3 +58,16 @@ const enforceAuth = t.middleware(({ ctx, next }) => {
 export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(enforceAuth);
+
+/**
+ * Helper function to check if a user has access to a household
+ * Call this at the beginning of procedures that require household access
+ */
+export function checkHouseholdAccess(ctx: Context, householdId: string): void {
+  if (!ctx.userHouseholds.includes(householdId)) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You do not have access to this household.",
+    });
+  }
+}
