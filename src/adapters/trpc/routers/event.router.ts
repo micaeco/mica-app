@@ -1,9 +1,9 @@
-import { TRPCError } from "@trpc/server";
 import { format, startOfDay, subHours } from "date-fns";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { Category } from "@domain/entities/category";
+import { NotFoundError, UnauthorizedError } from "@domain/entities/errors";
 import { Event, EventsForDay } from "@domain/entities/event";
 
 const hoursBeforeNowForLeakEvents = 3;
@@ -25,11 +25,11 @@ export const eventRouter = createTRPCRouter({
       const { householdId, startDate, endDate, category, tagId, notes } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       if (!(await ctx.householdRepo.exists(householdId))) {
-        throw new Error("Household does not exist");
+        throw new NotFoundError("Household");
       }
 
       await ctx.eventRepo.create(
@@ -79,7 +79,7 @@ export const eventRouter = createTRPCRouter({
       const { householdId, startDate, endDate, order, cursor, limit } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const events = await ctx.eventRepo.getEvents(
@@ -129,7 +129,7 @@ export const eventRouter = createTRPCRouter({
       const { householdId, startDate, endDate, categories, limit, order, cursor } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const events = await ctx.eventRepo.getEvents(
@@ -176,7 +176,7 @@ export const eventRouter = createTRPCRouter({
       const { householdId, order, cursor, limit } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const endDate = new Date();
@@ -226,7 +226,7 @@ export const eventRouter = createTRPCRouter({
       const { householdId, order, cursor, limit } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const endDate = new Date();
@@ -264,7 +264,7 @@ export const eventRouter = createTRPCRouter({
       const { householdId } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const endDate = new Date();
@@ -281,7 +281,7 @@ export const eventRouter = createTRPCRouter({
       const { householdId } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const endDate = new Date();
@@ -313,7 +313,7 @@ export const eventRouter = createTRPCRouter({
       const { householdId, cursor, limit } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const events = await ctx.eventRepo.getEvents(

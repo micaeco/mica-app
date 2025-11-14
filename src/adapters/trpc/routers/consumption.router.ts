@@ -1,8 +1,8 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { Consumption, Granularity } from "@domain/entities/consumption";
+import { UnauthorizedError } from "@domain/entities/errors";
 
 export const consumptionRouter = createTRPCRouter({
   getConsumption: protectedProcedure
@@ -18,7 +18,7 @@ export const consumptionRouter = createTRPCRouter({
       const { householdId, startDate, endDate } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const consumption = await ctx.consumptionRepo.getConsumption(householdId, startDate, endDate);
@@ -47,7 +47,7 @@ export const consumptionRouter = createTRPCRouter({
       const { householdId, startDate, endDate, granularity, order, cursor, limit } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const queryLimit = limit + 1;
@@ -82,7 +82,7 @@ export const consumptionRouter = createTRPCRouter({
       const { householdId } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const consumption = await ctx.consumptionRepo.getCurrentMonthConsumption(householdId);
@@ -96,7 +96,7 @@ export const consumptionRouter = createTRPCRouter({
       const { householdId } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const consumption = await ctx.consumptionRepo.getCurrentDayConsumption(householdId);

@@ -1,9 +1,8 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { Category } from "@domain/entities/category";
-import { TagAlreadyExistsError, TagNotFoundError } from "@domain/entities/errors";
+import { TagAlreadyExistsError, TagNotFoundError, UnauthorizedError } from "@domain/entities/errors";
 import { createTag, Tag } from "@domain/entities/tag";
 import { Repositories } from "@domain/services/unit-of-work";
 
@@ -13,7 +12,7 @@ export const tagRouter = createTRPCRouter({
     .output(Tag)
     .mutation(async ({ input, ctx }) => {
       if (!ctx.userHouseholds.includes(input.householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       if (await ctx.tagRepo.exists(input.householdId, input.category, input.name)) {
@@ -29,7 +28,7 @@ export const tagRouter = createTRPCRouter({
     .output(z.array(Tag))
     .query(async ({ input, ctx }) => {
       if (!ctx.userHouseholds.includes(input.householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const tags = await ctx.tagRepo.getTagsByCategory(input.householdId, input.category);
@@ -46,7 +45,7 @@ export const tagRouter = createTRPCRouter({
       }
 
       if (!ctx.userHouseholds.includes(tag.householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       if (await ctx.tagRepo.exists(tag.householdId, tag.category, input.newName)) {
@@ -83,7 +82,7 @@ export const tagRouter = createTRPCRouter({
       }
 
       if (!ctx.userHouseholds.includes(tag.householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const deleted = await ctx.unitOfWork.execute(async (repos: Repositories) => {

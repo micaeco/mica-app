@@ -1,5 +1,4 @@
 import { render } from "@react-email/components";
-import { TRPCError } from "@trpc/server";
 import { addDays } from "date-fns";
 import { getMessages } from "next-intl/server";
 import { z } from "zod";
@@ -13,7 +12,9 @@ import {
   HouseholdInvitationInvalidError,
   HouseholdSensorAlreadyExistsError,
   HouseholdUserAlreadyExistsError,
+  NotFoundError,
   SensorNotFoundError,
+  UnauthorizedError,
 } from "@domain/entities/errors";
 import { createHousehold, Household } from "@domain/entities/household";
 import { HouseholdInvitation } from "@domain/entities/household-invitation";
@@ -66,7 +67,7 @@ export const householdRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       if (!ctx.userHouseholds.includes(input.householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const invitedUser = await ctx.userRepo.findByEmail(input.invitedEmail);
@@ -76,7 +77,7 @@ export const householdRouter = createTRPCRouter({
 
       const household = await ctx.householdRepo.findById(input.householdId);
       if (!household) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new NotFoundError("Household");
       }
 
       const existingInvitations = await ctx.householdInvitationRepo.exists(
@@ -203,13 +204,13 @@ export const householdRouter = createTRPCRouter({
       const { id } = input;
 
       if (!ctx.userHouseholds.includes(id)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const household = await ctx.householdRepo.findById(id);
 
       if (!household) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new NotFoundError("Household");
       }
 
       return household;
@@ -233,13 +234,13 @@ export const householdRouter = createTRPCRouter({
       const { householdId } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const householdUsers = await ctx.householdUserRepo.findByHouseholdId(householdId);
 
       if (!householdUsers) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new NotFoundError("Household users");
       }
 
       const users: User[] = [];
@@ -257,7 +258,7 @@ export const householdRouter = createTRPCRouter({
     const { id, ...data } = input;
 
     if (!ctx.userHouseholds.includes(id)) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+      throw new UnauthorizedError();
     }
 
     if (data.sensorId) {
@@ -281,13 +282,13 @@ export const householdRouter = createTRPCRouter({
       const { householdId } = input;
 
       if (!ctx.userHouseholds.includes(householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       const householdUser = await ctx.householdUserRepo.findById(householdId, ctx.user.id);
 
       if (!householdUser) {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new NotFoundError("Household user");
       }
 
       if (householdUser.role === "admin") {
@@ -301,7 +302,7 @@ export const householdRouter = createTRPCRouter({
     .input(z.object({ sensorId: z.string(), householdId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       if (!ctx.userHouseholds.includes(input.householdId)) {
-        throw new TRPCError({ code: "UNAUTHORIZED" });
+        throw new UnauthorizedError();
       }
 
       await ctx.sensorRepo.unassignHouseholdFromSensor(input.sensorId, input.householdId);
