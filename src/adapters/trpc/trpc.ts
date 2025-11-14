@@ -32,9 +32,8 @@ export const t = initTRPC.context<Context>().create({
       message: error.message,
       data: {
         ...shape.data,
-        code: isAppError ? error.cause.trpcCode : shape.data.code,
+        code: isAppError ? error.cause.code : shape.data.code,
         httpStatus: isAppError ? error.cause.httpStatusCode : shape.data.httpStatus,
-        customCode: isAppError ? error.cause.code : shape.data.code,
       },
     };
   },
