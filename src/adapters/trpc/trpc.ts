@@ -3,13 +3,14 @@ import superjson from "superjson";
 
 import { Context } from "@adapters/trpc/context";
 import { AppError } from "@domain/entities/errors";
+import { env } from "@env";
 
 export const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
     const isAppError = error.cause instanceof AppError;
 
-    if (process.env.NODE_ENV === "production") {
+    if (env.NODE_ENV === "production") {
       console.error("[tRPC Error]", {
         code: isAppError ? error.cause.code : shape.data.code,
         message: error.message,
