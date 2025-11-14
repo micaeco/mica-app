@@ -305,8 +305,11 @@ export const householdRouter = createTRPCRouter({
         throw new UnauthorizedError();
       }
 
-      await ctx.sensorRepo.unassignHouseholdFromSensor(input.sensorId, input.householdId);
-      await ctx.householdRepo.delete(input.householdId);
+      await ctx.unitOfWork.execute(async (repos: Repositories) => {
+        await ctx.sensorRepo.unassignHouseholdFromSensor(input.sensorId, input.householdId);
+        await repos.householdRepo.delete(input.householdId);
+      });
+
       return { id: input.householdId };
     }),
 });
