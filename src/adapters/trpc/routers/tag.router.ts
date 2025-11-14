@@ -2,7 +2,11 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import { Category } from "@domain/entities/category";
-import { TagAlreadyExistsError, TagNotFoundError, UnauthorizedError } from "@domain/entities/errors";
+import {
+  TagAlreadyExistsError,
+  TagNotFoundError,
+  UnauthorizedError,
+} from "@domain/entities/errors";
 import { createTag, Tag } from "@domain/entities/tag";
 import { Repositories } from "@domain/services/unit-of-work";
 
