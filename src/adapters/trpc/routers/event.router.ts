@@ -10,29 +10,27 @@ const hoursBeforeNowForLeakEvents = 3;
 const hoursBeforeNowForUnknownEvents = 3;
 
 export const eventRouter = createTRPCRouter({
-  create: protectedProcedure
-    .input(createEventInput)
-    .mutation(async ({ input, ctx }) => {
-      const { householdId, startDate, endDate, category, tagId, notes } = input;
+  create: protectedProcedure.input(createEventInput).mutation(async ({ input, ctx }) => {
+    const { householdId, startDate, endDate, category, tagId, notes } = input;
 
-      if (!ctx.userHouseholds.includes(householdId)) {
-        throw new UnauthorizedError();
-      }
+    if (!ctx.userHouseholds.includes(householdId)) {
+      throw new UnauthorizedError();
+    }
 
-      if (!(await ctx.householdRepo.exists(householdId))) {
-        throw new NotFoundError("Household");
-      }
+    if (!(await ctx.householdRepo.exists(householdId))) {
+      throw new NotFoundError("Household");
+    }
 
-      await ctx.eventRepo.create(
-        ctx.user.id,
-        householdId,
-        category,
-        startDate,
-        endDate,
-        tagId,
-        notes
-      );
-    }),
+    await ctx.eventRepo.create(
+      ctx.user.id,
+      householdId,
+      category,
+      startDate,
+      endDate,
+      tagId,
+      notes
+    );
+  }),
 
   getEvents: protectedProcedure
     .input(
@@ -362,11 +360,9 @@ export const eventRouter = createTRPCRouter({
       };
     }),
 
-  update: protectedProcedure
-    .input(updateEventInput)
-    .mutation(async ({ input, ctx }) => {
-      const { eventId, startDate, endDate, category, tagId, notes } = input;
+  update: protectedProcedure.input(updateEventInput).mutation(async ({ input, ctx }) => {
+    const { eventId, startDate, endDate, category, tagId, notes } = input;
 
-      await ctx.eventRepo.update(ctx.user.id, eventId, startDate, endDate, category, tagId, notes);
-    }),
+    await ctx.eventRepo.update(ctx.user.id, eventId, startDate, endDate, category, tagId, notes);
+  }),
 });

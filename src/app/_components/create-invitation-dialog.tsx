@@ -60,9 +60,9 @@ export function CreateInvitationDialog({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await createInvitation({ 
-      householdId, 
-      invitedEmail: values.email 
+    await createInvitation({
+      householdId,
+      invitedEmail: values.email,
     });
   }
 

@@ -147,9 +147,9 @@ const FormMessage = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
   const t = useTranslations("common.validation");
-  
+
   let body = children;
-  
+
   if (error?.message) {
     const message = String(error.message);
     // Check if the message is a translation key (starts with "validation.")
