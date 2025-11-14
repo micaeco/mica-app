@@ -7,7 +7,6 @@ export async function createContext(request: Request) {
   });
   const container = createContainer();
 
-  // Only fetch user households if the user is authenticated
   const userHouseholds = session?.user?.id
     ? await container.householdUserRepo.findHouseholdsByUserId(session.user.id)
     : [];

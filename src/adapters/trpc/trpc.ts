@@ -9,16 +9,13 @@ export const t = initTRPC.context<Context>().create({
   errorFormatter({ shape, error }) {
     const isAppError = error.cause instanceof AppError;
 
-    // Log errors for monitoring and debugging
     if (process.env.NODE_ENV === "production") {
-      // In production, log all errors with sanitized information
       console.error("[tRPC Error]", {
         code: isAppError ? error.cause.code : shape.data.code,
         message: error.message,
         ...(isAppError && error.cause.metadata ? { metadata: error.cause.metadata } : {}),
       });
     } else {
-      // In development, log full error details including stack trace
       console.error("[tRPC Error]", {
         code: isAppError ? error.cause.code : shape.data.code,
         message: error.message,
