@@ -41,8 +41,8 @@ const isFieldRequired = (fieldName: keyof FormValues) => {
 };
 
 const stepFields: FieldName<FormValues>[][] = [
-  ["name", "residents", "sensorId"], // Step 1: Basic Info
-  ["street1", "street2", "city", "zip", "country"], // Step 2: Address
+  ["name", "residents", "sensorId"],
+  ["street1", "street2", "city", "zip", "country"],
 ];
 
 export function CreateHouseholdPanel({

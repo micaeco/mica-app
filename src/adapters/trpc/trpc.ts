@@ -14,12 +14,8 @@ export const t = initTRPC.context<Context>().create({
       message: error.message,
       data: {
         ...shape.data,
-        // Standard HTTP semantic code (CONFLICT, NOT_FOUND, etc.)
         code: isAppError ? error.cause.trpcCode : shape.data.code,
-        // Correct HTTP status (409, 404, etc.)
         httpStatus: isAppError ? error.cause.httpStatusCode : shape.data.httpStatus,
-        // Translation key for presentation layer
-        // Use domain error code if available, otherwise fall back to tRPC code
         customCode: isAppError ? error.cause.code : shape.data.code,
       },
     };

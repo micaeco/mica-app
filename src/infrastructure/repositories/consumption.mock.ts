@@ -18,7 +18,6 @@ export class MockConsumptionRepository implements ConsumptionRepository {
     const key = `${householdId}-${date.toISOString().split("T")[0]}`;
 
     if (!this.seedMap.has(key)) {
-      // Add more variability with date components
       const dateValue = date.getDate() + date.getMonth() * 31;
       this.seedMap.set(key, Math.random() * this.instanceSeed * dateValue);
     }
@@ -77,19 +76,16 @@ export class MockConsumptionRepository implements ConsumptionRepository {
 
     let remainingConsumption = totalConsumption;
 
-    // Assign random weights to categories, leaving the last one to balance the total
     for (let i = 0; i < categories.length; i++) {
       const category = categories[i];
       if (i === categories.length - 1) {
-        // Last category gets whatever is left to ensure they sum to total
         const index = breakdown.findIndex((item) => item.category === category);
         if (index !== -1) {
           breakdown[index].consumptionInLiters = Math.round(remainingConsumption * 10) / 10;
         }
       } else {
-        // Assign a random portion of the remaining consumption
         const portion = Math.random() * 0.5 * remainingConsumption;
-        const value = Math.round(portion * 10) / 10; // Round to 1 decimal place
+        const value = Math.round(portion * 10) / 10;
         const index = breakdown.findIndex((item) => item.category === category);
         if (index !== -1) {
           breakdown[index].consumptionInLiters = value;
@@ -98,7 +94,6 @@ export class MockConsumptionRepository implements ConsumptionRepository {
       }
     }
 
-    // Limit to top 4 categories + rest
     const sortedBreakdown = [...breakdown].sort(
       (a, b) => b.consumptionInLiters - a.consumptionInLiters
     );
@@ -285,13 +280,11 @@ export class MockConsumptionRepository implements ConsumptionRepository {
   ): Promise<Consumption[]> {
     const result: Consumption[] = [];
 
-    // Adjust firstDate to Monday (first day of week)
     const firstDate = new Date(startDate);
     const dayOfWeek = firstDate.getDay();
     firstDate.setDate(firstDate.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
     firstDate.setHours(0, 0, 0, 0);
 
-    // Adjust lastDate to Sunday (last day of week)
     const lastDate = new Date(endDate);
     const daysToAdd = lastDate.getDay() === 0 ? 0 : 7 - lastDate.getDay();
     if (daysToAdd > 0) {
