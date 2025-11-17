@@ -38,12 +38,7 @@ import { trpc } from "@app/_lib/trpc";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 import { Category, categories, categoryMap } from "@domain/entities/category";
-import { createEventForm } from "@domain/entities/event";
 import { Tag } from "@domain/entities/tag";
-
-const eventFormSchema = createEventForm;
-
-type EventFormValues = z.infer<typeof eventFormSchema>;
 
 const filteredCategories = categories.filter(
   (category) => category !== "rest" && category !== "unknown"
@@ -63,6 +58,46 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
   const tNewEventSheet = useTranslations("newEventSheet");
   const tEditTagsDialog = useTranslations("editTagsDialog");
 
+  const createEventForm = z
+    .object({
+      startDateTime: z.date().nullable(),
+      endDateTime: z.date().nullable(),
+      category: Category.nullable(),
+      tag: Tag.nullable(),
+      notes: z.string().nullable(),
+    })
+    .refine(
+      (data) => {
+        return data.startDateTime || data.endDateTime;
+      },
+      {
+        message: tCommon("validation.eitherStartOrEndRequired"),
+        path: ["startDateTime"],
+      }
+    )
+    .refine(
+      (data) => {
+        if (data.startDateTime && data.endDateTime) {
+          return data.endDateTime >= data.startDateTime;
+        }
+        return true;
+      },
+      {
+        message: tCommon("validation.endCannotBeBeforeStart"),
+        path: ["endDateTime"],
+      }
+    )
+    .refine(
+      (data) => {
+        return data.category !== null;
+      },
+      {
+        message: tCommon("validation.categoryRequired"),
+        path: ["category"],
+      }
+    );
+  type EventFormValues = z.infer<typeof createEventForm>;
+
   const now = new Date();
   const defaultFormValues: EventFormValues = {
     startDateTime: now,
@@ -73,7 +108,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
   };
 
   const eventForm = useForm<EventFormValues>({
-    resolver: zodResolver(eventFormSchema),
+    resolver: zodResolver(createEventForm),
     defaultValues: defaultFormValues,
   });
 

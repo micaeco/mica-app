@@ -28,7 +28,6 @@ export const EventsForDay = z.object({
 
 export type EventsForDay = z.infer<typeof EventsForDay>;
 
-// Schema for creating a new event
 export const createEventInput = z
   .object({
     householdId: z.string(),
@@ -40,7 +39,6 @@ export const createEventInput = z
   })
   .refine(
     (data) => {
-      // At least one of startDate or endDate must be provided
       return data.startDate || data.endDate;
     },
     {
@@ -50,7 +48,6 @@ export const createEventInput = z
   )
   .refine(
     (data) => {
-      // If both dates are provided, endDate must be after startDate
       if (data.startDate && data.endDate) {
         return data.endDate >= data.startDate;
       }
@@ -62,50 +59,6 @@ export const createEventInput = z
     }
   );
 
-// Schema for client-side form (without householdId, uses nullable instead of optional)
-export const createEventForm = z
-  .object({
-    startDateTime: z.date().nullable(),
-    endDateTime: z.date().nullable(),
-    category: Category.nullable(),
-    tag: Tag.nullable(),
-    notes: z.string().nullable(),
-  })
-  .refine(
-    (data) => {
-      // At least one of startDateTime or endDateTime must be provided
-      return data.startDateTime || data.endDateTime;
-    },
-    {
-      message: "validation.eitherStartOrEndRequired",
-      path: ["startDateTime"],
-    }
-  )
-  .refine(
-    (data) => {
-      // If both dates are provided, endDateTime must be after startDateTime
-      if (data.startDateTime && data.endDateTime) {
-        return data.endDateTime >= data.startDateTime;
-      }
-      return true;
-    },
-    {
-      message: "validation.endCannotBeBeforeStart",
-      path: ["endDateTime"],
-    }
-  )
-  .refine(
-    (data) => {
-      // Category is required for submission
-      return data.category !== null;
-    },
-    {
-      message: "validation.categoryRequired",
-      path: ["category"],
-    }
-  );
-
-// Schema for updating an event
 export const updateEventInput = z.object({
   eventId: z.string(),
   startDate: z.date(),
@@ -115,7 +68,6 @@ export const updateEventInput = z.object({
   notes: z.string().optional(),
 });
 
-// Schema for client-side edit form (only editable fields)
 export const updateEventForm = z.object({
   category: Category.nullable(),
   tag: Tag.nullable(),
