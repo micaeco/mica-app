@@ -1,21 +1,16 @@
 "use client";
 
 import { Menu } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 import { EditProfileSheet } from "@app/_components/edit-profile-sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@app/_components/ui/avatar";
 import { useSidebar } from "@app/_components/ui/sidebar";
-import { usePathname } from "@app/_i18n/routing";
 import { authClient } from "@app/_lib/auth-client";
 import { cn } from "@app/_lib/utils";
 import { useHouseholdStore } from "@app/_stores/household";
 
 export function Header({ className }: { className?: string }) {
-  const pathname = usePathname();
   const { toggleSidebar } = useSidebar();
-
-  const tNavPages = useTranslations("common.navPages");
 
   const { data: session } = authClient.useSession();
 
@@ -35,17 +30,7 @@ export function Header({ className }: { className?: string }) {
           <button onClick={toggleSidebar}>
             <Menu />
           </button>
-          <p className="text-sm font-semibold">
-            {household?.name
-              ? household?.name
-              : /* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
-                tNavPages.has(pathname as any)
-                ? /* eslint-disable-next-line @typescript-eslint/no-explicit-any*/
-                  tNavPages(pathname as any)
-                : pathname == "/"
-                  ? tNavPages("/")
-                  : tNavPages("/404")}
-          </p>
+          <p className="text-sm font-semibold">{household?.name ? household?.name : ""}</p>
         </div>
 
         <div className="fixed top-2 right-3">
