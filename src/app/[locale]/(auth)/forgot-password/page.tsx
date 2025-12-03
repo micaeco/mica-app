@@ -50,7 +50,7 @@ export default function ForgotPassword() {
   });
 
   const onSubmit = async (values: z.infer<typeof ForgotPasswordSchema>) => {
-    await authClient.resetPassword(
+    await authClient.requestPasswordReset(
       {
         email: values.email,
         redirectTo: "/reset-password",
