@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@app/_components/ui/button";
 import { Input } from "@app/_components/ui/input";
 import { Label } from "@app/_components/ui/label";
+import Loading from "@app/loading";
 
 const DEVICE_ID_STORAGE_KEY = "recirculator-device-id";
 const MAC_ID_REGEX = /^[0-9A-F]{12}$/;
@@ -45,11 +45,7 @@ export default function RecirculatorPage() {
   };
 
   if (isChecking) {
-    return (
-      <div className="flex w-full items-center justify-center">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
