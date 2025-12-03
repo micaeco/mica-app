@@ -214,7 +214,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
                           <ToggleGroupItem
                             className={cn(
                               "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                              category === field.value ? "!bg-brand-secondary" : "bg-gray-100"
+                              category === field.value ? "bg-brand-secondary!" : "bg-gray-100"
                             )}
                             value={category}
                             key={category}
@@ -266,7 +266,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
                               <ToggleGroupItem
                                 className={cn(
                                   "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                                  tag.id === field.value?.id ? "!bg-brand-secondary" : "bg-gray-100"
+                                  tag.id === field.value?.id ? "bg-brand-secondary!" : "bg-gray-100"
                                 )}
                                 value={tag.name}
                                 key={tag.id}
@@ -401,7 +401,7 @@ export function DateTimeField<T extends FieldValues>({
               className={isActive ? "bg-secondary" : ""}
             >
               <Clock />
-              {getDisplayDateTime(field.value)}
+              {getDisplayDateTime(field.value ?? null)}
             </Button>
             <Button onClick={() => field.onChange(null)} variant="outline" type="button">
               <Undo2 /> {tCommon("clear")}
@@ -436,7 +436,7 @@ export function DateTimeField<T extends FieldValues>({
                   5 min
                 </Button>
               </div>
-              <DateTimePicker value={field.value} onChange={field.onChange} />
+              <DateTimePicker value={field.value ?? null} onChange={field.onChange} />
             </div>
           )}
           <FormMessage>{fieldState.error?.message}</FormMessage>

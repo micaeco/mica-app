@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 
-import { Body, Font, Head, Html, Tailwind } from "@react-email/components";
-import { TailwindConfig } from "@react-email/tailwind";
+import { Body, Font, Head, Html, Tailwind, type TailwindConfig } from "@react-email/components";
 
 import { cn } from "@app/_lib/utils";
 
