@@ -51,7 +51,7 @@
     "@trpc/react-query": "^11.1.2",
     "@trpc/server": "^11.1.2",
     "axios": "^1.10.0",
-    "better-auth": "^1.2.12",
+    "better-auth": "^1.4.5",
     "bufferutil": "^4.0.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -92,7 +92,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/ws": "^8.18.1",
-    "drizzle-kit": "^0.31.1",
+    "drizzle-kit": "^0.31.7",
     "eslint": "^8",
     "eslint-config-next": "15.0.4",
     "eslint-config-prettier": "^10.0.1",
@@ -105,5 +105,10 @@
     "react-email": "4.0.17",
     "tailwindcss": "^4.0.6",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": ">=0.25.0"
+    }
   }
 }
