@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 
-import { skipToken } from "@tanstack/react-query";
-
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 import { Consumption, Granularity, TimeWindow } from "@domain/entities/consumption";
@@ -25,7 +23,7 @@ export function useConsumption() {
     refetch,
   } = trpc.consumption.getConsumptionByGranularity.useInfiniteQuery(
     {
-      householdId: selectedHouseholdId || (skipToken as unknown as string),
+      householdId: selectedHouseholdId!,
       granularity,
       limit: intervals,
     },
