@@ -48,7 +48,7 @@ export function Navbar({ className }: { className?: string }) {
                 >
                   <item.icon className="h-6 w-6" />
                   {item.sample && (
-                    <div className="absolute top-2 -right-6 flex items-center justify-center rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-gray-800">
+                    <div className="absolute top-2 right-8 flex items-center justify-center rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium whitespace-nowrap text-gray-800">
                       {tCommon("sample")}
                     </div>
                   )}
