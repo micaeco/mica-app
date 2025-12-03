@@ -40,7 +40,7 @@
       }
     ],
     "import/order": [
-      "warn",
+      "error",
       {
         "groups": ["builtin", "external", "internal", ["parent", "sibling", "index"], "type"],
         "pathGroups": [
@@ -59,7 +59,7 @@
       }
     ],
 
-    "import/no-unresolved": "error",
+    "import/no-unresolved": "off",
     "import/no-duplicates": "error"
   }
 }

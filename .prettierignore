@@ -5,3 +5,4 @@ dist
 .git
 .cache
 public
+pnpm-lock.yaml
