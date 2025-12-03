@@ -434,5 +434,33 @@
       "teamSignature": "The MICA team",
       "automaticNote": "This is an automated message. Please do not reply to this email."
     }
+  },
+  "recirculator": {
+    "title": "Recirculator",
+    "configureTitle": "Configure recirculator",
+    "configureDescription": "Enter your device ID to get started",
+    "deviceIdLabel": "Device ID",
+    "deviceIdPlaceholder": "A085E30D9B64",
+    "continue": "Continue",
+    "temperature": "Temperature",
+    "maxTemperature": "Maximum temperature",
+    "heatWater": "Heat water",
+    "sendingCommand": "Sending command...",
+    "heating": "Heating",
+    "stop": "Stop",
+    "waterReady": "Water ready!",
+    "waterReachedTemp": "Water has reached {temp}°C",
+    "currentTemperature": "Current temperature: {temp}°C",
+    "back": "Back",
+    "noDataWarning": "Not receiving data",
+    "disconnectWarning": "The recirculator may be disconnected from power. If so, click \"Stop\" to reset the state.",
+    "errorTurnOn": "Error turning on: {message}",
+    "errorTurnOff": "Error stopping: {message}",
+    "errorSetTemp": "Error setting temperature: {message}",
+    "successStop": "Recirculator stopped",
+    "errorNoResponse": "The recirculator did not respond",
+    "errorStoppedEarly": "The recirculator stopped before reaching maximum temperature",
+    "errorTempRange": "Temperature must be between {min}°C and {max}°C",
+    "errorInvalidDeviceId": "Device ID must be exactly 12 hexadecimal characters"
   }
 }

@@ -434,5 +434,33 @@
       "teamSignature": "L'equip de MICA",
       "automaticNote": "Aquest correu electrònic s'ha generat automàticament. Si us plau, no responguis."
     }
+  },
+  "recirculator": {
+    "title": "Recirculador",
+    "configureTitle": "Configura el recirculador",
+    "configureDescription": "Introdueix l'ID del teu dispositiu per començar",
+    "deviceIdLabel": "ID del dispositiu",
+    "deviceIdPlaceholder": "A085E30D9B64",
+    "continue": "Continuar",
+    "temperature": "Temperatura",
+    "maxTemperature": "Temperatura màxima",
+    "heatWater": "Escalfar aigua",
+    "sendingCommand": "Enviant comanda...",
+    "heating": "Escalfant",
+    "stop": "Aturar",
+    "waterReady": "Aigua llesta!",
+    "waterReachedTemp": "L'aigua ha arribat als {temp}°C",
+    "currentTemperature": "Temperatura actual: {temp}°C",
+    "back": "Tornar",
+    "noDataWarning": "No s'estan rebent dades",
+    "disconnectWarning": "El recirculador podria estar desconnectat de la corrent. Si és així, fes clic a \"Aturar\" per reiniciar l'estat.",
+    "errorTurnOn": "Error al encendre: {message}",
+    "errorTurnOff": "Error al aturar: {message}",
+    "errorSetTemp": "Error al configurar temperatura: {message}",
+    "successStop": "Recirculador aturat",
+    "errorNoResponse": "El recirculador no ha respost",
+    "errorStoppedEarly": "El recirculador s'ha aturat abans d'arribar a la temperatura màxima",
+    "errorTempRange": "La temperatura ha d'estar entre {min}°C i {max}°C",
+    "errorInvalidDeviceId": "L'ID del dispositiu ha de tenir exactament 12 caràcters hexadecimals"
   }
 }

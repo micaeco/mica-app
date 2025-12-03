@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-import { Home, PieChart, Droplet } from "lucide-react";
+import { Home, PieChart, Droplet, Repeat2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Link } from "@app/_i18n/routing";
@@ -11,6 +11,7 @@ import { cn } from "@app/_lib/utils";
 const navItems = [
   { icon: PieChart, href: "/consumption" },
   { icon: Home, href: "/" },
+  { icon: Repeat2, href: "/recirculator" },
   { icon: Droplet, href: "/efficiency", sample: true },
 ];
 
@@ -29,7 +30,7 @@ export function Navbar({ className }: { className?: string }) {
     >
       <ul className="mx-auto flex h-16 max-w-md items-center justify-around">
         {navItems.map((item) => {
-          const isActive = cleanPathname === item.href;
+          const isActive = cleanPathname === item.href || cleanPathname.startsWith(item.href + "/");
           return (
             <li key={item.href}>
               <Link

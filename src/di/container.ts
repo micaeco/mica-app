@@ -7,6 +7,7 @@ import { SensorRepository } from "@domain/repositories/sensor";
 import { TagRepository } from "@domain/repositories/tag";
 import { UserRepository } from "@domain/repositories/user";
 import { EmailService } from "@domain/services/email";
+import { RecirculatorService } from "@domain/services/recirculator";
 import { UnitOfWork } from "@domain/services/unit-of-work";
 import { db } from "@infrastructure/db";
 import { ApiConsumptionRepository } from "@infrastructure/repositories/consumption.api";
@@ -18,11 +19,13 @@ import { ApiSensorRepository } from "@infrastructure/repositories/sensor.api";
 import { PostgresTagRepository } from "@infrastructure/repositories/tag.postgres";
 import { PostgresUserRepository } from "@infrastructure/repositories/user.postgres";
 import { SESEmailService } from "@infrastructure/services/email.ses";
+import { IoTRecirculatorService } from "@infrastructure/services/recirculator.iot";
 import { DrizzleUnitOfWork } from "@infrastructure/services/unit-of-work.postgres";
 
 interface Container {
   unitOfWork: UnitOfWork;
   emailService: EmailService;
+  recirculatorService: RecirculatorService;
   eventRepo: EventRepository;
   householdRepo: HouseholdRepository;
   tagRepo: TagRepository;
@@ -35,6 +38,7 @@ interface Container {
 
 const unitOfWork: UnitOfWork = new DrizzleUnitOfWork(db);
 const emailService: EmailService = new SESEmailService();
+const recirculatorService: RecirculatorService = new IoTRecirculatorService();
 
 const userRepo: UserRepository = new PostgresUserRepository(db);
 const householdRepo: HouseholdRepository = new PostgresHouseholdRepository(db);
@@ -51,6 +55,7 @@ export function createContainer(): Container {
   return {
     unitOfWork,
     emailService,
+    recirculatorService,
     eventRepo,
     userRepo,
     householdRepo,

@@ -18,6 +18,8 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
 
+    AWS_IOT_ENDPOINT: z.string(),
+
     DATABASE_URL: z.string().url(),
     DATABASE_URL_UNPOOLED: z.string().url(),
   },
@@ -44,6 +46,8 @@ export const env = createEnv({
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+
+    AWS_IOT_ENDPOINT: process.env.AWS_IOT_ENDPOINT,
 
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,

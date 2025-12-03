@@ -434,5 +434,33 @@
       "teamSignature": "El equipo de MICA",
       "automaticNote": "Este es un mensaje automático. Por favor, no respondas a este correo."
     }
+  },
+  "recirculator": {
+    "title": "Recirculador",
+    "configureTitle": "Configura el recirculador",
+    "configureDescription": "Introduce el ID de tu dispositivo para empezar",
+    "deviceIdLabel": "ID del dispositivo",
+    "deviceIdPlaceholder": "A085E30D9B64",
+    "continue": "Continuar",
+    "temperature": "Temperatura",
+    "maxTemperature": "Temperatura máxima",
+    "heatWater": "Calentar agua",
+    "sendingCommand": "Enviando comando...",
+    "heating": "Calentando",
+    "stop": "Detener",
+    "waterReady": "¡Agua lista!",
+    "waterReachedTemp": "El agua ha alcanzado los {temp}°C",
+    "currentTemperature": "Temperatura actual: {temp}°C",
+    "back": "Volver",
+    "noDataWarning": "No se están recibiendo datos",
+    "disconnectWarning": "El recirculador podría estar desconectado de la corriente. Si es así, haz clic en \"Detener\" para reiniciar el estado.",
+    "errorTurnOn": "Error al encender: {message}",
+    "errorTurnOff": "Error al detener: {message}",
+    "errorSetTemp": "Error al configurar temperatura: {message}",
+    "successStop": "Recirculador detenido",
+    "errorNoResponse": "El recirculador no ha respondido",
+    "errorStoppedEarly": "El recirculador se ha detenido antes de alcanzar la temperatura máxima",
+    "errorTempRange": "La temperatura debe estar entre {min}°C y {max}°C",
+    "errorInvalidDeviceId": "El ID del dispositivo debe tener exactamente 12 caracteres hexadecimales"
   }
 }
