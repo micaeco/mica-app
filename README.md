@@ -51,7 +51,7 @@ src/
 ### Prerequisites
 
 - Node.js 18+
-- npm or yarn
+- pnpm
 - PostgreSQL database (or use Docker Compose)
 
 ### Installation
@@ -66,7 +66,7 @@ cd mica-app
 2. **Install dependencies**
 
 ```bash
-npm install
+pnpm install
 ```
 
 3. **Set up environment variables**
@@ -92,6 +92,7 @@ AWS_ACCESS_KEY_ID="your-aws-access-key"
 AWS_SECRET_ACCESS_KEY="your-aws-secret-key"
 AWS_API_GATEWAY_URL="your-api-gateway-url"
 AWS_API_GATEWAY_TOKEN="your-api-gateway-token"
+AWS_IOT_ENDPOINT="your-iot-endpoint"
 
 # App URL
 NEXT_PUBLIC_URL="http://localhost:3000"
@@ -111,13 +112,13 @@ Or set up your own PostgreSQL instance and update the DATABASE_URL accordingly.
 5. **Run database migrations**
 
 ```bash
-npm run db:migrate
+pnpm db:migrate
 ```
 
 6. **Start the development server**
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 The application will be available at [http://localhost:3000](http://localhost:3000).
@@ -126,24 +127,24 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ```bash
 # Development
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run preview      # Build and start production server
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm start        # Start production server
+pnpm preview      # Build and start production server
 
 # Code Quality
-npm run lint         # Run ESLint
-npm run lint:fix     # Run ESLint with auto-fix
-npm run format:check # Check code formatting with Prettier
-npm run format:write # Format code with Prettier
-npm run typecheck    # Run TypeScript type checking
-npm run check        # Run both lint and typecheck
+pnpm lint         # Run ESLint
+pnpm lint:fix     # Run ESLint with auto-fix
+pnpm format:check # Check code formatting with Prettier
+pnpm format:write # Format code with Prettier
+pnpm typecheck    # Run TypeScript type checking
+pnpm check        # Run both lint and typecheck
 
 # Database
-npm run db:generate  # Generate database migrations
-npm run db:migrate   # Run database migrations
-npm run db:push      # Push schema changes to database
-npm run db:studio    # Open Drizzle Studio (database GUI)
+pnpm db:generate  # Generate database migrations
+pnpm db:migrate   # Run database migrations
+pnpm db:push      # Push schema changes to database
+pnpm db:studio    # Open Drizzle Studio (database GUI)
 ```
 
 ## 🗄️ Database Management
@@ -152,10 +153,10 @@ This project uses PostgreSQL with Drizzle ORM. The database schema is defined in
 
 ### Key commands:
 
-- `npm run db:studio` - Opens a web-based database browser
-- `npm run db:generate` - Creates migration files after schema changes
-- `npm run db:migrate` - Applies pending migrations to the database
-- `npm run db:push` - Pushes schema changes directly (development only)
+- `pnpm db:studio` - Opens a web-based database browser
+- `pnpm db:generate` - Creates migration files after schema changes
+- `pnpm db:migrate` - Applies pending migrations to the database
+- `pnpm db:push` - Pushes schema changes directly (development only)
 
 ## 🔧 Troubleshooting
 
@@ -165,11 +166,11 @@ This project uses PostgreSQL with Drizzle ORM. The database schema is defined in
 
 - Ensure PostgreSQL is running (`docker-compose up -d`)
 - Check that DATABASE_URL in `.env.development.local` is correct
-- Run `npm run db:migrate` to ensure schema is up to date
+- Run `pnpm db:migrate` to ensure schema is up to date
 
 **Build/TypeScript errors:**
 
-- Run `npm run typecheck` to see specific type errors
+- Run `pnpm typecheck` to see specific type errors
 - Ensure all environment variables are properly set
 
 **Authentication issues:**
@@ -179,7 +180,7 @@ This project uses PostgreSQL with Drizzle ORM. The database schema is defined in
 
 **Missing dependencies:**
 
-- Delete `node_modules` and `package-lock.json`, then run `npm install`
+- Delete `node_modules` and `pnpm-lock.yaml`, then run `pnpm install`
 
 ## 🚢 Deployment
 
@@ -194,5 +195,5 @@ Ensure all required environment variables from the Getting Started section are c
 Remember to run database migrations in your production environment:
 
 ```bash
-npm run db:migrate
+pnpm db:migrate
 ```
