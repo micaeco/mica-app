@@ -248,7 +248,7 @@ export default function RecirculatorPage() {
 
             {showDisconnectWarning && (
               <div className="border-brand-quaternary/50 bg-brand-quaternary/10 mt-3 flex items-start gap-2 rounded-lg border p-3">
-                <AlertCircle className="text-brand-quaternary mt-0.5 h-4 w-4 flex-shrink-0" />
+                <AlertCircle className="text-brand-quaternary mt-0.5 h-4 w-4 shrink-0" />
                 <div className="text-brand-quaternary text-xs">
                   <p className="font-medium">{t("noDataWarning")}</p>
                   <p className="mt-0.5">{t("disconnectWarning")}</p>
