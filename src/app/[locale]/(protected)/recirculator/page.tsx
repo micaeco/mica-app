@@ -10,7 +10,6 @@ import { toast } from "sonner";
 
 import { Button } from "@app/_components/ui/button";
 import { Input } from "@app/_components/ui/input";
-import { Label } from "@app/_components/ui/label";
 import Loading from "@app/loading";
 
 const DEVICE_ID_STORAGE_KEY = "recirculator-device-id";

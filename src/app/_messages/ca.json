@@ -439,7 +439,6 @@
     "title": "Recirculador",
     "configureTitle": "Configura el recirculador",
     "configureDescription": "El recirculador és un dispositiu MICA addicional que et permet tenir aigua calenta a l’instant quan entres a la dutxa, sense malbaratar aigua mentre esperes que s’escalfi.<br></br><br></br> Si t’interessa, contacta’ns a <emailLink>info@mica.eco</emailLink>.<br></br><br></br> Si ja tens un recirculador a casa, introdueix l'ID.",
-    "deviceIdLabel": "ID del dispositiu",
     "deviceIdPlaceholder": "A0851B2C3D4E",
     "continue": "Continuar",
     "temperature": "Temperatura",
