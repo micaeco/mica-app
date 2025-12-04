@@ -61,12 +61,20 @@ export default function RecirculatorPage() {
       <div className="w-full max-w-sm space-y-6">
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-bold">{t("configureTitle")}</h1>
-          <p className="text-muted-foreground text-sm">{t("configureDescription")}</p>
+          <p className="text-muted-foreground text-sm">
+            {t.rich("configureDescription", {
+              br: () => <br />,
+              emailLink: (chunks) => (
+                <a href="mailto:info@mica.eco" className="text-blue-500 underline">
+                  {chunks}
+                </a>
+              ),
+            })}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="deviceId">{t("deviceIdLabel")}</Label>
             <Input
               id="deviceId"
               type="text"
@@ -79,7 +87,7 @@ export default function RecirculatorPage() {
             />
           </div>
 
-          <Button type="submit" className="w-full" size="lg" disabled={!deviceId.trim()}>
+          <Button type="submit" className="mx-auto flex" size="lg" disabled={!deviceId.trim()}>
             {t("continue")}
           </Button>
         </form>

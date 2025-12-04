@@ -438,7 +438,7 @@
   "recirculator": {
     "title": "Recirculator",
     "configureTitle": "Configure recirculator",
-    "configureDescription": "Enter your device ID to get started",
+    "configureDescription": "The recirculator is an additional MICA device that gives you instant hot water when you step into the shower, without wasting water while you wait for it to heat up.<br></br><br></br> If you're interested, contact us at <emailLink>info@mica.eco</emailLink>.<br></br><br></br> If you already have a recirculator at home, enter its ID.",
     "deviceIdLabel": "Device ID",
     "deviceIdPlaceholder": "A0851B2C3D4E",
     "continue": "Continue",

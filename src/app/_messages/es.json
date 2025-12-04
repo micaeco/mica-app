@@ -438,7 +438,7 @@
   "recirculator": {
     "title": "Recirculador",
     "configureTitle": "Configura el recirculador",
-    "configureDescription": "Introduce el ID de tu dispositivo para empezar",
+    "configureDescription": "El recirculador es un dispositivo adicional de MICA que te permite tener agua caliente al instante cuando entras en la ducha, sin desperdiciar agua mientras esperas a que se caliente.<br></br><br></br> Si te interesa, contáctanos en <emailLink>info@mica.eco</emailLink>.<br></br><br></br> Si ya tienes un recirculador en casa, introduce su ID.",
     "deviceIdLabel": "ID del dispositivo",
     "deviceIdPlaceholder": "A0851B2C3D4E",
     "continue": "Continuar",
