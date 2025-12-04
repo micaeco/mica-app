@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
 } from "@app/_components/ui/alert-dialog";
 import { trpc } from "@app/_lib/trpc";
+import { useHouseholdStore } from "@app/_stores/household";
 import { Household } from "@domain/entities/household";
 
 export function DeleteHouseholdDialog({
@@ -28,9 +29,12 @@ export function DeleteHouseholdDialog({
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("common.errors");
 
+  const deleteHousehold = useHouseholdStore((state) => state.deleteHousehold);
+
   const utils = trpc.useUtils();
   const deleteMutation = trpc.household.delete.useMutation({
     onSuccess: () => {
+      deleteHousehold(household.id);
       utils.household.invalidate();
       toast.success(t("success"));
       setIsOpen(false);

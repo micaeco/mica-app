@@ -93,9 +93,14 @@ export function EditHouseholdSheet({
     }
   }, [isOpen, household, form]);
 
+  const updateHousehold = useHouseholdStore((state) => state.updateHousehold);
+
   const utils = trpc.useUtils();
   const updateMutation = trpc.household.update.useMutation({
-    onSuccess: () => {
+    onSuccess: (household) => {
+      if (household) {
+        updateHousehold(household);
+      }
       utils.household.invalidate();
       toast.success(t("updateSuccess"));
       setIsOpen(false);

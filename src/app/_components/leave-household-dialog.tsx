@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@app/_components/ui/dialog";
 import { trpc } from "@app/_lib/trpc";
+import { useHouseholdStore } from "@app/_stores/household";
 
 export function LeaveHouseholdDialog({
   householdId,
@@ -27,9 +28,12 @@ export function LeaveHouseholdDialog({
   const tErrors = useTranslations("common.errors");
   const tLeaveHousehold = useTranslations("leaveHousehold");
 
+  const deleteHousehold = useHouseholdStore((state) => state.deleteHousehold);
+
   const utils = trpc.useUtils();
   const leaveMutation = trpc.household.leave.useMutation({
     onSuccess: () => {
+      deleteHousehold(householdId);
       utils.household.invalidate();
       toast.success(tLeaveHousehold("success"));
       setIsOpen(false);
