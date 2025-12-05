@@ -29,7 +29,7 @@ export default async function ProtectedLayout({
   return (
     <HouseholdsInitializer>
       <SidebarProvider>
-        <AppSidebar className="!h-[calc(100svh-var(--navbar-height))]" />
+        <AppSidebar className="h-[calc(100svh-var(--navbar-height))]!" />
         <main className="w-full overflow-hidden pb-(--navbar-height)">
           <Header />
           <div className="pt-(--header-height)">
