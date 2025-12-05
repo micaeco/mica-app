@@ -1,14 +1,16 @@
-import { z } from "zod";
+import type { auth } from "@adapters/auth";
 
-export const UserSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  emailVerified: z.boolean(),
-  email: z.string().email(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  image: z.string().nullable().optional(),
-  locale: z.string().nullable().optional(),
-});
+export type User = typeof auth.$Infer.Session.user;
 
-export type User = z.infer<typeof UserSchema>;
+// Note: For use within auth config callbacks (due to circular reference),
+// we need to manually define the type. This is used in @adapters/auth/index.ts
+export interface UserForAuthConfig {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string | null | undefined;
+  createdAt: Date;
+  updatedAt: Date;
+  locale: string;
+}
