@@ -22,6 +22,13 @@
       "when": 1752257668440,
       "tag": "0002_steady_otto_octavius",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1764930837474,
+      "tag": "0003_absurd_black_bolt",
+      "breakpoints": true
     }
   ]
 }

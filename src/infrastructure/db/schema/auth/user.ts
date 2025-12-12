@@ -11,6 +11,7 @@ export const user = authSchema.table("user", {
     .notNull(),
   image: text("image"),
   locale: text("locale"),
+  role: text("role").default("end_user").notNull(),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),

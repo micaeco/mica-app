@@ -1,0 +1,1 @@
+ALTER TABLE "auth"."user" ADD COLUMN "role" text DEFAULT 'end_user' NOT NULL;
