@@ -3,6 +3,7 @@ import { addDays } from "date-fns";
 import { getMessages } from "next-intl/server";
 import { z } from "zod";
 
+import { auth } from "@adapters/auth";
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import HouseholdInvitationEmail from "@app/_components/emails/household-invitation";
 import { defaultLocale } from "@app/_i18n/routing";
@@ -22,7 +23,6 @@ import {
   HouseholdInvitation,
 } from "@domain/entities/household-invitation";
 import { HouseholdUser } from "@domain/entities/household-user";
-import { User } from "@domain/entities/user";
 import { HouseholdInvitationRepository } from "@domain/repositories/household-invitation";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
 import { UserRepository } from "@domain/repositories/user";
@@ -102,7 +102,7 @@ export const householdRouter = createTRPCRouter({
         };
 
         const messages = (await getMessages({
-          locale: (ctx.user as User).locale || defaultLocale,
+          locale: ctx.user.locale || defaultLocale,
         })) as unknown as IntlMessages;
 
         const joinUrl = `${env.NEXT_PUBLIC_URL}/join-household/${householdInvitation.token}`;
@@ -113,7 +113,7 @@ export const householdRouter = createTRPCRouter({
           text: await render(
             HouseholdInvitationEmail({
               messages,
-              locale: (ctx.user as User).locale || defaultLocale,
+              locale: ctx.user.locale || defaultLocale,
               joinUrl,
               inviterName: ctx.user.name,
               householdName: household.name,
@@ -125,7 +125,7 @@ export const householdRouter = createTRPCRouter({
           html: await render(
             HouseholdInvitationEmail({
               messages,
-              locale: (ctx.user as User).locale || defaultLocale,
+              locale: ctx.user.locale || defaultLocale,
               joinUrl,
               inviterName: ctx.user.name,
               householdName: household.name,
@@ -235,10 +235,9 @@ export const householdRouter = createTRPCRouter({
       const householdUsers = await ctx.householdUserRepo.findByHouseholdId(householdId);
 
       if (!householdUsers) {
-        throw new NotFoundError("Household users");
       }
 
-      const users: User[] = [];
+      const users: (typeof auth.$Infer.Session.user)[] = [];
       for (const user of householdUsers) {
         const foundUser = await ctx.userRepo.findById(user.userId);
         if (foundUser) {
@@ -310,7 +309,7 @@ export const householdRouter = createTRPCRouter({
 });
 
 interface InvitationValidContext {
-  user: User;
+  user: typeof auth.$Infer.Session.user;
   householdInvitationRepo: HouseholdInvitationRepository;
   householdUserRepo: HouseholdUserRepository;
   userRepo: UserRepository;

@@ -6,7 +6,6 @@ import { getMessages } from "next-intl/server";
 import ResetPasswordEmail from "@app/_components/emails/reset-password";
 import VerificationEmail from "@app/_components/emails/verification";
 import { defaultLocale } from "@app/_i18n/routing";
-import { UserForAuthConfig } from "@domain/entities/user";
 import { env } from "@env";
 import { db } from "@infrastructure/db";
 import { SESEmailService } from "@infrastructure/services/email.ses";
@@ -17,8 +16,9 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     autoSignIn: true,
     sendResetPassword: async ({ user, url }) => {
+      const userLocale = "locale" in user ? (user.locale as string) : defaultLocale;
       const messages = (await getMessages({
-        locale: (user as UserForAuthConfig).locale || defaultLocale,
+        locale: userLocale,
       })) as unknown as IntlMessages;
 
       const emailService = new SESEmailService();
@@ -29,7 +29,7 @@ export const auth = betterAuth({
         text: await render(
           ResetPasswordEmail({
             messages,
-            locale: (user as UserForAuthConfig).locale || defaultLocale,
+            locale: userLocale,
             resetUrl: url,
           }),
           {
@@ -39,7 +39,7 @@ export const auth = betterAuth({
         html: await render(
           ResetPasswordEmail({
             messages,
-            locale: (user as UserForAuthConfig).locale || defaultLocale,
+            locale: userLocale,
             resetUrl: url,
           }),
           {
@@ -56,7 +56,7 @@ export const auth = betterAuth({
         required: true,
       },
       role: {
-        type: "string",
+        type: ["end_user", "admin", "staff"],
         required: true,
         defaultValue: "end_user",
         input: false,
@@ -80,8 +80,9 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
+      const userLocale = "locale" in user ? (user.locale as string) : defaultLocale;
       const messages = (await getMessages({
-        locale: (user as UserForAuthConfig).locale || defaultLocale,
+        locale: userLocale,
       })) as unknown as IntlMessages;
 
       const emailService = new SESEmailService();
@@ -92,7 +93,7 @@ export const auth = betterAuth({
         text: await render(
           VerificationEmail({
             messages,
-            locale: (user as UserForAuthConfig).locale || defaultLocale,
+            locale: userLocale,
             verificationUrl: url,
           }),
           {
@@ -102,7 +103,7 @@ export const auth = betterAuth({
         html: await render(
           VerificationEmail({
             messages,
-            locale: (user as UserForAuthConfig).locale || defaultLocale,
+            locale: userLocale,
             verificationUrl: url,
           }),
           {
