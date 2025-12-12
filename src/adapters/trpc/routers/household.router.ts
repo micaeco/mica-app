@@ -3,7 +3,6 @@ import { addDays } from "date-fns";
 import { getMessages } from "next-intl/server";
 import { z } from "zod";
 
-import { auth } from "@adapters/auth";
 import { createTRPCRouter, protectedProcedure } from "@adapters/trpc/trpc";
 import HouseholdInvitationEmail from "@app/_components/emails/household-invitation";
 import { defaultLocale } from "@app/_i18n/routing";
@@ -23,6 +22,7 @@ import {
   HouseholdInvitation,
 } from "@domain/entities/household-invitation";
 import { HouseholdUser } from "@domain/entities/household-user";
+import { User } from "@domain/entities/user";
 import { HouseholdInvitationRepository } from "@domain/repositories/household-invitation";
 import { HouseholdUserRepository } from "@domain/repositories/household-user";
 import { UserRepository } from "@domain/repositories/user";
@@ -237,7 +237,7 @@ export const householdRouter = createTRPCRouter({
       if (!householdUsers) {
       }
 
-      const users: (typeof auth.$Infer.Session.user)[] = [];
+      const users: User[] = [];
       for (const user of householdUsers) {
         const foundUser = await ctx.userRepo.findById(user.userId);
         if (foundUser) {
@@ -309,7 +309,7 @@ export const householdRouter = createTRPCRouter({
 });
 
 interface InvitationValidContext {
-  user: typeof auth.$Infer.Session.user;
+  user: User;
   householdInvitationRepo: HouseholdInvitationRepository;
   householdUserRepo: HouseholdUserRepository;
   userRepo: UserRepository;
