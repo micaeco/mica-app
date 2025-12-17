@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import { Loading } from "@app/_components/loading";
 import { trpc } from "@app/_lib/trpc";
 import { useHouseholdStore } from "@app/_stores/household";
 
@@ -26,7 +26,11 @@ export function HouseholdsInitializer({ children }: { children: React.ReactNode 
   }, [households]);
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 size={64} className="animate-spin" />
+      </div>
+    );
   }
 
   if (error) {

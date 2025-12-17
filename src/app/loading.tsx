@@ -1,9 +1,9 @@
-import { Loader2 } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 
-export default function Loading() {
+export default function LoadingPage() {
   return (
     <div className="flex h-screen w-full items-center justify-center">
-      <Loader2 size={64} className="animate-spin" />
+      <LoaderCircle size={64} className="animate-spin" />
     </div>
   );
 }
