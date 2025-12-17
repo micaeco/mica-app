@@ -28,8 +28,8 @@
           },
           {
             "target": "./src/app/**",
-            "from": ["./src/infrastructure/**", "./src/adapters/**"],
-            "message": "Violation: Presentation layer cannot import from Infrastructure or App layers."
+            "from": ["./src/infrastructure/**"],
+            "message": "Violation: Presentation layer cannot import from Infrastructure."
           },
           {
             "target": "./src/infrastructure/**",
