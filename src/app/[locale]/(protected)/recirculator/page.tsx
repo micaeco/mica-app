@@ -45,7 +45,7 @@ export default function RecirculatorPage() {
 
   if (isChecking) {
     return (
-      <div className="flex h-[calc(100vh-var(--header-height))] w-full items-center justify-center">
+      <div className="flex h-[calc(100vh-var(--header-height)-var(--navbar-height))] w-full items-center justify-center">
         <Loader2 className="animate-spin" size={64} />
       </div>
     );
