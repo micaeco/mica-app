@@ -57,9 +57,7 @@ const Panel = ({ children, ...props }: RootPanelProps) => {
 
   return (
     <PanelContext.Provider value={{ isDesktop }}>
-      <Panel {...props} {...(!isDesktop && { autoFocus: true })}>
-        {children}
-      </Panel>
+      <Panel {...props}>{children}</Panel>
     </PanelContext.Provider>
   );
 };

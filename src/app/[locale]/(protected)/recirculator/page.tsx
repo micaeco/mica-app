@@ -82,7 +82,6 @@ export default function RecirculatorPage() {
               id="deviceId"
               value={deviceId}
               onChange={(e) => setDeviceId(e.target.value)}
-              autoFocus
             />
           </div>
 

@@ -273,7 +273,6 @@ export default function RecirculatorPage() {
               value={editedDeviceId}
               onChange={(e) => setEditedDeviceId(e.target.value)}
               onKeyDown={handleKeyDown}
-              autoFocus
               className="h-8 w-44 text-xs"
             />
             <Button size="icon" variant="ghost" onClick={handleSaveDeviceId}>
