@@ -3,13 +3,14 @@
 import { useEffect, useState, useRef } from "react";
 
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-import { Power, AlertCircle, CircleCheckBig, Loader2 } from "lucide-react";
+import { Power, AlertCircle, CircleCheckBig, Loader2, Check, X, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@app/_components/ui/button";
+import { MacIdInput } from "@app/_components/ui/mac-id-input";
 import { Progress } from "@app/_components/ui/progress";
 import { Slider } from "@app/_components/ui/slider";
 import { trpc } from "@app/_lib/trpc";
@@ -27,9 +28,12 @@ const DISCONNECT_TIMEOUT_MS = 20000;
 const COMMAND_TIMEOUT_MS = 10000;
 
 const STORAGE_KEY = "recirculator-max-temp";
+const DEVICE_ID_STORAGE_KEY = "recirculator-device-id";
+const MAC_ID_REGEX = /^[0-9A-F]{12}$/;
 
 export default function RecirculatorPage() {
   const params = useParams();
+  const router = useRouter();
   const deviceId = params.id as string;
   const t = useTranslations("recirculator");
 
@@ -38,6 +42,8 @@ export default function RecirculatorPage() {
   const [initialTemp, setInitialTemp] = useState<number>(0);
   const [showDisconnectWarning, setShowDisconnectWarning] = useState(false);
   const [hasInitialCheck, setHasInitialCheck] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedDeviceId, setEditedDeviceId] = useState("");
   const lastDeviceTimestampRef = useRef<string | null>(null);
   const lastTimestampCheckRef = useRef<number>(Date.now());
   const commandSentAtRef = useRef<number>(0);
@@ -180,6 +186,38 @@ export default function RecirculatorPage() {
     setMaxTemp(values[0]);
   };
 
+  const handleStartEditing = () => {
+    const formattedId = (deviceId.match(/.{1,2}/g) || []).join(":");
+    setEditedDeviceId(formattedId);
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedDeviceId("");
+  };
+
+  const handleSaveDeviceId = () => {
+    const sanitizedId = editedDeviceId.replace(/:/g, "").trim().toUpperCase();
+
+    if (!MAC_ID_REGEX.test(sanitizedId)) {
+      toast.error(t("errorInvalidDeviceId"));
+      return;
+    }
+
+    localStorage.setItem(DEVICE_ID_STORAGE_KEY, sanitizedId);
+    setIsEditing(false);
+    router.push(`/recirculator/${sanitizedId}`);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSaveDeviceId();
+    } else if (e.key === "Escape") {
+      handleCancelEdit();
+    }
+  };
+
   const currentTemp = status?.temperature ?? 0;
   const progress =
     phase === "HEATING" && initialTemp < maxTemp
@@ -187,6 +225,8 @@ export default function RecirculatorPage() {
       : 0;
 
   const isInteractionDisabled = phase === "SENDING" || turnOffMutation.isPending;
+
+  const formattedDeviceId = (deviceId.match(/.{1,2}/g) || []).join(":");
 
   return (
     <div className="flex w-full flex-col items-center justify-center space-y-8 p-4">
@@ -197,6 +237,31 @@ export default function RecirculatorPage() {
         height={140}
         className="opacity-90"
       />
+
+      <div className="flex items-center gap-2">
+        {!isEditing ? (
+          <Button variant="ghost" className="inline-flex gap-2" onClick={handleStartEditing}>
+            <span className="font-mono">{formattedDeviceId}</span>
+            <Pencil />
+          </Button>
+        ) : (
+          <div className="flex items-center gap-2">
+            <MacIdInput
+              value={editedDeviceId}
+              onChange={(e) => setEditedDeviceId(e.target.value)}
+              onKeyDown={handleKeyDown}
+              autoFocus
+              className="h-8 w-44 text-xs"
+            />
+            <Button size="icon" variant="ghost" onClick={handleSaveDeviceId}>
+              <Check />
+            </Button>
+            <Button size="icon" variant="ghost" onClick={handleCancelEdit}>
+              <X />
+            </Button>
+          </div>
+        )}
+      </div>
 
       {phase === "OFF" && (
         <>

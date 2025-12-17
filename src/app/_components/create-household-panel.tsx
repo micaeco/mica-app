@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@app/_components/ui/form";
 import { Input } from "@app/_components/ui/input";
+import { MacIdInput } from "@app/_components/ui/mac-id-input";
 import {
   Panel,
   PanelContent,
@@ -185,23 +186,7 @@ export function CreateHouseholdPanel({
                           {tForm("sensorId.label")}
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="A1:B2:C3:D4:E5:F6"
-                            className="font-mono"
-                            maxLength={17}
-                            onChange={(e) => {
-                              const sanitizedValue = e.target.value
-                                .toUpperCase()
-                                .replace(/[^A-F0-9]/g, "");
-
-                              const formattedValue = (
-                                sanitizedValue.slice(0, 12).match(/.{1,2}/g) || []
-                              ).join(":");
-
-                              field.onChange(formattedValue);
-                            }}
-                          />
+                          <MacIdInput {...field} />
                         </FormControl>
                         <FormDescription>{tForm("sensorId.description")}</FormDescription>
                         <FormMessage />

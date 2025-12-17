@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@app/_components/ui/button";
-import { Input } from "@app/_components/ui/input";
+import { MacIdInput } from "@app/_components/ui/mac-id-input";
 
 const DEVICE_ID_STORAGE_KEY = "recirculator-device-id";
 const MAC_ID_REGEX = /^[0-9A-F]{12}$/;
@@ -32,15 +32,15 @@ export default function RecirculatorPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmedId = deviceId.trim().toUpperCase();
+    const sanitizedId = deviceId.replace(/:/g, "").trim().toUpperCase();
 
-    if (!MAC_ID_REGEX.test(trimmedId)) {
+    if (!MAC_ID_REGEX.test(sanitizedId)) {
       toast.error(t("errorInvalidDeviceId"));
       return;
     }
 
-    localStorage.setItem(DEVICE_ID_STORAGE_KEY, trimmedId);
-    router.push(`/recirculator/${trimmedId}`);
+    localStorage.setItem(DEVICE_ID_STORAGE_KEY, sanitizedId);
+    router.push(`/recirculator/${sanitizedId}`);
   };
 
   if (isChecking) {
@@ -78,14 +78,10 @@ export default function RecirculatorPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Input
+            <MacIdInput
               id="deviceId"
-              type="text"
-              placeholder={t("deviceIdPlaceholder")}
               value={deviceId}
-              onChange={(e) => setDeviceId(e.target.value.toUpperCase())}
-              className="font-mono uppercase"
-              maxLength={12}
+              onChange={(e) => setDeviceId(e.target.value)}
               autoFocus
             />
           </div>
