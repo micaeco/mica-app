@@ -114,33 +114,31 @@ export default function RecirculatorPage() {
       }
     }
 
+    // --- PHASE: OFF ---
     if (phase === "OFF" && !hasInitialCheck) {
       setHasInitialCheck(true);
       if (state === "ON") {
         setPhase("HEATING");
         setInitialTemp(currentTemp);
         heatingStartedAtRef.current = now;
+        lastTimestampCheckRef.current = now;
       }
       return;
     }
 
+    // --- PHASE: SENDING ---
     if (phase === "SENDING") {
       if (state === "ON") {
         setPhase("HEATING");
         setInitialTemp(currentTemp);
         heatingStartedAtRef.current = now;
-      } else if (now - commandSentAtRef.current > COMMAND_TIMEOUT_MS) {
-        toast.error(t("errorNoResponse"));
-        setPhase("OFF");
+        lastTimestampCheckRef.current = now;
       }
       return;
     }
 
+    // --- PHASE: HEATING ---
     if (phase === "HEATING") {
-      if (now - lastTimestampCheckRef.current > DISCONNECT_TIMEOUT_MS) {
-        setShowDisconnectWarning(true);
-      }
-
       if (state === "OFF" && now - heatingStartedAtRef.current > 2000) {
         if (currentTemp >= maxTemp - TEMP_REACHED_MARGIN) {
           setPhase("READY");
@@ -152,6 +150,7 @@ export default function RecirculatorPage() {
       return;
     }
 
+    // --- PHASE: READY ---
     if (phase === "READY") {
       if (currentTemp < maxTemp - TEMP_COOLING_THRESHOLD) {
         setPhase("OFF");
@@ -159,6 +158,30 @@ export default function RecirculatorPage() {
       return;
     }
   }, [status, phase, maxTemp, hasInitialCheck, t]);
+
+  useEffect(() => {
+    if (phase === "OFF" || phase === "READY") return;
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+
+      if (phase === "SENDING") {
+        if (now - commandSentAtRef.current > COMMAND_TIMEOUT_MS) {
+          toast.error(t("errorNoResponse"));
+          setPhase("OFF");
+        }
+      }
+
+      if (phase === "HEATING") {
+        const timeSinceLastData = now - lastTimestampCheckRef.current;
+        if (timeSinceLastData > DISCONNECT_TIMEOUT_MS) {
+          setShowDisconnectWarning(true);
+        }
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [phase, t]);
 
   const handleStart = async () => {
     if (maxTemp < MIN_SAFE_TEMPERATURE || maxTemp > MAX_SAFE_TEMPERATURE) {
