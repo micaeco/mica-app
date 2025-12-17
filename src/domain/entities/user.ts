@@ -1,3 +1,11 @@
-import { auth } from "@adapters/auth";
-
-export type User = typeof auth.$Infer.Session.user;
+export type User = {
+  id: string;
+  email: string;
+  emailVerified: boolean;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  image?: string | null;
+  locale: string;
+  role: "end_user" | "admin" | "staff";
+};
