@@ -23,17 +23,17 @@
         "zones": [
           {
             "target": "./src/domain/**",
-            "from": ["./src/infrastructure/**", "./src/presentation/**", "./src/app/**"],
+            "from": ["./src/infrastructure/**", "./src/app/**", "./src/adapters/**"],
             "message": "Violation: Domain layer cannot import from Infrastructure, Presentation, or App layers."
           },
           {
-            "target": "./src/presentation/**",
-            "from": ["./src/infrastructure/**", "./src/app/**"],
+            "target": "./src/app/**",
+            "from": ["./src/infrastructure/**", "./src/adapters/**"],
             "message": "Violation: Presentation layer cannot import from Infrastructure or App layers."
           },
           {
             "target": "./src/infrastructure/**",
-            "from": ["./src/presentation/**", "./src/app/**"],
+            "from": ["./src/app/**", "./src/adapters/**"],
             "message": "Violation: Infrastructure layer cannot import from Presentation or App layers."
           }
         ]
