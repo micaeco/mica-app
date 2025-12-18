@@ -9,10 +9,10 @@ import { Link } from "@app/_i18n/routing";
 import { cn } from "@app/_lib/utils";
 
 const navItems = [
-  { icon: PieChart, href: "/consumption" },
   { icon: Home, href: "/" },
-  { icon: Repeat2, href: "/recirculator" },
+  { icon: PieChart, href: "/consumption" },
   { icon: Droplet, href: "/efficiency", sample: true },
+  { icon: Repeat2, href: "/recirculator" },
 ];
 
 export function Navbar({ className }: { className?: string }) {
