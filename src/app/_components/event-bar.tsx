@@ -72,7 +72,7 @@ export function EventBar({ event, granularity }: EventBarProps) {
           <div className="flex w-full flex-col">
             <div className="flex flex-row justify-between gap-2">
               <div className="flex min-w-0 flex-row space-x-2">
-                <span className="flex-shrink flex-grow-0 truncate font-medium">
+                <span className="shrink grow-0 truncate font-medium">
                   {tCategories(event.category)}
                 </span>
                 {(event.categorySource === "algorithm" ||
@@ -83,7 +83,7 @@ export function EventBar({ event, granularity }: EventBarProps) {
                   <Sparkles className="text-brand-primary fill-brand-primary size-3" />
                 )}
                 {event.tag && (
-                  <div className="bg-brand-secondary flex flex-shrink items-center justify-center rounded-full px-3 py-0.5 text-xs">
+                  <div className="bg-brand-secondary flex shrink items-center justify-center rounded-full px-3 py-0.5 text-xs">
                     <span className="truncate">{event.tag.name}</span>
                   </div>
                 )}
