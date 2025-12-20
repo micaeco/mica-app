@@ -142,7 +142,7 @@ export function CreateEventSheet({ children }: { children: React.ReactNode }) {
       category: watchedCategory!,
     },
     {
-      enabled: !!watchedCategory,
+      enabled: !!watchedCategory && !!selectedHouseholdId,
     }
   );
 

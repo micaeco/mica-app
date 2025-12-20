@@ -96,7 +96,7 @@ export function EditEventForm({
       category: watchedCategory!,
     },
     {
-      enabled: !!watchedCategory,
+      enabled: !!watchedCategory && !!selectedHouseholdId,
     }
   );
 
