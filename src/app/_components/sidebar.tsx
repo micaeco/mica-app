@@ -112,7 +112,7 @@ function HouseholdMenuItem({
       <SidebarMenuButton
         onClick={handleClick}
         className={cn(
-          "peer h-9 flex-grow rounded-r-none",
+          "peer h-9 grow rounded-r-none",
           isSelected
             ? "bg-brand-secondary hover:bg-brand-secondary active:bg-brand-secondary transition-colors"
             : "bg-muted hover:bg-brand-tertiary active:bg-brand-tertiary transition-colors"

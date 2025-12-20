@@ -82,7 +82,7 @@ export default function ConsumptionPage() {
                 {formatSelectedTimeWindow()}
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-grow flex-col items-center justify-center px-2 pt-6">
+            <CardContent className="flex grow flex-col items-center justify-center px-2 pt-6">
               <ConsumptionPerTimeChart
                 selectedTimeWindow={selectedTimeWindow}
                 setSelectedTimeWindow={setSelectedTimeWindow}
@@ -135,7 +135,7 @@ export default function ConsumptionPage() {
                 )}
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-grow flex-col items-center justify-center">
+            <CardContent className="flex grow flex-col items-center justify-center">
               <ConsumptionPerCategoryChart
                 categoryBreakdown={currentConsumption?.categoryBreakdown || []}
                 setSelectedCategories={setSelectedCategories}

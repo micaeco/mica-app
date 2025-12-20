@@ -20,7 +20,7 @@ export default function Home() {
       </Card>
 
       <Card className="w-full xl:flex xl:flex-col xl:overflow-hidden">
-        <CardHeader className="xl:flex-shrink-0">
+        <CardHeader className="xl:shrink-0">
           <CardTitle className="flex flex-row items-center gap-2">
             {tEventsList("title")}
             <CreateEventSheet>
