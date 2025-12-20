@@ -1,11 +1,13 @@
-import { BaseLayout } from "@app/_components/base-layout";
-import { NotFound } from "@app/_components/not-found";
-import { routing } from "@app/_i18n/routing";
+'use client';
+
+import Error from 'next/error';
 
 export default function GlobalNotFound() {
   return (
-    <BaseLayout locale={routing.defaultLocale}>
-      <NotFound />
-    </BaseLayout>
+    <html lang="en">
+      <body>
+        <Error statusCode={404} />
+      </body>
+    </html>
   );
 }

@@ -36,7 +36,6 @@ export function LeaveHouseholdDialog({
     },
     onError: (error) => {
       const errorCode = error.data?.code || "INTERNAL_SERVER_ERROR";
-      // @ts-expect-error - Dynamic key for error translation
       toast.error(tErrors.has(errorCode) ? tErrors(errorCode) : tErrors("INTERNAL_SERVER_ERROR"));
     },
   });
