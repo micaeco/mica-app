@@ -74,9 +74,9 @@ export default function ConsumptionPage() {
     <div className="flex w-full flex-col gap-4 p-4">
       <TimeGranularitySelect granularity={granularity} setGranularity={setGranularity} />
 
-      <div className="/* 100vh minus this container's vertical padding (p-4 => 2*space.4) */ flex flex-col gap-4 xl:grid xl:h-[calc(100vh-theme(space.8))] xl:min-h-0 xl:grid-cols-[24rem_minmax(0,1fr)] xl:grid-rows-[auto_minmax(0,1fr)] xl:gap-4">
-        <div className="col-start-1 row-start-1 flex flex-col">
-          <Card className="flex h-fit flex-col">
+      <div className="flex flex-col gap-4 xl:flex-row">
+        <div className="flex flex-col gap-4 xl:w-2/5">
+          <Card>
             <CardHeader>
               <CardTitle className="first-letter:capitalize">
                 {formatSelectedTimeWindow()}
@@ -95,10 +95,8 @@ export default function ConsumptionPage() {
               />
             </CardContent>
           </Card>
-        </div>
 
-        <div className="col-start-1 row-start-2 min-h-0">
-          <Card className="flex h-full flex-col">
+          <Card>
             <CardHeader>
               <CardTitle className="space-x-4">
                 {isLoadingConsumption ? (
@@ -145,15 +143,17 @@ export default function ConsumptionPage() {
           </Card>
         </div>
 
-        <Card className="col-start-2 row-span-2 row-start-1 flex h-full min-h-0 flex-col overflow-hidden">
-          <CardContent className="h-full min-h-0 overflow-auto p-6">
-            <ConsumptionPerEventChart
-              selectedCategories={selectedCategories}
-              selectedTimeWindow={selectedTimeWindow}
-              granularity={granularity}
-            />
-          </CardContent>
-        </Card>
+        <div className="flex max-h-[calc(100vh-var(--header-height)-var(--navbar-height))] overflow-y-hidden xl:w-3/5">
+          <Card className="w-full">
+            <CardContent className="h-full min-h-0 overflow-auto p-6">
+              <ConsumptionPerEventChart
+                selectedCategories={selectedCategories}
+                selectedTimeWindow={selectedTimeWindow}
+                granularity={granularity}
+              />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
