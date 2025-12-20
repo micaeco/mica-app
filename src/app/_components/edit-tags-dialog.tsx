@@ -69,10 +69,15 @@ export function EditTagsDialog({ isOpen, onOpenChange, category }: EditTagsDialo
   const { selectedHouseholdId } = useHouseholdStore();
   const utils = trpc.useUtils();
 
-  const { data: tags, isLoading: isLoadingTags } = trpc.tag.getTagsByCategory.useQuery({
-    householdId: selectedHouseholdId,
-    category: selectedCategory,
-  });
+  const { data: tags, isLoading: isLoadingTags } = trpc.tag.getTagsByCategory.useQuery(
+    {
+      householdId: selectedHouseholdId,
+      category: selectedCategory,
+    },
+    {
+      enabled: !!selectedHouseholdId && !!selectedCategory,
+    }
+  );
 
   const { mutate: createTag, isPending: isCreatingTag } = trpc.tag.create.useMutation({
     onSuccess: () => {
