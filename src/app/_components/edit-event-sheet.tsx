@@ -25,12 +25,6 @@ export function EditEventSheet({
   return (
     <Sheet open={open} onOpenChange={handleSheetOpenChange}>
       <SheetContent className="w-full overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>
-            {tCommon("edit")} <span className="lowercase">{tCommon("event")}</span>
-          </SheetTitle>
-        </SheetHeader>
-
         <EditEventForm
           event={event}
           onFormSubmitSuccess={() => {
