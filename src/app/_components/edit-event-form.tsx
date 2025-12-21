@@ -156,6 +156,23 @@ export function EditEventForm({
                   <span>{formatDuration(event.durationInSeconds)}</span>
                 </div>
               </div>
+
+              {(event.categorizationState === "ai_low_confidence" ||
+                event.categorizationState === "ai_high_confidence") && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    if (event.algorithmCategory) {
+                      eventForm.setValue("category", event.algorithmCategory);
+                    }
+                  }}
+                >
+                  <Sparkles className="text-brand-primary fill-brand-primary mr-2 size-4" />
+                  {tEditEventSheet("confirmAiCategorization")}
+                </Button>
+              )}
             </>
           )}
 

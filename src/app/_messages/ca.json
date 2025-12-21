@@ -244,7 +244,8 @@
     "noTagsForCategory": "No s'han trobat etiquetes per a aquesta categoria.",
     "eventEditedSuccessfully": "Esdeveniment actualitzat correctament",
     "flowRate": "Cabal mitjà",
-    "flowRateUnit": "L/min"
+    "flowRateUnit": "L/min",
+    "confirmAiCategorization": "Confirmar categorització"
   },
   "editTagsDialog": {
     "title": "Editar etiquetes",

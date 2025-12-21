@@ -244,7 +244,8 @@
     "noTagsForCategory": "No se encontraron etiquetas para esta categoría.",
     "eventEditedSuccessfully": "Evento actualizado correctamente",
     "flowRate": "Caudal medio",
-    "flowRateUnit": "L/min"
+    "flowRateUnit": "L/min",
+    "confirmAiCategorization": "Confirmar categorización"
   },
   "editTagsDialog": {
     "title": "Editar etiquetas",
