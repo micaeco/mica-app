@@ -42,7 +42,7 @@ export const createEventInput = z
       return data.startDate || data.endDate;
     },
     {
-      message: "validation.eitherStartOrEndRequired",
+      message: "Either start date or end date must be provided",
       path: ["startDate"],
     }
   )
@@ -54,7 +54,7 @@ export const createEventInput = z
       return true;
     },
     {
-      message: "validation.endCannotBeBeforeStart",
+      message: "End date cannot be before start date",
       path: ["endDate"],
     }
   );
