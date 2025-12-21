@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 
 import { trpc } from "@app/_lib/trpc";
 
-import { CreateHouseholdPanel } from "./create-household-panel";
+import { CreateHouseholdDialog } from "./create-household-dialog";
 import { Button } from "./ui/button";
 
 // Routes that don't require a household to be accessed
@@ -49,10 +49,10 @@ export function HouseholdGate({ children }: { children: React.ReactNode }) {
           <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{t("subtitle")}</p>
           <Button asChild>
-            <CreateHouseholdPanel>
+            <CreateHouseholdDialog>
               <Plus className="h-5 w-5" />
               {t("createButton")}
-            </CreateHouseholdPanel>
+            </CreateHouseholdDialog>
           </Button>
         </div>
       </div>

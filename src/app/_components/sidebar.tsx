@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ExternalLink, HelpCircle, MessageSquare, Plus, SquarePen } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { CreateHouseholdPanel } from "@app/_components/create-household-panel";
+import { CreateHouseholdDialog } from "@app/_components/create-household-dialog";
 import { ManageHouseholdSheet } from "@app/_components/manage-household-sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@app/_components/ui/avatar";
 import { Button } from "@app/_components/ui/button";
@@ -51,12 +51,12 @@ export function AppSidebar({ className }: { className?: string }) {
                 </HouseholdMenuItem>
               ))}
               <SidebarMenuItem>
-                <CreateHouseholdPanel className="text-muted-foreground hover:text-primary hover:bg-muted flex w-fit gap-2 rounded-lg px-4 py-2 transition-colors">
+                <CreateHouseholdDialog className="text-muted-foreground hover:text-primary hover:bg-muted flex w-fit gap-2 rounded-lg px-4 py-2 transition-colors">
                   <Plus className="h-5 w-5" />
                   <div>
                     {tCommon("add")} <span className="lowercase">{tCommon("household")}</span>
                   </div>
-                </CreateHouseholdPanel>
+                </CreateHouseholdDialog>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>

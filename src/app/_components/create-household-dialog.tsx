@@ -11,6 +11,14 @@ import { z } from "zod";
 
 import { Button } from "@app/_components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@app/_components/ui/dialog";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -21,14 +29,6 @@ import {
 } from "@app/_components/ui/form";
 import { Input } from "@app/_components/ui/input";
 import { MacIdInput } from "@app/_components/ui/mac-id-input";
-import {
-  Panel,
-  PanelContent,
-  PanelDescription,
-  PanelHeader,
-  PanelTitle,
-  PanelTrigger,
-} from "@app/_components/ui/panel";
 import { ScrollArea } from "@app/_components/ui/scroll-area";
 import { trpc } from "@app/_lib/trpc";
 import { createHousehold } from "@domain/entities/household";
@@ -46,7 +46,7 @@ const stepFields: FieldName<FormValues>[][] = [
   ["street1", "street2", "city", "zip", "country"],
 ];
 
-export function CreateHouseholdPanel({
+export function CreateHouseholdDialog({
   children,
   className,
 }: {
@@ -116,17 +116,17 @@ export function CreateHouseholdPanel({
     setCurrentStep((prev) => prev - 1);
   };
 
-  const panelTitles = [t("step1.title"), t("step2.title")];
-  const panelDescriptions = [t("step1.description"), t("step2.description")];
+  const dialogTitles = [t("step1.title"), t("step2.title")];
+  const dialogDescriptions = [t("step1.description"), t("step2.description")];
 
   return (
-    <Panel open={open} onOpenChange={setOpen}>
-      <PanelTrigger className={className}>{children}</PanelTrigger>
-      <PanelContent className="flex max-h-[90dvh] flex-col">
-        <PanelHeader>
-          <PanelTitle>{panelTitles[currentStep]}</PanelTitle>
-          <PanelDescription>{panelDescriptions[currentStep]}</PanelDescription>
-        </PanelHeader>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger className={className}>{children}</DialogTrigger>
+      <DialogContent className="flex max-h-[90dvh] flex-col">
+        <DialogHeader>
+          <DialogTitle>{dialogTitles[currentStep]}</DialogTitle>
+          <DialogDescription>{dialogDescriptions[currentStep]}</DialogDescription>
+        </DialogHeader>
         <ScrollArea className="flex-1 overflow-y-auto">
           <Form {...form}>
             <form className="space-y-4 p-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -299,7 +299,7 @@ export function CreateHouseholdPanel({
             </form>
           </Form>
         </ScrollArea>
-      </PanelContent>
-    </Panel>
+      </DialogContent>
+    </Dialog>
   );
 }
