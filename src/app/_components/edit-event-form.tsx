@@ -129,27 +129,6 @@ export function EditEventForm({
         <form onSubmit={eventForm.handleSubmit(onSubmitEvent)} className="flex flex-col space-y-6">
           {event && (
             <>
-              <div className="flex items-center gap-2">
-                <Image
-                  src={categoryMap[event.category].icon!}
-                  alt={event.category}
-                  width={32}
-                  height={32}
-                />
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-semibold">{tCategories(event.category)}</span>
-                  {event.categorizationState === "ai_high_confidence" && (
-                    <Sparkles className="text-brand-primary fill-brand-primary size-4" />
-                  )}
-                  {event.categorizationState === "ai_confirmed" && (
-                    <div className="relative inline-flex">
-                      <Sparkles className="text-brand-secondary fill-brand-secondary size-3" />
-                      <Check className="text-brand-secondary size-3" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
               <div className="bg-muted/30 space-y-3 rounded-lg p-4">
                 <p className="text-muted-foreground text-sm">
                   {format(event.startTimestamp, "cccc PPP", { locale: getDateFnsLocale(locale) })}
