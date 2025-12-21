@@ -3,13 +3,26 @@ import { z } from "zod";
 import { Category } from "@domain/entities/category";
 import { Tag } from "@domain/entities/tag";
 
+export const eventCategorizationStates = [
+  "ai_unrecognized",
+  "ai_low_confidence",
+  "ai_high_confidence",
+  "manual_only",
+  "manual_override",
+  "ai_confirmed",
+] as const;
+
+export const EventCategorizationState = z.enum(eventCategorizationStates);
+
+export type EventCategorizationState = z.infer<typeof EventCategorizationState>;
+
 export const Event = z.object({
   id: z.string(),
   category: Category,
-  categorySource: z.enum(["algorithm", "user"]).optional(),
   algorithmCategory: Category.optional(),
   algorithmConfidence: z.number().min(0).max(1).optional(),
   userCategory: Category.optional(),
+  categorizationState: EventCategorizationState,
   startTimestamp: z.date(),
   endTimestamp: z.date(),
   durationInSeconds: z.number().nonnegative(),

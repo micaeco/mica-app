@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import { Category } from "@domain/entities/category";
-import { Event } from "@domain/entities/event";
+import { Event, EventCategorizationState } from "@domain/entities/event";
 import { EventRepository } from "@domain/repositories/event";
 import { TagRepository } from "@domain/repositories/tag";
 import { env } from "@env";
@@ -15,7 +15,6 @@ interface EventApiResponse {
   tagId: number | null;
   notes: string | null;
   category: string | null;
-  categorySource: "algorithm" | "user" | null;
   algorithmCategory: string | null;
   algorithmConfidence: number | null;
   userCategory: string | null;
@@ -198,17 +197,48 @@ export class ApiEventRepository implements EventRepository {
     );
   }
 
+  private computeCategorizationState(
+    category: Category,
+    algorithmCategory?: Category,
+    userCategory?: Category
+  ): EventCategorizationState {
+    if (algorithmCategory === "unknown" || !algorithmCategory) {
+      return "ai_unrecognized";
+    }
+
+    if (userCategory) {
+      if (userCategory === algorithmCategory) {
+        return "ai_confirmed";
+      }
+      return "manual_override";
+    }
+
+    if (category === algorithmCategory) {
+      return "ai_high_confidence";
+    }
+
+    return "ai_low_confidence";
+  }
+
   private async mapApiResponseToEvent(apiResponse: EventApiResponse): Promise<Event> {
     let tag;
     if (apiResponse.tagId) tag = await this.tagRepo.getTagById(apiResponse.tagId);
 
+    const category = (apiResponse.category as Category) || "unknown";
+    const algorithmCategory = (apiResponse.algorithmCategory as Category) || undefined;
+    const userCategory = (apiResponse.userCategory as Category) || undefined;
+
     return {
       id: apiResponse.eventId,
-      category: (apiResponse.category as Category) || "unknown",
-      categorySource: apiResponse.categorySource || "user",
-      algorithmCategory: (apiResponse.algorithmCategory as Category) || undefined,
+      category,
+      algorithmCategory,
       algorithmConfidence: apiResponse.algorithmConfidence || undefined,
-      userCategory: (apiResponse.userCategory as Category) || undefined,
+      userCategory,
+      categorizationState: this.computeCategorizationState(
+        category,
+        algorithmCategory,
+        userCategory
+      ),
       startTimestamp: new Date(apiResponse.start),
       endTimestamp: new Date(apiResponse.end),
       durationInSeconds: apiResponse.duration || 0,

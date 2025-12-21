@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { format } from "date-fns";
-import { Sparkles, Timer } from "lucide-react";
+import { Check, Sparkles, Timer } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 
 import { ConsumptionBar } from "@app/_components/consumption-bar";
@@ -33,7 +33,12 @@ export function EventBar({ event, granularity }: EventBarProps) {
   const consumptionPercentage = Math.min((event.consumptionInLiters / 15) * 100, 100);
 
   const isActiveLeak = () => {
-    if (event.category !== "leak" || event.categorySource !== "algorithm" || !event.endTimestamp) {
+    if (
+      event.category !== "leak" ||
+      event.categorizationState === "manual_only" ||
+      event.categorizationState === "manual_override" ||
+      !event.endTimestamp
+    ) {
       return false;
     }
 
@@ -75,12 +80,14 @@ export function EventBar({ event, granularity }: EventBarProps) {
                 <span className="shrink grow-0 truncate font-medium">
                   {tCategories(event.category)}
                 </span>
-                {(event.categorySource === "algorithm" ||
-                  (event.algorithmCategory &&
-                    event.algorithmCategory !== "unknown" &&
-                    event.userCategory === event.algorithmCategory &&
-                    event.categorySource === "user")) && (
+                {event.categorizationState === "ai_high_confidence" && (
                   <Sparkles className="text-brand-primary fill-brand-primary size-3" />
+                )}
+                {event.categorizationState === "ai_confirmed" && (
+                  <div className="relative inline-flex">
+                    <Sparkles className="text-brand-secondary fill-brand-secondary size-3" />
+                    <Check className="text-brand-secondary size-3" />
+                  </div>
                 )}
                 {event.tag && (
                   <div className="bg-brand-secondary flex shrink items-center justify-center rounded-full px-3 py-0.5 text-xs">

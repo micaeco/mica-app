@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Edit, LoaderCircle, Sparkles } from "lucide-react";
+import { Check, Edit, LoaderCircle, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -57,7 +57,6 @@ export function EditEventForm({
   const tEditEventSheet = useTranslations("editEventSheet");
   const tEditTagsDialog = useTranslations("editTagsDialog");
 
-  // Helper function to format duration
   const formatDuration = (durationInSeconds: number) => {
     const minutes = Math.floor(durationInSeconds / 60);
     const seconds = Math.floor(durationInSeconds % 60);
@@ -73,7 +72,6 @@ export function EditEventForm({
     return `${minutes}m ${seconds}s`;
   };
 
-  // Helper function to calculate flow rate (L/min)
   const calculateFlowRate = (consumptionInLiters: number, durationInSeconds: number) => {
     if (durationInSeconds === 0) return 0;
     return (consumptionInLiters / (durationInSeconds / 60)).toFixed(1);
@@ -82,7 +80,7 @@ export function EditEventForm({
   const eventForm = useForm<EditEventFormValues>({
     resolver: zodResolver(editEventFormSchema),
     defaultValues: {
-      category: event?.category ?? null,
+      category: event?.userCategory ?? null,
       tag: event?.tag ?? null,
       notes: event?.notes ?? null,
     },
@@ -130,33 +128,56 @@ export function EditEventForm({
       <Form {...eventForm}>
         <form onSubmit={eventForm.handleSubmit(onSubmitEvent)} className="flex flex-col space-y-6">
           {event && (
-            <div className="bg-muted/30 space-y-3 rounded-lg p-4">
-              <p className="text-muted-foreground text-sm">
-                {format(event.startTimestamp, "cccc PPP", { locale: getDateFnsLocale(locale) })}
-              </p>
-
-              <div className="flex items-baseline justify-between">
-                <span className="text-brand-secondary text-3xl font-bold">
-                  {event.consumptionInLiters.toFixed(1)} L
-                </span>
-                <span className="text-muted-foreground text-sm">
-                  {calculateFlowRate(event.consumptionInLiters, event.durationInSeconds)} L/min
-                </span>
+            <>
+              <div className="flex items-center gap-2">
+                <Image
+                  src={categoryMap[event.category].icon!}
+                  alt={event.category}
+                  width={32}
+                  height={32}
+                />
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold">{tCategories(event.category)}</span>
+                  {event.categorizationState === "ai_high_confidence" && (
+                    <Sparkles className="text-brand-primary fill-brand-primary size-4" />
+                  )}
+                  {event.categorizationState === "ai_confirmed" && (
+                    <div className="relative inline-flex">
+                      <Sparkles className="text-brand-secondary fill-brand-secondary size-3" />
+                      <Check className="text-brand-secondary size-3" />
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="text-muted-foreground flex justify-between text-sm">
-                <span>
-                  {format(event.startTimestamp, "HH:mm", {
-                    locale: getDateFnsLocale(locale),
-                  })}
-                  {" - "}
-                  {event.endTimestamp
-                    ? format(event.endTimestamp, "HH:mm", { locale: getDateFnsLocale(locale) })
-                    : tCommon("inProgress")}
-                </span>
-                <span>{formatDuration(event.durationInSeconds)}</span>
+              <div className="bg-muted/30 space-y-3 rounded-lg p-4">
+                <p className="text-muted-foreground text-sm">
+                  {format(event.startTimestamp, "cccc PPP", { locale: getDateFnsLocale(locale) })}
+                </p>
+
+                <div className="flex items-baseline justify-between">
+                  <span className="text-brand-secondary text-3xl font-bold">
+                    {event.consumptionInLiters.toFixed(1)} L
+                  </span>
+                  <span className="text-muted-foreground text-sm">
+                    {calculateFlowRate(event.consumptionInLiters, event.durationInSeconds)} L/min
+                  </span>
+                </div>
+
+                <div className="text-muted-foreground flex justify-between text-sm">
+                  <span>
+                    {format(event.startTimestamp, "HH:mm", {
+                      locale: getDateFnsLocale(locale),
+                    })}
+                    {" - "}
+                    {event.endTimestamp
+                      ? format(event.endTimestamp, "HH:mm", { locale: getDateFnsLocale(locale) })
+                      : tCommon("inProgress")}
+                  </span>
+                  <span>{formatDuration(event.durationInSeconds)}</span>
+                </div>
               </div>
-            </div>
+            </>
           )}
 
           {/* Category */}
@@ -185,8 +206,10 @@ export function EditEventForm({
                       <ToggleGroupItem
                         className={cn(
                           "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                          category === field.value ? "!bg-brand-secondary" : "bg-gray-100",
-                          category === event.algorithmCategory && "border-brand-primary border-2"
+                          category === field.value ? "bg-brand-secondary!" : "bg-gray-100",
+                          category === event.algorithmCategory &&
+                            event.algorithmCategory !== "unknown" &&
+                            "border-brand-primary border-2"
                         )}
                         value={category}
                         key={category}
@@ -200,9 +223,10 @@ export function EditEventForm({
                           height={24}
                         />
                         <span className="ml-1 text-sm">{tCategories(category)}</span>
-                        {category === event.algorithmCategory && (
-                          <Sparkles className="fill-brand-primary size-3" />
-                        )}
+                        {category === event.algorithmCategory &&
+                          event.algorithmCategory !== "unknown" && (
+                            <Sparkles className="fill-brand-primary size-3" />
+                          )}
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
@@ -241,7 +265,7 @@ export function EditEventForm({
                           <ToggleGroupItem
                             className={cn(
                               "hover:text-primary hover:bg-brand-tertiary rounded-lg transition-colors",
-                              tag.id === field.value?.id ? "!bg-brand-secondary" : "bg-gray-100"
+                              tag.id === field.value?.id ? "bg-brand-secondary!" : "bg-gray-100"
                             )}
                             value={tag.name}
                             key={tag.id}
