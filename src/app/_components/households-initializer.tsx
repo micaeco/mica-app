@@ -13,17 +13,22 @@ export function HouseholdsInitializer({ children }: { children: React.ReactNode 
   const tErrors = useTranslations("common.errors");
 
   const { data: households, isLoading, error } = trpc.household.getAll.useQuery();
+  const { setHouseholds, selectHousehold, selectedHouseholdId } = useHouseholdStore();
 
   useEffect(() => {
     if (households) {
-      useHouseholdStore.setState({ households });
+      setHouseholds(households);
 
-      if (households.length > 0) {
-        const firstId = households[0].id;
-        useHouseholdStore.setState({ selectedHouseholdId: firstId });
+      // Only set selected household if none is selected or if the currently selected one no longer exists
+      const selectedExists = households.some((h) => h.id === selectedHouseholdId);
+      if (!selectedHouseholdId || !selectedExists) {
+        if (households.length > 0) {
+          const firstId = households[0].id;
+          selectHousehold(firstId);
+        }
       }
     }
-  }, [households]);
+  }, [households, setHouseholds, selectHousehold, selectedHouseholdId]);
 
   if (isLoading) {
     return (
